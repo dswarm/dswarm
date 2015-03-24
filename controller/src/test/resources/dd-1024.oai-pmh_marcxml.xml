@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/
+                               http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+	<responseDate>2015-03-12T10:14:52Z</responseDate>
+	<request verb="GetRecord" identifier="oai:lcoa1.loc.gov:loc.gmd/g3791p.rr002300" metadataPrefix="marc21">http://memory.loc.gov/cgi-bin/oai2_0
+	</request>
+	<GetRecord>
+		<ns28:record xmlns:ns28="http://www.openarchives.org/OAI/2.0/">
+			<ns28:header>
+				<ns28:identifier><![CDATA[CBO-publish:32107]]></ns28:identifier>
+			</ns28:header>
+			<ns28:metadata xmlns:ns29="http://www.loc.gov/MARC21/slim">
+				<ns29:collection ns29:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+					<ns29:record>
+						<ns29:leader><![CDATA[02105nam  2200805 a 4500]]></ns29:leader>
+						<ns29:controlfield ns29:tag="001"><![CDATA[32111]]></ns29:controlfield>
+						<ns29:controlfield ns29:tag="003"><![CDATA[DE-14]]></ns29:controlfield>
+						<ns29:controlfield ns29:tag="005"><![CDATA[20150316143703]]></ns29:controlfield>
+						<ns29:datafield ns29:tag="016">
+							<ns29:subfield ns29:code="a"><![CDATA[(OCoLC)894744593]]></ns29:subfield>
+						</ns29:datafield>
+						<ns29:datafield ns29:tag="020">
+							<ns29:subfield ns29:code="a"><![CDATA[9781107326279 (ebook)]]></ns29:subfield>
+							<ns29:subfield ns29:code="z"><![CDATA[9781107042339 (hardback)]]></ns29:subfield>
+						</ns29:datafield>
+						<ns29:datafield ns29:tag="035">
+							<ns29:subfield ns29:code="a"><![CDATA[(DE-576)415692911]]></ns29:subfield>
+							<ns29:subfield ns29:code="a"><![CDATA[(DE-599)BSZ415692911]]></ns29:subfield>
+							<ns29:subfield ns29:code="a"><![CDATA[(LIBERO-RSN)16107255]]></ns29:subfield>
+							<ns29:subfield ns29:code="a"><![CDATA[(SWB-PPN)415692911]]></ns29:subfield>
+							<ns29:subfield ns29:code="a"><![CDATA[(UkCbUP)CR9781107326279]]></ns29:subfield>
+						</ns29:datafield>
+						<ns29:datafield ns29:tag="040">
+							<ns29:subfield ns29:code="a"><![CDATA[CBO]]></ns29:subfield>
+							<ns29:subfield ns29:code="a"><![CDATA[Coll.:CBO]]></ns29:subfield>
+							<ns29:subfield ns29:code="a"><![CDATA[DE-576]]></ns29:subfield>
+							<ns29:subfield ns29:code="a"><![CDATA[PPN:415692911]]></ns29:subfield>
+							<ns29:subfield ns29:code="a"><![CDATA[RSN:16107255]]></ns29:subfield>
+							<ns29:subfield ns29:code="a"><![CDATA[UkCbUP]]></ns29:subfield>
+							<ns29:subfield ns29:code="b"><![CDATA[ger]]></ns29:subfield>
+							<ns29:subfield ns29:code="c"><![CDATA[DE-576]]></ns29:subfield>
+							<ns29:subfield ns29:code="c"><![CDATA[UkCbUP]]></ns29:subfield>
+							<ns29:subfield ns29:code="e"><![CDATA[rakwb]]></ns29:subfield>
+						</ns29:datafield>
+						<ns29:datafield ns29:tag="041">
+							<ns29:subfield ns29:code="a"><![CDATA[eng]]></ns29:subfield>
+						</ns29:datafield>
+						<ns29:datafield ns29:tag="044">
+							<ns29:subfield ns29:code="a"><![CDATA[XA-GB]]></ns29:subfield>
+						</ns29:datafield>
+						<ns29:datafield ns29:tag="100" ns29:ind1="1">
+							<ns29:subfield ns29:code="a"><![CDATA[Tarkoma, Sasu]]></ns29:subfield>
+							<ns29:subfield/>
+							<ns29:subfield/>
+						</ns29:datafield>
+						<ns29:datafield ns29:tag="245" ns29:ind1="1">
+							<ns29:subfield ns29:code="a"><![CDATA[Smartphone Energy Consumption]]></ns29:subfield>
+							<ns29:subfield ns29:code="b"><![CDATA[Modeling and Optimization]]></ns29:subfield>
+							<ns29:subfield ns29:code="c"><![CDATA[Sasu Tarkoma, Matti Siekkinen, Eemil Lagerspetz, Yu Xiao]]></ns29:subfield>
+						</ns29:datafield>
+						<ns29:datafield ns29:tag="245" ns29:ind1="1" ns29:ind2="x">
+							<ns29:subfield ns29:code="a"><![CDATA[Smartphone energy consumption]]></ns29:subfield>
+							<ns29:subfield ns29:code="b"><![CDATA[modeling and optimization]]></ns29:subfield>
+							<ns29:subfield ns29:code="c"><![CDATA[Sasu Tarkoma]]></ns29:subfield>
+							<ns29:subfield ns29:code="h"><![CDATA[Elektronische Ressource]]></ns29:subfield>
+						</ns29:datafield>
+						<ns29:datafield ns29:tag="260" ns29:ind2="x">
+							<ns29:subfield ns29:code="a"><![CDATA[Cambridge]]></ns29:subfield>
+							<ns29:subfield ns29:code="b"><![CDATA[Cambridge University Press]]></ns29:subfield>
+							<ns29:subfield ns29:code="c"><![CDATA[2014]]></ns29:subfield>
+						</ns29:datafield>
+						<ns29:datafield ns29:tag="264" ns29:ind2="1">
+							<ns29:subfield ns29:code="a"><![CDATA[Cambridge : ]]></ns29:subfield>
+							<ns29:subfield ns29:code="b"><![CDATA[Cambridge University Press]]></ns29:subfield>
+							<ns29:subfield ns29:code="c"><![CDATA[2014]]></ns29:subfield>
+						</ns29:datafield>
+						<ns29:datafield ns29:tag="300">
+							<ns29:subfield ns29:code="a"><![CDATA[1 online resource (350 p.)]]></ns29:subfield>
+							<ns29:subfield ns29:code="b"><![CDATA[digital, PDF file(s)]]></ns29:subfield>
+						</ns29:datafield>
+						<ns29:datafield ns29:tag="336">
+							<ns29:subfield ns29:code="2"><![CDATA[rdacontent]]></ns29:subfield>
+							<ns29:subfield ns29:code="a"><![CDATA[text]]></ns29:subfield>
+							<ns29:subfield ns29:code="b"><![CDATA[txt]]></ns29:subfield>
+						</ns29:datafield>
+						<ns29:datafield ns29:tag="337">
+							<ns29:subfield ns29:code="2"><![CDATA[rdamedia]]></ns29:subfield>
+							<ns29:subfield ns29:code="a"><![CDATA[computer]]></ns29:subfield>
+							<ns29:subfield ns29:code="b"><![CDATA[c]]></ns29:subfield>
+						</ns29:datafield>
+						<ns29:datafield ns29:tag="338">
+							<ns29:subfield ns29:code="2"><![CDATA[rdacarrier]]></ns29:subfield>
+							<ns29:subfield ns29:code="a"><![CDATA[online resource]]></ns29:subfield>
+							<ns29:subfield ns29:code="b"><![CDATA[cr]]></ns29:subfield>
+						</ns29:datafield>
+						<ns29:datafield ns29:tag="500">
+							<ns29:subfield ns29:code="a">
+								<![CDATA[Title from publisher's bibliographic system (viewed on 27 Jan 2015)]]></ns29:subfield>
+						</ns29:datafield>
+						<ns29:datafield ns29:tag="533" ns29:ind2="x">
+							<ns29:subfield ns29:code="a"><![CDATA[Online-Ausg]]></ns29:subfield>
+							<ns29:subfield ns29:code="e"><![CDATA[Online-Ressource]]></ns29:subfield>
+						</ns29:datafield>
+						<ns29:datafield ns29:tag="700" ns29:ind1="1">
+							<ns29:subfield ns29:code="a"><![CDATA[Lagerspetz, Eemil]]></ns29:subfield>
+							<ns29:subfield ns29:code="a"><![CDATA[Siekkinen, Matti]]></ns29:subfield>
+							<ns29:subfield ns29:code="a"><![CDATA[Xiao, Yu]]></ns29:subfield>
+						</ns29:datafield>
+						<ns29:datafield ns29:tag="776" ns29:ind1="1" ns29:ind2="x">
+							<ns29:subfield ns29:code="9"><![CDATA[9781107326279]]></ns29:subfield>
+							<ns29:subfield ns29:code="z"><![CDATA[9781107326279]]></ns29:subfield>
+						</ns29:datafield>
+						<ns29:datafield ns29:tag="776" ns29:ind2="8">
+							<ns29:subfield ns29:code="i"><![CDATA[Print version: ]]></ns29:subfield>
+							<ns29:subfield ns29:code="z"><![CDATA[9781107042339]]></ns29:subfield>
+						</ns29:datafield>
+						<ns29:datafield ns29:tag="856" ns29:ind1="4">
+							<ns29:subfield ns29:code="u"><![CDATA[http://dx.doi.org/10.1017/CBO9781107326279]]></ns29:subfield>
+						</ns29:datafield>
+						<ns29:datafield ns29:tag="856" ns29:ind1="4" ns29:ind2="x">
+							<ns29:subfield ns29:code="x"><![CDATA[Verlag]]></ns29:subfield>
+						</ns29:datafield>
+						<ns29:datafield ns29:tag="912" ns29:ind2="x">
+							<ns29:subfield ns29:code="a"><![CDATA[ZDB-20-CBO]]></ns29:subfield>
+						</ns29:datafield>
+						<ns29:datafield ns29:tag="935" ns29:ind2="x">
+							<ns29:subfield ns29:code="b"><![CDATA[cofz]]></ns29:subfield>
+							<ns29:subfield ns29:code="c"><![CDATA[text]]></ns29:subfield>
+						</ns29:datafield>
+					</ns29:record>
+				</ns29:collection>
+			</ns28:metadata>
+		</ns28:record>
+	</GetRecord>
+</OAI-PMH>

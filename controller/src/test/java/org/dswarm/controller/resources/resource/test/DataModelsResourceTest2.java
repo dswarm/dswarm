@@ -17,6 +17,7 @@ package org.dswarm.controller.resources.resource.test;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 
@@ -47,6 +48,9 @@ import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
+import org.dswarm.persistence.model.schema.AttributePath;
+import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.service.InternalModelService;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.service.UUIDService;
@@ -115,31 +119,16 @@ public class DataModelsResourceTest2 extends
 
 		DataModelsResourceTest2.LOG.debug("start get CSV data test");
 
-		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString("resource.json");
+		// START DATA MODEL CREATION
 
-		final Resource expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
+		final String dataResourceResourceFileName = "resource.json";
+		final String dataResourceFileName = "test_csv-controller.csv";
+		final String configurationFileName = "controller_configuration.json";
+		final String dataModelName = "mabxml";
 
-		final URL fileURL = Resources.getResource("test_csv-controller.csv");
-		final File resourceFile = FileUtils.toFile(fileURL);
+		final DataModel dataModel = createDataModel(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName);
 
-		final String configurationJSONString = DMPPersistenceUtil.getResourceAsString("controller_configuration.json");
-
-		// add resource and config
-		final Resource resource = resourcesResourceTestUtils.uploadResource(resourceFile, expectedResource);
-
-		final Configuration config = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
-
-		final String dataModel1Uuid = UUIDService.getUUID(DataModel.class.getSimpleName());
-
-		final DataModel dataModel1 = new DataModel(dataModel1Uuid);
-		dataModel1.setName("my data model");
-		dataModel1.setDescription("my data model description");
-		dataModel1.setDataResource(resource);
-		dataModel1.setConfiguration(config);
-
-		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
-
-		final DataModel dataModel = pojoClassResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
+		// END DATA MODEL CREATION
 
 		final int atMost = 1;
 
@@ -189,32 +178,16 @@ public class DataModelsResourceTest2 extends
 
 		DataModelsResourceTest2.LOG.debug("start get XML data test");
 
-		// prepare resource
-		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString("test-mabxml-resource.json");
+		// START DATA MODEL CREATION
 
-		final Resource expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
+		final String dataResourceResourceFileName = "test-mabxml-resource.json";
+		final String dataResourceFileName = "controller_test-mabxml.xml";
+		final String configurationFileName = "xml-configuration.json";
+		final String dataModelName = "mabxml";
 
-		final URL fileURL = Resources.getResource("controller_test-mabxml.xml");
-		final File resourceFile = FileUtils.toFile(fileURL);
+		final DataModel dataModel = createDataModel(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName);
 
-		final String configurationJSONString = DMPPersistenceUtil.getResourceAsString("xml-configuration.json");
-
-		// add resource and config
-		final Resource resource = resourcesResourceTestUtils.uploadResource(resourceFile, expectedResource);
-
-		final Configuration configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
-
-		final String dataModel1Uuid = UUIDService.getUUID(DataModel.class.getSimpleName());
-
-		final DataModel dataModel1 = new DataModel(dataModel1Uuid);
-		dataModel1.setName("my data model");
-		dataModel1.setDescription("my data model description");
-		dataModel1.setDataResource(resource);
-		dataModel1.setConfiguration(configuration);
-
-		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
-
-		final DataModel dataModel = pojoClassResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
+		// END DATA MODEL CREATION
 
 		final int atMost = 1;
 
@@ -247,7 +220,7 @@ public class DataModelsResourceTest2 extends
 
 		Assert.assertNotNull("the expected data JSON shouldn't be null", expectedJson);
 
-//		System.out.println("expected JSON = '" + objectMapper.writeValueAsString(expectedJson) + "'");
+		//		System.out.println("expected JSON = '" + objectMapper.writeValueAsString(expectedJson) + "'");
 
 		Assert.assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", json),
 				CoreMatchers.equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", expectedJson)));
@@ -259,6 +232,52 @@ public class DataModelsResourceTest2 extends
 				CoreMatchers.equalTo(getValueNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld", expectedJson).size()));
 
 		DataModelsResourceTest2.LOG.debug("end get XML data test");
+	}
+
+	/**
+	 * to ensure that the inbuilt schema won't be corrupted during processing
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testNonSchemaComformOAIPMHMARCXMLData() throws Exception {
+
+		DataModelsResourceTest2.LOG.debug("start get non-schema comform OAI-PMH+MARCXML XML data test");
+
+		// START DATA MODEL CREATION
+
+		final String dataResourceResourceFileName = "dd-1024.oai-pmh_marcxml.resource.json";
+		final String dataResourceFileName = "dd-1024.oai-pmh_marcxml.xml";
+		final String configurationFileName = "oai-pmh_marcxml.configuration.json";
+		final String dataModelName = "oai-pmh+marcxml";
+
+		final DataModel dataModel = createDataModel(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName);
+
+		// END DATA MODEL CREATION
+
+		final Response response = target(String.valueOf(dataModel.getUuid())).request()
+				.accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+
+		final String freshDataModelString = response.readEntity(String.class);
+		final DataModel freshDataModel = objectMapper.readValue(freshDataModelString, DataModel.class);
+
+		Assert.assertNotNull(freshDataModel);
+
+		final Schema freshSchema = freshDataModel.getSchema();
+
+		Assert.assertNotNull(freshSchema);
+
+		final String actualAttributePaths = parseAttributePaths(freshSchema);
+
+		Assert.assertNotNull(actualAttributePaths);
+
+		final String expectedAttributePaths = DMPPersistenceUtil.getResourceAsString("dd1024.oai-pmh_plus_marcxml_schema_-_attribute_paths.txt");
+
+		Assert.assertEquals(expectedAttributePaths, actualAttributePaths);
+
+		DataModelsResourceTest2.LOG.debug("end get non-schema comform OAI-PMH+MARCXML XML data test");
 	}
 
 	@Test
@@ -304,6 +323,63 @@ public class DataModelsResourceTest2 extends
 				body);
 
 		DataModelsResourceTest2.LOG.debug("end throw Exception at XML data test");
+	}
+
+	private DataModel createDataModel(final String dataResourceResourceFileName, final String dataResourceFileName,
+			final String configurationFileName, final String dataModelName) throws Exception {
+
+		// prepare resource
+		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString(dataResourceResourceFileName);
+
+		final Resource expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
+
+		final URL fileURL = Resources.getResource(dataResourceFileName);
+		final File resourceFile = FileUtils.toFile(fileURL);
+
+		final String configurationJSONString = DMPPersistenceUtil.getResourceAsString(configurationFileName);
+
+		// add resource and config
+		final Resource resource = resourcesResourceTestUtils.uploadResource(resourceFile, expectedResource);
+
+		final Configuration configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
+
+		final String dataModel1Uuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+
+		final DataModel dataModel1 = new DataModel(dataModel1Uuid);
+		dataModel1.setName("my " + dataModelName + " data model");
+		dataModel1.setDescription("my " + dataModelName + " data model description");
+		dataModel1.setDataResource(resource);
+		dataModel1.setConfiguration(configuration);
+
+		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
+
+		return pojoClassResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
+	}
+
+	private String parseAttributePaths(final Schema schema) {
+
+		final Collection<SchemaAttributePathInstance> sapis = schema.getAttributePaths();
+
+		if (sapis == null) {
+
+			return null;
+		}
+
+		final StringBuilder sb = new StringBuilder();
+
+		for (final SchemaAttributePathInstance sapi : sapis) {
+
+			final AttributePath attributePath = sapi.getAttributePath();
+
+			if (attributePath == null) {
+
+				continue;
+			}
+
+			sb.append(attributePath.toAttributePath()).append("\n");
+		}
+
+		return sb.toString();
 	}
 
 	private JsonNode getValueNode(final String key, final JsonNode json) {

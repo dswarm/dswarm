@@ -1,0 +1,11 @@
+{
+  "name": "dd-1024.oai-pmh_marcxml.xml",
+  "type": "FILE",
+  "description": "this is a description",
+  "resource_attributes": {
+    "path": "dummy/path/to/dd-1024.oai-pmh_marcxml.xml",
+    "filesize": 2279,
+    "filetype": "application/xml"
+  },
+  "uuid": "980a3ff9-0ea0-4693-959f-1bf11771e9c5"
+}
