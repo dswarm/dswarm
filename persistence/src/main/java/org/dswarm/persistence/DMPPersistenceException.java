@@ -38,4 +38,15 @@ public class DMPPersistenceException extends DMPException {
 		super(exception);
 	}
 
+	/**
+	 * Creates a new DMP persistence exception with the given exception message.
+	 *
+	 * @param exception the exception message
+	 * @param e the underlying exception
+	 */
+	public DMPPersistenceException(final String exception, final Throwable e) {
+
+		super(exception, e);
+	}
+
 }

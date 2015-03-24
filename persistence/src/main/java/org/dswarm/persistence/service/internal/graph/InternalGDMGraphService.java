@@ -17,6 +17,7 @@ package org.dswarm.persistence.service.internal.graph;
 
 import java.io.IOException;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,7 +34,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
@@ -42,13 +42,13 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import org.glassfish.jersey.media.multipart.BodyPart;
 import org.glassfish.jersey.media.multipart.MultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.dswarm.common.DMPStatics;
+import org.dswarm.common.model.util.AttributePathUtil;
 import org.dswarm.graph.json.Resource;
 import org.dswarm.graph.json.util.Util;
 import org.dswarm.persistence.DMPPersistenceException;
@@ -87,6 +87,7 @@ public class InternalGDMGraphService implements InternalModelService {
 	private static final Logger LOG = LoggerFactory.getLogger(InternalGDMGraphService.class);
 
 	private static final String resourceIdentifier = "gdm";
+	private static final String MULTIPART_MIXED    = "multipart/mixed";
 
 	/**
 	 * The data model persistence service.
@@ -565,38 +566,16 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final WebTarget target = target("/put");
 
-		final ObjectMapper objectMapper = Util.getJSONObjectMapper();
-
-		byte[] bytes = null;
-
-		try {
-
-			bytes = objectMapper.writeValueAsBytes(model);
-		} catch (final JsonProcessingException e) {
-
-			throw new DMPPersistenceException("couldn't serialise model to JSON");
-		}
+		final byte[] content = getBytes(model);
+		final String metadata = getMetadata(dataModelUri, optionalContentSchema, optionalDeprecateMissingRecords, optionalRecordClassUri);
 
 		// Construct a MultiPart with two body parts
 		final MultiPart multiPart = new MultiPart();
-		multiPart.bodyPart(bytes, MediaType.APPLICATION_OCTET_STREAM_TYPE)
-				.bodyPart(dataModelUri, MediaType.TEXT_PLAIN_TYPE);
-
-		if (optionalContentSchema.isPresent()) {
-
-			final String contentSchemaJSONString = generateContentSchemaJSON(optionalContentSchema.get());
-
-			multiPart.bodyPart(new BodyPart(contentSchemaJSONString, MediaType.APPLICATION_JSON_TYPE));
-		}
-
-		if (optionalDeprecateMissingRecords.isPresent() && optionalRecordClassUri.isPresent()) {
-
-			multiPart.bodyPart(new BodyPart(optionalDeprecateMissingRecords.get().toString(), MediaType.TEXT_PLAIN_TYPE))
-					.bodyPart(new BodyPart(optionalRecordClassUri.get(), MediaType.TEXT_PLAIN_TYPE));
-		}
+		multiPart.bodyPart(content, MediaType.APPLICATION_OCTET_STREAM_TYPE)
+				.bodyPart(metadata, MediaType.APPLICATION_JSON_TYPE);
 
 		// POST the request
-		final Response response = target.request("multipart/mixed").post(Entity.entity(multiPart, "multipart/mixed"));
+		final Response response = target.request(MULTIPART_MIXED).post(Entity.entity(multiPart, MULTIPART_MIXED));
 
 		if (response.getStatus() != 200) {
 
@@ -605,61 +584,62 @@ public class InternalGDMGraphService implements InternalModelService {
 		}
 	}
 
-	private String generateContentSchemaJSON(final ContentSchema contentSchema) throws DMPPersistenceException {
+	private JsonNode generateContentSchemaJSON(final ContentSchema contentSchema) throws DMPPersistenceException {
 
-		final ObjectNode contentSchemaJSON = objectMapperProvider.get().createObjectNode();
-
-		final String recordIdentifierAP;
+		final org.dswarm.common.model.AttributePath recordIdentifierSAP;
 
 		if (contentSchema.getRecordIdentifierAttributePath() != null) {
 
-			recordIdentifierAP = contentSchema.getRecordIdentifierAttributePath().toAttributePath();
+			final String recordIdentifierAP = contentSchema.getRecordIdentifierAttributePath().toAttributePath();
+			recordIdentifierSAP = AttributePathUtil.parseAttributePathString(recordIdentifierAP);
 		} else {
 
-			recordIdentifierAP = null;
+			recordIdentifierSAP = null;
 		}
 
-		contentSchemaJSON.put("record_identifier_attribute_path", recordIdentifierAP);
-
-		final ArrayNode keyAttributePaths;
+		final LinkedList<org.dswarm.common.model.AttributePath> keyAttributePaths;
 
 		if (contentSchema.getKeyAttributePaths() != null) {
 
-			keyAttributePaths = objectMapperProvider.get().createArrayNode();
+			keyAttributePaths = new LinkedList<>();
 
 			for (final AttributePath keyAttributePath : contentSchema.getKeyAttributePaths()) {
 
-				keyAttributePaths.add(keyAttributePath.toAttributePath());
+				final String keyAP = keyAttributePath.toAttributePath();
+				final org.dswarm.common.model.AttributePath keySAP = AttributePathUtil.parseAttributePathString(keyAP);
+				keyAttributePaths.add(keySAP);
 			}
 		} else {
 
 			keyAttributePaths = null;
 		}
 
-		contentSchemaJSON.set("key_attribute_paths", keyAttributePaths);
-
-		final String valueAttributePath;
+		final org.dswarm.common.model.AttributePath valueSAP;
 
 		if (contentSchema.getValueAttributePath() != null) {
 
-			valueAttributePath = contentSchema.getValueAttributePath().toAttributePath();
+			final String valueAttributePath = contentSchema.getValueAttributePath().toAttributePath();
+			valueSAP = AttributePathUtil.parseAttributePathString(valueAttributePath);
 		} else {
 
-			valueAttributePath = null;
+			valueSAP = null;
 		}
 
-		contentSchemaJSON.put("value_attribute_path", valueAttributePath);
+		final org.dswarm.common.model.ContentSchema simpleContentSchema = new org.dswarm.common.model.ContentSchema(recordIdentifierSAP,
+				keyAttributePaths, valueSAP);
 
 		try {
 
-			return objectMapperProvider.get().writeValueAsString(contentSchemaJSON);
-		} catch (final JsonProcessingException e) {
+			final String simpleContentSchemaString = objectMapperProvider.get().writeValueAsString(simpleContentSchema);
 
-			final String message = "couldn't serialize content schema for dmp graph endpoint";
+			return objectMapperProvider.get().readValue(simpleContentSchemaString, ObjectNode.class);
+		} catch (final IOException e) {
+
+			final String message = "couldn't serialize/deserialize content schema for dmp graph endpoint";
 
 			InternalGDMGraphService.LOG.error(message, e);
 
-			throw new DMPPersistenceException(message);
+			throw new DMPPersistenceException(message, e);
 		}
 	}
 
@@ -686,7 +666,7 @@ public class InternalGDMGraphService implements InternalModelService {
 			requestJsonString = objectMapper.writeValueAsString(requestJson);
 		} catch (final JsonProcessingException e) {
 
-			throw new DMPPersistenceException("something went wrong, while creating the request JSON string for the read-gdm-from-db request");
+			throw new DMPPersistenceException("something went wrong, while creating the request JSON string for the read-gdm-from-db request", e);
 		}
 
 		// POST the request
@@ -744,5 +724,49 @@ public class InternalGDMGraphService implements InternalModelService {
 		}
 
 		return target;
+	}
+
+	private byte[] getBytes(final org.dswarm.graph.json.Model model) throws DMPPersistenceException {
+
+		//final ObjectMapper objectMapper = Util.getJSONObjectMapper();
+
+		try {
+
+			return objectMapperProvider.get().writeValueAsBytes(model);
+		} catch (final JsonProcessingException e) {
+
+			throw new DMPPersistenceException("couldn't serialise model to JSON", e);
+		}
+	}
+
+	private String getMetadata(final String dataModelUri, final Optional<ContentSchema> optionalContentSchema,
+			final Optional<Boolean> optionalDeprecateMissingRecords, final Optional<String> optionalRecordClassUri) throws DMPPersistenceException {
+
+		final ObjectNode metadata = objectMapperProvider.get().createObjectNode();
+		metadata.put(DMPStatics.DATA_MODEL_URI_IDENTIFIER, dataModelUri);
+
+		if (optionalContentSchema.isPresent()) {
+
+			final JsonNode contentSchemaJSON = generateContentSchemaJSON(optionalContentSchema.get());
+
+			metadata.set(DMPStatics.CONTENT_SCHEMA_IDENTIFIER, contentSchemaJSON);
+		}
+
+		if (optionalDeprecateMissingRecords.isPresent() && optionalRecordClassUri.isPresent()) {
+
+			metadata.put(DMPStatics.DEPRECATE_MISSING_RECORDS_IDENTIFIER, optionalDeprecateMissingRecords.get().toString());
+			metadata.put(DMPStatics.RECORD_CLASS_URI_IDENTIFIER, optionalRecordClassUri.get());
+		}
+
+		try {
+			return objectMapperProvider.get().writeValueAsString(metadata);
+		} catch (JsonProcessingException e) {
+
+			final String message = "couldn't serialize metadata";
+
+			InternalGDMGraphService.LOG.error(message, e);
+
+			throw new DMPPersistenceException(message, e);
+		}
 	}
 }
