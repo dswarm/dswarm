@@ -653,7 +653,6 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 				return null;
 			}
-		}
 
 			final RetrievalType type = proxyDataModel.getType();
 
