@@ -297,7 +297,10 @@ public class ResourcesResource extends AbstractBaseResource {
 	@GET
 	@Path("/{uuid}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getResource(@ApiParam(value = "data resource identifier", required = true) @PathParam("uuid") final String uuid)
+	public Response getResource(
+			@ApiParam(value = "data resource identifier", required = true) @PathParam("uuid") final String uuid,
+			@ApiParam(value = "'short' for only uuid,name,description, 'full' for the complete entity")
+			@QueryParam("format") @DefaultValue("full") final POJOFormat format)
 			throws DMPControllerException {
 		final Optional<Resource> resourceOptional = dataModelUtil.fetchResource(uuid);
 
@@ -308,18 +311,39 @@ public class ResourcesResource extends AbstractBaseResource {
 		final Resource resource = resourceOptional.get();
 
 		final String resourceJSON;
-
-		try {
-
-			resourceJSON = objectMapper.writeValueAsString(resource);
-		} catch (final JsonProcessingException e) {
-			throw new DMPControllerException("couldn't transform resource object to JSON string.\n" + e.getMessage());
+		switch (format) {
+			case SHORT:
+				resourceJSON = serializeShortResource(resource);
+				break;
+			default:
+				resourceJSON = serializeFullResource(resource);
+				break;
 		}
 
-		ResourcesResource.LOG.debug("return resource with uuid '" + uuid + "' and content ");
-		ResourcesResource.LOG.trace("'" + resourceJSON + "'");
+		ResourcesResource.LOG.debug("return resource with uuid '{}' and content ", uuid);
+		if (ResourcesResource.LOG.isTraceEnabled()) {
+			ResourcesResource.LOG.trace("'{}'", resourceJSON);
+		}
 
 		return buildResponse(resourceJSON);
+	}
+
+	private String serializeShortResource(final Resource resource) throws DMPControllerException {
+		final ShortExtendendBasicDMPDTO shortVersion =
+				ShortExtendendBasicDMPDTO.of(resource, createObjectURI(resource.getUuid()));
+		return serialiseObject(shortVersion);
+	}
+
+	private String serializeFullResource(final Resource resource) throws DMPControllerException {
+		return serialiseObject(resource);
+	}
+
+	private String serialiseObject(final Object object) throws DMPControllerException {
+		try {
+			return objectMapper.writeValueAsString(object);
+		} catch (final JsonProcessingException e) {
+			throw new DMPControllerException("couldn't transform resource object to JSON string.", e);
+		}
 	}
 
 	/**
