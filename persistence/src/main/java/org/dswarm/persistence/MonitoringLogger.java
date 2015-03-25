@@ -18,10 +18,13 @@ package org.dswarm.persistence;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.SortedMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.Metered;
@@ -36,6 +39,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import org.apache.commons.lang3.StringUtils;
@@ -51,6 +55,7 @@ import org.dswarm.persistence.model.job.Task;
 import org.dswarm.persistence.model.resource.DataModel;
 
 import static com.codahale.metrics.MetricRegistry.name;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public final class MonitoringLogger implements Reporter {
 
@@ -64,10 +69,9 @@ public final class MonitoringLogger implements Reporter {
 	private final double durationFactor;
 	private final String durationUnit;
 	private final String rateUnit;
-	private final Timer executionsTimer;
-	private final Timer ingestTimer;
-	private final String executionsTimerName;
-	private final String ingestTimerName;
+	private final MarkedTimer executionsTimer;
+	private final MarkedTimer ingestTimer;
+	private final List<MarkedTimer> specialTimers;
 	private final MetricFilter noSpecialTimer;
 	private static final CharMatcher MATCHER =
 			CharMatcher.ASCII
@@ -93,24 +97,38 @@ public final class MonitoringLogger implements Reporter {
 		rateFactor = rateUnit.toSeconds(1);
 		durationFactor = 1.0 / durationUnit.toNanos(1);
 
-		executionsTimerName = name(Task.class, "executions");
-		executionsTimer = registry.timer(executionsTimerName);
+		final String executionsTimerName = name(Task.class, "executions");
+		executionsTimer = new MarkedTimer(
+				executionsTimerName,
+				EXECUTION_MARKER,
+				registry.timer(executionsTimerName));
 
-		ingestTimerName = name(DataModel.class, "ingest");
-		ingestTimer = registry.timer(ingestTimerName);
+		final String ingestTimerName = name(DataModel.class, "ingest");
+		ingestTimer = new MarkedTimer(
+				ingestTimerName,
+				INGEST_MARKER,
+				registry.timer(ingestTimerName));
+
+		specialTimers = ImmutableList.of(executionsTimer, ingestTimer);
 
 		noSpecialTimer = (name, metric) ->
-				!(executionsTimerName.equals(name) || ingestTimerName.equals(name));
+				!specialTimers.stream().anyMatch(mt -> mt.matches(name));
 	}
 
 	public void report() {
+		report(markedTimer -> true);
+	}
+
+	private void report(final Predicate<MarkedTimer> selectSpecialTimer) {
 		final SortedMap<String, Meter> meters = registry.getMeters();
 		final SortedMap<String, Timer> timers = registry.getTimers(noSpecialTimer);
 
 		meters.forEach(this::logMeter);
 		timers.forEach(this::logTimer);
-		logTimer(executionsTimerName, executionsTimer, EXECUTION_MARKER);
-		logTimer(ingestTimerName, ingestTimer, INGEST_MARKER);
+
+		specialTimers.stream()
+				.filter(selectSpecialTimer)
+				.forEach(mt -> logTimer(mt.name, mt.timer, mt.marker));
 	}
 
 	private void logMeter(final String name, final Metered meter) {
@@ -294,19 +312,25 @@ public final class MonitoringLogger implements Reporter {
 	public static final class MonitoringHelper implements AutoCloseable {
 
 		private final Context context;
+		private final MarkedTimer timer;
 		private final MDCCloseable identifier;
 		private final MonitoringLogger logger;
 
-		private MonitoringHelper(final Timer timer, final MDCCloseable identifier, final MonitoringLogger logger) {
+		private MonitoringHelper(
+				final MarkedTimer timer,
+				final MDCCloseable identifier,
+				final MonitoringLogger logger) {
+			this.timer = timer;
 			this.identifier = identifier;
 			this.logger = logger;
 			context = timer.time();
+			context = timer.timer.time();
 		}
 
 		@Override
 		public void close() {
 			context.close();
-			logger.report();
+			logger.report(mt -> mt.equals(timer));
 			identifier.close();
 		}
 	}
@@ -314,6 +338,22 @@ public final class MonitoringLogger implements Reporter {
 	private static final class MonitoringException extends RuntimeException {
 		public MonitoringException(final Throwable cause) {
 			super(cause);
+		}
+	}
+
+	private static final class MarkedTimer {
+		public final String name;
+		public final Marker marker;
+		public final Timer timer;
+
+		private MarkedTimer(final String name, final Marker marker, final Timer timer) {
+			this.name = checkNotNull(name);
+			this.marker = checkNotNull(marker);
+			this.timer = checkNotNull(timer);
+		}
+
+		private boolean matches(final String otherName) {
+			return name.equals(otherName);
 		}
 	}
 }
