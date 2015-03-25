@@ -22,6 +22,7 @@ import java.util.List;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
+import com.google.inject.ProvisionException;
 import org.culturegraph.mf.stream.source.ResourceOpener;
 import org.culturegraph.mf.types.Triple;
 import org.hamcrest.CoreMatchers;
@@ -96,7 +97,6 @@ public class CSVSourceResourceTriplesFlowTest extends GuicedTest {
 	@Test
 	public void testEndToEnd3() throws Exception {
 
-
 		final CSVSourceResourceTriplesFlow flow = injector
 				.getInstance(CSVResourceFlowFactory.class)
 				.fromConfigurationParameters(Charsets.UTF_8.name(), '\\', '"', ',', "\n");
@@ -131,7 +131,7 @@ public class CSVSourceResourceTriplesFlowTest extends GuicedTest {
 		testFlow(flow, "test_csv.csv", 19, 5, predicateMatcher);
 	}
 
-	@Test(expected = DMPConverterException.class)
+	@Test(expected = ProvisionException.class)
 	public void testNullConfiguration() throws Exception {
 		final Configuration configuration = null;
 		@SuppressWarnings("UnusedDeclaration")
@@ -140,7 +140,7 @@ public class CSVSourceResourceTriplesFlowTest extends GuicedTest {
 				.fromConfiguration(configuration);
 	}
 
-	@Test(expected = DMPConverterException.class)
+	@Test(expected = ProvisionException.class)
 	public void testNullConfigurationParameter() throws Exception {
 
 		final String uuid = UUIDService.getUUID(Configuration.class.getSimpleName());
