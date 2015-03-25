@@ -221,6 +221,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	 * @return the updated data model as JSON representation
 	 * @throws DMPControllerException
 	 */
+	@Override
 	@ApiOperation(value = "update data model with given id ", notes = "Returns an updated DataModel object.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "data model was successfully updated"),
 			@ApiResponse(code = 404, message = "could not find a data model for the given id"),
@@ -608,11 +609,6 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 		final ProxyDataModel newProxyDataModel = addConfigurationToDataResource(proxyDataModel, dataModel);
 
-		if (newProxyDataModel == null) {
-
-			return null;
-		}
-
 		final DataModel newDataModel = newProxyDataModel.getObject();
 
 		if (newDataModel == null) {
@@ -623,20 +619,25 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 		return updateDataModelContent(newProxyDataModel, newDataModel);
 	}
 
-	private ProxyDataModel addConfigurationToDataResource(final ProxyDataModel proxyDataModel, final DataModel dataModel) {
+	private ProxyDataModel addConfigurationToDataResource(final ProxyDataModel proxyDataModel, final DataModel dataModel)
+			throws DMPControllerException {
 
 		if (dataModel.getConfiguration() == null) {
 
-			DataModelsResource.LOG.debug("could not add configuration to data resource, because configuration is null");
+			final String message = String.format("could not add configuration to data resource, because the data model '%s' has no configuration", dataModel.getUuid());
 
-			return null;
+			DataModelsResource.LOG.debug(message);
+
+			return proxyDataModel;
 		}
 
 		if (dataModel.getDataResource() == null) {
 
-			DataModelsResource.LOG.debug("could not add configuration to data resource, because data resource is null");
+			final String message = String.format("could not add configuration to data resource, because the data model '%s' has no resource", dataModel.getUuid());
 
-			return null;
+			DataModelsResource.LOG.debug(message);
+
+			return proxyDataModel;
 		}
 
 		// add configuration to data resource
@@ -648,10 +649,11 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 			if (proxyUpdatedDataModel == null) {
 
-				DataModelsResource.LOG.error("something went wrong, when trying to add configuration to data resource of data model '"
-						+ dataModel.getUuid() + "'");
+				final String message = String.format("something went wrong, when trying to add configuration '%s' to data resource '%s' of data model '%s'", dataModel.getConfiguration().getUuid(), dataModel.getDataResource().getUuid(), dataModel.getUuid());
 
-				return null;
+				DataModelsResource.LOG.error(message);
+
+				throw new DMPControllerException(message);
 			}
 
 			final RetrievalType type = proxyDataModel.getType();
@@ -660,11 +662,12 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 		} catch (final DMPPersistenceException e) {
 
-			DataModelsResource.LOG.error("something went wrong, when trying to add configuration to data resource of data model '"
-					+ dataModel.getUuid() + "'");
-		}
+			final String message = String.format("something went wrong, when trying to add configuration '%s' to data resource '%s' of data model '%s'", dataModel.getConfiguration().getUuid(), dataModel.getDataResource().getUuid(), dataModel.getUuid());
 
-		return null;
+			DataModelsResource.LOG.error(message, e);
+
+			throw new DMPControllerException(message, e);
+		}
 	}
 
 	private ProxyDataModel updateDataModelContent(final ProxyDataModel proxyDataModel, final DataModel dataModel) throws DMPControllerException {
