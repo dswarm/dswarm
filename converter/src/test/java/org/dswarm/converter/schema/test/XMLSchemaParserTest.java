@@ -159,7 +159,7 @@ public class XMLSchemaParserTest extends GuicedTest {
 
 		final Schema schema = parseOAIPMHPlusXSchema("oai_dc.xsd", "DC Elements", SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID, "dc", true);
 
-		final Map<String, AttributePath> aps = generateAttributePathMap(schema);
+		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(schema);
 
 		final String uuid = UUIDService.getUUID(ContentSchema.class.getSimpleName());
 
@@ -176,7 +176,7 @@ public class XMLSchemaParserTest extends GuicedTest {
 
 		final Schema schema = parseOAIPMHPlusXSchema("dcterms.xsd", "DC Terms", SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID, null, false);
 
-		final Map<String, AttributePath> aps = generateAttributePathMap(schema);
+		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(schema);
 
 		final String uuid = UUIDService.getUUID(ContentSchema.class.getSimpleName());
 
@@ -194,7 +194,7 @@ public class XMLSchemaParserTest extends GuicedTest {
 		// collection - to include "record" attribute into the attribute paths
 		final Schema schema = parseOAIPMHPlusXSchema("MARC21slim.xsd", "MARCXML", SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID, "collection", false);
 
-		final Map<String, AttributePath> aps = generateAttributePathMap(schema);
+		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(schema);
 
 		final String uuid = UUIDService.getUUID(ContentSchema.class.getSimpleName());
 
@@ -250,7 +250,7 @@ public class XMLSchemaParserTest extends GuicedTest {
 
 		final Schema schema = parseSchema("mabxml-1.xsd", "datensatz", SchemaUtils.MABXML_SCHEMA_UUID, "mabxml schema");
 
-		final Map<String, AttributePath> aps = generateAttributePathMap(schema);
+		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(schema);
 
 		final String uuid = UUIDService.getUUID(ContentSchema.class.getSimpleName());
 
@@ -281,7 +281,7 @@ public class XMLSchemaParserTest extends GuicedTest {
 
 		final Schema schema = parseSchema("pnx.xsd", "record", SchemaUtils.PNX_SCHEMA_UUID, "pnx schema");
 
-		final Map<String, AttributePath> aps = generateAttributePathMap(schema);
+		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(schema);
 
 		final String uuid = UUIDService.getUUID(ContentSchema.class.getSimpleName());
 
@@ -304,7 +304,7 @@ public class XMLSchemaParserTest extends GuicedTest {
 
 		final Schema schema = parseSchema("MARC21slim.xsd", "record", SchemaUtils.MARC21_SCHEMA_UUID, "marc21 schema");
 
-		final Map<String, AttributePath> aps = generateAttributePathMap(schema);
+		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(schema);
 
 		final String uuid = UUIDService.getUUID(ContentSchema.class.getSimpleName());
 
@@ -385,19 +385,6 @@ public class XMLSchemaParserTest extends GuicedTest {
 		Assert.assertTrue(optionalAttributePaths.isPresent());
 
 		return optionalAttributePaths.get();
-	}
-
-	private static Map<String, AttributePath> generateAttributePathMap(final Schema schema) {
-
-		final Map<String, AttributePath> aps = Maps.newHashMap();
-
-		for (final SchemaAttributePathInstance schemaAttributePathInstance : schema.getAttributePaths()) {
-
-			final AttributePath attributePath = schemaAttributePathInstance.getAttributePath();
-			aps.put(attributePath.toAttributePath(), attributePath);
-		}
-
-		return aps;
 	}
 
 	private static Schema fillContentSchemaAndUpdateSchema(final ContentSchema contentSchema, final AttributePath recordIdentifierAP,

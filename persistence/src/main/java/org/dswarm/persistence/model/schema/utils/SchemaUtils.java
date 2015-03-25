@@ -17,6 +17,7 @@ package org.dswarm.persistence.model.schema.utils;
 
 import java.net.URI;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -25,6 +26,7 @@ import javax.annotation.Nullable;
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.net.UrlEscapers;
 import com.google.inject.Provider;
 import org.slf4j.Logger;
@@ -403,6 +405,19 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 		}
 
 		return sb.toString();
+	}
+
+	public static Map<String, AttributePath> generateAttributePathMap(final Schema schema) {
+
+		final Map<String, AttributePath> aps = Maps.newHashMap();
+
+		for (final SchemaAttributePathInstance schemaAttributePathInstance : schema.getAttributePaths()) {
+
+			final AttributePath attributePath = schemaAttributePathInstance.getAttributePath();
+			aps.put(attributePath.toAttributePath(), attributePath);
+		}
+
+		return aps;
 	}
 
 	private static String mintTermUri(final String termUri, final String localTermName, final String baseUri) {

@@ -18,6 +18,7 @@ package org.dswarm.converter.schema.test;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.Assert;
@@ -28,9 +29,12 @@ import org.dswarm.converter.schema.SolrSchemaParser;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
+import org.dswarm.persistence.model.schema.ContentSchema;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
+import org.dswarm.persistence.service.UUIDService;
+import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -87,7 +91,9 @@ public class SolrSchemaParserTest extends GuicedTest {
 
 		final String name = "finc Solr schema";
 
-		return parseSchema("finc-solr-schema.xml", SchemaUtils.FINC_SOLR_SCHEMA_UUID, name);
+		final Schema schema = parseSchema("finc-solr-schema.xml", SchemaUtils.FINC_SOLR_SCHEMA_UUID, name);
+
+		return addFincSolrContentSchema(schema);
 	}
 
 	private static Schema parseSchema(final String solrSchemaFileName, final String schemaUUID, final String schemaName)
@@ -99,5 +105,35 @@ public class SolrSchemaParserTest extends GuicedTest {
 		Assert.assertTrue(optionalSchema.isPresent());
 
 		return optionalSchema.get();
+	}
+
+	private static Schema addFincSolrContentSchema(final Schema schema) throws DMPPersistenceException {
+
+		final ContentSchema contentSchema = createFincSolrContentSchema(schema);
+
+		schema.setContentSchema(contentSchema);
+
+		final SchemaService schemaService = GuicedTest.injector.getInstance(SchemaService.class);
+
+		schemaService.updateObjectTransactional(schema);
+
+		return schema;
+	}
+
+	private static ContentSchema createFincSolrContentSchema(final Schema schema) {
+
+		final String idAttributeURIString = "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/id";
+
+		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(schema);
+
+		final AttributePath legacyRecordIdentifierAP = aps.get(idAttributeURIString);
+
+		final String uuid = UUIDService.getUUID(ContentSchema.class.getSimpleName());
+
+		final ContentSchema contentSchema = new ContentSchema(uuid);
+		contentSchema.setName("finc Solr content schema");
+		contentSchema.setRecordIdentifierAttributePath(legacyRecordIdentifierAP);
+
+		return contentSchema;
 	}
 }
