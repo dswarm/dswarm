@@ -15,14 +15,12 @@
  */
 package org.dswarm.converter.pipe.timing;
 
-import java.io.Closeable;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
 import com.codahale.metrics.Timer.Context;
 
-public final class TimingContext implements Closeable {
+public final class TimingContext implements AutoCloseable {
 
 	private final List<Context> contexts;
 
@@ -30,12 +28,12 @@ public final class TimingContext implements Closeable {
 		this.contexts = Arrays.asList(contexts);
 	}
 
-	public void stop() {
-		contexts.forEach(Context::stop);
+	@Override
+	public void close() {
+		stop();
 	}
 
-	@Override
-	public void close() throws IOException {
-		stop();
+	public void stop() {
+		contexts.forEach(Context::stop);
 	}
 }

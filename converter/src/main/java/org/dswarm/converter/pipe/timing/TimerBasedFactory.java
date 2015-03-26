@@ -21,4 +21,6 @@ public interface TimerBasedFactory {
 
 	StreamTimer forStream(final String prefix);
 
+	XmlTimer forXml(final String prefix);
+
 }

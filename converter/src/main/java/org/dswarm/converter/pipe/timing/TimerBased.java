@@ -15,7 +15,6 @@
  */
 package org.dswarm.converter.pipe.timing;
 
-import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.codahale.metrics.Timer.Context;
@@ -27,7 +26,7 @@ import org.culturegraph.mf.framework.Sender;
 
 import static com.codahale.metrics.MetricRegistry.name;
 
-public abstract class TimerBased<R extends Receiver> implements Sender<R> {
+abstract class TimerBased<R extends Receiver> implements Sender<R> {
 
 	private final MetricRegistry registry;
 	private final String prefix;
@@ -63,7 +62,7 @@ public abstract class TimerBased<R extends Receiver> implements Sender<R> {
 	}
 
 	@Override
-	public void closeStream() {
+	public final void closeStream() {
 		if (receiver != null) {
 			final Context context = cumulativeTimer.time();
 			receiver.closeStream();

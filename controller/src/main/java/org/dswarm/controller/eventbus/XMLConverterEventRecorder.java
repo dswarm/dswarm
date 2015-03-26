@@ -30,6 +30,7 @@ import org.dswarm.converter.flow.XmlResourceFlowFactory;
 import org.dswarm.graph.json.Model;
 import org.dswarm.graph.json.Resource;
 import org.dswarm.persistence.DMPPersistenceException;
+import org.dswarm.persistence.MonitoringLogger;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
@@ -50,6 +51,7 @@ public class XMLConverterEventRecorder {
 	 */
 	private final InternalModelServiceFactory	internalServiceFactory;
 	private final Provider<XmlResourceFlowFactory> xmlFlowFactory;
+	private final Provider<MonitoringLogger> loggerProvider;
 
 	/**
 	 * Creates a new event recorder for converting XML documents with the given internal model service factory and event bus.
@@ -59,9 +61,11 @@ public class XMLConverterEventRecorder {
 	@Inject
 	public XMLConverterEventRecorder(
 			final InternalModelServiceFactory internalModelServiceFactory,
-			final Provider<XmlResourceFlowFactory> xmlFlowFactory) {
+			final Provider<XmlResourceFlowFactory> xmlFlowFactory,
+			final Provider<MonitoringLogger> loggerProvider) {
 		internalServiceFactory = internalModelServiceFactory;
 		this.xmlFlowFactory = xmlFlowFactory;
+		this.loggerProvider = loggerProvider;
 	}
 
 	/**
@@ -73,6 +77,13 @@ public class XMLConverterEventRecorder {
 	public void processDataModel(final XMLConverterEvent event) throws DMPControllerException {
 
 		final DataModel dataModel = event.getDataModel();
+
+		try (final MonitoringLogger.MonitoringHelper ignore = loggerProvider.get().startIngest(dataModel)) {
+			processDataModel(dataModel);
+		}
+	}
+
+	public void processDataModel(final DataModel dataModel) throws DMPControllerException {
 
 		GDMModel result = null;
 

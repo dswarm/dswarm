@@ -51,9 +51,9 @@ public class MonitoringCSVSourceResourceTriplesFlow extends CSVSourceResourceTri
 	protected ImmutableList<Triple> process(final ObjectPipe<String, ObjectReceiver<Reader>> opener, final String obj, final CsvReader pipe) {
 
 		final ListTripleReceiver tripleReceiver = new ListTripleReceiver();
+		final ObjectTimer<Reader> csvReaderTimer = timerBasedFactory.forObject("Input Resource Files");
 		final StreamTimer csvInputTimer = timerBasedFactory.forStream("CSV Records (Lines)");
-		final ObjectTimer csvTriplesTimer = timerBasedFactory.forObject("CSV Triples");
-		final ObjectTimer csvReaderTimer = timerBasedFactory.forObject("Input Resource Files");
+		final ObjectTimer<Triple> csvTriplesTimer = timerBasedFactory.forObject("CSV Triples");
 
 		pipe
 				.setReceiver(csvInputTimer)

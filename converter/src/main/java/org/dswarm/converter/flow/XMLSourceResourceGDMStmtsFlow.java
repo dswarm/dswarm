@@ -27,7 +27,6 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
-import org.culturegraph.mf.framework.Receiver;
 import org.culturegraph.mf.stream.converter.xml.XmlDecoder;
 import org.culturegraph.mf.stream.source.StringReader;
 import org.slf4j.Logger;
@@ -39,6 +38,7 @@ import org.dswarm.converter.mf.stream.source.BOMResourceOpener;
 import org.dswarm.converter.mf.stream.source.XMLGDMEncoder;
 import org.dswarm.converter.pipe.timing.ObjectTimer;
 import org.dswarm.converter.pipe.timing.TimerBasedFactory;
+import org.dswarm.converter.pipe.timing.XmlTimer;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
@@ -121,12 +121,17 @@ public class XMLSourceResourceGDMStmtsFlow {
 			encoder = new XMLGDMEncoder(dataModel);
 		}
 		final GDMModelReceiver writer = new GDMModelReceiver();
-		final ObjectTimer gdmModelsTimer = timerBasedFactory.forObject("gdm-models");
+
+		final ObjectTimer<Reader> inputTimer = timerBasedFactory.forObject("Input Resource Files");
+		final XmlTimer<GDMModel> xmlTimer = timerBasedFactory.forXml("XML Events");
+		final ObjectTimer<GDMModel> gdmModelsTimer = timerBasedFactory.forObject("Parsed XML Records");
 
 		final Timer.Context morphContext = morphTimer.time();
 
 		opener
+				.setReceiver(inputTimer)
 				.setReceiver(decoder)
+				.setReceiver(xmlTimer)
 				.setReceiver(encoder)
 				.setReceiver(gdmModelsTimer)
 				.setReceiver(writer);
