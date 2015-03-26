@@ -36,7 +36,6 @@ import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.flow.CSVResourceFlowFactory;
 import org.dswarm.converter.flow.CSVSourceResourceTriplesFlow;
 import org.dswarm.persistence.DMPPersistenceException;
-import org.dswarm.persistence.MonitoringLogger;
 import org.dswarm.persistence.model.proxy.RetrievalType;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
@@ -69,7 +68,6 @@ public class SchemaEventRecorder {
 	private final Provider<ClaszService>                       claszServiceProvider;
 	private final Provider<DataModelService>                   dataModelServiceProvider;
 	private final Provider<SchemaService>                      schemaServiceProvider;
-	private final Provider<MonitoringLogger>                   loggerProvider;
 
 	@Inject
 	public SchemaEventRecorder(
@@ -79,8 +77,7 @@ public class SchemaEventRecorder {
 			final Provider<AttributeService> attributeService,
 			final Provider<ClaszService> claszService,
 			final Provider<DataModelService> dataModelService,
-			final Provider<SchemaService> schemaService,
-			final Provider<MonitoringLogger> loggerProvider) {
+			final Provider<SchemaService> schemaService) {
 
 		this.flowFactory2 = flowFactory2;
 		this.schemaAttributePathInstanceServiceProvider = schemaAttributePathInstanceService;
@@ -91,7 +88,6 @@ public class SchemaEventRecorder {
 		this.schemaServiceProvider = schemaService;
 
 		// eventBus.register(this);
-		this.loggerProvider = loggerProvider;
 	}
 
 	private void createSchemaFromCsv(final SchemaEvent event) throws DMPPersistenceException, DMPConverterException {
@@ -116,9 +112,7 @@ public class SchemaEventRecorder {
 			}
 		}
 
-		try (final MonitoringLogger.MonitoringHelper ignore = loggerProvider.get().startIngest(dataModel)) {
-			createSchemaFromCsv(dataModel);
-		}
+		createSchemaFromCsv(dataModel);
 	}
 	private void createSchemaFromCsv(final DataModel dataModel) throws DMPPersistenceException, DMPConverterException {
 

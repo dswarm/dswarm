@@ -25,7 +25,7 @@ import org.dswarm.persistence.model.resource.DataModel;
  */
 public interface CSVResourceFlowFactory {
 
-	CSVSourceResourceTriplesFlow fromDataModel(final DataModel dataModel);
+	MonitoringCSVSourceResourceTriplesFlow fromDataModel(final DataModel dataModel);
 
 	CSVSourceResourceTriplesFlow fromConfiguration(final Configuration configuration);
 

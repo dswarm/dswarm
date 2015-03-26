@@ -18,8 +18,8 @@ package org.dswarm.converter.flow;
 import java.io.Reader;
 
 import com.google.common.collect.ImmutableList;
+import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.stream.converter.StreamToTriples;
@@ -27,40 +27,41 @@ import org.culturegraph.mf.types.Triple;
 
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.mf.stream.reader.CsvReader;
-import org.dswarm.persistence.model.resource.Configuration;
+import org.dswarm.converter.pipe.timing.ObjectTimer;
+import org.dswarm.converter.pipe.timing.StreamTimer;
+import org.dswarm.converter.pipe.timing.TimerBasedFactory;
 import org.dswarm.persistence.model.resource.DataModel;
 
 /**
  * @author phorn
  */
-public class CSVSourceResourceTriplesFlow extends AbstractCSVResourceFlow<ImmutableList<Triple>> {
+public class MonitoringCSVSourceResourceTriplesFlow extends CSVSourceResourceTriplesFlow {
 
-	@AssistedInject
-	private CSVSourceResourceTriplesFlow(
-			@Assisted("encoding") final String encoding,
-			@Assisted("escapeCharacter") final Character escapeCharacter,
-			@Assisted("quoteCharacter") final Character quoteCharacter,
-			@Assisted("columnDelimiter") final Character columnDelimiter,
-			@Assisted("rowDelimiter") final String rowDelimiter) {
-		super(encoding, escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter);
-	}
+	private final TimerBasedFactory timerBasedFactory;
 
-	@AssistedInject
-	private CSVSourceResourceTriplesFlow(@Assisted final Configuration configuration) throws DMPConverterException {
-		super(configuration);
-	}
-
-	protected CSVSourceResourceTriplesFlow(final DataModel dataModel) throws DMPConverterException {
+	@Inject
+	private MonitoringCSVSourceResourceTriplesFlow(
+			final TimerBasedFactory timerBasedFactory,
+			@Assisted final DataModel dataModel) throws DMPConverterException {
 		super(dataModel);
+		this.timerBasedFactory = timerBasedFactory;
 	}
 
 	@Override
 	protected ImmutableList<Triple> process(final ObjectPipe<String, ObjectReceiver<Reader>> opener, final String obj, final CsvReader pipe) {
 
 		final ListTripleReceiver tripleReceiver = new ListTripleReceiver();
+		final StreamTimer csvInputTimer = timerBasedFactory.forStream("CSV Records (Lines)");
+		final ObjectTimer csvTriplesTimer = timerBasedFactory.forObject("CSV Triples");
+		final ObjectTimer csvReaderTimer = timerBasedFactory.forObject("Input Resource Files");
 
-		pipe.setReceiver(new StreamToTriples())
+		pipe
+				.setReceiver(csvInputTimer)
+				.setReceiver(new StreamToTriples())
+				.setReceiver(csvTriplesTimer)
 				.setReceiver(tripleReceiver);
+
+		opener.setReceiver(csvReaderTimer).setReceiver(pipe);
 
 		opener.process(obj);
 		return tripleReceiver.getCollection();
