@@ -30,9 +30,10 @@ import org.dswarm.converter.flow.XmlResourceFlowFactory;
 import org.dswarm.graph.json.Model;
 import org.dswarm.graph.json.Resource;
 import org.dswarm.persistence.DMPPersistenceException;
-import org.dswarm.persistence.MonitoringLogger;
+import org.dswarm.persistence.monitoring.MonitoringLogger;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.DataModel;
+import org.dswarm.persistence.monitoring.MonitoringHelper;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
 
 /**
@@ -78,7 +79,7 @@ public class XMLConverterEventRecorder {
 
 		final DataModel dataModel = event.getDataModel();
 
-		try (final MonitoringLogger.MonitoringHelper ignore = loggerProvider.get().startIngest(dataModel)) {
+		try (final MonitoringHelper ignore = loggerProvider.get().startIngest(dataModel)) {
 			processDataModel(dataModel);
 		}
 	}

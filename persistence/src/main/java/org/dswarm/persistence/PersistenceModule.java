@@ -42,6 +42,7 @@ import org.dswarm.init.ExecutionScoped;
 import org.dswarm.init.util.DMPUtil;
 import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.job.utils.TransformationDeserializer;
+import org.dswarm.persistence.monitoring.MonitoringLogger;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.service.MaintainDBService;
 import org.dswarm.persistence.service.UUIDService;

@@ -19,9 +19,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
-import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.PathSegment;
@@ -61,17 +61,11 @@ public abstract class AbstractBaseResource {
 	 */
 	protected final URI createObjectURI(final String uuid) {
 
-		final URI baseURI = uri.getBaseUri();
-		final List<PathSegment> pathSegments = uri.getPathSegments();
-
 		try {
 			final String idEncoded = URLEncoder.encode(uuid, "UTF-8");
-			final String basePath = StringUtils.stripEnd(uri.getBaseUri().getPath(), "/");
-			final String path = pathSegments.stream()
-					.map(PathSegment::getPath)
-					.filter(Predicate.isEqual(idEncoded).negate())
-					.collect(Collectors.joining("/", basePath, "/" + idEncoded));
+			final String path = createObjectPath(idEncoded);
 
+			final URI baseURI = uri.getBaseUri();
 			return new URI(
 					baseURI.getScheme(),
 					baseURI.getAuthority(),
@@ -82,5 +76,22 @@ public abstract class AbstractBaseResource {
 			LOG.debug("couldn't encode id", e);
 			return null;
 		}
+	}
+
+	private String createObjectPath(final String uuid) {
+
+		final String basePath = StringUtils.stripEnd(uri.getBaseUri().getPath(), "/");
+
+		final Stream<String> pathWithoutId =
+				uri.getPathSegments().stream()
+						.map(PathSegment::getPath)
+						.filter(Predicate.isEqual(uuid).negate());
+
+		final Stream<String> pathSegments = Stream.concat(
+				Stream.of(basePath),
+				Stream.concat(pathWithoutId, Stream.of(uuid))
+		);
+
+		return pathSegments.collect(Collectors.joining("/"));
 	}
 }
