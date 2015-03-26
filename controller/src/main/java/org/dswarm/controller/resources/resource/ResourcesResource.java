@@ -135,6 +135,7 @@ public class ResourcesResource extends AbstractBaseResource {
 		configurationServiceProvider = configurationServiceProviderArg;
 		objectMapper = objectMapperArg;
 		dataModelUtil = dataModelUtilArg;
+		this.flowFactory2 = flowFactory2;
 	}
 
 	/**
