@@ -50,6 +50,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -213,7 +214,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	}
 
 	/**
-	 * This endpoint consumes a data model as JSON representation and updates this data model in the database.
+	 * This endpoint consumes a data model as JSON representation and updates this data model in the metadata repository.
 	 *
 	 * @param jsonObjectString a JSON representation of one data model
 	 * @param uuid             a data model identifier
@@ -232,7 +233,107 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	public Response updateObject(@ApiParam(value = "data model (as JSON)", required = true) final String jsonObjectString,
 			@ApiParam(value = "data model identifier", required = true) @PathParam("id") final String uuid) throws DMPControllerException {
 
-		return super.updateObject(jsonObjectString, uuid);
+		//if (updateContent == null || updateContent.equals(Boolean.FALSE)) {
+
+			// only the data model metadata would be updated
+			return super.updateObject(jsonObjectString, uuid);
+		//}
+
+//		DataModelsResource.LOG.debug("try to update {} '{}'", pojoClassName, uuid);
+//
+//		final DataModel objectFromDB = retrieveObject(uuid, jsonObjectString);
+//
+//		if (objectFromDB == null) {
+//
+//			return Response.status(Status.NOT_FOUND).build();
+//		}
+//
+//		// update data model metadata
+//		final Tuple<ProxyDataModel, DataModel> updateResult = updateObjectInternal2(jsonObjectString, uuid, objectFromDB);
+//
+//		// update data model content (especially)
+//		final ProxyDataModel updatedProxyDataModel = updateDataModel(updateResult.v1(), updateResult.v2());
+//
+//		if (updatedProxyDataModel == null) {
+//
+//			DataModelsResource.LOG.debug("couldn't update content for data model '{}'", uuid);
+//
+//			throw new DMPControllerException("couldn't update content for data model '" + uuid + "'");
+//		}
+//
+//		final DataModel object = updatedProxyDataModel.getObject();
+//
+//		if (object == null) {
+//
+//			DataModelsResource.LOG.debug("couldn't update content for data model '{}'", uuid);
+//
+//			throw new DMPControllerException("couldn't update content for data model '" + uuid + "'");
+//		}
+//
+//		DataModelsResource.LOG.debug("updated content for data model '{}'", uuid);
+//
+//		if (DataModelsResource.LOG.isTraceEnabled()) {
+//
+//			DataModelsResource.LOG.trace(" = '{}'", ToStringBuilder.reflectionToString(object));
+//		}
+//
+//		final String newJsonObjectString = serializeObject(updatedProxyDataModel.getObject());
+//
+//		return createUpdateResponse(updatedProxyDataModel, object, newJsonObjectString);
+	}
+
+	/**
+	 * This endpoint consumes a data model uuid and updates the data model content in the datahub.
+	 *
+	 * @param uuid             a data model identifier
+	 * @return the updated data model as JSON representation
+	 * @throws DMPControllerException
+	 */
+	@ApiOperation(value = "update data model with given id ", notes = "Returns an updated DataModel object.")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "data model was successfully updated"),
+			@ApiResponse(code = 404, message = "could not find a data model for the given id"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@POST
+	@Path("/{id}/data")
+	public Response updateDataModelData(@ApiParam(value = "data model identifier", required = true) @PathParam("id") final String uuid) throws DMPControllerException {
+
+		DataModelsResource.LOG.debug("try to update {} '{}'", pojoClassName, uuid);
+
+		final DataModel objectFromDB = retrieveObject(uuid, null);
+
+		if (objectFromDB == null) {
+
+			return Response.status(Status.NOT_FOUND).build();
+		}
+
+		final ProxyDataModel updatedProxyDataModel = updateDataModelContent(new ProxyDataModel(objectFromDB, RetrievalType.RETRIEVED), objectFromDB);
+
+		if (updatedProxyDataModel == null) {
+
+			DataModelsResource.LOG.debug("couldn't update content for data model '{}'", uuid);
+
+			throw new DMPControllerException("couldn't update content for data model '" + uuid + "'");
+		}
+
+		final DataModel object = updatedProxyDataModel.getObject();
+
+		if (object == null) {
+
+			DataModelsResource.LOG.debug("couldn't update content for data model '{}'", uuid);
+
+			throw new DMPControllerException("couldn't update content for data model '" + uuid + "'");
+		}
+
+		DataModelsResource.LOG.debug("updated content for data model '{}'", uuid);
+
+		if (DataModelsResource.LOG.isTraceEnabled()) {
+
+			DataModelsResource.LOG.trace(" = '{}'", ToStringBuilder.reflectionToString(object));
+		}
+
+		// TODO: shall we return the content here? or a restricted amount of content?
+
+		return Response.ok().build();
 	}
 
 	/**
@@ -254,41 +355,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	public Response getData(@ApiParam(value = "data model identifier", required = true) @PathParam("uuid") final String uuid,
 			@ApiParam("number of records limit") @QueryParam("atMost") final Integer atMost) throws DMPControllerException {
 
-		// final Timer.Context context = dmpStatus.getConfigurationData();
-
-		DataModelsResource.LOG.debug("try to get data for data model with uuid '{}'", uuid);
-
-		final Optional<Iterator<Tuple<String, JsonNode>>> data = dataModelUtil.getData(uuid, Optional.fromNullable(atMost));
-
-		if (!data.isPresent()) {
-
-			DataModelsResource.LOG.debug("couldn't find data for data model with uuid '{}'", uuid);
-
-			// dmpStatus.stop(context);
-			return Response.status(Status.NOT_FOUND).build();
-		}
-
-		// temp
-		final Iterator<Tuple<String, JsonNode>> tupleIterator;
-		if (atMost != null) {
-			tupleIterator = Iterators.limit(data.get(), atMost);
-		} else {
-			tupleIterator = data.get();
-		}
-
-		final ObjectNode json = objectMapperProvider.get().createObjectNode();
-		while (tupleIterator.hasNext()) {
-			final Tuple<String, JsonNode> tuple = data.get().next();
-			json.set(tuple.v1(), tuple.v2());
-		}
-
-		final String jsonString = serializeObject(json);
-
-		DataModelsResource.LOG.debug("return data for data model with uuid '{}' ", uuid);
-		DataModelsResource.LOG.trace("and content '{}'", jsonString);
-
-		// dmpStatus.stop(context);
-		return buildResponse(jsonString);
+		return getDataInternal(uuid, atMost);
 	}
 
 	/**
@@ -496,59 +563,114 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	@Override
 	protected ProxyDataModel addObject(final String objectJSONString) throws DMPControllerException {
 
-		ProxyDataModel proxyDataModel = super.addObject(objectJSONString);
+		final ProxyDataModel proxyDataModel = super.addObject(objectJSONString);
 
 		if (proxyDataModel == null) {
 
-			return proxyDataModel;
+			return null;
 		}
 
-		DataModel dataModel = proxyDataModel.getObject();
+		final DataModel dataModel = proxyDataModel.getObject();
 
 		if (dataModel == null) {
 
 			return proxyDataModel;
 		}
 
-		if (dataModel.getConfiguration() != null) {
+		return updateDataModel(proxyDataModel, dataModel);
 
-			// add configuration to data resource
-			dataModel.getDataResource().addConfiguration(dataModel.getConfiguration());
+	}
 
-			try {
+	/**
+	 * {@inheritDoc}<br/>
+	 * Updates the name, description, resource, configuration and schema of the data model.
+	 */
+	@Override
+	protected DataModel prepareObjectForUpdate(final DataModel objectFromJSON, final DataModel object) {
 
-				final ProxyDataModel proxyUpdatedDataModel = persistenceServiceProvider.get().updateObjectTransactional(dataModel);
+		super.prepareObjectForUpdate(objectFromJSON, object);
 
-				if (proxyUpdatedDataModel == null) {
+		object.setDataResource(objectFromJSON.getDataResource());
+		object.setConfiguration(objectFromJSON.getConfiguration());
+		object.setSchema(objectFromJSON.getSchema());
 
-					DataModelsResource.LOG.error("something went wrong, when trying to add configuration to data resource of data model '{}'", dataModel.getUuid());
+		return object;
+	}
 
-					proxyDataModel = null;
-				} else {
+	/**
+	 * add configuration to data resource + update data model content
+	 *
+	 * @param proxyDataModel
+	 * @param dataModel
+	 * @return
+	 * @throws DMPControllerException
+	 */
+	private ProxyDataModel updateDataModel(final ProxyDataModel proxyDataModel, final DataModel dataModel) throws DMPControllerException {
 
-					final RetrievalType type = proxyDataModel.getType();
+		final ProxyDataModel newProxyDataModel = addConfigurationToDataResource(proxyDataModel, dataModel);
 
-					proxyDataModel = new ProxyDataModel(proxyUpdatedDataModel.getObject(), type);
-				}
-			} catch (final DMPPersistenceException e) {
+		final DataModel newDataModel = newProxyDataModel.getObject();
 
-				DataModelsResource.LOG.error("something went wrong, when trying to add configuration to data resource of data model '{}'", dataModel.getUuid());
+		if (newDataModel == null) {
 
-				proxyDataModel = null;
+			return proxyDataModel;
+		}
+
+		return updateDataModelContent(newProxyDataModel, newDataModel);
+	}
+
+	private ProxyDataModel addConfigurationToDataResource(final ProxyDataModel proxyDataModel, final DataModel dataModel)
+			throws DMPControllerException {
+
+		if (dataModel.getConfiguration() == null) {
+
+			final String message = String.format("could not add configuration to data resource, because the data model '%s' has no configuration", dataModel.getUuid());
+
+			DataModelsResource.LOG.debug(message);
+
+			return proxyDataModel;
+		}
+
+		if (dataModel.getDataResource() == null) {
+
+			final String message = String.format("could not add configuration to data resource, because the data model '%s' has no resource", dataModel.getUuid());
+
+			DataModelsResource.LOG.debug(message);
+
+			return proxyDataModel;
+		}
+
+		// add configuration to data resource
+		dataModel.getDataResource().addConfiguration(dataModel.getConfiguration());
+
+		try {
+
+			final ProxyDataModel proxyUpdatedDataModel = persistenceServiceProvider.get().updateObjectTransactional(dataModel);
+
+			if (proxyUpdatedDataModel == null) {
+
+				final String message = String.format("something went wrong, when trying to add configuration '%s' to data resource '%s' of data model '%s'", dataModel.getConfiguration().getUuid(), dataModel.getDataResource().getUuid(), dataModel.getUuid());
+
+				DataModelsResource.LOG.error(message);
+
+				throw new DMPControllerException(message);
 			}
+
+			final RetrievalType type = proxyDataModel.getType();
+
+			return new ProxyDataModel(proxyUpdatedDataModel.getObject(), type);
+
+		} catch (final DMPPersistenceException e) {
+
+			final String message = String.format("something went wrong, when trying to add configuration '%s' to data resource '%s' of data model '%s'", dataModel.getConfiguration().getUuid(), dataModel.getDataResource().getUuid(), dataModel.getUuid());
+
+			DataModelsResource.LOG.error(message, e);
+
+			throw new DMPControllerException(message, e);
 		}
+	}
 
-		if (proxyDataModel == null) {
-
-			return proxyDataModel;
-		}
-
-		dataModel = proxyDataModel.getObject();
-
-		if (dataModel == null) {
-
-			return proxyDataModel;
-		}
+	private ProxyDataModel updateDataModelContent(final ProxyDataModel proxyDataModel, final DataModel dataModel) throws DMPControllerException {
 
 		// final Timer.Context context = dmpStatus.createNewConfiguration();
 
@@ -566,14 +688,18 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 		}
 
 		final JsonNode jsStorageType = configuration.getParameters().get(ConfigurationStatics.STORAGE_TYPE);
+
 		if (jsStorageType != null) {
+
 			final String storageType = jsStorageType.asText();
 
 			try {
+
 				final SchemaEvent.SchemaType type = SchemaEvent.SchemaType.fromString(storageType);
 				final SchemaEvent schemaEvent = new SchemaEvent(dataModel, type);
 				schemaEventRecorderProvider.get().convertSchema(schemaEvent);
 			} catch (final IllegalArgumentException e) {
+
 				DataModelsResource.LOG.warn("could not determine schema type", e);
 			}
 
@@ -616,25 +742,53 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 		final DataModel freshDataModel = persistenceService.getObject(dataModel.getUuid());
 		final RetrievalType type = proxyDataModel.getType();
 
-		proxyDataModel = new ProxyDataModel(freshDataModel, type);
-
-		return proxyDataModel;
+		return new ProxyDataModel(freshDataModel, type);
 	}
 
-	/**
-	 * {@inheritDoc}<br/>
-	 * Updates the name, description, resource, configuration and schema of the data model.
-	 */
-	@Override
-	protected DataModel prepareObjectForUpdate(final DataModel objectFromJSON, final DataModel object) {
+	private Response getDataInternal(final String uuid, final Integer atMost) throws DMPControllerException {
 
-		super.prepareObjectForUpdate(objectFromJSON, object);
+		// final Timer.Context context = dmpStatus.getConfigurationData();
 
-		object.setDataResource(objectFromJSON.getDataResource());
-		object.setConfiguration(objectFromJSON.getConfiguration());
-		object.setSchema(objectFromJSON.getSchema());
+		DataModelsResource.LOG.debug("try to get data for data model with uuid '{}'", uuid);
 
-		return object;
+		final Optional<Iterator<Tuple<String, JsonNode>>> data = dataModelUtil.getData(uuid, Optional.fromNullable(atMost));
+
+		if (!data.isPresent()) {
+
+			DataModelsResource.LOG.debug("couldn't find data for data model with uuid '{}'", uuid);
+
+			// dmpStatus.stop(context);
+			return Response.status(Status.NOT_FOUND).build();
+		}
+
+		// temp
+		final Iterator<Tuple<String, JsonNode>> tupleIterator;
+
+		if (atMost != null) {
+
+			tupleIterator = Iterators.limit(data.get(), atMost);
+		} else {
+
+			tupleIterator = data.get();
+		}
+
+		final ObjectNode json = objectMapperProvider.get().createObjectNode();
+		while (tupleIterator.hasNext()) {
+			final Tuple<String, JsonNode> tuple = data.get().next();
+			json.set(tuple.v1(), tuple.v2());
+		}
+
+		final String jsonString = serializeObject(json);
+
+		DataModelsResource.LOG.debug("return data for data model with uuid '{}' ", uuid);
+
+		if(DataModelsResource.LOG.isTraceEnabled()) {
+
+			DataModelsResource.LOG.trace("and content '{}'", jsonString);
+		}
+
+		// dmpStatus.stop(context);
+		return buildResponse(jsonString);
 	}
 
 	private Client client() {

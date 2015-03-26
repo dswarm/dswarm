@@ -210,9 +210,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 		final POJOCLASS expectedObject = objectMapper.readValue(updateObjectJSONString, pojoClass);
 
-		final POJOCLASS updatedObject = updateObject(updateObjectJSONString, expectedObject);
-
-		return updatedObject;
+		return updateObject(updateObjectJSONString, expectedObject);
 	}
 
 	public Response executeCreateObject(final String objectJSONString) throws Exception {

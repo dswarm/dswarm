@@ -15,6 +15,8 @@
  */
 package org.dswarm.init;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
@@ -53,8 +55,8 @@ final class LoggingAppender {
 	private final String logFileBaseName;
 	private final String name;
 	private final Level level;
-	private final Optional<String> marker;
-	private final FilterReply markerReply;
+	private final Optional<String> allowMarker;
+	private final Optional<List<String>> denyMarkers;
 	private final String pattern;
 	private final int maxFileSizeInMB;
 	private final int maxHistory;
@@ -67,8 +69,8 @@ final class LoggingAppender {
 			final String logFileBaseName,
 			final String name,
 			final Level level,
-			final Optional<String> marker,
-			final FilterReply markerReply,
+			final Optional<String> allowMarker,
+			final Optional<List<String>> denyMarkers,
 			final String pattern,
 			final int maxFileSizeInMB,
 			final int maxHistory,
@@ -79,8 +81,8 @@ final class LoggingAppender {
 		this.logFileBaseName = logFileBaseName;
 		this.name = name;
 		this.level = level;
-		this.marker = marker;
-		this.markerReply = markerReply;
+		this.allowMarker = allowMarker;
+		this.denyMarkers = denyMarkers;
 		this.pattern = pattern;
 		this.maxFileSizeInMB = maxFileSizeInMB;
 		this.maxHistory = maxHistory;
@@ -101,14 +103,11 @@ final class LoggingAppender {
 				.withMaxFileSizeInMB(prototype.maxFileSizeInMB)
 				.withMaxHistory(prototype.maxHistory);
 		prototype.extraPaths.forEach(builder::addPath);
+		prototype.allowMarker.ifPresent(builder::withMarker);
 		prototype.discriminationKey.ifPresent(builder::withDiscriminationKey);
-
-		if (prototype.markerReply == FilterReply.ACCEPT) {
-			prototype.marker.ifPresent(builder::withMarker);
-		} else if (prototype.markerReply == FilterReply.DENY) {
-			prototype.marker.ifPresent(builder::withoutMarker);
-		}
-
+		prototype.denyMarkers
+				.map(ms -> ms.toArray(new String[ms.size()]))
+				.ifPresent(builder::withoutMarkers);
 		return builder;
 	}
 
@@ -155,21 +154,30 @@ final class LoggingAppender {
 		return filter;
 	}
 
-	private Function<String, Filter<ILoggingEvent>> markerFilter(final Context context) {
-		return marker -> markerFilter(marker, context);
+	private static Function<String, Filter<ILoggingEvent>> markerFilter(
+			final Context context, final FilterReply reply) {
+		return marker -> markerFilter(context, reply, Collections.singleton(marker));
 	}
 
-	private Filter<ILoggingEvent> markerFilter(final String marker, final Context context) {
+	private static Function<Iterable<String>, Filter<ILoggingEvent>> markersFilter(
+			final Context context, final FilterReply reply) {
+		return markers -> markerFilter(context, reply, markers);
+	}
+
+	private static Filter<ILoggingEvent> markerFilter(
+			final Context context,
+			final FilterReply reply,
+			final Iterable<String> markers) {
 		final OnMarkerEvaluator markerEvaluator = new OnMarkerEvaluator();
 		markerEvaluator.setContext(context);
-		markerEvaluator.addMarker(marker);
+		markers.forEach(markerEvaluator::addMarker);
 		markerEvaluator.start();
 
 		final EvaluatorFilter<ILoggingEvent> filter = new EvaluatorFilter<>();
 		filter.setContext(context);
 		filter.setEvaluator(markerEvaluator);
-		filter.setOnMatch(markerReply);
-		filter.setOnMismatch(markerReply == FilterReply.ACCEPT ? FilterReply.DENY : FilterReply.NEUTRAL);
+		filter.setOnMatch(reply);
+		filter.setOnMismatch(reply == FilterReply.ACCEPT ? FilterReply.DENY : FilterReply.NEUTRAL);
 		filter.start();
 
 		return filter;
@@ -194,7 +202,12 @@ final class LoggingAppender {
 
 		rollingPolicy.setParent(fileAppender);
 		fileAppender.setRollingPolicy(rollingPolicy);
-		marker.map(markerFilter(context)).ifPresent(fileAppender::addFilter);
+		allowMarker
+				.map(markerFilter(context, FilterReply.ACCEPT))
+				.ifPresent(fileAppender::addFilter);
+		denyMarkers
+				.map(markersFilter(context, FilterReply.DENY))
+				.ifPresent(fileAppender::addFilter);
 		fileAppender.addFilter(levelFilter(context));
 		fileAppender.setEncoder(encoder(context));
 
@@ -254,8 +267,8 @@ final class LoggingAppender {
 		private String logFileBaseName = "messages";
 		private Level level = Level.INFO;
 		private String pattern = "%date %level [%thread] %logger [%file:%line] %msg%n";
-		private Optional<String> marker = Optional.empty();
-		private FilterReply markerReply = FilterReply.NEUTRAL;
+		private Optional<String> allowMarker = Optional.empty();
+		private Optional<List<String>> denyMarkers = Optional.empty();
 		private int maxFileSizeInMB = 50;
 		private int maxHistory = 30;
 		private Optional<String> discriminationKey = Optional.empty();
@@ -295,14 +308,18 @@ final class LoggingAppender {
 		}
 
 		Builder withMarker(final String marker) {
-			this.marker = Optional.of(marker);
-			this.markerReply = FilterReply.ACCEPT;
+			denyMarkers = Optional.empty();
+			allowMarker = Optional.of(marker);
 			return this;
 		}
 
-		Builder withoutMarker(final String marker) {
-			this.marker = Optional.of(marker);
-			this.markerReply = FilterReply.DENY;
+		Builder withoutMarkers(final String... markers) {
+			allowMarker = Optional.empty();
+			if (markers.length == 0) {
+				denyMarkers = Optional.empty();
+			} else {
+				denyMarkers = Optional.of(Arrays.asList(markers));
+			}
 			return this;
 		}
 
@@ -329,8 +346,8 @@ final class LoggingAppender {
 					logFileBaseName,
 					name,
 					level,
-					marker,
-					markerReply,
+					allowMarker,
+					denyMarkers,
 					pattern,
 					maxFileSizeInMB,
 					maxHistory,

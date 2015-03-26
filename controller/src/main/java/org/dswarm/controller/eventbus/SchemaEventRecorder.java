@@ -18,6 +18,7 @@ package org.dswarm.controller.eventbus;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Optional;
@@ -35,6 +36,7 @@ import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.flow.CSVResourceFlowFactory;
 import org.dswarm.converter.flow.CSVSourceResourceTriplesFlow;
 import org.dswarm.persistence.DMPPersistenceException;
+import org.dswarm.persistence.MonitoringLogger;
 import org.dswarm.persistence.model.proxy.RetrievalType;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
@@ -60,22 +62,27 @@ public class SchemaEventRecorder {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SchemaEventRecorder.class);
 
+	private final Provider<CSVResourceFlowFactory>            flowFactory2;
 	private final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceServiceProvider;
 	private final Provider<AttributePathService>               attributePathServiceProvider;
 	private final Provider<AttributeService>                   attributeServiceProvider;
 	private final Provider<ClaszService>                       claszServiceProvider;
 	private final Provider<DataModelService>                   dataModelServiceProvider;
 	private final Provider<SchemaService>                      schemaServiceProvider;
+	private final Provider<MonitoringLogger>                   loggerProvider;
 
 	@Inject
-	public SchemaEventRecorder(final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceService,
-			final Provider<AttributePathService> attributePathService, final Provider<AttributeService> attributeService,
-			final Provider<ClaszService> claszService, final Provider<DataModelService> dataModelService, final Provider<SchemaService> schemaService/*
-																														 * , final
-																														 * EventBus
-																														 * eventBus
-																														 */) {
+	public SchemaEventRecorder(
+			final Provider<CSVResourceFlowFactory> flowFactory2,
+			final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceService,
+			final Provider<AttributePathService> attributePathService,
+			final Provider<AttributeService> attributeService,
+			final Provider<ClaszService> claszService,
+			final Provider<DataModelService> dataModelService,
+			final Provider<SchemaService> schemaService,
+			final Provider<MonitoringLogger> loggerProvider) {
 
+		this.flowFactory2 = flowFactory2;
 		this.schemaAttributePathInstanceServiceProvider = schemaAttributePathInstanceService;
 		this.attributePathServiceProvider = attributePathService;
 		this.attributeServiceProvider = attributeService;
@@ -84,6 +91,7 @@ public class SchemaEventRecorder {
 		this.schemaServiceProvider = schemaService;
 
 		// eventBus.register(this);
+		this.loggerProvider = loggerProvider;
 	}
 
 	private void createSchemaFromCsv(final SchemaEvent event) throws DMPPersistenceException, DMPConverterException {
@@ -107,6 +115,12 @@ public class SchemaEventRecorder {
 				dataModel = null;
 			}
 		}
+
+		try (final MonitoringLogger.MonitoringHelper ignore = loggerProvider.get().startIngest(dataModel)) {
+			createSchemaFromCsv(dataModel);
+		}
+	}
+	private void createSchemaFromCsv(final DataModel dataModel) throws DMPPersistenceException, DMPConverterException {
 
 		final List<Triple> triples = dataModel == null ? null : triplesFromCsv(dataModel.getDataResource(), dataModel.getConfiguration()).orNull();
 
@@ -175,9 +189,7 @@ public class SchemaEventRecorder {
 
 		final Set<String> stringAttributes = Sets.newLinkedHashSet();
 
-		for (final Triple triple : triples) {
-			stringAttributes.add(triple.getPredicate());
-		}
+		stringAttributes.addAll(triples.stream().map(Triple::getPredicate).collect(Collectors.toList()));
 
 		final AttributeService attributeService = attributeServiceProvider.get();
 		final AttributePathService attributePathService = attributePathServiceProvider.get();
@@ -243,7 +255,7 @@ public class SchemaEventRecorder {
 		final List<Triple> result;
 
 		try {
-			final CSVSourceResourceTriplesFlow flow = CSVResourceFlowFactory.fromConfiguration(configuration, CSVSourceResourceTriplesFlow.class);
+			final CSVSourceResourceTriplesFlow flow = flowFactory2.get().fromConfiguration(configuration);
 
 			result = flow.applyFile(filePath);
 

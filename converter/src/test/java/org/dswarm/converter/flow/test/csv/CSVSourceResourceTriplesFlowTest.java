@@ -20,7 +20,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.node.TextNode;
+import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
+import com.google.inject.ProvisionException;
 import org.culturegraph.mf.stream.source.ResourceOpener;
 import org.culturegraph.mf.types.Triple;
 import org.hamcrest.CoreMatchers;
@@ -30,15 +32,20 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import org.dswarm.converter.DMPConverterException;
+import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.flow.CSVResourceFlowFactory;
 import org.dswarm.converter.flow.CSVSourceResourceTriplesFlow;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.service.UUIDService;
 
-public class CSVSourceResourceTriplesFlowTest {
+public class CSVSourceResourceTriplesFlowTest extends GuicedTest {
 
-	private void testFlow(final CSVSourceResourceTriplesFlow flow, final String fileName, final int rowNumbers, final int columnNumbers,
+	private static void testFlow(
+			final CSVSourceResourceTriplesFlow flow,
+			final String fileName,
+			final int rowNumbers,
+			final int columnNumbers,
 			final Matcher<String> predicateMatcher) throws DMPConverterException {
 		final ResourceOpener opener = new ResourceOpener();
 
@@ -63,8 +70,9 @@ public class CSVSourceResourceTriplesFlowTest {
 	@Test
 	public void testEndToEnd() throws Exception {
 
-		final CSVSourceResourceTriplesFlow flow = CSVResourceFlowFactory.fromConfigurationParameters("UTF-8", '\\', '"', ';', "\n",
-				CSVSourceResourceTriplesFlow.class);
+		final CSVSourceResourceTriplesFlow flow = injector
+				.getInstance(CSVResourceFlowFactory.class)
+				.fromConfigurationParameters(Charsets.UTF_8.name(), '\\', '"', ';', "\n");
 
 		@SuppressWarnings("unchecked")
 		final Matcher<String> predicateMatcher = CoreMatchers.anyOf(CoreMatchers.equalTo("id"), CoreMatchers.equalTo("name"),
@@ -76,8 +84,9 @@ public class CSVSourceResourceTriplesFlowTest {
 	@Test
 	public void testEndToEnd2() throws Exception {
 
-		final CSVSourceResourceTriplesFlow flow = CSVResourceFlowFactory.fromConfigurationParameters("UTF-8", '\\', '"', ',', "\n",
-				CSVSourceResourceTriplesFlow.class);
+		final CSVSourceResourceTriplesFlow flow = injector
+				.getInstance(CSVResourceFlowFactory.class)
+				.fromConfigurationParameters(Charsets.UTF_8.name(), '\\', '"', ',', "\n");
 
 		@SuppressWarnings("unchecked")
 		final Matcher<String> predicateMatcher = CoreMatchers.anyOf(CoreMatchers.equalTo("spalte1"), CoreMatchers.equalTo("spalte2"));
@@ -88,8 +97,9 @@ public class CSVSourceResourceTriplesFlowTest {
 	@Test
 	public void testEndToEnd3() throws Exception {
 
-		final CSVSourceResourceTriplesFlow flow = CSVResourceFlowFactory.fromConfigurationParameters("UTF-8", '\\', '"', ',', "\n",
-				CSVSourceResourceTriplesFlow.class);
+		final CSVSourceResourceTriplesFlow flow = injector
+				.getInstance(CSVResourceFlowFactory.class)
+				.fromConfigurationParameters(Charsets.UTF_8.name(), '\\', '"', ',', "\n");
 
 		@SuppressWarnings("unchecked")
 		final Matcher<String> predicateMatcher = CoreMatchers.anyOf(CoreMatchers.equalTo("spalte1"), CoreMatchers.equalTo("spalte2"));
@@ -110,7 +120,9 @@ public class CSVSourceResourceTriplesFlowTest {
 		configuration.addParameter(ConfigurationStatics.QUOTE_CHARACTER, new TextNode("\""));
 		configuration.addParameter(ConfigurationStatics.ROW_DELIMITER, new TextNode("\n"));
 
-		final CSVSourceResourceTriplesFlow flow = CSVResourceFlowFactory.fromConfiguration(configuration, CSVSourceResourceTriplesFlow.class);
+		final CSVSourceResourceTriplesFlow flow = injector
+				.getInstance(CSVResourceFlowFactory.class)
+				.fromConfiguration(configuration);
 
 		@SuppressWarnings("unchecked")
 		final Matcher<String> predicateMatcher = CoreMatchers.anyOf(CoreMatchers.equalTo("id"), CoreMatchers.equalTo("name"),
@@ -119,21 +131,26 @@ public class CSVSourceResourceTriplesFlowTest {
 		testFlow(flow, "test_csv.csv", 19, 5, predicateMatcher);
 	}
 
-	@Test(expected = DMPConverterException.class)
+	@Test(expected = ProvisionException.class)
 	public void testNullConfiguration() throws Exception {
 		final Configuration configuration = null;
 		@SuppressWarnings("UnusedDeclaration")
-		final CSVSourceResourceTriplesFlow flow = new CSVSourceResourceTriplesFlow(configuration);
+		final CSVSourceResourceTriplesFlow flow = injector
+				.getInstance(CSVResourceFlowFactory.class)
+				.fromConfiguration(configuration);
 	}
 
-	@Test(expected = DMPConverterException.class)
+	@Test(expected = ProvisionException.class)
 	public void testNullConfigurationParameter() throws Exception {
 
 		final String uuid = UUIDService.getUUID(Configuration.class.getSimpleName());
 
 		final Configuration configuration = new Configuration(uuid);
 		@SuppressWarnings("UnusedDeclaration")
-		final CSVSourceResourceTriplesFlow flow = new CSVSourceResourceTriplesFlow(configuration);
+
+		final CSVSourceResourceTriplesFlow flow = injector
+				.getInstance(CSVResourceFlowFactory.class)
+				.fromConfiguration(configuration);
 	}
 
 	@Test
@@ -145,7 +162,9 @@ public class CSVSourceResourceTriplesFlowTest {
 
 		configuration.addParameter(ConfigurationStatics.COLUMN_DELIMITER, new TextNode(";"));
 
-		final CSVSourceResourceTriplesFlow flow = new CSVSourceResourceTriplesFlow(configuration);
+		final CSVSourceResourceTriplesFlow flow = injector
+				.getInstance(CSVResourceFlowFactory.class)
+				.fromConfiguration(configuration);
 
 		@SuppressWarnings("unchecked")
 		final Matcher<String> predicateMatcher = CoreMatchers.anyOf(CoreMatchers.equalTo("id"), CoreMatchers.equalTo("name"),

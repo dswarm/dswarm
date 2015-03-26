@@ -186,4 +186,27 @@ public class ResourcesResourceTestUtils
 		return responseConfiguration;
 	}
 
+	public String updateResource(final File resourceFile, final Resource expectedResource, final String uuid) throws Exception {
+
+		final FormDataMultiPart form = new FormDataMultiPart();
+		form.field("name", expectedResource.getName());
+		form.field("description", expectedResource.getDescription());
+		form.bodyPart(new FileDataBodyPart("file", resourceFile, MediaType.MULTIPART_FORM_DATA_TYPE));
+
+		final Response response = target(String.valueOf(uuid)).request(MediaType.MULTIPART_FORM_DATA_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+				.put(Entity.entity(form, MediaType.MULTIPART_FORM_DATA));
+
+		Assert.assertEquals("200 OK was expected", 200, response.getStatus());
+
+		final String responseResourceString = response.readEntity(String.class);
+
+		Assert.assertNotNull("resource shouldn't be null", responseResourceString);
+
+		final Resource responseResource = objectMapper.readValue(responseResourceString, Resource.class);
+
+		getPersistenceServiceTestUtils().compareObjects(expectedResource, responseResource);
+
+		return responseResourceString;
+	}
+
 }

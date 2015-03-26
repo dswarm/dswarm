@@ -18,6 +18,8 @@ package org.dswarm.converter.flow;
 import java.io.Reader;
 import java.io.StringWriter;
 
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.stream.sink.ObjectJavaIoWriter;
@@ -29,18 +31,25 @@ import org.dswarm.persistence.model.resource.Configuration;
 
 /**
  * Flow that reads and parses a given CSV document and returns a preview of its content.
- * 
+ *
  * @author tgaengler
  * @author phorn
  */
 public class CSVSourceResourceCSVPreviewFlow extends AbstractCSVResourceFlow<String> {
 
-	public CSVSourceResourceCSVPreviewFlow(final String encoding, final Character escapeCharacter, final Character quoteCharacter,
-			final Character columnDelimiter, final String rowDelimiter) {
+	@AssistedInject
+	private CSVSourceResourceCSVPreviewFlow(
+			@Assisted("encoding") final String encoding,
+			@Assisted("escapeCharacter") final Character escapeCharacter,
+			@Assisted("quoteCharacter") final Character quoteCharacter,
+			@Assisted("columnDelimiter") final Character columnDelimiter,
+			@Assisted("rowDelimiter") final String rowDelimiter) {
 		super(encoding, escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter);
 	}
 
-	public CSVSourceResourceCSVPreviewFlow(final Configuration configuration) throws DMPConverterException {
+	@AssistedInject
+	private CSVSourceResourceCSVPreviewFlow(
+			@Assisted final Configuration configuration) throws DMPConverterException {
 		super(configuration);
 	}
 
