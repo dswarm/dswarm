@@ -21,16 +21,22 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
+import com.codahale.metrics.Counter;
+import com.codahale.metrics.Gauge;
+import com.codahale.metrics.Histogram;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.Metered;
 import com.codahale.metrics.MetricFilter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Reporter;
+import com.codahale.metrics.ScheduledReporter;
 import com.codahale.metrics.Snapshot;
 import com.codahale.metrics.Timer;
 import com.codahale.metrics.Timer.Context;
@@ -68,8 +74,11 @@ public final class MonitoringLogger implements Reporter {
 	private final Logger logger;
 	private final long rateFactor;
 	private final double durationFactor;
-	private final String durationUnit;
-	private final String rateUnit;
+	private final TimeUnit durationUnit;
+	private final String durationUnitName;
+	private final TimeUnit rateUnit;
+	private final String rateUnitName;
+	private final long continuousInterval;
 	private final MarkedTimer executionsTimer;
 	private final MarkedTimer ingestTimer;
 	private final List<MarkedTimer> specialTimers;
@@ -84,17 +93,21 @@ public final class MonitoringLogger implements Reporter {
 	private MonitoringLogger(
 			@Named("Monitoring") final ObjectMapper mapper,
 			@Named("Monitoring") final MetricRegistry registry,
-			@Named("Monitoring") final Logger logger) {
+			@Named("Monitoring") final Logger logger,
+			@Named("dswarm.monitoring.rate-unit") final String rateUnitFromConfig,
+			@Named("dswarm.monitoring.duration-unit") final String durationUnitFromConfig,
+			@Named("dswarm.monitoring.continuous-interval") final long continuousIntervalInMillisFromConfig) {
 		this.mapper = mapper;
 		this.registry = registry;
 		this.logger = logger;
 
-		// TODO: config value
-		final TimeUnit rateUnit = TimeUnit.SECONDS;
-		final TimeUnit durationUnit = TimeUnit.MILLISECONDS;
+		rateUnit = TimeUnit.valueOf(rateUnitFromConfig.toUpperCase());
+		durationUnit = TimeUnit.valueOf(durationUnitFromConfig.toUpperCase());
+		continuousInterval = continuousIntervalInMillisFromConfig;
 
-		this.rateUnit = calculateRateUnit(rateUnit);
-		this.durationUnit = durationUnit.toString().toLowerCase(Locale.US);
+		rateUnitName =  rateUnitFromConfig.substring(0, rateUnitFromConfig.length() - 1);
+		durationUnitName = durationUnitFromConfig;
+
 		rateFactor = rateUnit.toSeconds(1);
 		durationFactor = 1.0 / durationUnit.toNanos(1);
 
@@ -124,6 +137,13 @@ public final class MonitoringLogger implements Reporter {
 		final SortedMap<String, Meter> meters = registry.getMeters();
 		final SortedMap<String, Timer> timers = registry.getTimers(noSpecialTimer);
 
+		report(selectSpecialTimer, meters, timers);
+	}
+
+	private void report(
+			final Predicate<MarkedTimer> selectSpecialTimer,
+			final Map<String, Meter> meters,
+			final Map<String, Timer> timers) {
 		meters.forEach(this::logMeter);
 		timers.forEach(this::logTimer);
 
@@ -195,7 +215,7 @@ public final class MonitoringLogger implements Reporter {
 			generator.writeNumberField("m1", convertRate(meter.getOneMinuteRate()));
 			generator.writeNumberField("m5", convertRate(meter.getFiveMinuteRate()));
 			generator.writeNumberField("m15", convertRate(meter.getFifteenMinuteRate()));
-			generator.writeStringField("rate_unit", rateUnit);
+			generator.writeStringField("rate_unit", rateUnitName);
 		} catch (final IOException e) {
 			throw new MonitoringException(e);
 		}
@@ -213,15 +233,10 @@ public final class MonitoringLogger implements Reporter {
 			generator.writeNumberField("p98", convertDuration(snapshot.get98thPercentile()));
 			generator.writeNumberField("p99", convertDuration(snapshot.get99thPercentile()));
 			generator.writeNumberField("p999", convertDuration(snapshot.get999thPercentile()));
-			generator.writeStringField("duration_unit", durationUnit);
+			generator.writeStringField("duration_unit", durationUnitName);
 		} catch (final IOException e) {
 			throw new MonitoringException(e);
 		}
-	}
-
-	private static String calculateRateUnit(final TimeUnit unit) {
-		final String s = unit.toString().toLowerCase(Locale.US);
-		return s.substring(0, s.length() - 1);
 	}
 
 	private double convertDuration(final double duration) {
@@ -252,7 +267,7 @@ public final class MonitoringLogger implements Reporter {
 		monitorEntity(dataModel.getDataResource());
 		monitorEntity(dataModel.getSchema());
 
-		return new MonitoringHelper(ingestTimer, dataModel, mdc, this);
+		return startMonitoring(ingestTimer, dataModel, mdc);
 	}
 
 	public MonitoringHelper startExecution(final Task task) {
@@ -262,7 +277,18 @@ public final class MonitoringLogger implements Reporter {
 		monitorEntity(task.getInputDataModel(), "source");
 		monitorEntity(task.getOutputDataModel(), "target");
 
-		return new MonitoringHelper(executionsTimer, task, mdc, this);
+		return startMonitoring(executionsTimer, task, mdc);
+	}
+
+	private MonitoringHelper startMonitoring(final MarkedTimer timer, final DMPObject entity, final MDCCloseable mdc) {
+		final ContinuousReporter reporter = new ContinuousReporter(timer);
+		if (logger.isInfoEnabled()) {
+			reporter.start(continuousInterval, TimeUnit.MILLISECONDS);
+		} else {
+			reporter.stop();
+		}
+
+		return new MonitoringHelper(timer, entity, mdc, reporter, this);
 	}
 
 	private static MDCCloseable setEntityIdentifier(final ExtendedBasicDMPJPAObject entity) {
@@ -274,7 +300,7 @@ public final class MonitoringLogger implements Reporter {
 		final String baseIdentifier = getBaseIdentifier(entity);
 		final String identifier = normalizeIdentifier(baseIdentifier);
 
-		return StringUtils.abbreviate(identifier, 65);
+		return StringUtils.abbreviate(identifier, 125);
 	}
 
 	private static String getBaseIdentifier(final ExtendedBasicDMPJPAObject entity) {
@@ -323,16 +349,19 @@ public final class MonitoringLogger implements Reporter {
 		private final MarkedTimer timer;
 		private final DMPObject entity;
 		private final MDCCloseable identifier;
+		private final ScheduledReporter reporter;
 		private final MonitoringLogger logger;
 
 		private MonitoringHelper(
 				final MarkedTimer timer,
 				final DMPObject entity,
 				final MDCCloseable identifier,
+				final ScheduledReporter reporter,
 				final MonitoringLogger logger) {
 			this.timer = timer;
 			this.entity = entity;
 			this.identifier = identifier;
+			this.reporter = reporter;
 			this.logger = logger;
 
 			logger.logActionWithMarker(entity, timer.marker, Operation.START);
@@ -342,9 +371,50 @@ public final class MonitoringLogger implements Reporter {
 		@Override
 		public void close() {
 			context.close();
+			reporter.close();
 			logger.logActionWithMarker(entity, timer.marker, Operation.FINISHED);
 			logger.report(mt -> mt.equals(timer));
 			identifier.close();
+		}
+	}
+
+	private final class ContinuousReporter extends ScheduledReporter {
+
+		private final Logger logger = MonitoringLogger.this.logger;
+		private final Marker marker;
+
+		private ContinuousReporter(final MarkedTimer specialTimer) {
+
+			super(
+					registry,
+					"continuous-execution-reporter",
+					(name, metric) -> name.endsWith(".cumulative"),
+					rateUnit,
+					durationUnit);
+			this.marker = specialTimer.marker;
+		}
+
+		@Override
+		public void report(
+				final SortedMap<String, Gauge> gauges,
+				final SortedMap<String, Counter> counters,
+				final SortedMap<String, Histogram> histograms,
+				final SortedMap<String, Meter> meters,
+				final SortedMap<String, Timer> timers) {
+
+			final String status = timers.entrySet().stream()
+					.filter(entry -> entry.getValue().getCount() > 0)
+					.map(entry -> {
+						final String name = StringUtils.removeEnd(entry.getKey(), ".cumulative");
+						final long count = entry.getValue().getCount();
+						return String.format("%s of %s", count, name);
+					})
+					.collect(Collectors.joining(", "));
+
+			if (!status.isEmpty()) {
+				logger.info(marker, "{} in progress - {} so far",
+						marker.toString().toLowerCase(), status);
+			}
 		}
 	}
 
