@@ -32,8 +32,6 @@ public abstract class TimerBased<R extends Receiver> implements Sender<R> {
 	private final MetricRegistry registry;
 	private final String prefix;
 	private final Timer cumulativeTimer;
-	private final Meter resetsMeter;
-	private final Meter closesMeter;
 
 	private R receiver;
 
@@ -45,8 +43,6 @@ public abstract class TimerBased<R extends Receiver> implements Sender<R> {
 		this.prefix = prefix;
 
 		cumulativeTimer = registry.timer(name(prefix, "cumulative"));
-		resetsMeter = registry.meter(name(prefix, "resets"));
-		closesMeter = registry.meter(name(prefix, "closes"));
 	}
 
 	@Override
@@ -61,7 +57,6 @@ public abstract class TimerBased<R extends Receiver> implements Sender<R> {
 
 	@Override
 	public void resetStream() {
-		resetsMeter.mark();
 		if (receiver != null) {
 			receiver.resetStream();
 		}
@@ -69,7 +64,6 @@ public abstract class TimerBased<R extends Receiver> implements Sender<R> {
 
 	@Override
 	public void closeStream() {
-		closesMeter.mark();
 		if (receiver != null) {
 			final Context context = cumulativeTimer.time();
 			receiver.closeStream();
