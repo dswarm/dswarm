@@ -92,7 +92,7 @@ public class CSVSourceResourceTriplesFlow extends AbstractCSVResourceFlow<Immuta
 				.setReceiver(tripleReceiver);
 
 		//noinspection unchecked
-		opener.setReceiver(csvReaderTimer).process(obj);
+		opener.setReceiver(csvReaderTimer).setReceiver(pipe);
 
 		opener.process(obj);
 		return tripleReceiver.getCollection();
