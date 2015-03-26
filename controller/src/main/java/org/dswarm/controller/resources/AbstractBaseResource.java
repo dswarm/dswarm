@@ -28,6 +28,7 @@ import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,10 +66,11 @@ public abstract class AbstractBaseResource {
 
 		try {
 			final String idEncoded = URLEncoder.encode(uuid, "UTF-8");
+			final String basePath = StringUtils.stripEnd(uri.getBaseUri().getPath(), "/");
 			final String path = pathSegments.stream()
 					.map(PathSegment::getPath)
 					.filter(Predicate.isEqual(idEncoded).negate())
-					.collect(Collectors.joining("/", uri.getBaseUri().getPath(), "/" + idEncoded));
+					.collect(Collectors.joining("/", basePath, "/" + idEncoded));
 
 			return new URI(
 					baseURI.getScheme(),

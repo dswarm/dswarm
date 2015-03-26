@@ -225,8 +225,7 @@ public class ResourcesResource extends AbstractBaseResource {
 			throw new DMPControllerException("couldn't transform resource object to JSON string");
 		}
 
-		final URI baseURI = uri.getRequestUri();
-		final URI resourceURI = URI.create(baseURI + "/" + resource.getUuid());
+		final URI resourceURI = createObjectURI(resource.getUuid());
 
 		ResourcesResource.LOG.debug("created new resource at '{}' with content ", resourceURI);
 		ResourcesResource.LOG.trace("'{}'", resourceJSON);
