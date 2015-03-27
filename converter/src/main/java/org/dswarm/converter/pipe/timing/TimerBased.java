@@ -32,6 +32,9 @@ abstract class TimerBased<R extends Receiver> implements Sender<R> {
 	protected static final String STREAM_RECORDS = "records";
 	protected static final String STREAM_ENTITIES = "entities";
 	protected static final String STREAM_LITERALS = "literals";
+	protected static final String XML_ENTITIES = "entities";
+	protected static final String XML_ELEMENTS = "elements";
+	protected static final String XML_CHARACTERS = "characters";
 
 	private final MetricRegistry registry;
 	private final String prefix;

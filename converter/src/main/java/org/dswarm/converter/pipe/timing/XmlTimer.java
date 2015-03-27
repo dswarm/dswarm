@@ -35,11 +35,7 @@ import org.xml.sax.SAXParseException;
 
 public final class XmlTimer<R> extends TimerBased<XmlPipe<ObjectReceiver<R>>> implements XmlReceiver {
 
-	private final Deque<TimingContext> dtdContexts;
 	private final Deque<TimingContext> entityContexts;
-	private final Deque<TimingContext> cdataContexts;
-	private final Deque<TimingContext> documentContexts;
-	private final Deque<TimingContext> prefixContexts;
 	private final Deque<TimingContext> elementContexts;
 
 	@Inject
@@ -48,40 +44,23 @@ public final class XmlTimer<R> extends TimerBased<XmlPipe<ObjectReceiver<R>>> im
 			@Assisted final String prefix) {
 		super(registry, prefix);
 
-		dtdContexts = new LinkedList<>();
 		entityContexts = new LinkedList<>();
-		cdataContexts = new LinkedList<>();
-		documentContexts = new LinkedList<>();
-		prefixContexts = new LinkedList<>();
 		elementContexts = new LinkedList<>();
 	}
 
 	@Override
 	public void startDTD(final String name, final String publicId, final String systemId) throws SAXException {
-		final TimingContext context = startMeasurement("DTD");
-		dtdContexts.offerLast(context);
-		try {
-			getReceiver().startDTD(name, publicId, systemId);
-		} catch (final Throwable t) {
-			dtdContexts.removeLast();
-		}
+		getReceiver().startDTD(name, publicId, systemId);
 	}
 
 	@Override
 	public void endDTD() throws SAXException {
-		try {
-			getReceiver().endDTD();
-		} finally {
-			final TimingContext context = dtdContexts.pollLast();
-			if (context != null) {
-				context.stop();
-			}
-		}
+		getReceiver().endDTD();
 	}
 
 	@Override
 	public void startEntity(final String name) throws SAXException {
-		final TimingContext context = startMeasurement("entity");
+		final TimingContext context = startMeasurement(XML_ENTITIES);
 		entityContexts.offerLast(context);
 		try {
 			getReceiver().startEntity(name);
@@ -104,132 +83,77 @@ public final class XmlTimer<R> extends TimerBased<XmlPipe<ObjectReceiver<R>>> im
 
 	@Override
 	public void startCDATA() throws SAXException {
-		final TimingContext context = startMeasurement("CDATA");
-		cdataContexts.offerLast(context);
-		try {
-			getReceiver().startCDATA();
-		} catch (final Throwable t) {
-			cdataContexts.removeLast();
-		}
+		getReceiver().startCDATA();
 	}
 
 	@Override
 	public void endCDATA() throws SAXException {
-		try {
-			getReceiver().endCDATA();
-		} finally {
-			final TimingContext context = cdataContexts.pollLast();
-			if (context != null) {
-				context.stop();
-			}
-		}
+		getReceiver().endCDATA();
 	}
 
 	@Override
 	public void comment(final char[] ch, final int start, final int length) throws SAXException {
-		try (final TimingContext ignore = startMeasurement("comment")) {
-			getReceiver().comment(ch, start, length);
-		}
+		getReceiver().comment(ch, start, length);
 	}
 
 	@Override
 	public void warning(final SAXParseException exception) throws SAXException {
-		try (final TimingContext ignore = startMeasurement("warning")) {
-			getReceiver().warning(exception);
-		}
+		getReceiver().warning(exception);
 	}
 
 	@Override
 	public void error(final SAXParseException exception) throws SAXException {
-		try (final TimingContext ignore = startMeasurement("error")) {
-			getReceiver().error(exception);
-		}
+		getReceiver().error(exception);
 	}
 
 	@Override
 	public void fatalError(final SAXParseException exception) throws SAXException {
-		try (final TimingContext ignore = startMeasurement("fatalError")) {
-			getReceiver().fatalError(exception);
-		}
+		getReceiver().fatalError(exception);
 	}
 
 	@Override
 	public InputSource resolveEntity(final String publicId, final String systemId) throws SAXException, IOException {
-		try (final TimingContext ignore = startMeasurement("getReceiver")) {
-			return getReceiver().resolveEntity(publicId, systemId);
-		}
+		return getReceiver().resolveEntity(publicId, systemId);
 	}
 
 	@Override
 	public void notationDecl(final String name, final String publicId, final String systemId) throws SAXException {
-		try (final TimingContext ignore = startMeasurement("notationDecl")) {
-			getReceiver().notationDecl(name, publicId, systemId);
-		}
+		getReceiver().notationDecl(name, publicId, systemId);
 	}
 
 	@Override
 	public void unparsedEntityDecl(final String name, final String publicId, final String systemId, final String notationName) throws SAXException {
-		try (final TimingContext ignore = startMeasurement("unparsedEntityDecl")) {
-			getReceiver().unparsedEntityDecl(name, publicId, systemId, notationName);
-		}
+		getReceiver().unparsedEntityDecl(name, publicId, systemId, notationName);
 	}
 
 	@Override
 	public void setDocumentLocator(final Locator locator) {
-		try (final TimingContext ignore = startMeasurement("setDocumentLocator")) {
-			getReceiver().setDocumentLocator(locator);
-		}
+		getReceiver().setDocumentLocator(locator);
 	}
 
 	@Override
 	public void startDocument() throws SAXException {
-		final TimingContext context = startMeasurement("document");
-		documentContexts.offerLast(context);
-		try {
-			getReceiver().startDocument();
-		} catch (final Throwable t) {
-			documentContexts.removeLast();
-		}
+		getReceiver().startDocument();
 	}
 
 	@Override
 	public void endDocument() throws SAXException {
-		try {
-			getReceiver().endDocument();
-		} finally {
-			final TimingContext context = documentContexts.pollLast();
-			if (context != null) {
-				context.stop();
-			}
-		}
+		getReceiver().endDocument();
 	}
 
 	@Override
 	public void startPrefixMapping(final String prefix, final String uri) throws SAXException {
-		final TimingContext context = startMeasurement("prefixMapping");
-		prefixContexts.offerLast(context);
-		try {
-			getReceiver().startPrefixMapping(prefix, uri);
-		} catch (final Throwable t) {
-			prefixContexts.removeLast();
-		}
+		getReceiver().startPrefixMapping(prefix, uri);
 	}
 
 	@Override
 	public void endPrefixMapping(final String prefix) throws SAXException {
-		try {
-			getReceiver().endPrefixMapping(prefix);
-		} finally {
-			final TimingContext context = prefixContexts.pollLast();
-			if (context != null) {
-				context.stop();
-			}
-		}
+		getReceiver().endPrefixMapping(prefix);
 	}
 
 	@Override
 	public void startElement(final String uri, final String localName, final String qName, final Attributes atts) throws SAXException {
-		final TimingContext context = startMeasurement("element");
+		final TimingContext context = startMeasurement(XML_ELEMENTS);
 		elementContexts.offerLast(context);
 		try {
 			getReceiver().startElement(uri, localName, qName, atts);
@@ -252,29 +176,23 @@ public final class XmlTimer<R> extends TimerBased<XmlPipe<ObjectReceiver<R>>> im
 
 	@Override
 	public void characters(final char[] ch, final int start, final int length) throws SAXException {
-		try (final TimingContext ignore = startMeasurement("characters")) {
+		try (final TimingContext ignore = startMeasurement(XML_CHARACTERS)) {
 			getReceiver().characters(ch, start, length);
 		}
 	}
 
 	@Override
 	public void ignorableWhitespace(final char[] ch, final int start, final int length) throws SAXException {
-		try (final TimingContext ignore = startMeasurement("ignorableWhitespace")) {
-			getReceiver().ignorableWhitespace(ch, start, length);
-		}
+		getReceiver().ignorableWhitespace(ch, start, length);
 	}
 
 	@Override
 	public void processingInstruction(final String target, final String data) throws SAXException {
-		try (final TimingContext ignore = startMeasurement("processingInstruction")) {
-			getReceiver().processingInstruction(target, data);
-		}
+		getReceiver().processingInstruction(target, data);
 	}
 
 	@Override
 	public void skippedEntity(final String name) throws SAXException {
-		try (final TimingContext ignore = startMeasurement("skippedEntity")) {
-			getReceiver().skippedEntity(name);
-		}
+		getReceiver().skippedEntity(name);
 	}
 }
