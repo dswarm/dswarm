@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dswarm.converter.pipe.timing;
+package org.dswarm.converter.flow;
 
-public interface TimerBasedFactory {
+import org.dswarm.persistence.model.resource.DataModel;
 
-	ObjectTimer forObject(final String prefix);
+/**
+ * @author phorn
+ */
+public interface XmlResourceFlowFactory {
 
-	StreamTimer forStream(final String prefix);
-
-	XmlTimer forXml(final String prefix);
-
+	XMLSourceResourceGDMStmtsFlow fromDataModel(final DataModel dataModel);
 }

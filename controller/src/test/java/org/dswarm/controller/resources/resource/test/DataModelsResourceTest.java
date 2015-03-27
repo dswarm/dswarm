@@ -26,6 +26,9 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.codahale.metrics.Meter;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Timer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -33,6 +36,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
 import com.google.common.io.Resources;
 import com.google.inject.Key;
+import com.google.inject.name.Names;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpStatus;
@@ -50,6 +54,8 @@ import org.xmlunit.builder.Input;
 import org.xmlunit.diff.Diff;
 
 import org.dswarm.common.MediaTypeUtil;
+import org.dswarm.controller.eventbus.CSVConverterEvent;
+import org.dswarm.controller.eventbus.CSVConverterEventRecorder;
 import org.dswarm.controller.resources.POJOFormat;
 import org.dswarm.controller.resources.resource.test.utils.ConfigurationsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
@@ -59,6 +65,7 @@ import org.dswarm.controller.resources.schema.test.utils.ClaszesResourceTestUtil
 import org.dswarm.controller.resources.schema.test.utils.SchemasResourceTestUtils;
 import org.dswarm.controller.resources.test.BasicResourceTest;
 import org.dswarm.controller.test.GuicedTest;
+import org.dswarm.init.ExecutionScope;
 import org.dswarm.persistence.dto.ShortExtendendBasicDMPDTO;
 import org.dswarm.persistence.dto.resource.MediumDataModelDTO;
 import org.dswarm.persistence.model.internal.Model;
@@ -76,6 +83,8 @@ import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.service.resource.test.utils.DataModelServiceTestUtils;
 import org.dswarm.persistence.service.schema.test.utils.SchemaServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
+
+import static com.codahale.metrics.MetricRegistry.name;
 
 public class DataModelsResourceTest extends
 		BasicResourceTest<DataModelsResourceTestUtils, DataModelServiceTestUtils, DataModelService, ProxyDataModel, DataModel> {
@@ -280,6 +289,38 @@ public class DataModelsResourceTest extends
 		Assert.assertThat(response.hasEntity(), CoreMatchers.equalTo(false));
 
 		DataModelsResourceTest.LOG.debug("end get resource configuration data missing test");
+	}
+
+	/**
+	 * Test export of a single graph to N3
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testCsvImportWithMonitoring() throws Exception {
+
+		final DataModel datamodelUTF8csv = loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
+
+		final ExecutionScope scope = GuicedTest.injector.getInstance(ExecutionScope.class);
+		final CSVConverterEventRecorder recorder = GuicedTest.injector.getInstance(CSVConverterEventRecorder.class);
+
+		try (final ExecutionScope ignore = scope.enter()) {
+			recorder.convertConfiguration(new CSVConverterEvent(datamodelUTF8csv));
+			final MetricRegistry registry = GuicedTest.injector.getInstance(Key.get(MetricRegistry.class, Names.named("Monitoring")));
+
+			final String ingestTimerName = name(DataModel.class, "ingest");
+
+			final Timer ingest = registry.timer(ingestTimerName);
+			Assert.assertThat(ingest.getCount(), CoreMatchers.equalTo(1L));
+
+			final String resourceMeterName = name(Resource.class, datamodelUTF8csv.getDataResource().getUuid());
+			final Meter resource = registry.meter(resourceMeterName);
+			Assert.assertThat(resource.getCount(), CoreMatchers.equalTo(1L));
+
+			final String schemaMeterName = name(Schema.class, datamodelUTF8csv.getSchema().getUuid());
+			final Meter schema = registry.meter(schemaMeterName);
+			Assert.assertThat(schema.getCount(), CoreMatchers.equalTo(1L));
+		}
 	}
 
 	/**
@@ -605,7 +646,7 @@ public class DataModelsResourceTest extends
 			return jsonNode;
 		}
 
-		Assert.assertTrue("couldn't find element with key '" + key + "' in JSON structure '" + json + "'", false);
+		Assert.fail("couldn't find element with key '" + key + "' in JSON structure '" + json + "'");
 
 		return null;
 	}
@@ -616,7 +657,7 @@ public class DataModelsResourceTest extends
 
 		if (jsonNode == null) {
 
-			Assert.assertTrue("couldn't find element with key '" + key + "' in JSON structure '" + json + "'", false);
+			Assert.fail("couldn't find element with key '" + key + "' in JSON structure '" + json + "'");
 
 			return null;
 		}

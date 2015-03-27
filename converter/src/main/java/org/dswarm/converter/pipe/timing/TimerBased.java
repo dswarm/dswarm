@@ -15,7 +15,6 @@
  */
 package org.dswarm.converter.pipe.timing;
 
-import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.codahale.metrics.Timer.Context;
@@ -27,13 +26,19 @@ import org.culturegraph.mf.framework.Sender;
 
 import static com.codahale.metrics.MetricRegistry.name;
 
-public abstract class TimerBased<R extends Receiver> implements Sender<R> {
+abstract class TimerBased<R extends Receiver> implements Sender<R> {
+
+	protected static final String OBJECT_PROCESS = "process";
+	protected static final String STREAM_RECORDS = "records";
+	protected static final String STREAM_ENTITIES = "entities";
+	protected static final String STREAM_LITERALS = "literals";
+	protected static final String XML_ENTITIES = "entities";
+	protected static final String XML_ELEMENTS = "elements";
+	protected static final String XML_CHARACTERS = "characters";
 
 	private final MetricRegistry registry;
 	private final String prefix;
 	private final Timer cumulativeTimer;
-	private final Meter resetsMeter;
-	private final Meter closesMeter;
 
 	private R receiver;
 
@@ -45,8 +50,6 @@ public abstract class TimerBased<R extends Receiver> implements Sender<R> {
 		this.prefix = prefix;
 
 		cumulativeTimer = registry.timer(name(prefix, "cumulative"));
-		resetsMeter = registry.meter(name(prefix, "resets"));
-		closesMeter = registry.meter(name(prefix, "closes"));
 	}
 
 	@Override
@@ -61,15 +64,13 @@ public abstract class TimerBased<R extends Receiver> implements Sender<R> {
 
 	@Override
 	public void resetStream() {
-		resetsMeter.mark();
 		if (receiver != null) {
 			receiver.resetStream();
 		}
 	}
 
 	@Override
-	public void closeStream() {
-		closesMeter.mark();
+	public final void closeStream() {
 		if (receiver != null) {
 			final Context context = cumulativeTimer.time();
 			receiver.closeStream();

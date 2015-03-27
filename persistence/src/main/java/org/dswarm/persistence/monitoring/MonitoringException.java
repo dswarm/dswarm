@@ -13,14 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dswarm.converter.pipe.timing;
+package org.dswarm.persistence.monitoring;
 
-public interface TimerBasedFactory {
-
-	ObjectTimer forObject(final String prefix);
-
-	StreamTimer forStream(final String prefix);
-
-	XmlTimer forXml(final String prefix);
-
+final class MonitoringException extends RuntimeException {
+	MonitoringException(final Throwable cause) {
+		super(cause);
+	}
 }

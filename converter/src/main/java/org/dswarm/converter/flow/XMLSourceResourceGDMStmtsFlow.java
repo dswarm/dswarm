@@ -18,8 +18,13 @@ package org.dswarm.converter.flow;
 import java.io.Reader;
 import java.util.List;
 
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Timer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Optional;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.name.Named;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.stream.converter.xml.XmlDecoder;
@@ -31,6 +36,9 @@ import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.mf.stream.GDMModelReceiver;
 import org.dswarm.converter.mf.stream.source.BOMResourceOpener;
 import org.dswarm.converter.mf.stream.source.XMLGDMEncoder;
+import org.dswarm.converter.pipe.timing.ObjectTimer;
+import org.dswarm.converter.pipe.timing.TimerBasedFactory;
+import org.dswarm.converter.pipe.timing.XmlTimer;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
@@ -38,7 +46,7 @@ import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 
 /**
  * Flow that transforms a given XML source into GDM statements.
- * 
+ *
  * @author tgaengler
  */
 public class XMLSourceResourceGDMStmtsFlow {
@@ -47,9 +55,14 @@ public class XMLSourceResourceGDMStmtsFlow {
 
 	private final Optional<String>		recordTagName;
 	private final Optional<DataModel>	dataModel;
+	private final TimerBasedFactory timerBasedFactory;
+	private final Timer morphTimer;
 
-	public XMLSourceResourceGDMStmtsFlow(final DataModel dataModel) throws DMPConverterException {
-
+	@Inject
+	private XMLSourceResourceGDMStmtsFlow(
+			@Named("Monitoring") final MetricRegistry registry,
+			final TimerBasedFactory timerBasedFactory,
+			@Assisted final DataModel dataModel) throws DMPConverterException {
 		if (dataModel == null) {
 
 			throw new DMPConverterException("the data model shouldn't be null");
@@ -74,6 +87,10 @@ public class XMLSourceResourceGDMStmtsFlow {
 		}
 
 		recordTagName = getStringParameter(dataModel.getConfiguration(), ConfigurationStatics.RECORD_TAG);
+
+		this.timerBasedFactory = timerBasedFactory;
+
+		morphTimer = registry.timer(MonitoringFlowStatics.METAMORPH);
 	}
 
 	public List<GDMModel> applyRecord(final String record) {
@@ -105,14 +122,28 @@ public class XMLSourceResourceGDMStmtsFlow {
 		}
 		final GDMModelReceiver writer = new GDMModelReceiver();
 
-		opener.setReceiver(decoder).setReceiver(encoder).setReceiver(writer);
+		final ObjectTimer<Reader> inputTimer = timerBasedFactory.forObject(MonitoringFlowStatics.INPUT_RESOURCE_FILES);
+		final XmlTimer<GDMModel> xmlTimer = timerBasedFactory.forXml(MonitoringFlowStatics.XML_EVENTS);
+		final ObjectTimer<GDMModel> gdmModelsTimer = timerBasedFactory.forObject(MonitoringFlowStatics.PARSED_XML_RECORDS);
+
+		final Timer.Context morphContext = morphTimer.time();
+
+		opener
+				.setReceiver(inputTimer)
+				.setReceiver(decoder)
+				.setReceiver(xmlTimer)
+				.setReceiver(encoder)
+				.setReceiver(gdmModelsTimer)
+				.setReceiver(writer);
 
 		opener.process(object);
+
+		morphContext.stop();
 
 		return writer.getCollection();
 	}
 
-	private Optional<String> getStringParameter(final Configuration configuration, final String key) throws DMPConverterException {
+	private static Optional<String> getStringParameter(final Configuration configuration, final String key) throws DMPConverterException {
 		final JsonNode jsonNode = getParameterValue(configuration, key);
 		if (jsonNode == null) {
 			return Optional.absent();
@@ -121,7 +152,7 @@ public class XMLSourceResourceGDMStmtsFlow {
 		return Optional.of(jsonNode.asText());
 	}
 
-	private JsonNode getParameterValue(final Configuration configuration, final String key) throws DMPConverterException {
+	private static JsonNode getParameterValue(final Configuration configuration, final String key) throws DMPConverterException {
 
 		if (key == null) {
 
@@ -132,8 +163,8 @@ public class XMLSourceResourceGDMStmtsFlow {
 
 		if (valueNode == null) {
 
-			XMLSourceResourceGDMStmtsFlow.LOG.debug("couldn't find value for parameter '" + key
-					+ "'; try to utilise default value for this parameter");
+			XMLSourceResourceGDMStmtsFlow.LOG.debug(
+					"couldn't find value for parameter '{}'; try to utilise default value for this parameter", key);
 		}
 
 		return valueNode;

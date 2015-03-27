@@ -25,7 +25,7 @@ import org.dswarm.persistence.model.resource.DataModel;
  */
 public interface CSVResourceFlowFactory {
 
-	CSVSourceResourceTriplesFlow fromDataModel(final DataModel dataModel);
+	MonitoringCSVSourceResourceTriplesFlow fromDataModel(final DataModel dataModel);
 
 	CSVSourceResourceTriplesFlow fromConfiguration(final Configuration configuration);
 
@@ -53,6 +53,4 @@ public interface CSVResourceFlowFactory {
 			@Assisted("quoteCharacter") final Character quoteCharacter,
 			@Assisted("columnDelimiter") final Character columnDelimiter,
 			@Assisted("rowDelimiter") final String rowDelimiter);
-
-	// public static <T, U extends AbstractCSVResourceFlow<T>> U fromConfigurationParameters(final String encoding, final Character escapeCharacter, final Character quoteCharacter, final Character columnDelimiter, final String rowDelimiter, final Class<U> clazz)
 }

@@ -36,8 +36,8 @@ import org.dswarm.graph.json.Predicate;
 import org.dswarm.graph.json.Resource;
 import org.dswarm.graph.json.ResourceNode;
 import org.dswarm.persistence.DMPPersistenceException;
-import org.dswarm.persistence.MonitoringLogger;
-import org.dswarm.persistence.MonitoringLogger.MonitoringHelper;
+import org.dswarm.persistence.monitoring.MonitoringLogger;
+import org.dswarm.persistence.monitoring.MonitoringHelper;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
@@ -48,17 +48,17 @@ public class CSVConverterEventRecorder {
 
 	private static final Logger					LOG	= LoggerFactory.getLogger(CSVConverterEventRecorder.class);
 
-	private final Provider<CSVResourceFlowFactory> flowFactory2;
+	private final Provider<CSVResourceFlowFactory> flowFactory;
 	private final InternalModelServiceFactory	internalServiceFactory;
 	private final Provider<MonitoringLogger> loggerProvider;
 
 	@Inject
 	public CSVConverterEventRecorder(
-			final Provider<CSVResourceFlowFactory> flowFactory2,
+			final Provider<CSVResourceFlowFactory> flowFactory,
 			final InternalModelServiceFactory internalServiceFactory,
 			final Provider<MonitoringLogger> loggerProvider) {
 
-		this.flowFactory2 = flowFactory2;
+		this.flowFactory = flowFactory;
 		this.internalServiceFactory = internalServiceFactory;
 		this.loggerProvider = loggerProvider;
 	}
@@ -75,7 +75,7 @@ public class CSVConverterEventRecorder {
 
 		List<Triple> result = null;
 		try {
-			final CSVSourceResourceTriplesFlow flow = flowFactory2.get().fromDataModel(dataModel);
+			final CSVSourceResourceTriplesFlow flow = flowFactory.get().fromDataModel(dataModel);
 
 			final String path = dataModel.getDataResource().getAttribute("path").asText();
 			result = flow.applyFile(path);

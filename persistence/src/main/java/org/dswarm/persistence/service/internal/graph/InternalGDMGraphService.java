@@ -189,6 +189,10 @@ public class InternalGDMGraphService implements InternalModelService {
 			finalDataModel = getDataModel(dataModelUuid);
 		}
 
+		if (finalDataModel == null) {
+			throw new DMPPersistenceException("Could not get the actual data model to use");
+		}
+
 		if (finalDataModel.getSchema() != null) {
 
 			if (finalDataModel.getSchema().getRecordClass() != null) {

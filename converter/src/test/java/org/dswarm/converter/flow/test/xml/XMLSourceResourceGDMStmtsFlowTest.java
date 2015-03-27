@@ -37,6 +37,7 @@ import org.junit.Test;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.flow.XMLSourceResourceGDMStmtsFlow;
+import org.dswarm.converter.flow.XmlResourceFlowFactory;
 import org.dswarm.graph.json.Model;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.Configuration;
@@ -215,7 +216,9 @@ public class XMLSourceResourceGDMStmtsFlowTest extends GuicedTest {
 
 		dataModel.setConfiguration(configuration);
 
-		final XMLSourceResourceGDMStmtsFlow flow = new XMLSourceResourceGDMStmtsFlow(dataModel);
+		final XMLSourceResourceGDMStmtsFlow flow = injector
+				.getInstance(XmlResourceFlowFactory.class)
+				.fromDataModel(dataModel);
 
 		testFlow(flow, "test-mabxml.xml", "test-mabxml_converter.gson", null);
 	}
@@ -236,7 +239,9 @@ public class XMLSourceResourceGDMStmtsFlowTest extends GuicedTest {
 
 		dataModel.setConfiguration(configuration);
 
-		final XMLSourceResourceGDMStmtsFlow flow = new XMLSourceResourceGDMStmtsFlow(dataModel);
+		final XMLSourceResourceGDMStmtsFlow flow = injector
+				.getInstance(XmlResourceFlowFactory.class)
+				.fromDataModel(dataModel);
 
 		testFlow(flow, "test-complex-xml.xml", "test-complex-xml_converter.gson", null);
 	}
@@ -258,7 +263,9 @@ public class XMLSourceResourceGDMStmtsFlowTest extends GuicedTest {
 
 		dataModel.setDataResource(resource);
 
-		final XMLSourceResourceGDMStmtsFlow flow = new XMLSourceResourceGDMStmtsFlow(dataModel);
+		final XMLSourceResourceGDMStmtsFlow flow = injector
+				.getInstance(XmlResourceFlowFactory.class)
+				.fromDataModel(dataModel);
 
 		testFlow(flow, "test-pnx.xml", "test-pnx-converter.gson", 196);
 
@@ -282,7 +289,9 @@ public class XMLSourceResourceGDMStmtsFlowTest extends GuicedTest {
 
 		dataModel.setDataResource(resource);
 
-		final XMLSourceResourceGDMStmtsFlow flow = new XMLSourceResourceGDMStmtsFlow(dataModel);
+		final XMLSourceResourceGDMStmtsFlow flow = injector
+				.getInstance(XmlResourceFlowFactory.class)
+				.fromDataModel(dataModel);
 
 		testFlow(flow, "test-pnx2.xml", "test-pnx2.gson", null);
 

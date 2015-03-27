@@ -13,27 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dswarm.converter.pipe.timing;
+package org.dswarm.persistence.monitoring;
 
-import java.util.Arrays;
-import java.util.List;
+import com.codahale.metrics.Timer;
+import org.slf4j.Marker;
 
-import com.codahale.metrics.Timer.Context;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-public final class TimingContext implements AutoCloseable {
+final class MarkedTimer {
+	private final Marker marker;
+	private final String name;
+	private final Timer timer;
 
-	private final List<Context> contexts;
-
-	public TimingContext(final Context... contexts) {
-		this.contexts = Arrays.asList(contexts);
+	MarkedTimer(final String name, final Marker marker, final Timer timer) {
+		this.name = checkNotNull(name);
+		this.marker = checkNotNull(marker);
+		this.timer = checkNotNull(timer);
 	}
 
-	@Override
-	public void close() {
-		stop();
+	Marker getMarker() {
+		return marker;
 	}
 
-	public void stop() {
-		contexts.forEach(Context::stop);
+	String getName() {
+		return name;
+	}
+
+	Timer getTimer() {
+		return timer;
+	}
+
+	boolean matches(final String otherName) {
+		return name.equals(otherName);
 	}
 }
