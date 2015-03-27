@@ -50,10 +50,12 @@ public final class MediumDataModelDTO extends BasicDMPDTO<MediumDataModelDTO> {
 		this.configuration = configuration;
 	}
 
+	@JsonProperty("data_resource")
 	public Resource getDataResource() {
 		return resource;
 	}
 
+	@JsonProperty("configuration")
 	public Configuration getConfiguration() {
 		return configuration;
 	}
