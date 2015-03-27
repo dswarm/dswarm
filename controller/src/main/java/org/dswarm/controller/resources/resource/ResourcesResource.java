@@ -1050,7 +1050,7 @@ public class ResourcesResource extends AbstractBaseResource {
 	 * @return the new persisted configuration
 	 * @throws DMPControllerException
 	 */
-	private static ProxyConfiguration createNewConfiguration(final ConfigurationService configurationService) throws DMPControllerException {
+	private ProxyConfiguration createNewConfiguration(final ConfigurationService configurationService) throws DMPControllerException {
 
 		final ProxyConfiguration proxyConfiguration;
 
