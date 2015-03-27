@@ -36,7 +36,7 @@ public final class ObjectTimer<T> extends TimerBased<ObjectReceiver<T>>
 
 	@Override
 	public void process(final T obj) {
-		final TimingContext context = startMeasurement("process");
+		final TimingContext context = startMeasurement(OBJECT_PROCESS);
 		try {
 			getReceiver().process(obj);
 		} finally {

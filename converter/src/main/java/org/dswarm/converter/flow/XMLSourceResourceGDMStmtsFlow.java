@@ -90,7 +90,7 @@ public class XMLSourceResourceGDMStmtsFlow {
 
 		this.timerBasedFactory = timerBasedFactory;
 
-		morphTimer = registry.timer("metamorph");
+		morphTimer = registry.timer(MonitoringFlowStatics.METAMORPH);
 	}
 
 	public List<GDMModel> applyRecord(final String record) {
@@ -122,9 +122,9 @@ public class XMLSourceResourceGDMStmtsFlow {
 		}
 		final GDMModelReceiver writer = new GDMModelReceiver();
 
-		final ObjectTimer<Reader> inputTimer = timerBasedFactory.forObject("Input Resource Files");
-		final XmlTimer<GDMModel> xmlTimer = timerBasedFactory.forXml("XML Events");
-		final ObjectTimer<GDMModel> gdmModelsTimer = timerBasedFactory.forObject("Parsed XML Records");
+		final ObjectTimer<Reader> inputTimer = timerBasedFactory.forObject(MonitoringFlowStatics.INPUT_RESOURCE_FILES);
+		final XmlTimer<GDMModel> xmlTimer = timerBasedFactory.forXml(MonitoringFlowStatics.XML_EVENTS);
+		final ObjectTimer<GDMModel> gdmModelsTimer = timerBasedFactory.forObject(MonitoringFlowStatics.PARSED_XML_RECORDS);
 
 		final Timer.Context morphContext = morphTimer.time();
 

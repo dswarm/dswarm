@@ -28,6 +28,11 @@ import static com.codahale.metrics.MetricRegistry.name;
 
 abstract class TimerBased<R extends Receiver> implements Sender<R> {
 
+	protected static final String OBJECT_PROCESS = "process";
+	protected static final String STREAM_RECORDS = "records";
+	protected static final String STREAM_ENTITIES = "entities";
+	protected static final String STREAM_LITERALS = "literals";
+
 	private final MetricRegistry registry;
 	private final String prefix;
 	private final Timer cumulativeTimer;
