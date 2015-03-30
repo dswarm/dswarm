@@ -15,13 +15,17 @@
  */
 package org.dswarm.persistence.model.job;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -30,8 +34,10 @@ import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
 
+import org.dswarm.persistence.converter.StringOrderedListConverter;
 import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
@@ -53,7 +59,7 @@ public class Project extends ExtendedBasicDMPJPAObject {
 	/**
 	 *
 	 */
-	private static final long	serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The sample input data model that will be utilised for demonstration or testing of the mappings of the project.
@@ -64,7 +70,7 @@ public class Project extends ExtendedBasicDMPJPAObject {
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	// @JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
 	// @XmlIDREF
-	private DataModel			inputDataModel;
+	private DataModel inputDataModel;
 
 	/**
 	 * The output data model that contains the output schema.
@@ -75,13 +81,14 @@ public class Project extends ExtendedBasicDMPJPAObject {
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	// @JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
 	// @XmlIDREF
-	private DataModel			outputDataModel;
+	private DataModel outputDataModel;
 
 	/**
 	 * The collection of mappings the project.
 	 */
 	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinTable(name = "PROJECTS_MAPPINGS", joinColumns = { @JoinColumn(name = "PROJECT_UUID", referencedColumnName = "UUID") }, inverseJoinColumns = { @JoinColumn(name = "MAPPING_UUID", referencedColumnName = "UUID") })
+	@JoinTable(name = "PROJECTS_MAPPINGS", joinColumns = { @JoinColumn(name = "PROJECT_UUID", referencedColumnName = "UUID") }, inverseJoinColumns = {
+			@JoinColumn(name = "MAPPING_UUID", referencedColumnName = "UUID") })
 	// @JsonSerialize(using = SetMappingReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	// @XmlIDREF
@@ -101,12 +108,24 @@ public class Project extends ExtendedBasicDMPJPAObject {
 	 * The collection of functions that are created in this project, i.e., those functions are only visible to this project.
 	 */
 	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinTable(name = "PROJECTS_FUNCTIONS", joinColumns = { @JoinColumn(name = "PROJECT_UUID", referencedColumnName = "UUID") }, inverseJoinColumns = { @JoinColumn(name = "FUNCTION_UUID", referencedColumnName = "UUID") })
+	@JoinTable(name = "PROJECTS_FUNCTIONS", joinColumns = {
+			@JoinColumn(name = "PROJECT_UUID", referencedColumnName = "UUID") }, inverseJoinColumns = {
+			@JoinColumn(name = "FUNCTION_UUID", referencedColumnName = "UUID") })
 	// @JsonSerialize(using = SetFunctionReferenceSerializer.class)
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	// @XmlIDREF
 	@XmlList
-	private Set<Function>		functions;
+	private Set<Function> functions;
+
+	/**
+	 * An ordered list of selected record identifiers (that are utilised for display purpose or task execution).
+	 */
+	@Lob
+	@XmlElement(name = "selected_records")
+	@XmlList
+	@Convert(converter = StringOrderedListConverter.class)
+	@Column(name = "SELECTED_RECORDS", columnDefinition = "BLOB")
+	private Set<String> selectedRecords;
 
 	public Project(final String uuidArg) {
 
@@ -225,7 +244,7 @@ public class Project extends ExtendedBasicDMPJPAObject {
 	}
 
 	/**
-	 * Sets the functions of the
+	 * Sets the functions of the project
 	 *
 	 * @param functionsArg
 	 */
@@ -251,6 +270,41 @@ public class Project extends ExtendedBasicDMPJPAObject {
 		}
 	}
 
+	/**
+	 * Gets the ordered list of selected record identifiers (that are utilised for display purpose or task execution).
+	 *
+	 * @return the ordered list of selected record identifiers
+	 */
+	public Set<String> getSelectedRecords() {
+
+		return selectedRecords;
+	}
+
+	/**
+	 * Sets the ordered list of selected record identifiers (that are utilised for display purpose or task execution).
+	 *
+	 * @param selectedRecordsArg the ordered list of selected record identifiers
+	 */
+	public void setSelectedRecords(final Set<String> selectedRecordsArg) {
+
+		selectedRecords = selectedRecordsArg;
+	}
+
+	/**
+	 * Adds a record identifier to the ordered list of selected record identifiers (thar are utilised for display purpose or task execution).
+	 *
+	 * @param recordIdentifier a record identifier
+	 */
+	public void addSelectedRecord(final String recordIdentifier) {
+
+		if (selectedRecords == null) {
+
+			selectedRecords = new LinkedHashSet<>();
+		}
+
+		selectedRecords.add(recordIdentifier);
+	}
+
 	@Override
 	public boolean completeEquals(final Object obj) {
 
@@ -259,6 +313,7 @@ public class Project extends ExtendedBasicDMPJPAObject {
 				&& DMPPersistenceUtil.getDataModelUtils().completeEquals(((Project) obj).getOutputDataModel(), getOutputDataModel())
 				&& DMPPersistenceUtil.getMappingUtils().completeEquals(((Project) obj).getMappings(), getMappings())
 				&& DMPPersistenceUtil.getFilterUtils().completeEquals(((Project) obj).getSkipFilter(), getSkipFilter())
-				&& DMPPersistenceUtil.getFunctionUtils().completeEquals(((Project) obj).getFunctions(), getFunctions());
+				&& DMPPersistenceUtil.getFunctionUtils().completeEquals(((Project) obj).getFunctions(), getFunctions())
+				&& Objects.equal(((Project) obj).getSelectedRecords(), getSelectedRecords());
 	}
 }

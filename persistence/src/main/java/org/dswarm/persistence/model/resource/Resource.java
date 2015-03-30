@@ -86,7 +86,7 @@ public class Resource extends ExtendedBasicDMPJPAObject {
 	 */
 	@Lob
 	@Access(AccessType.FIELD)
-	@Column(name = "attributes", columnDefinition = "BLOB")
+	@Column(name = "ATTRIBUTES", columnDefinition = "BLOB")
 	private byte[] attributesString;
 
 	/**
