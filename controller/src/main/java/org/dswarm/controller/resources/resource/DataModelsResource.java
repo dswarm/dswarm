@@ -624,7 +624,8 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 		if (dataModel.getConfiguration() == null) {
 
-			final String message = String.format("could not add configuration to data resource, because the data model '%s' has no configuration", dataModel.getUuid());
+			final String message = String.format("could not add configuration to data resource, because the data model '%s' has no configuration",
+					dataModel.getUuid());
 
 			DataModelsResource.LOG.debug(message);
 
