@@ -70,6 +70,7 @@ import org.dswarm.controller.resources.ExtendedMediumBasicDMPResource;
 import org.dswarm.controller.resources.POJOFormat;
 import org.dswarm.controller.resources.resource.utils.ExportUtils;
 import org.dswarm.controller.utils.DataModelUtil;
+import org.dswarm.init.DMPException;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.dto.resource.MediumDataModelDTO;
 import org.dswarm.persistence.model.proxy.RetrievalType;
@@ -82,6 +83,7 @@ import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.utils.ClaszUtils;
 import org.dswarm.persistence.service.resource.DataModelService;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.dswarm.persistence.util.GDMUtil;
 
 /**
@@ -342,11 +344,13 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	 *
 	 * @param uuid             a data model identifier
 	 * @param searchRequestJSONString the search request as JSON string
+	 * @param atMost the number of records that should be returned at most
 	 * @return the data for matched records of a given data model
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "get the data of records that matches the search criteria and of the data model that matches the given data model uuid", notes = "Returns the data for matched records of a given data model.")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "could retrieve the data successfully for the data for matched records of a given data model"),
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "could retrieve the data successfully for the data for matched records of a given data model"),
 			@ApiResponse(code = 404, message = "could not find a data model for the given uuid"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@Timed
@@ -355,10 +359,101 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response searchRecords(@ApiParam(value = "data model identifier", required = true) @PathParam("uuid") final String uuid,
-			@ApiParam(value = "search request (as JSON)", required = true) final String searchRequestJSONString) throws DMPControllerException {
+			@ApiParam(value = "search request (as JSON)", required = true) final String searchRequestJSONString,
+			@ApiParam("number of records limit") @QueryParam("atMost") final Integer atMost) throws DMPControllerException {
 
-		// TODO: continue here
-		return null;
+		if (searchRequestJSONString == null) {
+
+			final String message = "couldn't search records, because the request JSON string is null";
+
+			DataModelsResource.LOG.error(message);
+
+			throw new DMPControllerException(message);
+		}
+
+		final ObjectNode requestJSON;
+
+		try {
+
+			requestJSON = DMPPersistenceUtil.getJSON(searchRequestJSONString);
+		} catch (final DMPException e) {
+
+			final String message = "couldn't search records, because the request JSON string couldn't be deserialized";
+
+			DataModelsResource.LOG.error(message, e);
+
+			throw new DMPControllerException(message, e);
+		}
+
+		if (requestJSON == null) {
+
+			final String message = "couldn't search records, because the request JSON is null";
+
+			DataModelsResource.LOG.error(message);
+
+			throw new DMPControllerException(message);
+		}
+
+		final Optional<String> optionalKeyAttributePathString = getStringValue(DMPStatics.KEY_ATTRIBUTE_PATH_IDENTIFIER, requestJSON);
+		final Optional<String> optionalSearchValue = getStringValue(DMPStatics.SEARCH_VALUE_IDENTIFIER, requestJSON);
+
+		if (!optionalKeyAttributePathString.isPresent() || !optionalSearchValue.isPresent()) {
+
+			final String message = "couldn't search records, because the search request is insufficient";
+
+			DataModelsResource.LOG.error(message);
+
+			throw new DMPControllerException(message);
+		}
+
+		final String keyAttributePathString = optionalKeyAttributePathString.get();
+		final String searchValue = optionalSearchValue.get();
+
+		DataModelsResource.LOG.debug("try to search records for key attribute path '{}' and search value '{}' in data model with uuid '{}'",
+				keyAttributePathString, searchValue, uuid);
+
+		final Optional<Iterator<Tuple<String, JsonNode>>> data = dataModelUtil.searchRecords(keyAttributePathString, searchValue, uuid,
+				Optional.fromNullable(atMost));
+
+		if (!data.isPresent()) {
+
+			DataModelsResource.LOG.debug("couldn't find records for key attribute path '{}' and search value '{}' in data model with uuid '{}'",
+					keyAttributePathString, searchValue, uuid);
+
+			return Response.status(Status.NOT_FOUND).build();
+		}
+
+		// temp
+		final Iterator<Tuple<String, JsonNode>> tupleIterator;
+
+		if (atMost != null) {
+
+			tupleIterator = Iterators.limit(data.get(), atMost);
+		} else {
+
+			tupleIterator = data.get();
+		}
+
+		final ObjectNode json = objectMapperProvider.get().createObjectNode();
+
+		while (tupleIterator.hasNext()) {
+
+			final Tuple<String, JsonNode> tuple = data.get().next();
+
+			json.set(tuple.v1(), tuple.v2());
+		}
+
+		final String jsonString = serializeObject(json);
+
+		DataModelsResource.LOG.debug("return data for key attribute path '{}' and search value '{}' in data model with uuid '{}'",
+				keyAttributePathString, searchValue, uuid);
+
+		if (DataModelsResource.LOG.isTraceEnabled()) {
+
+			DataModelsResource.LOG.trace("and content '{}'", jsonString);
+		}
+
+		return buildResponse(jsonString);
 	}
 
 	/**
@@ -852,6 +947,22 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 		}
 
 		return target;
+	}
+
+	private Optional<String> getStringValue(final String key, final JsonNode json) {
+
+		final JsonNode node = json.get(key);
+		final Optional<String> optionalValue;
+
+		if (node != null) {
+
+			optionalValue = Optional.fromNullable(node.asText());
+		} else {
+
+			optionalValue = Optional.absent();
+		}
+
+		return optionalValue;
 	}
 
 }
