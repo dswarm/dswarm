@@ -210,7 +210,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			@ApiParam(value = "'short' for only uuid,name,description, 'medium' for additional configuration,resource, 'full' for the complete entity")
 			@QueryParam("format") @DefaultValue("full") final POJOFormat format) throws DMPControllerException {
 
-		return super.getObjects();
+		return super.getObjects(format);
 	}
 
 	/**
