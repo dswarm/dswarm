@@ -366,6 +366,95 @@ public class InternalGDMGraphService implements InternalModelService {
 		return Optional.of(schema);
 	}
 
+	@Override public Optional<Map<String, Model>> searchObjects(final String dataModelUuid, final String keyAttributePathString,
+			final String searchValue, final Optional<Integer> optionalAtMost) throws DMPPersistenceException {
+
+		if (dataModelUuid == null) {
+
+			throw new DMPPersistenceException("data model id shouldn't be null");
+		}
+
+		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelUuid);
+
+		final DataModel dataModel = dataModelService.get().getObject(dataModelUuid);
+
+		if (dataModel == null) {
+
+			InternalGDMGraphService.LOG.debug("couldn't find data model '{}' to search records", dataModelUuid);
+
+			throw new DMPPersistenceException(String.format("couldn't find data model '%s' to search", dataModelUuid));
+		}
+
+		final Schema schema = dataModel.getSchema();
+
+		if (schema == null) {
+
+			InternalGDMGraphService.LOG.debug("couldn't find schema in data model '{}'", dataModelUuid);
+
+			throw new DMPPersistenceException(String.format("couldn't find schema in data model '%s'", dataModelUuid));
+		}
+
+		final Clasz recordClass = schema.getRecordClass();
+
+		if (recordClass == null) {
+
+			InternalGDMGraphService.LOG
+					.debug("couldn't find record class in schema '{}' of data model '{}'", schema.getUuid(), dataModelUuid);
+
+			throw new DMPPersistenceException(String.format(
+					"couldn't find record class in schema '%s' of data model '%s'", schema.getUuid(), dataModelUuid));
+		}
+
+		final String recordClassUri = recordClass.getUri();
+
+		final org.dswarm.graph.json.Model model = searchGDMRecordsInDB(keyAttributePathString, searchValue, dataModelURI, optionalAtMost);
+
+		if (model == null) {
+
+			InternalGDMGraphService.LOG
+					.debug("couldn't find records for key attribute path '{}' and search value '{}  in data model '{}' in database",
+							keyAttributePathString, searchValue, dataModelUuid);
+
+			return Optional.absent();
+		}
+
+		if (model.size() <= 0) {
+
+			InternalGDMGraphService.LOG
+					.debug("model is empty for key attribute path '{}' and search value '{}  in data model '{}' in database", keyAttributePathString,
+							searchValue, dataModelUuid);
+
+			return Optional.absent();
+		}
+
+		final Set<Resource> recordResources = GDMUtil.getRecordResources(recordClassUri, model);
+
+		if (recordResources == null || recordResources.isEmpty()) {
+
+			InternalGDMGraphService.LOG
+					.debug("couldn't find records for record class '{}' in search result of key attribute path = '{}' and search value = '{}' in data model '{}'",
+							recordClassUri, keyAttributePathString, searchValue, dataModelUuid);
+
+			throw new DMPPersistenceException(String.format(
+					"couldn't find records for record class '%s' in search result of key attribute path = '%s' and search value = '%s' in data model '%s'",
+					recordClassUri, keyAttributePathString, searchValue, dataModelUuid));
+		}
+
+		final Map<String, Model> modelMap = Maps.newLinkedHashMap();
+
+		for (final Resource recordResource : recordResources) {
+
+			final org.dswarm.graph.json.Model recordModel = new org.dswarm.graph.json.Model();
+			recordModel.addResource(recordResource);
+
+			final Model rdfModel = new GDMModel(recordModel, recordResource.getUri());
+
+			modelMap.put(recordResource.getUri(), rdfModel);
+		}
+
+		return Optional.of(modelMap);
+	}
+
 	/**
 	 * Adds the record class to the schema of the data model.
 	 *
@@ -681,13 +770,71 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final String body = response.readEntity(String.class);
 
+		return deserializeModel(body);
+	}
+
+	private org.dswarm.graph.json.Model searchGDMRecordsInDB(final String keyAttributePathString, final String searchValue, final String dataModelUri,
+			final Optional<Integer> optionalAtMost)
+			throws DMPPersistenceException {
+
+		final WebTarget target = target("/searchrecords");
+
+		final ObjectMapper objectMapper = DMPPersistenceUtil.getJSONObjectMapper();
+		final ObjectNode requestJson = objectMapper.createObjectNode();
+
+		requestJson.put(DMPStatics.KEY_ATTRIBUTE_PATH_IDENTIFIER, keyAttributePathString);
+		requestJson.put(DMPStatics.SEARCH_VALUE_IDENTIFIER, searchValue);
+		requestJson.put(DMPStatics.DATA_MODEL_URI_IDENTIFIER, dataModelUri);
+
+		if (optionalAtMost.isPresent()) {
+
+			requestJson.put(DMPStatics.AT_MOST_IDENTIFIER, optionalAtMost.get());
+		}
+
+		String requestJsonString;
+
+		try {
+
+			requestJsonString = objectMapper.writeValueAsString(requestJson);
+		} catch (final JsonProcessingException e) {
+
+			throw new DMPPersistenceException("something went wrong, while creating the request JSON string for the search-gdm-records-in-db request",
+					e);
+		}
+
+		// POST the request
+		final Response response = target.request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
+				.post(Entity.entity(requestJsonString, MediaType.APPLICATION_JSON));
+
+		if (response.getStatus() != 200) {
+
+			throw new DMPPersistenceException(
+					String.format("Couldn't find GDM records in database. Received status code '%s' from database endpoint.", response.getStatus()));
+		}
+
+		final String body = response.readEntity(String.class);
+
+		if (body.equals("[]")) {
+
+			InternalGDMGraphService.LOG
+					.debug("couldn't find results for key attribute path '{}' and search value '}' in data model '{}'", keyAttributePathString,
+							searchValue, dataModelUri);
+
+			return null;
+		}
+
+		return deserializeModel(body);
+	}
+
+	private org.dswarm.graph.json.Model deserializeModel(final String modelString) throws DMPPersistenceException {
+
 		final ObjectMapper gdmObjectMapper = Util.getJSONObjectMapper();
 
 		final org.dswarm.graph.json.Model model;
 
 		try {
 
-			model = gdmObjectMapper.readValue(body, org.dswarm.graph.json.Model.class);
+			model = gdmObjectMapper.readValue(modelString, org.dswarm.graph.json.Model.class);
 		} catch (final JsonParseException e) {
 
 			throw new DMPPersistenceException("something went wrong, while parsing the JSON string");
