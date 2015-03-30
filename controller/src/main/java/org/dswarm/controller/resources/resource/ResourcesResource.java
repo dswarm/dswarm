@@ -329,7 +329,7 @@ public class ResourcesResource extends AbstractBaseResource {
 	}
 
 	private String serializeShortResource(final Resource resource) throws DMPControllerException {
-				final ShortExtendendBasicDMPDTO shortVersion =
+		final ShortExtendendBasicDMPDTO shortVersion =
 				ShortExtendendBasicDMPDTO.of(resource, createObjectURI(resource.getUuid()));
 		return serialiseObject(shortVersion);
 	}
