@@ -25,6 +25,7 @@ import com.google.common.collect.Sets;
 import org.json.JSONException;
 import org.junit.Assert;
 
+import org.dswarm.persistence.model.job.Filter;
 import org.dswarm.persistence.model.job.Function;
 import org.dswarm.persistence.model.job.Mapping;
 import org.dswarm.persistence.model.job.Project;
@@ -43,6 +44,8 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 
 	private final DataModelServiceTestUtils dataModelServiceTestUtils;
 
+	private final FilterServiceTestUtils filterServiceTestUtils;
+
 	public ProjectServiceTestUtils() {
 
 		super(Project.class, ProjectService.class);
@@ -50,6 +53,7 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 		functionServiceTestUtils = new FunctionServiceTestUtils();
 		mappingServiceTestUtils = new MappingServiceTestUtils();
 		dataModelServiceTestUtils = new DataModelServiceTestUtils();
+		filterServiceTestUtils = new FilterServiceTestUtils();
 	}
 
 	@Override public Project createObject(JsonNode objectDescription) throws Exception {
@@ -106,6 +110,16 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 		return createProject(projectName, projectDescription, mappings, inputDataModel, outputDataModel, functions);
 	}
 
+	@Override public Project createAndPersistDefaultCompleteObject() throws Exception {
+
+		final Project project = createDefaultObject();
+		final Filter skipFilter = filterServiceTestUtils.createDefaultObject();
+
+		project.setSkipFilter(skipFilter);
+
+		return createAndCompareObject(project, project);
+	}
+
 	public Project createAndPersistProject(final String name, final String description, final Set<Mapping> mappings, final DataModel inputDataModel,
 			final DataModel outputDataModel, final Set<Function> functions)
 			throws Exception {
@@ -155,6 +169,7 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 					actualProject.getInputDataModel());
 
 		} else {
+
 			dataModelServiceTestUtils.compareObjects(expectedProject.getInputDataModel(), actualProject.getInputDataModel());
 		}
 
@@ -165,7 +180,19 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 					actualProject.getOutputDataModel());
 
 		} else {
+
 			dataModelServiceTestUtils.compareObjects(expectedProject.getOutputDataModel(), actualProject.getOutputDataModel());
+		}
+
+		// compare output skip filters
+		if (expectedProject.getSkipFilter() == null) {
+
+			Assert.assertNull("the actual project '" + actualProject.getUuid() + "' should not have a skip filter",
+					actualProject.getSkipFilter());
+
+		} else {
+
+			filterServiceTestUtils.compareObjects(expectedProject.getSkipFilter(), actualProject.getSkipFilter());
 		}
 
 		// compare mappings
@@ -227,6 +254,7 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 		object.setFunctions(objectWithUpdates.getFunctions());
 		object.setInputDataModel(objectWithUpdates.getInputDataModel());
 		object.setOutputDataModel(objectWithUpdates.getOutputDataModel());
+		object.setSkipFilter(objectWithUpdates.getSkipFilter());
 		object.setMappings(objectWithUpdates.getMappings());
 
 		return object;
@@ -238,5 +266,6 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 		dataModelServiceTestUtils.reset();
 		functionServiceTestUtils.reset();
 		mappingServiceTestUtils.reset();
+		filterServiceTestUtils.reset();
 	}
 }

@@ -55,4 +55,18 @@ public class ProjectServiceTest extends BasicJPAServiceTest<ProxyProject, Projec
 
 		ProjectServiceTest.LOG.debug("end simple project test");
 	}
+
+	@Test
+	public void testComplexObject() throws Exception {
+
+		ProjectServiceTest.LOG.debug("start complex project test");
+
+		final Project project = projectServiceTestUtils.createAndPersistDefaultCompleteObject();
+
+		final Project updatedProject = projectServiceTestUtils.updateAndCompareObject(project, project);
+
+		logObjectJSON(updatedProject);
+
+		ProjectServiceTest.LOG.debug("end complex project test");
+	}
 }
