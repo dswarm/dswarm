@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -246,7 +247,9 @@ public class ResourcesResource extends AbstractBaseResource {
 	@Timed
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getResources() throws DMPControllerException {
+	public Response getResources(
+			@ApiParam(value = "'short' for only uuid,name,description, 'full' for the complete entity")
+			@QueryParam("format") @DefaultValue("full") final POJOFormat format) throws DMPControllerException {
 		ResourcesResource.LOG.debug("try to get all resources");
 
 		final ResourceService resourceService = resourceServiceProvider.get();
@@ -266,21 +269,39 @@ public class ResourcesResource extends AbstractBaseResource {
 		}
 
 		ResourcesResource.LOG.debug("got all resources ");
-		ResourcesResource.LOG.trace("= '{}'", ToStringBuilder.reflectionToString(resources));
+		if (ResourcesResource.LOG.isTraceEnabled()) {
+			ResourcesResource.LOG.trace("= '{}'", ToStringBuilder.reflectionToString(resources));
+		}
 
 		final String resourcesJSON;
 
-		try {
-
-			resourcesJSON = objectMapper.writeValueAsString(resources);
-		} catch (final JsonProcessingException e) {
-			throw new DMPControllerException("couldn't transform resources list object to JSON string.\n", e);
+		switch (format) {
+			case SHORT:
+				resourcesJSON = serializeShortObjects(resources);
+				break;
+			default:
+				resourcesJSON = serializeFullObjects(resources);
+				break;
 		}
 
 		ResourcesResource.LOG.debug("return all resources ");
-		ResourcesResource.LOG.trace("'{}'", resourcesJSON);
+		if (ResourcesResource.LOG.isTraceEnabled()) {
+			ResourcesResource.LOG.trace("'{}'", resourcesJSON);
+		}
 
 		return buildResponse(resourcesJSON);
+	}
+
+	private String serializeShortObjects(final List<Resource> resources) throws DMPControllerException {
+		final List<ShortExtendendBasicDMPDTO> shortResources = resources.stream()
+				.map(r -> ShortExtendendBasicDMPDTO.of(r, createObjectURI(r.getUuid())))
+				.collect(Collectors.toList());
+
+		return serialiseObject(shortResources);
+	}
+
+	private String serializeFullObjects(final List<Resource> resources) throws DMPControllerException {
+		return serialiseObject(resources);
 	}
 
 	/**
