@@ -32,19 +32,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.dswarm.common.types.Tuple;
-import org.dswarm.controller.DMPControllerException;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
-import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.service.InternalModelService;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.service.resource.ResourceService;
-import org.dswarm.persistence.service.schema.SchemaService;
 
 /**
  * A utility class for working with data ({@link Model}) and {@link Schema} of a {@link DataModel} (and other related parts of a
@@ -60,17 +57,14 @@ public class DataModelUtil {
 	private final ObjectMapper                          objectMapper;
 	private final Provider<ResourceService>             resourceServiceProvider;
 	private final Provider<InternalModelServiceFactory> internalServiceFactoryProvider;
-	private final Provider<SchemaService>               schemaServiceProvider;
 	private final Provider<DataModelService>            dataModelServiceProvider;
 
 	@Inject
 	public DataModelUtil(final ObjectMapper objectMapper, final Provider<ResourceService> resourceServiceProvider,
-			final Provider<InternalModelServiceFactory> internalServiceFactoryProvider, final Provider<SchemaService> schemaServiceProvider,
-			final Provider<DataModelService> dataModelServiceProvider) {
+			final Provider<InternalModelServiceFactory> internalServiceFactoryProvider, final Provider<DataModelService> dataModelServiceProvider) {
 		this.objectMapper = objectMapper;
 		this.resourceServiceProvider = resourceServiceProvider;
 		this.internalServiceFactoryProvider = internalServiceFactoryProvider;
-		this.schemaServiceProvider = schemaServiceProvider;
 		this.dataModelServiceProvider = dataModelServiceProvider;
 	}
 
@@ -95,19 +89,7 @@ public class DataModelUtil {
 
 		DataModelUtil.LOG.debug(String.format("try to get data for data model with id [%s]", dataModelUuid));
 
-		final Optional<Configuration> configurationOptional = fetchConfiguration(dataModelUuid);
-
-		if (!configurationOptional.isPresent()) {
-
-			return Optional.absent();
-		}
-
-		final InternalModelService internalService;
-		try {
-			internalService = determineInternalService(configurationOptional.get());
-		} catch (final DMPControllerException e) {
-			return Optional.absent();
-		}
+		final InternalModelService internalService = internalServiceFactoryProvider.get().getInternalGDMGraphService();
 
 		final Optional<Map<String, Model>> maybeTriples;
 
@@ -131,22 +113,49 @@ public class DataModelUtil {
 		return Optional.of(dataIterator(iterator));
 	}
 
+	/**
+	 * Gets the data of the search result of the given data model and maximum in the given amount.
+	 *
+	 * @param keyAttributePathString the key attribute path
+	 * @param searchValue the search value
+	 * @param dataModelUuid the identifer of the data model
+	 * @param atMost        the number of records that should be retrieved
+	 * @return the data of the given data model
+	 */
+	public Optional<Iterator<Tuple<String, JsonNode>>> searchRecords(final String keyAttributePathString, final String searchValue,
+			final String dataModelUuid, final Optional<Integer> atMost) {
+
+		DataModelUtil.LOG.debug(String.format("try to get data for data model with id [%s]", dataModelUuid));
+
+		final InternalModelService internalService = internalServiceFactoryProvider.get().getInternalGDMGraphService();
+
+		final Optional<Map<String, Model>> maybeTriples;
+
+		try {
+
+			maybeTriples = internalService.searchObjects(dataModelUuid, keyAttributePathString, searchValue, atMost);
+		} catch (final DMPPersistenceException e1) {
+
+			DataModelUtil.LOG.debug("couldn't find data for key attribute path '{}' and search value '{}' in data model '{}'", keyAttributePathString,
+					searchValue, dataModelUuid, e1);
+			return Optional.absent();
+		}
+
+		if (!maybeTriples.isPresent()) {
+
+			DataModelUtil.LOG.debug("couldn't find data for key attribute path '{}' and search value '{}' in data model '{}'", keyAttributePathString,
+					searchValue, dataModelUuid);
+			return Optional.absent();
+		}
+
+		final Iterator<Map.Entry<String, Model>> iterator = maybeTriples.get().entrySet().iterator();
+
+		return Optional.of(dataIterator(iterator));
+	}
+
 	public Optional<ObjectNode> getSchema(final String dataModelUuid) {
 
-		final Optional<Configuration> configurationOptional = fetchConfiguration(dataModelUuid);
-
-		if (!configurationOptional.isPresent()) {
-
-			return Optional.absent();
-		}
-
-		final InternalModelService internalService;
-		try {
-			internalService = determineInternalService(configurationOptional.get());
-		} catch (final DMPControllerException e) {
-
-			return Optional.absent();
-		}
+		final InternalModelService internalService = internalServiceFactoryProvider.get().getInternalGDMGraphService();
 
 		Optional<Schema> schemaOptional = null;
 		try {
@@ -165,7 +174,7 @@ public class DataModelUtil {
 			return Optional.absent();
 		}
 
-		String schemaJSONString = null;
+		String schemaJSONString;
 		try {
 
 			schemaJSONString = objectMapper.writeValueAsString(schemaOptional.get());
@@ -268,42 +277,6 @@ public class DataModelUtil {
 		final ResourceService resourceService = resourceServiceProvider.get();
 		resourceService.deleteObject(resourceUuid);
 
-	}
-
-	private InternalModelService determineInternalService(final Configuration configuration) throws DMPControllerException {
-
-		final JsonNode storageType = configuration.getParameters().get(ConfigurationStatics.STORAGE_TYPE);
-
-		if (storageType != null) {
-
-			switch (storageType.asText()) {
-
-				case ConfigurationStatics.SCHEMA_STORAGE_TYPE:
-
-					// TODO: fix this as needed
-
-					return null;
-				case ConfigurationStatics.CSV_STORAGE_TYPE:
-
-					return internalServiceFactoryProvider.get().getInternalGDMGraphService();
-
-				case ConfigurationStatics.XML_STORAGE_TYPE:
-				case ConfigurationStatics.MABXML_STORAGE_TYPE:
-				case ConfigurationStatics.MARCXML_STORAGE_TYPE:
-				case ConfigurationStatics.PNX_STORAGE_TYPE:
-				case ConfigurationStatics.OAI_PMH_DC_ELEMENTS_STORAGE_TYPE:
-				case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:
-				case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
-
-					return internalServiceFactoryProvider.get().getInternalGDMGraphService();
-				default:
-
-					throw new DMPControllerException("couldn't determine internal service type from storage type = '" + storageType.asText() + "'");
-			}
-		} else {
-
-			throw new DMPControllerException("couldn't determine storage type from configuration");
-		}
 	}
 
 	private Iterator<Tuple<String, JsonNode>> dataIterator(final Iterator<Map.Entry<String, Model>> triples) {

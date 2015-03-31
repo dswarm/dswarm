@@ -39,6 +39,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.dswarm.common.DMPStatics;
 import org.dswarm.common.types.Tuple;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
@@ -127,55 +128,55 @@ public class DataModelsResourceTest2 extends
 		DataModelsResourceTest2.LOG.debug("end get CSV data test");
 	}
 
-//	/**
-//	 * note doesn't work right now
-//	 *
-//	 * @throws Exception
-//	 */
-//	@Test
-//	public void testCSVDataUpdate() throws Exception {
-//
-//		DataModelsResourceTest2.LOG.debug("start CSV data update test");
-//
-//		final DataModel dataModel = testCSVDataInternal();
-//
-//		// prepare resource
-//
-//		final Resource expectedResource = dataModel.getDataResource();
-//
-//		final URL fileURL = Resources.getResource("test_csv-controller2.csv");
-//		final File resourceFile = FileUtils.toFile(fileURL);
-//
-//		// update resource
-//		resourcesResourceTestUtils.updateResource(resourceFile, expectedResource, expectedResource.getUuid());
-//
-//		final DataModel updateDataModel = pojoClassResourceTestUtils.getObject(dataModel.getUuid());
-//
-//		final String updateObjectJSONString = objectMapper.writeValueAsString(updateDataModel);
-//
-//		// update data model
-//		final Response response = target(String.valueOf(updateDataModel.getUuid())).queryParam("updateContent", Boolean.TRUE).request(
-//				MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
-//				.put(Entity.json(updateObjectJSONString));
-//
-//		Assert.assertEquals("200 Updated was expected", 200, response.getStatus());
-//
-//		final String responseString = response.readEntity(String.class);
-//
-//		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
-//
-//		final Tuple<Optional<Map<String, Model>>, ObjectNode> result = readData(updateDataModel, Optional.<Integer>absent());
-//
-//		final Optional<Map<String, Model>> data = result.v1();
-//		final ObjectNode assoziativeJsonArray = result.v2();
-//
-//		Assert.assertTrue(data.isPresent());
-//		Assert.assertNotNull(assoziativeJsonArray);
-//
-//		System.out.println(objectMapper.writeValueAsString(assoziativeJsonArray));
-//
-//		DataModelsResourceTest2.LOG.debug("end CSV data update test");
-//	}
+	//	/**
+	//	 * note doesn't work right now
+	//	 *
+	//	 * @throws Exception
+	//	 */
+	//	@Test
+	//	public void testCSVDataUpdate() throws Exception {
+	//
+	//		DataModelsResourceTest2.LOG.debug("start CSV data update test");
+	//
+	//		final DataModel dataModel = testCSVDataInternal();
+	//
+	//		// prepare resource
+	//
+	//		final Resource expectedResource = dataModel.getDataResource();
+	//
+	//		final URL fileURL = Resources.getResource("test_csv-controller2.csv");
+	//		final File resourceFile = FileUtils.toFile(fileURL);
+	//
+	//		// update resource
+	//		resourcesResourceTestUtils.updateResource(resourceFile, expectedResource, expectedResource.getUuid());
+	//
+	//		final DataModel updateDataModel = pojoClassResourceTestUtils.getObject(dataModel.getUuid());
+	//
+	//		final String updateObjectJSONString = objectMapper.writeValueAsString(updateDataModel);
+	//
+	//		// update data model
+	//		final Response response = target(String.valueOf(updateDataModel.getUuid())).queryParam("updateContent", Boolean.TRUE).request(
+	//				MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+	//				.put(Entity.json(updateObjectJSONString));
+	//
+	//		Assert.assertEquals("200 Updated was expected", 200, response.getStatus());
+	//
+	//		final String responseString = response.readEntity(String.class);
+	//
+	//		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
+	//
+	//		final Tuple<Optional<Map<String, Model>>, ObjectNode> result = readData(updateDataModel, Optional.<Integer>absent());
+	//
+	//		final Optional<Map<String, Model>> data = result.v1();
+	//		final ObjectNode assoziativeJsonArray = result.v2();
+	//
+	//		Assert.assertTrue(data.isPresent());
+	//		Assert.assertNotNull(assoziativeJsonArray);
+	//
+	//		System.out.println(objectMapper.writeValueAsString(assoziativeJsonArray));
+	//
+	//		DataModelsResourceTest2.LOG.debug("end CSV data update test");
+	//	}
 
 	@Test
 	public void testCSVDataUpdate2() throws Exception {
@@ -357,6 +358,43 @@ public class DataModelsResourceTest2 extends
 				body);
 
 		DataModelsResourceTest2.LOG.debug("end throw Exception at XML data test");
+	}
+
+	@Test
+	public void testSearchRecordsCSVData() throws Exception {
+
+		DataModelsResourceTest2.LOG.debug("start search records in CSV data test");
+
+		final DataModel dataModel = testCSVDataInternal();
+
+		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
+
+		Assert.assertNotNull("the data resource schema base uri shouldn't be null", dataResourceSchemaBaseURI);
+
+		final String keyAttributePathString = dataResourceSchemaBaseURI + "name";
+		final String searchValue = "foo";
+
+		final ObjectNode requestJSON = objectMapper.createObjectNode();
+		requestJSON.put(DMPStatics.KEY_ATTRIBUTE_PATH_IDENTIFIER, keyAttributePathString);
+		requestJSON.put(DMPStatics.SEARCH_VALUE_IDENTIFIER, searchValue);
+
+		final Response response = target(String.valueOf(dataModel.getUuid()), "/records/search").request(MediaType.APPLICATION_JSON_TYPE)
+				.accept(MediaType.APPLICATION_JSON_TYPE)
+				.post(Entity.json(requestJSON));
+
+		Assert.assertNotNull(response);
+		Assert.assertEquals(200, response.getStatus());
+
+		final String body = response.readEntity(String.class);
+
+		Assert.assertNotNull(body);
+
+		final String expectedResult = DMPPersistenceUtil.getResourceAsString("csv.record.search.result.json");
+
+		Assert.assertNotNull(expectedResult);
+		Assert.assertEquals(expectedResult.length(), body.length());
+
+		DataModelsResourceTest2.LOG.debug("end search records in CSV data test");
 	}
 
 	private DataModel createDataModel(final String dataResourceResourceFileName, final String dataResourceFileName,

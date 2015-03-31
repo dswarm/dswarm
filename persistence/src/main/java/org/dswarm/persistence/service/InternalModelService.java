@@ -67,4 +67,17 @@ public interface InternalModelService {
 	 * @throws DMPPersistenceException
 	 */
 	Optional<Schema> getSchema(final String dataModelUuid) throws DMPPersistenceException;
+
+	/**
+	 * Retrieves a collection of objects from a data model that matches the search criteria.
+	 *
+	 * @param dataModelUuid the identifier of the data model
+	 * @param keyAttributePathString the key attribute path as string
+	 * @param searchValue the search value
+	 * @param atMost        the number of objects that should be retrieved at most
+	 * @return (optional) a map of objects and their identifier
+	 * @throws DMPPersistenceException
+	 */
+	Optional<Map<String, Model>> searchObjects(final String dataModelUuid, final String keyAttributePathString, final String searchValue,
+			final Optional<Integer> atMost) throws DMPPersistenceException;
 }
