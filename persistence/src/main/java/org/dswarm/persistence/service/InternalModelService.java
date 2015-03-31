@@ -16,6 +16,7 @@
 package org.dswarm.persistence.service;
 
 import java.util.Map;
+import java.util.Set;
 
 import com.google.common.base.Optional;
 
@@ -80,4 +81,24 @@ public interface InternalModelService {
 	 */
 	Optional<Map<String, Model>> searchObjects(final String dataModelUuid, final String keyAttributePathString, final String searchValue,
 			final Optional<Integer> atMost) throws DMPPersistenceException;
+
+	/**
+	 * Retrieves the record in the specific data model with the given record identifier from the datahub.
+	 *
+	 * @param recordIdentifier the record identifier
+	 * @param dataModelUuid the identifier of the data model
+	 * @return
+	 * @throws DMPPersistenceException
+	 */
+	Optional<Model> getRecord(final String recordIdentifier, final String dataModelUuid) throws DMPPersistenceException;
+
+	/**
+	 * Retrieves the records in the specific data model with the given record identifiers from the datahub.
+	 *
+	 * @param recordIdentifiers the record identifiers
+	 * @param dataModelUuid the identifier of the data model
+	 * @return
+	 * @throws DMPPersistenceException
+	 */
+	Optional<Map<String, Model>> getRecords(final Set<String> recordIdentifiers, final String dataModelUuid) throws DMPPersistenceException;
 }

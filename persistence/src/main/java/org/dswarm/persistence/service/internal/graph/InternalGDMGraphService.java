@@ -447,9 +447,106 @@ public class InternalGDMGraphService implements InternalModelService {
 			final org.dswarm.graph.json.Model recordModel = new org.dswarm.graph.json.Model();
 			recordModel.addResource(recordResource);
 
-			final Model rdfModel = new GDMModel(recordModel, recordResource.getUri());
+			final Model gdmModel = new GDMModel(recordModel, recordResource.getUri());
 
-			modelMap.put(recordResource.getUri(), rdfModel);
+			modelMap.put(recordResource.getUri(), gdmModel);
+		}
+
+		return Optional.of(modelMap);
+	}
+
+	@Override public Optional<Model> getRecord(final String recordIdentifier, final String dataModelUuid) throws DMPPersistenceException {
+
+		if (recordIdentifier == null) {
+
+			throw new DMPPersistenceException("record identifier shouldn't be null");
+		}
+
+		if (dataModelUuid == null) {
+
+			throw new DMPPersistenceException("data model id shouldn't be null");
+		}
+
+		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelUuid);
+
+		final org.dswarm.graph.json.Resource resource = readGDMRecordFromDB(recordIdentifier, dataModelURI);
+
+		if (resource == null) {
+
+			InternalGDMGraphService.LOG.debug("couldn't find record data for record identifier '{}' in data model '{}' in database", recordIdentifier, dataModelUuid);
+
+			return Optional.absent();
+		}
+
+		if (resource.size() <= 0) {
+
+			InternalGDMGraphService.LOG.debug("resource is empty for record identifier '{}' in data model '{}' in database", recordIdentifier,
+					dataModelUuid);
+
+			return Optional.absent();
+		}
+
+		final org.dswarm.graph.json.Model model = new org.dswarm.graph.json.Model();
+		model.addResource(resource);
+
+		final Model gdmModel = new GDMModel(model, recordIdentifier);
+
+		return Optional.of(gdmModel);
+	}
+
+	@Override public Optional<Map<String, Model>> getRecords(final Set<String> recordIdentifiers, final String dataModelUuid)
+			throws DMPPersistenceException {
+
+		if (recordIdentifiers == null) {
+
+			throw new DMPPersistenceException("record identifiers shouldn't be null");
+		}
+
+		if (recordIdentifiers.isEmpty()) {
+
+			throw new DMPPersistenceException("there are no record identifiers");
+		}
+
+		if (dataModelUuid == null) {
+
+			throw new DMPPersistenceException("data model id shouldn't be null");
+		}
+
+		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelUuid);
+
+		final Map<String, Model> modelMap = Maps.newLinkedHashMap();
+
+		for(final String recordIdentifier : recordIdentifiers) {
+
+			final org.dswarm.graph.json.Resource resource = readGDMRecordFromDB(recordIdentifier, dataModelURI);
+
+			if (resource == null) {
+
+				InternalGDMGraphService.LOG.debug("couldn't find record data for record identifier '{}' in data model '{}' in database", recordIdentifier, dataModelUuid);
+
+				continue;
+			}
+
+			if (resource.size() <= 0) {
+
+				InternalGDMGraphService.LOG.debug("resource is empty for record identifier '{}' in data model '{}' in database", recordIdentifier, dataModelUuid);
+
+				continue;
+			}
+
+			final org.dswarm.graph.json.Model model = new org.dswarm.graph.json.Model();
+			model.addResource(resource);
+
+			final Model gdmModel = new GDMModel(model, recordIdentifier);
+
+			modelMap.put(recordIdentifier, gdmModel);
+		}
+
+		if(modelMap.isEmpty()) {
+
+			InternalGDMGraphService.LOG.debug("couldn't find any record in data model '{}' in database", dataModelUuid);
+
+			return Optional.absent();
 		}
 
 		return Optional.of(modelMap);
@@ -764,13 +861,47 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		if (response.getStatus() != 200) {
 
-			throw new DMPPersistenceException("Couldn't read GDM data from database. Received status code '" + response.getStatus()
-					+ "' from database endpoint.");
+			throw new DMPPersistenceException(String.format("Couldn't read GDM data from database. Received status code '%s' from database endpoint.", response.getStatus()));
 		}
 
 		final String body = response.readEntity(String.class);
 
 		return deserializeModel(body);
+	}
+
+	private org.dswarm.graph.json.Resource readGDMRecordFromDB(final String recordUri, final String dataModelUri)
+			throws DMPPersistenceException {
+
+		final WebTarget target = target("/getrecord");
+
+		final ObjectMapper objectMapper = DMPPersistenceUtil.getJSONObjectMapper();
+		final ObjectNode requestJson = objectMapper.createObjectNode();
+
+		requestJson.put(DMPStatics.RECORD_URI_IDENTIFIER, recordUri);
+		requestJson.put(DMPStatics.DATA_MODEL_URI_IDENTIFIER, dataModelUri);
+
+		String requestJsonString;
+
+		try {
+
+			requestJsonString = objectMapper.writeValueAsString(requestJson);
+		} catch (final JsonProcessingException e) {
+
+			throw new DMPPersistenceException("something went wrong, while creating the request JSON string for the read-gdm-record-from-db request", e);
+		}
+
+		// POST the request
+		final Response response = target.request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
+				.post(Entity.entity(requestJsonString, MediaType.APPLICATION_JSON));
+
+		if (response.getStatus() != 200) {
+
+			throw new DMPPersistenceException(String.format("Couldn't read GDM record data from database. Received status code '%s' from database endpoint.", response.getStatus()));
+		}
+
+		final String body = response.readEntity(String.class);
+
+		return deserializeResource(body);
 	}
 
 	private org.dswarm.graph.json.Model searchGDMRecordsInDB(final String keyAttributePathString, final String searchValue, final String dataModelUri,
@@ -847,6 +978,29 @@ public class InternalGDMGraphService implements InternalModelService {
 		}
 
 		return model;
+	}
+
+	private org.dswarm.graph.json.Resource deserializeResource(final String modelString) throws DMPPersistenceException {
+
+		final ObjectMapper gdmObjectMapper = Util.getJSONObjectMapper();
+
+		final org.dswarm.graph.json.Resource resource;
+
+		try {
+
+			resource = gdmObjectMapper.readValue(modelString, org.dswarm.graph.json.Resource.class);
+		} catch (final JsonParseException e) {
+
+			throw new DMPPersistenceException("something went wrong, while parsing the JSON string");
+		} catch (final JsonMappingException e) {
+
+			throw new DMPPersistenceException("something went wrong, while mapping the JSON string");
+		} catch (final IOException e) {
+
+			throw new DMPPersistenceException("something went wrong, while processing the JSON string");
+		}
+
+		return resource;
 	}
 
 	private Client client() {

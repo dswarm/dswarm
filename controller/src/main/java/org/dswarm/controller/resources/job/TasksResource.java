@@ -17,6 +17,8 @@ package org.dswarm.controller.resources.job;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -76,6 +78,11 @@ public class TasksResource {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TasksResource.class);
 
+	public static final String TASK_IDENTIFIER             = "task";
+	public static final String AT_MOST_IDENTIFIER          = "at_most";
+	public static final String PERSIST_IDENTIFIER          = "persist";
+	public static final String SELECTED_RECORDS_IDENTIFIER = "selected_records";
+
 	/**
 	 * The base URI of this resource.
 	 */
@@ -92,7 +99,7 @@ public class TasksResource {
 	 */
 	private final ObjectMapper objectMapper;
 
-	private final TransformationFlowFactory transformationFlowFactory;
+	private final TransformationFlowFactory  transformationFlowFactory;
 	private final Provider<MonitoringLogger> monitoringLogger;
 
 	/**
@@ -108,7 +115,7 @@ public class TasksResource {
 			final DataModelUtil dataModelUtilArg,
 			final ObjectMapper objectMapperArg,
 			final TransformationFlowFactory transformationFlowFactoryArg,
-			@Named("Monitoring") final Provider<MonitoringLogger> monitoringLogger){
+			@Named("Monitoring") final Provider<MonitoringLogger> monitoringLogger) {
 
 		dataModelUtil = dataModelUtilArg;
 		objectMapper = objectMapperArg;
@@ -127,14 +134,13 @@ public class TasksResource {
 		return Response.ok(responseContent).build();
 	}
 
-	// START FROM JobsResource
-
 	/**
-	 * This endpoint executes the task that is given via its JSON representation and returns the result of the task execution.
+	 * This endpoint executes the task that is given in the request JSON representation and returns the result of the task execution. The JSON request contains besides the task some more parameters. These are:<br>
+	 *     - selected_records: a set of selected record identifiers, i.e., the task will only be executed on these records
+	 *     - at_most: the number of result records that should be returned at most (optional)
+	 *     - persist: flag that indicates whether the result should be persisted in the datahub or not (optional)
 	 *
-	 * @param jsonObjectString a JSON representation of one task
-	 * @param persistResult    flag that indicates whether the result should be persisted in the datahub or not
-	 * @param atMost           the number of result records that should be returned at most
+	 * @param jsonObjectString a JSON representation of the request JSON (incl. task)
 	 * @return the result of the task execution
 	 * @throws IOException
 	 * @throws DMPConverterException
@@ -147,66 +153,133 @@ public class TasksResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response executeTask(@ApiParam(value = "task (as JSON)", required = true) final String jsonObjectString,
-			@ApiParam("persist result set") @QueryParam("persist") @DefaultValue(value = "false") final Boolean persistResult,
-			@ApiParam("number of result records limit") @QueryParam("atMost") final Integer atMost) throws IOException,
+	public Response executeTask(@ApiParam(value = "task execution request (as JSON)", required = true) final String jsonObjectString)
+			throws IOException,
 			DMPConverterException, DMPControllerException {
+
+		if (jsonObjectString == null) {
+
+			final String message = "couldn't process task execution request JSON, because it's null";
+
+			TasksResource.LOG.error(message);
+
+			throw new DMPControllerException(message);
+		}
+
+		final ObjectNode requestJSON = objectMapper.readValue(jsonObjectString, ObjectNode.class);
+
+		if (requestJSON == null) {
+
+			final String message = "couldn't deserialize task execution request JSON";
+
+			TasksResource.LOG.error(message);
+
+			throw new DMPControllerException(message);
+		}
+
+		final JsonNode taskNode = requestJSON.get(TasksResource.TASK_IDENTIFIER);
+
+		if (taskNode == null) {
+
+			final String message = "couldn't process task execution request JSON, because the task JSON node null";
+
+			TasksResource.LOG.error(message);
+
+			throw new DMPControllerException(message);
+		}
+
+		final String taskNodeString = objectMapper.writeValueAsString(taskNode);
+
+		if (taskNodeString == null) {
+
+			final String message = "couldn't process task execution request JSON, because couldn't process task JSON node";
+
+			TasksResource.LOG.error(message);
+
+			throw new DMPControllerException(message);
+		}
 
 		final Task task;
 
-		task = objectMapper.readValue(jsonObjectString, Task.class);
+		task = objectMapper.readValue(taskNodeString, Task.class);
 
 		if (task == null) {
 
-			TasksResource.LOG.error("couldn't parse task JSON to Task");
+			final String message = "couldn't parse task JSON to Task";
 
-			throw new DMPConverterException("couldn't parse task JSON to Task");
+			TasksResource.LOG.error(message);
+
+			throw new DMPConverterException(message);
 		}
 
 		final Job job = task.getJob();
 
 		if (job == null) {
 
-			TasksResource.LOG.error("there is no job for this task");
+			final String message = "there is no job for this task";
 
-			throw new DMPConverterException("there is no job for this task");
+			TasksResource.LOG.error(message);
+
+			throw new DMPConverterException(message);
 		}
 
 		if (job.getMappings() == null) {
 
-			TasksResource.LOG.error("there is are no mappings for this job of this task");
+			final String message = "there is are no mappings for this job of this task";
 
-			throw new DMPConverterException("there is are no mappings for this job of this task");
+			TasksResource.LOG.error(message);
+
+			throw new DMPConverterException(message);
 		}
 
 		final DataModel inputDataModel = task.getInputDataModel();
 
 		if (inputDataModel == null) {
 
-			TasksResource.LOG.error("there is no input data model for this task");
+			final String message = "there is no input data model for this task";
 
-			throw new DMPConverterException("there is no input data model for this task");
+			TasksResource.LOG.error(message);
+
+			throw new DMPConverterException(message);
 		}
 
 		final Resource dataResource = inputDataModel.getDataResource();
 
 		if (dataResource == null) {
 
-			TasksResource.LOG.error("there is no data resource for this input data model of this task");
+			final String message = "there is no data resource for this input data model of this task";
 
-			throw new DMPConverterException("there is no data resource for this input data model of this task");
+			TasksResource.LOG.error(message);
+
+			throw new DMPConverterException(message);
 		}
 
 		final Configuration configuration = inputDataModel.getConfiguration();
 
 		if (configuration == null) {
 
-			TasksResource.LOG.error("there is no configuration for this input data model of this task");
+			final String message = "there is no configuration for this input data model of this task";
 
-			throw new DMPConverterException("there is no configuration for this input data model of this task");
+			TasksResource.LOG.error(message);
+
+			throw new DMPConverterException(message);
 		}
 
-		final Optional<Iterator<Tuple<String, JsonNode>>> inputData = dataModelUtil.getData(inputDataModel.getUuid(), Optional.fromNullable(atMost));
+		final Optional<Iterator<Tuple<String, JsonNode>>> inputData;
+
+		final Optional<Set<String>> optionalSelectedRecords = getStringSetValue(TasksResource.SELECTED_RECORDS_IDENTIFIER, requestJSON);
+
+		if (optionalSelectedRecords.isPresent()) {
+
+			// retrieve data only for selected records
+
+			inputData = dataModelUtil.getRecordsData(optionalSelectedRecords.get(), inputDataModel.getUuid());
+		} else {
+
+			final Optional<Integer> optionalAtMost = getIntValue(TasksResource.AT_MOST_IDENTIFIER, requestJSON);
+
+			inputData = dataModelUtil.getData(inputDataModel.getUuid(), optionalAtMost);
+		}
 
 		if (!inputData.isPresent()) {
 
@@ -217,7 +290,9 @@ public class TasksResource {
 
 		final Iterator<Tuple<String, JsonNode>> tupleIterator = inputData.get();
 
-		final boolean writeResultToDatahub = persistResult != null && persistResult;
+		final Optional<Boolean> optionalPersistResult = getBooleanValue(TasksResource.PERSIST_IDENTIFIER, requestJSON);
+
+		final boolean writeResultToDatahub = optionalPersistResult.isPresent() && Boolean.TRUE.equals(optionalPersistResult.get());
 
 		final String result;
 		try (final MonitoringHelper ignore = monitoringLogger.get().startExecution(task)) {
@@ -334,6 +409,63 @@ public class TasksResource {
 			feFriendlyJSON.add(recordNode);
 		}
 		return feFriendlyJSON;
+	}
+
+	private Optional<Integer> getIntValue(final String key, final JsonNode json) {
+
+		final JsonNode node = json.get(key);
+		final Optional<Integer> optionalValue;
+
+		if (node != null) {
+
+			optionalValue = Optional.fromNullable(node.asInt());
+		} else {
+
+			optionalValue = Optional.absent();
+		}
+
+		return optionalValue;
+	}
+
+	private Optional<Boolean> getBooleanValue(final String key, final JsonNode json) {
+
+		final JsonNode node = json.get(key);
+		final Optional<Boolean> optionalValue;
+
+		if (node != null) {
+
+			optionalValue = Optional.fromNullable(node.asBoolean());
+		} else {
+
+			optionalValue = Optional.absent();
+		}
+
+		return optionalValue;
+	}
+
+	private Optional<Set<String>> getStringSetValue(final String key, final JsonNode json) {
+
+		final JsonNode node = json.get(key);
+		final Optional<Set<String>> optionalValue;
+
+		if (node != null) {
+
+			final Set<String> set = new LinkedHashSet<>();
+
+			for (final JsonNode entryNode : node) {
+
+				final String entry = entryNode.asText();
+
+				set.add(entry);
+			}
+
+			optionalValue = Optional.of(set);
+		} else {
+
+			optionalValue = Optional.absent();
+		}
+
+		return optionalValue;
 	}
 
 }
