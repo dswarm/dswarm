@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dswarm.controller.resources.job.test;
+package org.dswarm.controller.resources;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
@@ -30,7 +33,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
+import com.google.common.base.Optional;
 import com.google.common.io.Resources;
+import com.google.inject.Key;
 import org.apache.commons.io.FileUtils;
 import org.apache.tika.Tika;
 import org.hamcrest.CoreMatchers;
@@ -45,6 +50,7 @@ import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTes
 import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
 import org.dswarm.controller.resources.test.ResourceTest;
 import org.dswarm.controller.test.GuicedTest;
+import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
@@ -52,12 +58,14 @@ import org.dswarm.persistence.model.resource.ResourceType;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
 import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.service.InternalModelService;
+import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
-public class TasksCsvResourceTest extends ResourceTest {
+public class TasksCsvResourceTest3 extends ResourceTest {
 
-	private static final Logger LOG = LoggerFactory.getLogger(TasksCsvResourceTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TasksCsvResourceTest3.class);
 
 	private String taskJSONString;
 
@@ -67,7 +75,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	public TasksCsvResourceTest() {
+	public TasksCsvResourceTest3() {
 
 		super("tasks");
 	}
@@ -90,7 +98,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 	@Test
 	public void testTaskExecution() throws Exception {
 
-		TasksCsvResourceTest.LOG.debug("start task execution test");
+		TasksCsvResourceTest3.LOG.debug("start task execution test");
 
 		final String resourceFileName = "test_csv-controller.csv";
 
@@ -115,7 +123,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 			// fileType = Files.probeContentType(resourceFile.toPath());
 		} catch (final IOException e1) {
 
-			TasksCsvResourceTest.LOG.debug("couldn't determine file type from file '" + resourceFile.getAbsolutePath() + "'");
+			TasksCsvResourceTest3.LOG.debug("couldn't determine file type from file '" + resourceFile.getAbsolutePath() + "'");
 		}
 
 		if (fileType != null) {
@@ -210,9 +218,35 @@ public class TasksCsvResourceTest extends ResourceTest {
 		transformationComponentParameterMappingsJSON.put("description", "description");
 		transformationComponentParameterMappingsJSON.put("__TRANSFORMATION_OUTPUT_VARIABLE__1", "output mapping attribute path instance");
 
+		final InternalModelServiceFactory serviceFactory = GuicedTest.injector.getInstance(Key.get(InternalModelServiceFactory.class));
+		final InternalModelService service = serviceFactory.getInternalGDMGraphService();
+		final Optional<Map<String, Model>> inputData = service.getObjects(inputDataModel.getUuid(), Optional.of(10));
+
+		Assert.assertTrue(inputData.isPresent());
+		Assert.assertFalse(inputData.get().isEmpty());
+
+		final Set<String> selectedRecords = new LinkedHashSet<>();
+
+		int i = 0;
+
+		for (final String recordURI : inputData.get().keySet()) {
+
+			if (i == 1 || i == 5 || i == 7) {
+
+				selectedRecords.add(recordURI);
+			}
+
+			i++;
+		}
+
 		final ObjectNode requestJSON = objectMapper.createObjectNode();
 		requestJSON.set(TasksResource.TASK_IDENTIFIER, taskJSON);
 		requestJSON.put(TasksResource.PERSIST_IDENTIFIER, Boolean.TRUE);
+
+		final String selectedRecordsJSONString = objectMapper.writeValueAsString(selectedRecords);
+		final ArrayNode selectedRecordsNode = objectMapper.readValue(selectedRecordsJSONString, ArrayNode.class);
+
+		requestJSON.set(TasksResource.SELECTED_RECORDS_IDENTIFIER, selectedRecordsNode);
 
 		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE)
 				.accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(requestJSON));
@@ -225,14 +259,14 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
 
-		TasksCsvResourceTest.LOG.debug("task execution response = '" + responseString + "'");
+		TasksCsvResourceTest3.LOG.debug("task execution response = '" + responseString + "'");
 
-		final String expectedResultString = DMPPersistenceUtil.getResourceAsString("controller_task-result.csv.json");
+		final String expectedResultString = DMPPersistenceUtil.getResourceAsString("controller_task-result2.csv.json");
 
 		final ArrayNode expectedJSONArray = objectMapper.readValue(expectedResultString, ArrayNode.class);
 		final ArrayNode actualJSONArray = objectMapper.readValue(responseString, ArrayNode.class);
 
-		Assert.assertThat(expectedJSONArray.size(), Matchers.equalTo(actualJSONArray.size()));
+		Assert.assertThat(actualJSONArray.size(), Matchers.equalTo(3));
 
 		final Map<String, JsonNode> actualNodes = new HashMap<>(actualJSONArray.size());
 		for (final JsonNode node : actualJSONArray) {
@@ -245,34 +279,42 @@ public class TasksCsvResourceTest extends ResourceTest {
 		final String expectedDataResourceSchemaBaseURI = expectedRecordDataFieldNameExample.substring(0,
 				expectedRecordDataFieldNameExample.lastIndexOf('#') + 1);
 
+		int j = 0;
+
 		for (final JsonNode expectedNode : expectedJSONArray) {
 
-			final String recordData = expectedNode.get(DMPPersistenceUtil.RECORD_DATA).get(0).get(expectedDataResourceSchemaBaseURI + "description")
-					.asText();
-			final JsonNode actualNode = getRecordData(recordData, actualJSONArray, actualDataResourceSchemaBaseURI + "description");
+			if (i == 1 || i == 5 || i == 7) {
 
-			// SR TODO use Assert.assertNotNull here?
-			Assert.assertThat(actualNode, CoreMatchers.is(Matchers.notNullValue()));
+				final String recordData = expectedNode.get(DMPPersistenceUtil.RECORD_DATA).get(0)
+						.get(expectedDataResourceSchemaBaseURI + "description")
+						.asText();
+				final JsonNode actualNode = getRecordData(recordData, actualJSONArray, actualDataResourceSchemaBaseURI + "description");
 
-			final ObjectNode expectedRecordData = (ObjectNode) expectedNode.get(DMPPersistenceUtil.RECORD_DATA).get(0);
+				// SR TODO use Assert.assertNotNull here?
+				Assert.assertThat(actualNode, CoreMatchers.is(Matchers.notNullValue()));
 
-			final ObjectNode actualElement = (ObjectNode) actualNode;
-			ObjectNode actualRecordData = null;
+				final ObjectNode expectedRecordData = (ObjectNode) expectedNode.get(DMPPersistenceUtil.RECORD_DATA).get(0);
 
-			for (final JsonNode actualRecordDataCandidate : actualElement.get(DMPPersistenceUtil.RECORD_DATA)) {
+				final ObjectNode actualElement = (ObjectNode) actualNode;
+				ObjectNode actualRecordData = null;
 
-				if (actualRecordDataCandidate.get(actualDataResourceSchemaBaseURI + "description") != null) {
+				for (final JsonNode actualRecordDataCandidate : actualElement.get(DMPPersistenceUtil.RECORD_DATA)) {
 
-					actualRecordData = (ObjectNode) actualRecordDataCandidate;
+					if (actualRecordDataCandidate.get(actualDataResourceSchemaBaseURI + "description") != null) {
 
-					break;
+						actualRecordData = (ObjectNode) actualRecordDataCandidate;
+
+						break;
+					}
 				}
+
+				Assert.assertThat(actualRecordData, CoreMatchers.is(Matchers.notNullValue()));
+
+				Assert.assertThat(actualRecordData.get(actualDataResourceSchemaBaseURI + "description").asText(),
+						Matchers.equalTo(expectedRecordData.get(expectedDataResourceSchemaBaseURI + "description").asText()));
 			}
 
-			Assert.assertThat(actualRecordData, CoreMatchers.is(Matchers.notNullValue()));
-
-			Assert.assertThat(actualRecordData.get(actualDataResourceSchemaBaseURI + "description").asText(),
-					Matchers.equalTo(expectedRecordData.get(expectedDataResourceSchemaBaseURI + "description").asText()));
+			i++;
 		}
 
 		inputDataModel = dataModelsResourceTestUtils.getObject(inputDataModel.getUuid());
@@ -284,7 +326,7 @@ public class TasksCsvResourceTest extends ResourceTest {
 
 		Assert.assertNotNull("the data model schema record class shouldn't be null", schema.getRecordClass());
 
-		TasksCsvResourceTest.LOG.debug("end task execution test");
+		TasksCsvResourceTest3.LOG.debug("end task execution test");
 	}
 
 	private JsonNode getRecordData(final String recordData, final ArrayNode jsonArray, final String key) {

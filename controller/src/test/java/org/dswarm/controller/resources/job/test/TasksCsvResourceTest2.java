@@ -40,6 +40,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.dswarm.controller.resources.job.TasksResource;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
 import org.dswarm.controller.resources.test.ResourceTest;
@@ -209,10 +210,13 @@ public class TasksCsvResourceTest2 extends ResourceTest {
 		transformationComponentParameterMappingsJSON.put("description", "description");
 		transformationComponentParameterMappingsJSON.put("__TRANSFORMATION_OUTPUT_VARIABLE__1", "output mapping attribute path instance");
 
-		final String finalTaskJSONString = objectMapper.writeValueAsString(taskJSON);
+		final ObjectNode requestJSON = objectMapper.createObjectNode();
+		requestJSON.set(TasksResource.TASK_IDENTIFIER, taskJSON);
+		requestJSON.put(TasksResource.AT_MOST_IDENTIFIER, 10);
+		requestJSON.put(TasksResource.PERSIST_IDENTIFIER, Boolean.TRUE);
 
-		final Response response = target().queryParam("persist", Boolean.TRUE).queryParam("atMost", 10).request(MediaType.APPLICATION_JSON_TYPE)
-				.accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(finalTaskJSONString));
+		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE)
+				.accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(requestJSON));
 
 		// SR Start checking response
 

@@ -195,6 +195,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 		object.setOutputDataModel(objectFromJSON.getOutputDataModel());
 		object.setSkipFilter(objectFromJSON.getSkipFilter());
 		object.setMappings(objectFromJSON.getMappings());
+		object.setSelectedRecords(objectFromJSON.getSelectedRecords());
 
 		return object;
 	}

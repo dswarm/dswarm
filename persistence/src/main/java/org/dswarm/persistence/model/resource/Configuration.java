@@ -90,7 +90,7 @@ public class Configuration extends ExtendedBasicDMPJPAObject {
 	 */
 	@Lob
 	@Access(AccessType.FIELD)
-	@Column(name = "parameters", columnDefinition = "BLOB")
+	@Column(name = "PARAMETERS", columnDefinition = "BLOB")
 	private byte[] parametersString;
 
 	/**

@@ -1,0 +1,674 @@
+{
+  "uuid": "Project-fa5f49a5-4035-488e-b6fa-a5ef536cf4a0",
+  "name": "my project",
+  "description": "my project description",
+  "mappings": [
+    {
+      "uuid": "Mapping-d069062d-6a0a-4e55-8493-53dec37c882d",
+      "name": "my mapping",
+      "transformation": {
+        "uuid": "Component-f8582866-d85b-4ef0-a48b-608ec341cca3",
+        "name": "my transformation 2 (component)",
+        "description": null,
+        "function": {
+          "type": "Transformation",
+          "uuid": "Transformation-0b3b0bee-7896-49ca-bd65-1fa9cfea031d",
+          "name": "my transformation 2",
+          "description": "transformation which makes use of three functions (two transformations and one function)",
+          "components": [
+            {
+              "uuid": "Component-9ff11e8d-964f-48d1-a958-13ea917a227c",
+              "name": "prepare family name",
+              "description": null,
+              "function": {
+                "type": "Transformation",
+                "uuid": "Transformation-711d9d16-f2cf-4c2b-9032-43e53a3886a5",
+                "name": "my transformation",
+                "description": "transformation which just makes use of one function",
+                "components": [
+                  {
+                    "uuid": "Component-4402c192-089e-49db-9b1a-9f09f7894f87",
+                    "name": "my trim component",
+                    "description": null,
+                    "function": {
+                      "type": "Function",
+                      "uuid": "Function-14d2781d-c52f-41c6-a0c8-5d92f555182e",
+                      "name": "trim",
+                      "description": "trims leading and trailing whitespaces from a given string",
+                      "parameters": [
+                        "inputString"
+                      ]
+                    },
+                    "input_components": [
+                      {
+                        "uuid": "Component-840ea697-c913-4b1f-9150-f97eb8ab5752"
+                      }
+                    ],
+                    "output_components": [
+                      {
+                        "uuid": "Component-3378286c-00dd-40ac-8927-ae83e2d65eff"
+                      }
+                    ],
+                    "parameter_mappings": {
+                      "inputString": "previousComponent.outputString"
+                    }
+                  },
+                  {
+                    "uuid": "Component-840ea697-c913-4b1f-9150-f97eb8ab5752",
+                    "name": "my replace component",
+                    "description": null,
+                    "function": {
+                      "type": "Function",
+                      "uuid": "Function-1aa3ca7b-fb4e-4c1b-a6a1-269c7bf0e670",
+                      "name": "replace",
+                      "description": "replace certain parts of a given string that matches a certain regex",
+                      "parameters": [
+                        "inputString",
+                        "regex",
+                        "replaceString"
+                      ]
+                    },
+                    "input_components": null,
+                    "output_components": [
+                      {
+                        "uuid": "Component-4402c192-089e-49db-9b1a-9f09f7894f87"
+                      }
+                    ],
+                    "parameter_mappings": {
+                      "inputString": "previousComponent.outputString",
+                      "regex": "\\.",
+                      "replaceString": ":"
+                    }
+                  },
+                  {
+                    "uuid": "Component-3378286c-00dd-40ac-8927-ae83e2d65eff",
+                    "name": "my lower case component",
+                    "description": null,
+                    "function": {
+                      "type": "Function",
+                      "uuid": "Function-678519dd-79bf-49f0-9bbf-e4cfa20f6559",
+                      "name": "lower_case",
+                      "description": "lower cases all characters of a given string",
+                      "parameters": [
+                        "inputString"
+                      ]
+                    },
+                    "input_components": [
+                      {
+                        "uuid": "Component-4402c192-089e-49db-9b1a-9f09f7894f87"
+                      }
+                    ],
+                    "output_components": null,
+                    "parameter_mappings": {
+                      "inputString": "previousComponent.outputString"
+                    }
+                  }
+                ],
+                "parameters": [
+                  "transformationInputString"
+                ]
+              },
+              "input_components": null,
+              "output_components": [
+                {
+                  "uuid": "Component-558f07be-f4cc-405f-be3a-6946d9355250"
+                }
+              ],
+              "parameter_mappings": {
+                "transformationInputString": "familyName"
+              }
+            },
+            {
+              "uuid": "Component-558f07be-f4cc-405f-be3a-6946d9355250",
+              "name": "full name",
+              "description": null,
+              "function": {
+                "type": "Function",
+                "uuid": "Function-3cbef700-8b76-4bd6-9f0b-2c514d1cbb78",
+                "name": "concat",
+                "description": "concatenates two given string",
+                "parameters": [
+                  "firstString",
+                  "secondString"
+                ]
+              },
+              "input_components": [
+                {
+                  "uuid": "Component-9ff11e8d-964f-48d1-a958-13ea917a227c"
+                },
+                {
+                  "uuid": "Component-6779f3fa-761d-4ddb-859d-c19aacf07136"
+                }
+              ],
+              "output_components": null,
+              "parameter_mappings": {
+                "firstString": "Component-6779f3fa-761d-4ddb-859d-c19aacf07136.outputVariable",
+                "secondString": "Component-9ff11e8d-964f-48d1-a958-13ea917a227c.outputVariable"
+              }
+            },
+            {
+              "uuid": "Component-6779f3fa-761d-4ddb-859d-c19aacf07136",
+              "name": "prepare first name",
+              "description": null,
+              "function": {
+                "type": "Transformation",
+                "uuid": "Transformation-711d9d16-f2cf-4c2b-9032-43e53a3886a5",
+                "name": "my transformation",
+                "description": "transformation which just makes use of one function",
+                "components": [
+                  {
+                    "uuid": "Component-4402c192-089e-49db-9b1a-9f09f7894f87",
+                    "name": "my trim component",
+                    "description": null,
+                    "function": {
+                      "type": "Function",
+                      "uuid": "Function-14d2781d-c52f-41c6-a0c8-5d92f555182e",
+                      "name": "trim",
+                      "description": "trims leading and trailing whitespaces from a given string",
+                      "parameters": [
+                        "inputString"
+                      ]
+                    },
+                    "input_components": [
+                      {
+                        "uuid": "Component-840ea697-c913-4b1f-9150-f97eb8ab5752"
+                      }
+                    ],
+                    "output_components": [
+                      {
+                        "uuid": "Component-3378286c-00dd-40ac-8927-ae83e2d65eff"
+                      }
+                    ],
+                    "parameter_mappings": {
+                      "inputString": "previousComponent.outputString"
+                    }
+                  },
+                  {
+                    "uuid": "Component-840ea697-c913-4b1f-9150-f97eb8ab5752",
+                    "name": "my replace component",
+                    "description": null,
+                    "function": {
+                      "type": "Function",
+                      "uuid": "Function-1aa3ca7b-fb4e-4c1b-a6a1-269c7bf0e670",
+                      "name": "replace",
+                      "description": "replace certain parts of a given string that matches a certain regex",
+                      "parameters": [
+                        "inputString",
+                        "regex",
+                        "replaceString"
+                      ]
+                    },
+                    "input_components": null,
+                    "output_components": [
+                      {
+                        "uuid": "Component-4402c192-089e-49db-9b1a-9f09f7894f87"
+                      }
+                    ],
+                    "parameter_mappings": {
+                      "inputString": "previousComponent.outputString",
+                      "regex": "\\.",
+                      "replaceString": ":"
+                    }
+                  },
+                  {
+                    "uuid": "Component-3378286c-00dd-40ac-8927-ae83e2d65eff",
+                    "name": "my lower case component",
+                    "description": null,
+                    "function": {
+                      "type": "Function",
+                      "uuid": "Function-678519dd-79bf-49f0-9bbf-e4cfa20f6559",
+                      "name": "lower_case",
+                      "description": "lower cases all characters of a given string",
+                      "parameters": [
+                        "inputString"
+                      ]
+                    },
+                    "input_components": [
+                      {
+                        "uuid": "Component-4402c192-089e-49db-9b1a-9f09f7894f87"
+                      }
+                    ],
+                    "output_components": null,
+                    "parameter_mappings": {
+                      "inputString": "previousComponent.outputString"
+                    }
+                  }
+                ],
+                "parameters": [
+                  "transformationInputString"
+                ]
+              },
+              "input_components": null,
+              "output_components": [
+                {
+                  "uuid": "Component-558f07be-f4cc-405f-be3a-6946d9355250"
+                }
+              ],
+              "parameter_mappings": {
+                "transformationInputString": "firstName"
+              }
+            }
+          ],
+          "parameters": [
+            "firstName",
+            "familyName"
+          ]
+        },
+        "input_components": null,
+        "output_components": null,
+        "parameter_mappings": {
+          "firstName": "http://purl.org/dc/terms/creator\u001ehttp://xmlns.com/foaf/0.1/firstName",
+          "familyName": "http://purl.org/dc/terms/creator\u001ehttp://xmlns.com/foaf/0.1/familyName",
+          "transformationOutputVariable": "http://purl.org/dc/terms/creator\u001ehttp://xmlns.com/foaf/0.1/name"
+        }
+      },
+      "input_attribute_paths": [
+        {
+          "type": "MappingAttributePathInstance",
+          "uuid": "MappingAttributePathInstance-9f0ded89-c15d-4af6-9239-2d5e88d7abbb",
+          "name": "dcterms:creator/foaf:familyName MAPI",
+          "attribute_path": {
+            "uuid": "AttributePath-83dd1300-ba90-413b-8e53-258c0500cf8a",
+            "attributes": [
+              {
+                "uuid": "Attribute-79bbe961-1ae0-47c7-9c16-56f7523fd2b6",
+                "name": "creator",
+                "uri": "http://purl.org/dc/terms/creator"
+              },
+              {
+                "uuid": "Attribute-290bd611-0ae7-4633-b069-bf478e3d84d6",
+                "name": "family name",
+                "uri": "http://xmlns.com/foaf/0.1/familyName"
+              }
+            ]
+          }
+        },
+        {
+          "type": "MappingAttributePathInstance",
+          "uuid": "MappingAttributePathInstance-02d435d4-934a-4a1c-a2eb-3fc702af6c8c",
+          "name": "dcterms:creator/foaf:firstName MAPI",
+          "attribute_path": {
+            "uuid": "AttributePath-1e272890-ea2f-4609-bdb6-b9f0d45717c9",
+            "attributes": [
+              {
+                "uuid": "Attribute-79bbe961-1ae0-47c7-9c16-56f7523fd2b6",
+                "name": "creator",
+                "uri": "http://purl.org/dc/terms/creator"
+              },
+              {
+                "uuid": "Attribute-012503f5-bfa9-4407-a3b2-a36911c812a6",
+                "name": "first name",
+                "uri": "http://xmlns.com/foaf/0.1/firstName"
+              }
+            ]
+          }
+        }
+      ],
+      "output_attribute_path": {
+        "type": "MappingAttributePathInstance",
+        "uuid": "MappingAttributePathInstance-88567cab-06ce-4960-a022-1156c7add127",
+        "name": "dcterms:creator/foaf:name MAPI",
+        "attribute_path": {
+          "uuid": "AttributePath-1549ce3a-ea7a-4470-995a-b5b833fd61a8",
+          "attributes": [
+            {
+              "uuid": "Attribute-79bbe961-1ae0-47c7-9c16-56f7523fd2b6",
+              "name": "creator",
+              "uri": "http://purl.org/dc/terms/creator"
+            },
+            {
+              "uuid": "Attribute-a6d98647-e83a-47bf-a3d7-14810a7543cc",
+              "name": "name",
+              "uri": "http://xmlns.com/foaf/0.1/name"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "uuid": "Mapping-94014a5f-427f-49ab-9929-4971ec9dca59",
+      "name": "my mapping",
+      "transformation": {
+        "uuid": "Component-b087d443-6cc3-4fc8-97b6-5add9355ca71",
+        "name": "my transformation (component)",
+        "description": null,
+        "function": {
+          "type": "Transformation",
+          "uuid": "Transformation-9c8aa29b-bcd9-43b6-8c7d-e064b9637e0b",
+          "name": "my transformation",
+          "description": "transformation which just makes use of one function",
+          "components": [
+            {
+              "uuid": "Component-b63cdcbe-0b97-421d-a285-85e9cbf90c01",
+              "name": "my trim component",
+              "description": null,
+              "function": {
+                "type": "Function",
+                "uuid": "Function-f73e3d27-61bd-4de6-9a7e-44c3746144f4",
+                "name": "trim",
+                "description": "trims leading and trailing whitespaces from a given string",
+                "parameters": [
+                  "inputString"
+                ]
+              },
+              "input_components": null,
+              "output_components": null,
+              "parameter_mappings": {
+                "inputString": "previousComponent.outputString"
+              }
+            }
+          ],
+          "parameters": [
+            "transformationInputString"
+          ]
+        },
+        "input_components": null,
+        "output_components": null,
+        "parameter_mappings": {
+          "transformationInputString": "http://purl.org/dc/terms/title",
+          "transformationOutputVariable": "http://www.w3.org/2000/01/rdf-schema#label"
+        }
+      },
+      "input_attribute_paths": [
+        {
+          "type": "MappingAttributePathInstance",
+          "uuid": "MappingAttributePathInstance-9407df07-4afa-4a1a-9acd-571b228d12ef",
+          "name": "input mapping attribute path instance",
+          "attribute_path": {
+            "uuid": "AttributePath-2d1fef85-620c-4c47-8b24-38ccd2be5451",
+            "attributes": [
+              {
+                "uuid": "Attribute-519c7cba-3bdc-410f-9be8-626966178c1a",
+                "name": "title",
+                "uri": "http://purl.org/dc/terms/title"
+              }
+            ]
+          }
+        }
+      ],
+      "output_attribute_path": {
+        "type": "MappingAttributePathInstance",
+        "uuid": "MappingAttributePathInstance-d058fc4a-5bbb-41f4-b9e4-7372987448ef",
+        "name": "output mapping attribute path instance",
+        "attribute_path": {
+          "uuid": "AttributePath-31a22ccf-f2c6-4a44-9cc2-761b992e2446",
+          "attributes": [
+            {
+              "uuid": "Attribute-e75ee5ea-0599-4d74-b812-1caf021afd4e",
+              "name": "label",
+              "uri": "http://www.w3.org/2000/01/rdf-schema#label"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "functions": [
+    {
+      "type": "Transformation",
+      "uuid": "Transformation-9c8aa29b-bcd9-43b6-8c7d-e064b9637e0b",
+      "name": "my transformation",
+      "description": "transformation which just makes use of one function",
+      "components": [
+        {
+          "uuid": "Component-b63cdcbe-0b97-421d-a285-85e9cbf90c01",
+          "name": "my trim component",
+          "description": null,
+          "function": {
+            "type": "Function",
+            "uuid": "Function-f73e3d27-61bd-4de6-9a7e-44c3746144f4",
+            "name": "trim",
+            "description": "trims leading and trailing whitespaces from a given string",
+            "parameters": [
+              "inputString"
+            ]
+          },
+          "input_components": null,
+          "output_components": null,
+          "parameter_mappings": {
+            "inputString": "previousComponent.outputString"
+          }
+        }
+      ],
+      "parameters": [
+        "transformationInputString"
+      ]
+    }
+  ],
+  "input_data_model": {
+    "uuid": "DataModel-b06c7e87-7181-4c38-923d-9dda28c4948a",
+    "name": "my data model",
+    "description": "my data model description",
+    "configuration": {
+      "uuid": "Configuration-f3a80e5b-cc58-40cc-adb4-afd78bd9c488",
+      "name": "my configuration",
+      "description": "configuration description",
+      "resources": [
+        {
+          "uuid": "Resource-b9ebeb55-483a-4a50-b399-fa77b445beef"
+        }
+      ],
+      "parameters": {
+        "column_delimiter": ";"
+      }
+    },
+    "schema": {
+      "uuid": "Schema-6baf7885-9308-4f87-9fc2-f03ed942e5aa",
+      "name": "my schema",
+      "attribute_paths": [
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-71d81fe1-58dd-4701-9b75-bec39627d281",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-e87112ca-9a07-43ba-a223-46ad2169b39a",
+            "attributes": [
+              {
+                "uuid": "Attribute-519c7cba-3bdc-410f-9be8-626966178c1a",
+                "name": "title",
+                "uri": "http://purl.org/dc/terms/title"
+              },
+              {
+                "uuid": "Attribute-d0e72ff6-7a0c-4a88-a328-9581ff3a25e8",
+                "name": "hasPart",
+                "uri": "http://purl.org/dc/terms/hasPart"
+              },
+              {
+                "uuid": "Attribute-519c7cba-3bdc-410f-9be8-626966178c1a",
+                "name": "title",
+                "uri": "http://purl.org/dc/terms/title"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-fefc83f3-56c4-474f-89e7-36ec40fa5acf",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-1549ce3a-ea7a-4470-995a-b5b833fd61a8",
+            "attributes": [
+              {
+                "uuid": "Attribute-79bbe961-1ae0-47c7-9c16-56f7523fd2b6",
+                "name": "creator",
+                "uri": "http://purl.org/dc/terms/creator"
+              },
+              {
+                "uuid": "Attribute-a6d98647-e83a-47bf-a3d7-14810a7543cc",
+                "name": "name",
+                "uri": "http://xmlns.com/foaf/0.1/name"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-623333c3-942d-4e00-a0ad-78d54207dc60",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-a73177ff-e162-4790-af77-436798187d53",
+            "attributes": [
+              {
+                "uuid": "Attribute-c4a15921-8142-4647-96eb-0cfdf33165e0",
+                "name": "created",
+                "uri": "http://purl.org/dc/terms/created"
+              }
+            ]
+          }
+        }
+      ],
+      "record_class": {
+        "uuid": "Clasz-b38d723e-ca9c-4a3b-a320-b8c3860f5a30",
+        "name": "document",
+        "uri": "http://purl.org/ontology/bibo/Document"
+      }
+    },
+    "data_resource": {
+      "uuid": "Resource-b9ebeb55-483a-4a50-b399-fa77b445beef",
+      "name": "bla",
+      "description": "blubblub",
+      "type": "FILE",
+      "configurations": [
+        {
+          "uuid": "Configuration-f3a80e5b-cc58-40cc-adb4-afd78bd9c488",
+          "name": "my configuration",
+          "description": "configuration description",
+          "resources": [
+            {
+              "uuid": "Resource-b9ebeb55-483a-4a50-b399-fa77b445beef"
+            }
+          ],
+          "parameters": {
+            "column_delimiter": ";"
+          }
+        }
+      ],
+      "resource_attributes": {
+        "path": "/path/to/file.end"
+      }
+    }
+  },
+  "output_data_model": {
+    "uuid": "DataModel-eff88624-e63b-4ffd-bc2c-6a9de295aa4d",
+    "name": "my data model",
+    "description": "my data model description",
+    "configuration": {
+      "uuid": "Configuration-d53f5bd1-f45f-42c2-a15f-3a2cfd437c0d",
+      "name": "my configuration",
+      "description": "configuration description",
+      "resources": [
+        {
+          "uuid": "Resource-a7f77639-1efe-40b8-9517-9f51585a4097"
+        }
+      ],
+      "parameters": {
+        "column_delimiter": ";"
+      }
+    },
+    "schema": {
+      "uuid": "Schema-9492bf62-06e4-43c6-92c9-cb7417d9a328",
+      "name": "my schema",
+      "attribute_paths": [
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-8f6f2865-3a2a-4a16-8b3e-e90949fb09a9",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-e87112ca-9a07-43ba-a223-46ad2169b39a",
+            "attributes": [
+              {
+                "uuid": "Attribute-519c7cba-3bdc-410f-9be8-626966178c1a",
+                "name": "title",
+                "uri": "http://purl.org/dc/terms/title"
+              },
+              {
+                "uuid": "Attribute-d0e72ff6-7a0c-4a88-a328-9581ff3a25e8",
+                "name": "hasPart",
+                "uri": "http://purl.org/dc/terms/hasPart"
+              },
+              {
+                "uuid": "Attribute-519c7cba-3bdc-410f-9be8-626966178c1a",
+                "name": "title",
+                "uri": "http://purl.org/dc/terms/title"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-f83300a4-ca50-467c-b4c0-96f474a1233b",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-1549ce3a-ea7a-4470-995a-b5b833fd61a8",
+            "attributes": [
+              {
+                "uuid": "Attribute-79bbe961-1ae0-47c7-9c16-56f7523fd2b6",
+                "name": "creator",
+                "uri": "http://purl.org/dc/terms/creator"
+              },
+              {
+                "uuid": "Attribute-a6d98647-e83a-47bf-a3d7-14810a7543cc",
+                "name": "name",
+                "uri": "http://xmlns.com/foaf/0.1/name"
+              }
+            ]
+          }
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-d1a7174d-ee34-4e3e-9c18-ba075036ff69",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-a73177ff-e162-4790-af77-436798187d53",
+            "attributes": [
+              {
+                "uuid": "Attribute-c4a15921-8142-4647-96eb-0cfdf33165e0",
+                "name": "created",
+                "uri": "http://purl.org/dc/terms/created"
+              }
+            ]
+          }
+        }
+      ],
+      "record_class": {
+        "uuid": "Clasz-b38d723e-ca9c-4a3b-a320-b8c3860f5a30",
+        "name": "document",
+        "uri": "http://purl.org/ontology/bibo/Document"
+      }
+    },
+    "data_resource": {
+      "uuid": "Resource-a7f77639-1efe-40b8-9517-9f51585a4097",
+      "name": "bla",
+      "description": "blubblub",
+      "type": "FILE",
+      "configurations": [
+        {
+          "uuid": "Configuration-d53f5bd1-f45f-42c2-a15f-3a2cfd437c0d",
+          "name": "my configuration",
+          "description": "configuration description",
+          "resources": [
+            {
+              "uuid": "Resource-a7f77639-1efe-40b8-9517-9f51585a4097"
+            }
+          ],
+          "parameters": {
+            "column_delimiter": ";"
+          }
+        }
+      ],
+      "resource_attributes": {
+        "path": "/path/to/file.end"
+      }
+    }
+  },
+  "skip_filter": {
+    "uuid": "Filter-bbac99c6-0093-471f-ac5e-5d6252d14981",
+    "name": "my filter",
+    "expression": "SELECT ?identifier ?url\nWHERE {\n    ?record custmabxml:metadata ?metadata ;\n            custmabxml:header ?header .\n    ?header custmabxml:identifier ?identifier .\n    ?metadata m:record ?mabrecord .\n    ?mabrecord m:datafield ?dataField .\n    ?dataField m:tag \"088\" ;\n               m:ind1 \"a\" ;\n               m:subfield ?subField .\n    ?subField rdf:value ?url .\n}"
+  },
+  "selected_records": [
+    "http://example.com/records/1",
+    "http://example.com/records/3",
+    "http://example.com/records/5"
+  ]
+}

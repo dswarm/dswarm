@@ -15,11 +15,13 @@
  */
 package org.dswarm.persistence.service.job.test.utils;
 
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.base.Objects;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.json.JSONException;
@@ -116,6 +118,13 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 		final Filter skipFilter = filterServiceTestUtils.createDefaultObject();
 
 		project.setSkipFilter(skipFilter);
+
+		final Set<String> selectedRecords = new LinkedHashSet<>();
+		selectedRecords.add("http://example.com/records/1");
+		selectedRecords.add("http://example.com/records/3");
+		selectedRecords.add("http://example.com/records/5");
+
+		project.setSelectedRecords(selectedRecords);
 
 		return createAndCompareObject(project, project);
 	}
@@ -240,6 +249,24 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 
 			functionServiceTestUtils.compareObjects(expectedProject.getFunctions(), actualFunctionsMap);
 		}
+
+		// compare selectedRecords
+		if (expectedProject.getSelectedRecords() == null || expectedProject.getSelectedRecords().isEmpty()) {
+
+			final boolean actualProjectHasNoSelectedRecords = (actualProject.getSelectedRecords() == null || actualProject.getSelectedRecords()
+					.isEmpty());
+			Assert.assertTrue("the actual project '" + actualProject.getUuid() + "' shouldn't have any selected records",
+					actualProjectHasNoSelectedRecords);
+
+		} else { // !null && !empty
+
+			final Set<String> actualSelectedRecords = actualProject.getSelectedRecords();
+
+			Assert.assertNotNull("selected records of project '" + actualProject.getUuid() + "' shouldn't be null", actualSelectedRecords);
+			Assert.assertFalse("selected records of project '" + actualProject.getUuid() + "' shouldn't be empty", actualSelectedRecords.isEmpty());
+
+			Objects.equal(expectedProject.getSelectedRecords(), actualProject.getSelectedRecords());
+		}
 	}
 
 	/**
@@ -256,6 +283,7 @@ public class ProjectServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUtils
 		object.setOutputDataModel(objectWithUpdates.getOutputDataModel());
 		object.setSkipFilter(objectWithUpdates.getSkipFilter());
 		object.setMappings(objectWithUpdates.getMappings());
+		object.setSelectedRecords(objectWithUpdates.getSelectedRecords());
 
 		return object;
 	}

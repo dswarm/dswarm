@@ -18,6 +18,7 @@ package org.dswarm.controller.utils;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -81,7 +82,7 @@ public class DataModelUtil {
 	/**
 	 * Gets the data of the given data model and maximum in the given amount.
 	 *
-	 * @param dataModelUuid the identifer of the data model
+	 * @param dataModelUuid the identifier of the data model
 	 * @param atMost        the number of records that should be retrieved
 	 * @return the data of the given data model
 	 */
@@ -105,6 +106,41 @@ public class DataModelUtil {
 		if (!maybeTriples.isPresent()) {
 
 			DataModelUtil.LOG.debug("couldn't find data");
+			return Optional.absent();
+		}
+
+		final Iterator<Map.Entry<String, Model>> iterator = maybeTriples.get().entrySet().iterator();
+
+		return Optional.of(dataIterator(iterator));
+	}
+
+	/**
+	 * Gets the data of the records with the given record identifier in the given data model..
+	 *
+	 * @param recordIdentifiers the record identifiers
+	 * @param dataModelUuid the identifier of the data model
+	 * @return the data of the given data model
+	 */
+	public Optional<Iterator<Tuple<String, JsonNode>>> getRecordsData(final Set<String> recordIdentifiers, final String dataModelUuid) {
+
+		DataModelUtil.LOG.debug(String.format("try to get record's data for some records in data model with id [%s]", dataModelUuid));
+
+		final InternalModelService internalService = internalServiceFactoryProvider.get().getInternalGDMGraphService();
+
+		final Optional<Map<String, Model>> maybeTriples;
+
+		try {
+
+			maybeTriples = internalService.getRecords(recordIdentifiers, dataModelUuid);
+		} catch (final DMPPersistenceException e1) {
+
+			DataModelUtil.LOG.debug("couldn't find record's data data in data model with id [{}]", dataModelUuid, e1);
+			return Optional.absent();
+		}
+
+		if (!maybeTriples.isPresent()) {
+
+			DataModelUtil.LOG.debug("couldn't find record's data in data model with id [{}]", dataModelUuid);
 			return Optional.absent();
 		}
 

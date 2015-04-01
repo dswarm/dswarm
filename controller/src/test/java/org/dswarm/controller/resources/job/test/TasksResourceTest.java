@@ -39,6 +39,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.dswarm.controller.resources.job.TasksResource;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
 import org.dswarm.controller.resources.test.ResourceTest;
@@ -178,10 +179,12 @@ public class TasksResourceTest extends ResourceTest {
 
 		taskJSON.set("output_data_model", outputDataModelJSON);
 
-		final String finalTaskJSONString = objectMapper.writeValueAsString(taskJSON);
+		final ObjectNode requestJSON = objectMapper.createObjectNode();
+		requestJSON.set(TasksResource.TASK_IDENTIFIER, taskJSON);
+		requestJSON.put(TasksResource.PERSIST_IDENTIFIER, Boolean.TRUE);
 
-		final Response response = target().queryParam("persist", Boolean.TRUE).request(MediaType.APPLICATION_JSON_TYPE)
-				.accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(finalTaskJSONString));
+		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE)
+				.accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(requestJSON));
 
 		Assert.assertEquals("200 Created was expected", 200, response.getStatus());
 

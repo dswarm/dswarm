@@ -78,12 +78,14 @@ public class ProjectService extends ExtendedBasicDMPJPAService<ProxyProject, Pro
 		final Set<Mapping> mappings = object.getMappings();
 		final Filter skipFilter = object.getSkipFilter();
 		final Set<Function> functions = object.getFunctions();
+		final Set<String> selectedRecords = object.getSelectedRecords();
 
 		updateObject.setInputDataModel(inputDataModel);
 		updateObject.setOutputDataModel(outputDataModel);
 		updateObject.setMappings(mappings);
 		updateObject.setSkipFilter(skipFilter);
 		updateObject.setFunctions(functions);
+		updateObject.setSelectedRecords(selectedRecords);
 	}
 
 }

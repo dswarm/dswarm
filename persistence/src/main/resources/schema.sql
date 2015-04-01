@@ -98,7 +98,7 @@ SET foreign_key_checks = 0;
         UUID VARCHAR(160) not null,
         NAME varchar(255),
         DESCRIPTION VARCHAR(4000),
-        parameters BLOB,
+        PARAMETERS BLOB,
         primary key (UUID)
     ) ENGINE=InnoDB;
 
@@ -193,6 +193,7 @@ SET foreign_key_checks = 0;
         INPUT_DATA_MODEL VARCHAR(160),
         OUTPUT_DATA_MODEL VARCHAR(160),
         SKIP_FILTER VARCHAR(160),
+        SELECTED_RECORDS BLOB,
         primary key (UUID)
     ) ENGINE=InnoDB;
 
@@ -212,7 +213,7 @@ SET foreign_key_checks = 0;
         UUID VARCHAR(160) not null,
         NAME varchar(255),
         DESCRIPTION VARCHAR(4000),
-        attributes BLOB,
+        ATTRIBUTES BLOB,
         TYPE varchar(255),
         primary key (UUID)
     ) ENGINE=InnoDB;
