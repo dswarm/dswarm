@@ -295,6 +295,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "data model was successfully updated"),
 			@ApiResponse(code = 404, message = "could not find a data model for the given id"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@Timed
 	@POST
 	@Path("/{id}/data")
 	public Response updateDataModelData(@ApiParam(value = "data model identifier", required = true) @PathParam("id") final String uuid)

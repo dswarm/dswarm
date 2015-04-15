@@ -34,6 +34,7 @@ public final class MetricsReporter {
 	private final MetricRegistry	registry;
 	private final boolean			isEnabled;
 	private final String			esHost;
+	private final String			index;
 	private final long				reportIntervalInMillis;
 
 	@Inject
@@ -41,9 +42,11 @@ public final class MetricsReporter {
 			final MetricRegistry registry,
 			@Named("dswarm.reporting.enabled") final boolean isEnabled,
 			@Named("dswarm.reporting.interval") final long reportIntervalInMillis,
+			@Named("dswarm.reporting.elasticsearch.index") final String index,
 			@Named("dswarm.reporting.elasticsearch.host") final String esHost) {
 		this.registry = registry;
 		this.isEnabled = isEnabled;
+		this.index = index;
 		this.esHost = esHost;
 		this.reportIntervalInMillis = reportIntervalInMillis;
 	}
@@ -51,7 +54,7 @@ public final class MetricsReporter {
 	public void start() throws IOException {
 		if (isEnabled) {
 			MetricsReporter.LOG.trace("reporting metrics to Elasticsearch at {} every {} milliseconds", esHost, reportIntervalInMillis);
-			final ElasticsearchReporter reporter = ElasticsearchReporter.forRegistry(registry).hosts(esHost).build();
+			final ElasticsearchReporter reporter = ElasticsearchReporter.forRegistry(registry).hosts(esHost).index(index).build();
 			reporter.start(reportIntervalInMillis, TimeUnit.MILLISECONDS);
 		}
 	}
