@@ -15,7 +15,15 @@
  */
 package org.dswarm.persistence.service.internal.graph;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
@@ -42,14 +50,21 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+import org.apache.commons.io.IOUtils;
+import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.media.multipart.MultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rx.Observable;
+import rx.functions.Func1;
 
 import org.dswarm.common.DMPStatics;
 import org.dswarm.common.model.util.AttributePathUtil;
+import org.dswarm.common.types.Tuple;
 import org.dswarm.graph.json.Resource;
+import org.dswarm.graph.json.stream.ModelBuilder;
+import org.dswarm.graph.json.stream.ModelParser;
 import org.dswarm.graph.json.util.Util;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.Model;
@@ -88,6 +103,12 @@ public class InternalGDMGraphService implements InternalModelService {
 
 	private static final String resourceIdentifier = "gdm";
 	private static final String MULTIPART_MIXED    = "multipart/mixed";
+
+	private static final String SEARCH_RESULT    = "search result";
+	private static final String OBJECT_RETRIEVAL = "object retrieval";
+	private static final String OBJECT_ADDITION  = "object addition";
+
+	private static final ClientBuilder builder = ClientBuilder.newBuilder();
 
 	/**
 	 * The data model persistence service.
@@ -245,7 +266,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 			InternalGDMGraphService.LOG.debug("couldn't find data model '{}' to retrieve record class from", dataModelUuid);
 
-			throw new DMPPersistenceException("couldn't find data model '" + dataModelUuid + "' to retrieve record class from");
+			throw new DMPPersistenceException(String.format("couldn't find data model '%s' to retrieve record class from", dataModelUuid));
 		}
 
 		final Schema schema = dataModel.getSchema();
@@ -254,7 +275,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 			InternalGDMGraphService.LOG.debug("couldn't find schema in data model '{}'", dataModelUuid);
 
-			throw new DMPPersistenceException("couldn't find schema in data model '" + dataModelUuid + "'");
+			throw new DMPPersistenceException(String.format("couldn't find schema in data model '%s'", dataModelUuid));
 		}
 
 		final Clasz recordClass = schema.getRecordClass();
@@ -264,48 +285,66 @@ public class InternalGDMGraphService implements InternalModelService {
 			InternalGDMGraphService.LOG
 					.debug("couldn't find record class in schema '{}' of data model '{}'", schema.getUuid(), dataModelUuid);
 
-			throw new DMPPersistenceException(
-					"couldn't find record class in schema '" + schema.getUuid() + "' of data model '" + dataModelUuid + "'");
+			throw new DMPPersistenceException(String.format(
+					"couldn't find record class in schema '%s' of data model '%s'", schema.getUuid(), dataModelUuid));
 		}
 
 		final String recordClassUri = recordClass.getUri();
 
-		final org.dswarm.graph.json.Model model = readGDMFromDB(recordClassUri, dataModelURI, optionalAtMost);
-
-		if (model == null) {
-
-			InternalGDMGraphService.LOG.debug("couldn't find model for data model '{}' in database", dataModelUuid);
-
-			return Optional.absent();
-		}
-
-		if (model.size() <= 0) {
-
-			InternalGDMGraphService.LOG.debug("model is empty for data model '{}' in database", dataModelUuid);
-
-			return Optional.absent();
-		}
-
-		final Set<Resource> recordResources = GDMUtil.getRecordResources(recordClassUri, model);
-
-		if (recordResources == null || recordResources.isEmpty()) {
-
-			InternalGDMGraphService.LOG.debug("couldn't find records for record class'{}' in data model '{}'", recordClassUri, dataModelUuid);
-
-			throw new DMPPersistenceException("couldn't find records for record class'" + recordClassUri + "' in data model '" + dataModelUuid + "'");
-		}
+		final Tuple<Observable<Resource>, InputStream> readResult = readGDMFromDB(recordClassUri, dataModelURI, optionalAtMost);
+		final Observable<Resource> recordResourcesObservable = readResult.v1();
+		final InputStream inputStream = readResult.v2();
 
 		final Map<String, Model> modelMap = Maps.newLinkedHashMap();
 
-		for (final Resource recordResource : recordResources) {
+		final Observable<Void> modelObservable = recordResourcesObservable.map(new Func1<Resource, Void>() {
 
-			final org.dswarm.graph.json.Model recordModel = new org.dswarm.graph.json.Model();
-			recordModel.addResource(recordResource);
+			@Override public Void call(final Resource recordResource) {
 
-			final Model rdfModel = new GDMModel(recordModel, recordResource.getUri());
+				final org.dswarm.graph.json.Model recordModel = new org.dswarm.graph.json.Model();
+				recordModel.addResource(recordResource);
 
-			modelMap.put(recordResource.getUri(), rdfModel);
+				final Model gdmModel = new GDMModel(recordModel, recordResource.getUri());
+
+				modelMap.put(recordResource.getUri(), gdmModel);
+
+				return null;
+			}
+		});
+
+		try {
+
+			// TODO: move this, if needed
+			final Iterator<Void> iterator = modelObservable.toBlocking().getIterator();
+
+			if (!iterator.hasNext()) {
+
+				InternalGDMGraphService.LOG.debug("model is empty for data model '{}' in database", dataModelUuid);
+
+				return Optional.absent();
+			}
+
+			while (iterator.hasNext()) {
+
+				iterator.next();
+			}
+		} catch (final RuntimeException e) {
+
+			throw new DMPPersistenceException(e.getMessage(), e.getCause());
 		}
+
+		closeInputStream(inputStream, OBJECT_RETRIEVAL);
+
+		// TODO: this won'T be done right now, but is maybe also not really necessary any more
+		//		final Set<Resource> recordResources = GDMUtil.getRecordResources(recordClassUri, model);
+		//
+		//		if (recordResources == null || recordResources.isEmpty()) {
+		//
+		//			InternalGDMGraphService.LOG.debug("couldn't find records for record class'{}' in data model '{}'", recordClassUri, dataModelUuid);
+		//
+		//			throw new DMPPersistenceException(
+		//					String.format("couldn't find records for record class '%s' in data model '%s'", recordClassUri, dataModelUuid));
+		//		}
 
 		return Optional.of(modelMap);
 	}
@@ -473,7 +512,8 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		if (resource == null) {
 
-			InternalGDMGraphService.LOG.debug("couldn't find record data for record identifier '{}' in data model '{}' in database", recordIdentifier, dataModelUuid);
+			InternalGDMGraphService.LOG
+					.debug("couldn't find record data for record identifier '{}' in data model '{}' in database", recordIdentifier, dataModelUuid);
 
 			return Optional.absent();
 		}
@@ -516,20 +556,23 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final Map<String, Model> modelMap = Maps.newLinkedHashMap();
 
-		for(final String recordIdentifier : recordIdentifiers) {
+		for (final String recordIdentifier : recordIdentifiers) {
 
 			final org.dswarm.graph.json.Resource resource = readGDMRecordFromDB(recordIdentifier, dataModelURI);
 
 			if (resource == null) {
 
-				InternalGDMGraphService.LOG.debug("couldn't find record data for record identifier '{}' in data model '{}' in database", recordIdentifier, dataModelUuid);
+				InternalGDMGraphService.LOG
+						.debug("couldn't find record data for record identifier '{}' in data model '{}' in database", recordIdentifier,
+								dataModelUuid);
 
 				continue;
 			}
 
 			if (resource.size() <= 0) {
 
-				InternalGDMGraphService.LOG.debug("resource is empty for record identifier '{}' in data model '{}' in database", recordIdentifier, dataModelUuid);
+				InternalGDMGraphService.LOG
+						.debug("resource is empty for record identifier '{}' in data model '{}' in database", recordIdentifier, dataModelUuid);
 
 				continue;
 			}
@@ -542,7 +585,7 @@ public class InternalGDMGraphService implements InternalModelService {
 			modelMap.put(recordIdentifier, gdmModel);
 		}
 
-		if(modelMap.isEmpty()) {
+		if (modelMap.isEmpty()) {
 
 			InternalGDMGraphService.LOG.debug("couldn't find any record in data model '{}' in database", dataModelUuid);
 
@@ -752,22 +795,66 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final WebTarget target = target("/put");
 
-		final byte[] content = getBytes(model);
+		final ByteArrayOutputStream content = getBytes(model);
+
+		if (content == null) {
+
+			return;
+		}
+
 		final String metadata = getMetadata(dataModelUri, optionalContentSchema, optionalDeprecateMissingRecords, optionalRecordClassUri);
 
-		// Construct a MultiPart with two body parts
-		final MultiPart multiPart = new MultiPart();
-		multiPart.bodyPart(content, MediaType.APPLICATION_OCTET_STREAM_TYPE)
-				.bodyPart(metadata, MediaType.APPLICATION_JSON_TYPE);
+		try {
 
-		// POST the request
-		final Response response = target.request(MULTIPART_MIXED).post(Entity.entity(multiPart, MULTIPART_MIXED));
+			// convert pipe output stream into input stream
+			final PipedInputStream in = new PipedInputStream();
+			final PipedOutputStream out = new PipedOutputStream(in);
+			final Thread writeThread = new Thread(
+					() -> {
+						try {
+							// write the original OutputStream to the PipedOutputStream
+							content.writeTo(out);
 
-		if (response.getStatus() != 200) {
+							// Construct a MultiPart with two body parts
+							final MultiPart multiPart = new MultiPart();
+							multiPart.bodyPart(in, MediaType.APPLICATION_OCTET_STREAM_TYPE)
+									.bodyPart(metadata, MediaType.APPLICATION_JSON_TYPE);
 
-			throw new DMPPersistenceException("Couldn't store GDM data into database. Received status code '" + response.getStatus()
-					+ "' from database endpoint.");
+							// POST the request
+							final Response response = target.request(MULTIPART_MIXED).post(Entity.entity(multiPart, MULTIPART_MIXED));
+
+							multiPart.close();
+							in.close();
+							out.close();
+							content.close();
+
+							if (response.getStatus() != 200) {
+
+								throw new DMPPersistenceException(
+										String.format("Couldn't store GDM data into database. Received status code '%s' from database endpoint.",
+												response.getStatus()));
+							}
+						} catch (IOException e) {
+
+							// logging and exception handling should go here
+							LOG.error("couldn't store GDM data into database. something with i/o went wrong", e);
+						} catch(DMPPersistenceException e) {
+
+							LOG.error(e.getMessage(), e);
+						}
+					}
+			);
+			writeThread.start();
+
+		} catch (IOException e) {
+
+			final String message = "couldn't store GDM data into database. something with i/o went wrong";
+
+			LOG.error(message, e);
+
+			throw new DMPPersistenceException(message, e);
 		}
+
 	}
 
 	private JsonNode generateContentSchemaJSON(final ContentSchema contentSchema) throws DMPPersistenceException {
@@ -829,7 +916,8 @@ public class InternalGDMGraphService implements InternalModelService {
 		}
 	}
 
-	private org.dswarm.graph.json.Model readGDMFromDB(final String recordClassUri, final String dataModelUri, final Optional<Integer> optionalAtMost)
+	private Tuple<Observable<Resource>, InputStream> readGDMFromDB(final String recordClassUri, final String dataModelUri,
+			final Optional<Integer> optionalAtMost)
 			throws DMPPersistenceException {
 
 		final WebTarget target = target("/get");
@@ -861,10 +949,11 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		if (response.getStatus() != 200) {
 
-			throw new DMPPersistenceException(String.format("Couldn't read GDM data from database. Received status code '%s' from database endpoint.", response.getStatus()));
+			throw new DMPPersistenceException(
+					String.format("Couldn't read GDM data from database. Received status code '%s' from database endpoint.", response.getStatus()));
 		}
 
-		final String body = response.readEntity(String.class);
+		final InputStream body = response.readEntity(InputStream.class);
 
 		return deserializeModel(body);
 	}
@@ -887,7 +976,8 @@ public class InternalGDMGraphService implements InternalModelService {
 			requestJsonString = objectMapper.writeValueAsString(requestJson);
 		} catch (final JsonProcessingException e) {
 
-			throw new DMPPersistenceException("something went wrong, while creating the request JSON string for the read-gdm-record-from-db request", e);
+			throw new DMPPersistenceException("something went wrong, while creating the request JSON string for the read-gdm-record-from-db request",
+					e);
 		}
 
 		// POST the request
@@ -896,7 +986,9 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		if (response.getStatus() != 200) {
 
-			throw new DMPPersistenceException(String.format("Couldn't read GDM record data from database. Received status code '%s' from database endpoint.", response.getStatus()));
+			throw new DMPPersistenceException(
+					String.format("Couldn't read GDM record data from database. Received status code '%s' from database endpoint.",
+							response.getStatus()));
 		}
 
 		final String body = response.readEntity(String.class);
@@ -943,41 +1035,60 @@ public class InternalGDMGraphService implements InternalModelService {
 					String.format("Couldn't find GDM records in database. Received status code '%s' from database endpoint.", response.getStatus()));
 		}
 
-		final String body = response.readEntity(String.class);
+		final InputStream body = response.readEntity(InputStream.class);
 
-		if (body.equals("[]")) {
+		final org.dswarm.graph.json.Model model = new org.dswarm.graph.json.Model();
 
-			InternalGDMGraphService.LOG
-					.debug("couldn't find results for key attribute path '{}' and search value '}' in data model '{}'", keyAttributePathString,
-							searchValue, dataModelUri);
+		final Tuple<Observable<Resource>, InputStream> searchResultTuple = deserializeModel(body);
+		final Observable<Resource> searchResult = searchResultTuple.v1();
+		final InputStream is = searchResultTuple.v2();
 
-			return null;
-		}
+		final Observable<Void> resultObservable = searchResult.map(new Func1<Resource, Void>() {
 
-		return deserializeModel(body);
-	}
+			@Override public Void call(final Resource resource) {
 
-	private org.dswarm.graph.json.Model deserializeModel(final String modelString) throws DMPPersistenceException {
+				model.addResource(resource);
 
-		final ObjectMapper gdmObjectMapper = Util.getJSONObjectMapper();
-
-		final org.dswarm.graph.json.Model model;
+				return null;
+			}
+		});
 
 		try {
 
-			model = gdmObjectMapper.readValue(modelString, org.dswarm.graph.json.Model.class);
-		} catch (final JsonParseException e) {
+			// TODO: move this, if needed
+			final Iterator<Void> iterator = resultObservable.toBlocking().getIterator();
 
-			throw new DMPPersistenceException("something went wrong, while parsing the JSON string");
-		} catch (final JsonMappingException e) {
+			if (!iterator.hasNext()) {
 
-			throw new DMPPersistenceException("something went wrong, while mapping the JSON string");
-		} catch (final IOException e) {
+				InternalGDMGraphService.LOG
+						.debug("couldn't find results for key attribute path '{}' and search value '}' in data model '{}'", keyAttributePathString,
+								searchValue, dataModelUri);
 
-			throw new DMPPersistenceException("something went wrong, while processing the JSON string");
+				closeInputStream(is, SEARCH_RESULT);
+
+				return null;
+			}
+
+			while (iterator.hasNext()) {
+
+				iterator.next();
+			}
+		} catch (final RuntimeException e) {
+
+			throw new DMPPersistenceException(e.getMessage(), e.getCause());
 		}
 
+		closeInputStream(is, SEARCH_RESULT);
+
 		return model;
+	}
+
+	private Tuple<Observable<Resource>, InputStream> deserializeModel(final InputStream modelStream) {
+
+		final InputStream bis = new BufferedInputStream(modelStream, 1024);
+		final ModelParser modelParser = new ModelParser(bis);
+
+		return Tuple.tuple(modelParser.parse(), bis);
 	}
 
 	private org.dswarm.graph.json.Resource deserializeResource(final String modelString) throws DMPPersistenceException {
@@ -1005,9 +1116,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 	private Client client() {
 
-		final ClientBuilder builder = ClientBuilder.newBuilder();
-
-		return builder.register(MultiPartFeature.class).build();
+		return builder.register(MultiPartFeature.class).property(ClientProperties.CHUNKED_ENCODING_SIZE, 1024).build();
 	}
 
 	private WebTarget target() {
@@ -1027,16 +1136,31 @@ public class InternalGDMGraphService implements InternalModelService {
 		return target;
 	}
 
-	private byte[] getBytes(final org.dswarm.graph.json.Model model) throws DMPPersistenceException {
+	private ByteArrayOutputStream getBytes(final org.dswarm.graph.json.Model model) throws DMPPersistenceException {
 
-		//final ObjectMapper objectMapper = Util.getJSONObjectMapper();
+		if (model == null || model.getResources() == null) {
+
+			LOG.debug("model or resources are not available");
+
+			return null;
+		}
 
 		try {
 
-			return objectMapperProvider.get().writeValueAsBytes(model);
-		} catch (final JsonProcessingException e) {
+			final ByteArrayOutputStream modelStream = new ByteArrayOutputStream(1024);
+			final ModelBuilder modelBuilder = new ModelBuilder(modelStream);
 
-			throw new DMPPersistenceException("couldn't serialise model to JSON", e);
+			for (final Resource resource : model.getResources()) {
+
+				modelBuilder.addResource(resource);
+			}
+
+			modelBuilder.build();
+
+			return modelStream;
+		} catch (final IOException e) {
+
+			throw new DMPPersistenceException("couldn't serialize model", e);
 		}
 	}
 
@@ -1068,6 +1192,48 @@ public class InternalGDMGraphService implements InternalModelService {
 			InternalGDMGraphService.LOG.error(message, e);
 
 			throw new DMPPersistenceException(message, e);
+		}
+	}
+
+	private void closeInputStream(final InputStream inputStream, final String type) throws DMPPersistenceException {
+
+		if (inputStream != null) {
+
+			try {
+
+				inputStream.close();
+			} catch (final IOException e) {
+
+				throw new DMPPersistenceException(String.format("couldn't finish %s processing", type), e);
+			}
+		}
+	}
+
+	private void closeOutputStream(final OutputStream outputStream, final String type) throws DMPPersistenceException {
+
+		if (outputStream != null) {
+
+			try {
+
+				outputStream.close();
+			} catch (final IOException e) {
+
+				throw new DMPPersistenceException(String.format("couldn't finish %s processing", type), e);
+			}
+		}
+	}
+
+	private void closeMultiPart(final MultiPart multiPart, final String type) throws DMPPersistenceException {
+
+		if (multiPart != null) {
+
+			try {
+
+				multiPart.close();
+			} catch (final IOException e) {
+
+				throw new DMPPersistenceException(String.format("couldn't finish %s processing", type), e);
+			}
 		}
 	}
 }

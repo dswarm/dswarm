@@ -310,9 +310,14 @@
 			</exclusions>
 		</dependency>
 		<dependency>
+			<groupId>io.reactivex</groupId>
+			<artifactId>rxjava</artifactId>
+			<version>${version.rxjava}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.dswarm</groupId>
 			<artifactId>graph-json</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
+			<version>${version.dswarm.graph.json}</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>jackson-core</artifactId>
