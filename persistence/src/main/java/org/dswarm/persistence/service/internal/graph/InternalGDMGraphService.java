@@ -16,6 +16,7 @@
 package org.dswarm.persistence.service.internal.graph;
 
 import java.io.BufferedInputStream;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -58,7 +59,6 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
-import rx.functions.Func1;
 
 import org.dswarm.common.DMPStatics;
 import org.dswarm.common.model.util.AttributePathUtil;
@@ -102,17 +102,18 @@ public class InternalGDMGraphService implements InternalModelService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(InternalGDMGraphService.class);
 
-	private static final String resourceIdentifier = "gdm";
+	private static final String RESOURCE_IDENTIFIER = "gdm";
 	private static final String MULTIPART_MIXED    = "multipart/mixed";
 
 	private static final String SEARCH_RESULT    = "search result";
 	private static final String OBJECT_RETRIEVAL = "object retrieval";
 	private static final String OBJECT_ADDITION  = "object addition";
+	private static final String WRITE_GDM = "write to graph database";
 
 	private static final ExecutorService EXECUTOR_SERVICE = Executors.newCachedThreadPool(
 			new BasicThreadFactory.Builder().daemon(false).namingPattern("dswarm-model-streamer-%d").build());
 
-	private static final ClientBuilder builder = ClientBuilder.newBuilder();
+	private static final ClientBuilder BUILDER = ClientBuilder.newBuilder();
 
 	/**
 	 * The data model persistence service.
@@ -301,19 +302,16 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final Map<String, Model> modelMap = Maps.newLinkedHashMap();
 
-		final Observable<Void> modelObservable = recordResourcesObservable.map(new Func1<Resource, Void>() {
+		final Observable<Void> modelObservable = recordResourcesObservable.map(recordResource -> {
 
-			@Override public Void call(final Resource recordResource) {
+			final org.dswarm.graph.json.Model recordModel = new org.dswarm.graph.json.Model();
+			recordModel.addResource(recordResource);
 
-				final org.dswarm.graph.json.Model recordModel = new org.dswarm.graph.json.Model();
-				recordModel.addResource(recordResource);
+			final Model gdmModel = new GDMModel(recordModel, recordResource.getUri());
 
-				final Model gdmModel = new GDMModel(recordModel, recordResource.getUri());
+			modelMap.put(recordResource.getUri(), gdmModel);
 
-				modelMap.put(recordResource.getUri(), gdmModel);
-
-				return null;
-			}
+			return null;
 		});
 
 		try {
@@ -337,7 +335,7 @@ public class InternalGDMGraphService implements InternalModelService {
 			throw new DMPPersistenceException(e.getMessage(), e.getCause());
 		}
 
-		closeInputStream(inputStream, OBJECT_RETRIEVAL);
+		closeResource(inputStream, OBJECT_RETRIEVAL);
 
 		// TODO: this won'T be done right now, but is maybe also not really necessary any more
 		//		final Set<Resource> recordResources = GDMUtil.getRecordResources(recordClassUri, model);
@@ -401,7 +399,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		if (schema == null) {
 
-			InternalGDMGraphService.LOG.debug("couldn't find schema in data model '" + dataModelUuid + "'");
+			InternalGDMGraphService.LOG.debug("couldn't find schema in data model '{}'", dataModelUuid);
 
 			return Optional.absent();
 		}
@@ -512,7 +510,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelUuid);
 
-		final org.dswarm.graph.json.Resource resource = readGDMRecordFromDB(recordIdentifier, dataModelURI);
+		final Resource resource = readGDMRecordFromDB(recordIdentifier, dataModelURI);
 
 		if (resource == null) {
 
@@ -562,7 +560,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		for (final String recordIdentifier : recordIdentifiers) {
 
-			final org.dswarm.graph.json.Resource resource = readGDMRecordFromDB(recordIdentifier, dataModelURI);
+			final Resource resource = readGDMRecordFromDB(recordIdentifier, dataModelURI);
 
 			if (resource == null) {
 
@@ -813,10 +811,10 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		try {
 
-			final Future<Boolean> modelStreamFuture = EXECUTOR_SERVICE.submit(() -> {
+			final Future<Void> modelStreamFuture = EXECUTOR_SERVICE.submit(() -> {
 				output.connect(input);
 				getBytes(output, model);
-				return true; // turns a Runnable into a Callable which handles exceptions
+				return null; // turns a Runnable into a Callable which handles exceptions
 			});
 
 			final MultiPart multiPart = new MultiPart();
@@ -827,7 +825,10 @@ public class InternalGDMGraphService implements InternalModelService {
 			// POST the request
 			final Response response = target.request(MULTIPART_MIXED).post(Entity.entity(multiPart, MULTIPART_MIXED));
 
-			multiPart.close();
+			closeResource(multiPart, WRITE_GDM);
+			closeResource(output, WRITE_GDM);
+			closeResource(input, WRITE_GDM);
+
 			// TODO: maybe we have to wait on the future?
 			// modelStreamFuture.get()
 
@@ -837,11 +838,7 @@ public class InternalGDMGraphService implements InternalModelService {
 						String.format("Couldn't store GDM data into database. Received status code '%s' from database endpoint.",
 								response.getStatus()));
 			}
-		} catch (IOException e) {
-
-			// logging and exception handling should go here
-			LOG.error("couldn't store GDM data into database. something with i/o went wrong", e);
-		} catch (DMPPersistenceException e) {
+		} catch (final DMPPersistenceException e) {
 
 			LOG.error(e.getMessage(), e);
 		}
@@ -923,7 +920,7 @@ public class InternalGDMGraphService implements InternalModelService {
 			requestJson.put(DMPStatics.AT_MOST_IDENTIFIER, optionalAtMost.get());
 		}
 
-		String requestJsonString;
+		final String requestJsonString;
 
 		try {
 
@@ -948,7 +945,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		return deserializeModel(body);
 	}
 
-	private org.dswarm.graph.json.Resource readGDMRecordFromDB(final String recordUri, final String dataModelUri)
+	private Resource readGDMRecordFromDB(final String recordUri, final String dataModelUri)
 			throws DMPPersistenceException {
 
 		final WebTarget target = target("/getrecord");
@@ -959,7 +956,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		requestJson.put(DMPStatics.RECORD_URI_IDENTIFIER, recordUri);
 		requestJson.put(DMPStatics.DATA_MODEL_URI_IDENTIFIER, dataModelUri);
 
-		String requestJsonString;
+		final String requestJsonString;
 
 		try {
 
@@ -1004,7 +1001,7 @@ public class InternalGDMGraphService implements InternalModelService {
 			requestJson.put(DMPStatics.AT_MOST_IDENTIFIER, optionalAtMost.get());
 		}
 
-		String requestJsonString;
+		final String requestJsonString;
 
 		try {
 
@@ -1033,14 +1030,11 @@ public class InternalGDMGraphService implements InternalModelService {
 		final Observable<Resource> searchResult = searchResultTuple.v1();
 		final InputStream is = searchResultTuple.v2();
 
-		final Observable<Void> resultObservable = searchResult.map(new Func1<Resource, Void>() {
+		final Observable<Void> resultObservable = searchResult.map(resource -> {
 
-			@Override public Void call(final Resource resource) {
+			model.addResource(resource);
 
-				model.addResource(resource);
-
-				return null;
-			}
+			return null;
 		});
 
 		try {
@@ -1051,10 +1045,10 @@ public class InternalGDMGraphService implements InternalModelService {
 			if (!iterator.hasNext()) {
 
 				InternalGDMGraphService.LOG
-						.debug("couldn't find results for key attribute path '{}' and search value '}' in data model '{}'", keyAttributePathString,
-								searchValue, dataModelUri);
+						.debug("couldn't find results for key attribute path '{}' and search value '{}' in data model '{}'",
+								keyAttributePathString, searchValue, dataModelUri);
 
-				closeInputStream(is, SEARCH_RESULT);
+				closeResource(is, SEARCH_RESULT);
 
 				return null;
 			}
@@ -1068,7 +1062,7 @@ public class InternalGDMGraphService implements InternalModelService {
 			throw new DMPPersistenceException(e.getMessage(), e.getCause());
 		}
 
-		closeInputStream(is, SEARCH_RESULT);
+		closeResource(is, SEARCH_RESULT);
 
 		return model;
 	}
@@ -1081,15 +1075,15 @@ public class InternalGDMGraphService implements InternalModelService {
 		return Tuple.tuple(modelParser.parse(), bis);
 	}
 
-	private org.dswarm.graph.json.Resource deserializeResource(final String modelString) throws DMPPersistenceException {
+	private Resource deserializeResource(final String modelString) throws DMPPersistenceException {
 
 		final ObjectMapper gdmObjectMapper = Util.getJSONObjectMapper();
 
-		final org.dswarm.graph.json.Resource resource;
+		final Resource resource;
 
 		try {
 
-			resource = gdmObjectMapper.readValue(modelString, org.dswarm.graph.json.Resource.class);
+			resource = gdmObjectMapper.readValue(modelString, Resource.class);
 		} catch (final JsonParseException e) {
 
 			throw new DMPPersistenceException("something went wrong, while parsing the JSON string");
@@ -1106,12 +1100,12 @@ public class InternalGDMGraphService implements InternalModelService {
 
 	private Client client() {
 
-		return builder.register(MultiPartFeature.class).property(ClientProperties.CHUNKED_ENCODING_SIZE, 1024).build();
+		return BUILDER.register(MultiPartFeature.class).property(ClientProperties.CHUNKED_ENCODING_SIZE, 1024).build();
 	}
 
 	private WebTarget target() {
 
-		return client().target(graphEndpoint).path(InternalGDMGraphService.resourceIdentifier);
+		return client().target(graphEndpoint).path(InternalGDMGraphService.RESOURCE_IDENTIFIER);
 	}
 
 	private WebTarget target(final String... path) {
@@ -1166,7 +1160,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		try {
 			return objectMapperProvider.get().writeValueAsString(metadata);
-		} catch (JsonProcessingException e) {
+		} catch (final JsonProcessingException e) {
 
 			final String message = "couldn't serialize metadata";
 
@@ -1176,41 +1170,13 @@ public class InternalGDMGraphService implements InternalModelService {
 		}
 	}
 
-	private void closeInputStream(final InputStream inputStream, final String type) throws DMPPersistenceException {
+	private void closeResource(final Closeable closeable, final String type) throws DMPPersistenceException {
 
-		if (inputStream != null) {
-
-			try {
-
-				inputStream.close();
-			} catch (final IOException e) {
-
-				throw new DMPPersistenceException(String.format("couldn't finish %s processing", type), e);
-			}
-		}
-	}
-
-	private void closeOutputStream(final OutputStream outputStream, final String type) throws DMPPersistenceException {
-
-		if (outputStream != null) {
+		if (closeable != null) {
 
 			try {
 
-				outputStream.close();
-			} catch (final IOException e) {
-
-				throw new DMPPersistenceException(String.format("couldn't finish %s processing", type), e);
-			}
-		}
-	}
-
-	private void closeMultiPart(final MultiPart multiPart, final String type) throws DMPPersistenceException {
-
-		if (multiPart != null) {
-
-			try {
-
-				multiPart.close();
+				closeable.close();
 			} catch (final IOException e) {
 
 				throw new DMPPersistenceException(String.format("couldn't finish %s processing", type), e);
