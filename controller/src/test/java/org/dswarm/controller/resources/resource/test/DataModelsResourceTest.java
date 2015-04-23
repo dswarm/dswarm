@@ -72,6 +72,7 @@ import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
+import org.dswarm.persistence.model.resource.UpdateFormat;
 import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
@@ -305,7 +306,7 @@ public class DataModelsResourceTest extends
 		final CSVConverterEventRecorder recorder = GuicedTest.injector.getInstance(CSVConverterEventRecorder.class);
 
 		try (final ExecutionScope ignore = scope.enter()) {
-			recorder.convertConfiguration(new CSVConverterEvent(datamodelUTF8csv));
+			recorder.convertConfiguration(new CSVConverterEvent(datamodelUTF8csv, UpdateFormat.FULL));
 			final MetricRegistry registry = GuicedTest.injector.getInstance(Key.get(MetricRegistry.class, Names.named("Monitoring")));
 
 			final String ingestTimerName = name(DataModel.class, "ingest");

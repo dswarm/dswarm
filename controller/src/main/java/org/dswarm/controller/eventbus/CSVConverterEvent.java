@@ -15,6 +15,7 @@
  */
 package org.dswarm.controller.eventbus;
 
+import org.dswarm.persistence.model.resource.UpdateFormat;
 import org.dswarm.persistence.model.resource.DataModel;
 
 /**
@@ -24,8 +25,8 @@ import org.dswarm.persistence.model.resource.DataModel;
  */
 public class CSVConverterEvent extends ConverterEvent {
 
-	public CSVConverterEvent(final DataModel dataModel) {
+	public CSVConverterEvent(final DataModel dataModel, final UpdateFormat updateFormat) {
 
-		super(dataModel);
+		super(dataModel, updateFormat);
 	}
 }

@@ -178,6 +178,11 @@ public class DataModelsResourceTest2 extends
 	//		DataModelsResourceTest2.LOG.debug("end CSV data update test");
 	//	}
 
+	/**
+	 * existing (old) records will be deprecated after data model update
+	 *
+	 * @throws Exception
+	 */
 	@Test
 	public void testCSVDataUpdate2() throws Exception {
 
@@ -199,6 +204,56 @@ public class DataModelsResourceTest2 extends
 
 		// update data model
 		final Response response = target(String.valueOf(updateDataModel.getUuid()), "/data").request().post(Entity.text(""));
+
+		Assert.assertEquals("200 Updated was expected", 200, response.getStatus());
+
+		final String responseString = response.readEntity(String.class);
+
+		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
+
+		final Tuple<Optional<Map<String, Model>>, ObjectNode> result = readData(updateDataModel, Optional.<Integer>absent());
+
+		final Optional<Map<String, Model>> data = result.v1();
+		final ObjectNode assoziativeJsonArray = result.v2();
+
+		Assert.assertTrue(data.isPresent());
+		Assert.assertNotNull(assoziativeJsonArray);
+
+		final String expectedResult = DMPPersistenceUtil.getResourceAsString("dd-762.expected.delta-result.json");
+		final String actualResult = objectMapper.writeValueAsString(assoziativeJsonArray);
+
+		// TODO: do proper comparison
+		Assert.assertEquals(expectedResult.length(), actualResult.length());
+
+		DataModelsResourceTest2.LOG.debug("end CSV data update test");
+	}
+
+	/**
+	 * existing records won't be deprecated; all new records will be added to the data model
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testCSVDataUpdate3() throws Exception {
+
+		DataModelsResourceTest2.LOG.debug("start CSV data update test");
+
+		final DataModel dataModel = testCSVDataInternal();
+
+		// prepare resource
+
+		final Resource expectedResource = dataModel.getDataResource();
+
+		final URL fileURL = Resources.getResource("test_csv-controller2.csv");
+		final File resourceFile = FileUtils.toFile(fileURL);
+
+		// update resource
+		resourcesResourceTestUtils.updateResource(resourceFile, expectedResource, expectedResource.getUuid());
+
+		final DataModel updateDataModel = pojoClassResourceTestUtils.getObject(dataModel.getUuid());
+
+		// update data model
+		final Response response = target(String.valueOf(updateDataModel.getUuid()), "/data").queryParam("format","delta").request().post(Entity.text(""));
 
 		Assert.assertEquals("200 Updated was expected", 200, response.getStatus());
 

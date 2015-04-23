@@ -16,6 +16,7 @@
 package org.dswarm.controller.eventbus;
 
 import org.dswarm.persistence.model.resource.DataModel;
+import org.dswarm.persistence.model.resource.UpdateFormat;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 
 public class SchemaEvent extends DataModelEvent {
@@ -54,9 +55,9 @@ public class SchemaEvent extends DataModelEvent {
 
 	private final SchemaType schemaType;
 
-	public SchemaEvent(final DataModel dataModel, final SchemaType schemaType) {
+	public SchemaEvent(final DataModel dataModel, final SchemaType schemaType, final UpdateFormat updateFormat) {
 
-		super(dataModel);
+		super(dataModel, updateFormat);
 
 		this.schemaType = schemaType;
 	}

@@ -73,6 +73,7 @@ import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
+import org.dswarm.persistence.model.resource.UpdateFormat;
 import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.schema.AttributePath;
@@ -186,76 +187,14 @@ public class InternalGDMGraphService implements InternalModelService {
 	@Override
 	public void createObject(final String dataModelUuid, final Object model) throws DMPPersistenceException {
 
-		if (dataModelUuid == null) {
+		// always full at creation time, i.e., all existing records will be deprecated (however, there shouldn't be any)
+		createOrUpdateObject(dataModelUuid, model, UpdateFormat.FULL);
+	}
 
-			throw new DMPPersistenceException("data model id shouldn't be null");
-		}
+	@Override public void updateObject(final String dataModelUuid, final Object model, final UpdateFormat updateFormat)
+			throws DMPPersistenceException {
 
-		if (model == null) {
-
-			throw new DMPPersistenceException("model that should be added to DB shouldn't be null");
-		}
-
-		if (!GDMModel.class.isInstance(model)) {
-
-			throw new DMPPersistenceException("this service can only process GDM models");
-		}
-
-		final GDMModel gdmModel = (GDMModel) model;
-
-		final org.dswarm.graph.json.Model realModel = gdmModel.getModel();
-
-		if (realModel == null) {
-
-			throw new DMPPersistenceException("real model that should be added to DB shouldn't be null");
-		}
-
-		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelUuid);
-
-		final DataModel dataModel = addRecordClass(dataModelUuid, gdmModel.getRecordClassURI());
-
-		final DataModel finalDataModel;
-
-		if (dataModel != null) {
-
-			finalDataModel = dataModel;
-		} else {
-
-			finalDataModel = getDataModel(dataModelUuid);
-		}
-
-		if (finalDataModel == null) {
-			throw new DMPPersistenceException("Could not get the actual data model to use");
-		}
-
-		if (finalDataModel.getSchema() != null) {
-
-			if (finalDataModel.getSchema().getRecordClass() != null) {
-
-				final String recordClassURI = finalDataModel.getSchema().getRecordClass().getUri();
-
-				final Set<Resource> recordResources = GDMUtil.getRecordResources(recordClassURI, realModel);
-
-				if (recordResources != null && !recordResources.isEmpty()) {
-
-					final LinkedHashSet<String> recordURIs = Sets.newLinkedHashSet();
-
-					recordURIs.addAll(recordResources.stream().map(Resource::getUri).collect(Collectors.toList()));
-
-					gdmModel.setRecordURIs(recordURIs);
-				}
-			}
-		}
-
-		addAttributePaths(finalDataModel, gdmModel.getAttributePaths());
-
-		final Optional<ContentSchema> optionalContentSchema = Optional.fromNullable(finalDataModel.getSchema().getContentSchema());
-
-		// TODO: true for now
-		final Optional<Boolean> optionalDeprecateMissingRecords = Optional.of(Boolean.TRUE);
-		final Optional<String> optionalRecordClassUri = Optional.fromNullable(finalDataModel.getSchema().getRecordClass().getUri());
-
-		writeGDMToDB(realModel, dataModelURI, optionalContentSchema, optionalDeprecateMissingRecords, optionalRecordClassUri);
+		createOrUpdateObject(dataModelUuid, model, updateFormat);
 	}
 
 	/**
@@ -603,6 +542,96 @@ public class InternalGDMGraphService implements InternalModelService {
 		}
 
 		return Optional.of(modelMap);
+	}
+
+	private void createOrUpdateObject(final String dataModelUuid, final Object model, final UpdateFormat updateFormat)
+			throws DMPPersistenceException {
+
+		if (dataModelUuid == null) {
+
+			throw new DMPPersistenceException("data model id shouldn't be null");
+		}
+
+		if (model == null) {
+
+			throw new DMPPersistenceException("model that should be added to DB shouldn't be null");
+		}
+
+		if (!GDMModel.class.isInstance(model)) {
+
+			throw new DMPPersistenceException("this service can only process GDM models");
+		}
+
+		final GDMModel gdmModel = (GDMModel) model;
+
+		final org.dswarm.graph.json.Model realModel = gdmModel.getModel();
+
+		if (realModel == null) {
+
+			throw new DMPPersistenceException("real model that should be added to DB shouldn't be null");
+		}
+
+		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelUuid);
+
+		final DataModel dataModel = addRecordClass(dataModelUuid, gdmModel.getRecordClassURI());
+
+		final DataModel finalDataModel;
+
+		if (dataModel != null) {
+
+			finalDataModel = dataModel;
+		} else {
+
+			finalDataModel = getDataModel(dataModelUuid);
+		}
+
+		if (finalDataModel == null) {
+			throw new DMPPersistenceException("Could not get the actual data model to use");
+		}
+
+		if (finalDataModel.getSchema() != null) {
+
+			if (finalDataModel.getSchema().getRecordClass() != null) {
+
+				final String recordClassURI = finalDataModel.getSchema().getRecordClass().getUri();
+
+				final Set<Resource> recordResources = GDMUtil.getRecordResources(recordClassURI, realModel);
+
+				if (recordResources != null && !recordResources.isEmpty()) {
+
+					final LinkedHashSet<String> recordURIs = Sets.newLinkedHashSet();
+
+					recordURIs.addAll(recordResources.stream().map(Resource::getUri).collect(Collectors.toList()));
+
+					gdmModel.setRecordURIs(recordURIs);
+				}
+			}
+		}
+
+		addAttributePaths(finalDataModel, gdmModel.getAttributePaths());
+
+		final Optional<ContentSchema> optionalContentSchema = Optional.fromNullable(finalDataModel.getSchema().getContentSchema());
+
+		final Optional<Boolean> optionalDeprecateMissingRecords = determineMissingRecordsFlag(updateFormat);
+		final Optional<String> optionalRecordClassUri = Optional.fromNullable(finalDataModel.getSchema().getRecordClass().getUri());
+
+		writeGDMToDB(realModel, dataModelURI, optionalContentSchema, optionalDeprecateMissingRecords, optionalRecordClassUri);
+	}
+
+	private Optional<Boolean> determineMissingRecordsFlag(final UpdateFormat updateFormat) throws DMPPersistenceException {
+
+		switch (updateFormat) {
+
+			case FULL:
+
+				return Optional.of(Boolean.TRUE);
+			case DELTA:
+
+				return Optional.of(Boolean.FALSE);
+			default:
+
+				throw new DMPPersistenceException(String.format("unkown update format '%s'", updateFormat));
+		}
 	}
 
 	/**

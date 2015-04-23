@@ -15,6 +15,7 @@
  */
 package org.dswarm.controller.eventbus;
 
+import org.dswarm.persistence.model.resource.UpdateFormat;
 import org.dswarm.persistence.model.resource.DataModel;
 
 /**
@@ -24,8 +25,8 @@ import org.dswarm.persistence.model.resource.DataModel;
  */
 public class XMLConverterEvent extends ConverterEvent {
 
-	public XMLConverterEvent(final DataModel dataModel) {
+	public XMLConverterEvent(final DataModel dataModel, final UpdateFormat updateFormat) {
 
-		super(dataModel);
+		super(dataModel, updateFormat);
 	}
 }

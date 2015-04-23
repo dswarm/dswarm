@@ -13,25 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dswarm.controller.eventbus;
+package org.dswarm.persistence.model.resource;
 
-import org.dswarm.persistence.model.resource.UpdateFormat;
-import org.dswarm.persistence.model.resource.DataModel;
+import java.util.Locale;
 
-/**
- * A converter event that provides a {@link DataModel}.
- * 
- * @author tgaengler
- */
-public class ConverterEvent extends DataModelEvent {
+import javax.ws.rs.BadRequestException;
 
-	/**
-	 * Creates a new converter event with the given data model.
-	 * 
-	 * @param dataModel a data model that can be utilised for further processing
-	 */
-	public ConverterEvent(final DataModel dataModel, final UpdateFormat updateFormat) {
+@SuppressWarnings("UnusedDeclaration")
+public enum UpdateFormat {
+	FULL, DELTA;
 
-		super(dataModel, updateFormat);
+	// Required for Jersey, so that we can use 'full' instead of 'FULL'
+	public static UpdateFormat fromString(final String name) {
+		try {
+			return valueOf(name.toUpperCase(Locale.ENGLISH));
+		} catch (final IllegalArgumentException iae) {
+			throw new BadRequestException(
+					String.format("UpdateFormat must be one of {full|delta}, but got [%s] instead", name),
+					iae);
+		}
 	}
 }

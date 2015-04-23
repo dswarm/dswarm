@@ -76,6 +76,7 @@ import org.dswarm.persistence.dto.resource.MediumDataModelDTO;
 import org.dswarm.persistence.model.proxy.RetrievalType;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
+import org.dswarm.persistence.model.resource.UpdateFormat;
 import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
@@ -298,7 +299,8 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	@Timed
 	@POST
 	@Path("/{id}/data")
-	public Response updateDataModelData(@ApiParam(value = "data model identifier", required = true) @PathParam("id") final String uuid)
+	public Response updateDataModelData(@ApiParam(value = "data model identifier", required = true) @PathParam("id") final String uuid,
+			@ApiParam(value = "update format", required = false) @QueryParam("format") @DefaultValue("full") final UpdateFormat updateFormat)
 			throws DMPControllerException {
 
 		DataModelsResource.LOG.debug("try to update {} '{}'", pojoClassName, uuid);
@@ -310,13 +312,14 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		final ProxyDataModel updatedProxyDataModel = updateDataModelContent(new ProxyDataModel(objectFromDB, RetrievalType.RETRIEVED), objectFromDB);
+		final ProxyDataModel updatedProxyDataModel = updateDataModelContent(new ProxyDataModel(objectFromDB, RetrievalType.RETRIEVED), objectFromDB,
+				updateFormat);
 
 		if (updatedProxyDataModel == null) {
 
 			DataModelsResource.LOG.debug("couldn't update content for data model '{}'", uuid);
 
-			throw new DMPControllerException("couldn't update content for data model '" + uuid + "'");
+			throw new DMPControllerException(String.format("couldn't update content for data model '%s'", uuid));
 		}
 
 		final DataModel object = updatedProxyDataModel.getObject();
@@ -325,7 +328,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 			DataModelsResource.LOG.debug("couldn't update content for data model '{}'", uuid);
 
-			throw new DMPControllerException("couldn't update content for data model '" + uuid + "'");
+			throw new DMPControllerException(String.format("couldn't update content for data model '%s'", uuid));
 		}
 
 		DataModelsResource.LOG.debug("updated content for data model '{}'", uuid);
@@ -720,6 +723,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 	/**
 	 * add configuration to data resource + update data model content
+	 * note: this will only be called at data model creation
 	 *
 	 * @param proxyDataModel
 	 * @param dataModel
@@ -737,7 +741,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			return proxyDataModel;
 		}
 
-		return updateDataModelContent(newProxyDataModel, newDataModel);
+		return updateDataModelContent(newProxyDataModel, newDataModel, UpdateFormat.FULL);
 	}
 
 	private ProxyDataModel addConfigurationToDataResource(final ProxyDataModel proxyDataModel, final DataModel dataModel)
@@ -797,7 +801,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 		}
 	}
 
-	private ProxyDataModel updateDataModelContent(final ProxyDataModel proxyDataModel, final DataModel dataModel) throws DMPControllerException {
+	private ProxyDataModel updateDataModelContent(final ProxyDataModel proxyDataModel, final DataModel dataModel, final UpdateFormat updateFormat) throws DMPControllerException {
 
 		// final Timer.Context context = dmpStatus.createNewConfiguration();
 
@@ -823,7 +827,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			try {
 
 				final SchemaEvent.SchemaType type = SchemaEvent.SchemaType.fromString(storageType);
-				final SchemaEvent schemaEvent = new SchemaEvent(dataModel, type);
+				final SchemaEvent schemaEvent = new SchemaEvent(dataModel, type, updateFormat);
 				schemaEventRecorderProvider.get().convertSchema(schemaEvent);
 			} catch (final IllegalArgumentException e) {
 
@@ -843,7 +847,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 					// eventBusProvider.get().post(new CSVConverterEvent(dataModel));
 
-					final CSVConverterEvent csvConverterEvent = new CSVConverterEvent(dataModel);
+					final CSVConverterEvent csvConverterEvent = new CSVConverterEvent(dataModel, updateFormat);
 					csvConverterEventRecorderProvider.get().convertConfiguration(csvConverterEvent);
 
 					break;
@@ -857,7 +861,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 					// eventBusProvider.get().post(new XMLConverterEvent(dataModel));
 
-					final XMLConverterEvent xmlConverterEvent = new XMLConverterEvent(dataModel);
+					final XMLConverterEvent xmlConverterEvent = new XMLConverterEvent(dataModel, updateFormat);
 					xmlConvertEventRecorderProvider.get().processDataModel(xmlConverterEvent);
 
 					break;
@@ -888,22 +892,45 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
+		final Iterator<Tuple<String, JsonNode>> iterator = data.get();
+
+		if(iterator == null) {
+
+			DataModelsResource.LOG.debug("couldn't find data for data model with uuid '{}'", uuid);
+
+			return Response.status(Status.NOT_FOUND).build();
+		}
+
+		if(!iterator.hasNext()) {
+
+			DataModelsResource.LOG.debug("couldn't find data for data model with uuid '{}'", uuid);
+
+			return Response.status(Status.NOT_FOUND).build();
+		}
+
 		// temp
 		final Iterator<Tuple<String, JsonNode>> tupleIterator;
 
 		if (atMost != null) {
 
-			tupleIterator = Iterators.limit(data.get(), atMost);
+			tupleIterator = Iterators.limit(iterator, atMost);
 		} else {
 
-			tupleIterator = data.get();
+			tupleIterator = iterator;
+		}
+
+		if(!tupleIterator.hasNext()) {
+
+			DataModelsResource.LOG.debug("couldn't find data for data model with uuid '{}'", uuid);
+
+			return Response.status(Status.NOT_FOUND).build();
 		}
 
 		final ObjectNode json = objectMapperProvider.get().createObjectNode();
 
 		while (tupleIterator.hasNext()) {
 
-			final Tuple<String, JsonNode> tuple = data.get().next();
+			final Tuple<String, JsonNode> tuple = iterator.next();
 
 			json.set(tuple.v1(), tuple.v2());
 		}

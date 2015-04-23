@@ -36,6 +36,8 @@ import org.dswarm.graph.json.Predicate;
 import org.dswarm.graph.json.Resource;
 import org.dswarm.graph.json.ResourceNode;
 import org.dswarm.persistence.DMPPersistenceException;
+import org.dswarm.persistence.model.resource.UpdateFormat;
+import org.dswarm.persistence.model.resource.utils.ResourceStatics;
 import org.dswarm.persistence.monitoring.MonitoringLogger;
 import org.dswarm.persistence.monitoring.MonitoringHelper;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
@@ -47,10 +49,11 @@ import org.dswarm.persistence.service.InternalModelServiceFactory;
 public class CSVConverterEventRecorder {
 
 	private static final Logger					LOG	= LoggerFactory.getLogger(CSVConverterEventRecorder.class);
+	private static final String RECORD_TYPE_POSTFIX = "RecordType";
 
 	private final Provider<CSVResourceFlowFactory> flowFactory;
-	private final InternalModelServiceFactory	internalServiceFactory;
-	private final Provider<MonitoringLogger> loggerProvider;
+	private final InternalModelServiceFactory      internalServiceFactory;
+	private final Provider<MonitoringLogger>       loggerProvider;
 
 	@Inject
 	public CSVConverterEventRecorder(
@@ -64,36 +67,38 @@ public class CSVConverterEventRecorder {
 	}
 
 	public void convertConfiguration(final CSVConverterEvent event) throws DMPControllerException {
+
 		final DataModel dataModel = event.getDataModel();
+		final UpdateFormat updateFormat = event.getUpdateFormat();
 
 		try (final MonitoringHelper ignore = loggerProvider.get().startIngest(dataModel)) {
-			convertConfiguration(dataModel);
+			convertConfiguration(dataModel, updateFormat);
 		}
 	}
 
-	private void convertConfiguration(final DataModel dataModel) throws DMPControllerException {
+	private void convertConfiguration(final DataModel dataModel, final UpdateFormat updateFormat) throws DMPControllerException {
 
 		List<Triple> result = null;
 		try {
 			final CSVSourceResourceTriplesFlow flow = flowFactory.get().fromDataModel(dataModel);
 
-			final String path = dataModel.getDataResource().getAttribute("path").asText();
+			final String path = dataModel.getDataResource().getAttribute(ResourceStatics.PATH).asText();
 			result = flow.applyFile(path);
 
 		} catch (final DMPConverterException | NullPointerException e) {
 
-			final String message = "couldn't convert the CSV data of data model '" + dataModel.getUuid() + "'";
+			final String message = String.format("couldn't convert the CSV data of data model '%s'", dataModel.getUuid());
 
 			CSVConverterEventRecorder.LOG.error(message, e);
 
-			throw new DMPControllerException(message + " " + e.getMessage(), e);
+			throw new DMPControllerException(String.format("%s %s", message, e.getMessage()), e);
 		} catch (final Exception e) {
 
-			final String message = "really couldn't convert the CSV data of data model '" + dataModel.getUuid() + "'";
+			final String message = String.format("really couldn't convert the CSV data of data model '%s'", dataModel.getUuid());
 
 			CSVConverterEventRecorder.LOG.error(message, e);
 
-			throw new DMPControllerException(message + " " + e.getMessage(), e);
+			throw new DMPControllerException(String.format("%s %s", message, e.getMessage()), e);
 		}
 
 		if (result != null) {
@@ -104,7 +109,7 @@ public class CSVConverterEventRecorder {
 			final Model model = new Model();
 
 			final String dataResourceBaseSchemaURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
-			final String recordClassURI = dataResourceBaseSchemaURI + "RecordType";
+			final String recordClassURI = dataResourceBaseSchemaURI + RECORD_TYPE_POSTFIX;
 			final ResourceNode recordClassNode = new ResourceNode(recordClassURI);
 
 			for (final Triple triple : result) {
@@ -126,14 +131,14 @@ public class CSVConverterEventRecorder {
 
 			try {
 
-				internalServiceFactory.getInternalGDMGraphService().createObject(dataModel.getUuid(), gdmModel);
+				internalServiceFactory.getInternalGDMGraphService().updateObject(dataModel.getUuid(), gdmModel, updateFormat);
 			} catch (final DMPPersistenceException e) {
 
-				final String message = "couldn't persist the converted CSV data of data model '" + dataModel.getUuid() + "'";
+				final String message = String.format("couldn't persist the converted CSV data of data model '%s'", dataModel.getUuid());
 
 				CSVConverterEventRecorder.LOG.error(message, e);
 
-				throw new DMPControllerException(message + " " + e.getMessage(), e);
+				throw new DMPControllerException(String.format("%s %s", message, e.getMessage()), e);
 			}
 		}
 	}

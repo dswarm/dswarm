@@ -347,7 +347,9 @@ public class DataModelUtil {
 
 			@Override
 			protected Tuple<String, JsonNode> computeNext() {
+
 				if (triples.hasNext()) {
+
 					final Map.Entry<String, Model> nextTriple = triples.next();
 					final String recordId = nextTriple.getKey();
 					final JsonNode jsonNode = nextTriple.getValue().toRawJSON();

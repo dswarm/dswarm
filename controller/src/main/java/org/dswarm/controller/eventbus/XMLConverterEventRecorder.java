@@ -30,6 +30,8 @@ import org.dswarm.converter.flow.XmlResourceFlowFactory;
 import org.dswarm.graph.json.Model;
 import org.dswarm.graph.json.Resource;
 import org.dswarm.persistence.DMPPersistenceException;
+import org.dswarm.persistence.model.resource.UpdateFormat;
+import org.dswarm.persistence.model.resource.utils.ResourceStatics;
 import org.dswarm.persistence.monitoring.MonitoringLogger;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.DataModel;
@@ -45,14 +47,14 @@ import org.dswarm.persistence.service.InternalModelServiceFactory;
 @Singleton
 public class XMLConverterEventRecorder {
 
-	private static final Logger					LOG	= LoggerFactory.getLogger(XMLConverterEventRecorder.class);
+	private static final Logger LOG = LoggerFactory.getLogger(XMLConverterEventRecorder.class);
 
 	/**
 	 * The internal model service factory
 	 */
-	private final InternalModelServiceFactory	internalServiceFactory;
+	private final InternalModelServiceFactory      internalServiceFactory;
 	private final Provider<XmlResourceFlowFactory> xmlFlowFactory;
-	private final Provider<MonitoringLogger> loggerProvider;
+	private final Provider<MonitoringLogger>       loggerProvider;
 
 	/**
 	 * Creates a new event recorder for converting XML documents with the given internal model service factory and event bus.
@@ -78,13 +80,14 @@ public class XMLConverterEventRecorder {
 	public void processDataModel(final XMLConverterEvent event) throws DMPControllerException {
 
 		final DataModel dataModel = event.getDataModel();
+		final UpdateFormat updateFormat = event.getUpdateFormat();
 
 		try (final MonitoringHelper ignore = loggerProvider.get().startIngest(dataModel)) {
-			processDataModel(dataModel);
+			processDataModel(dataModel, updateFormat);
 		}
 	}
 
-	public void processDataModel(final DataModel dataModel) throws DMPControllerException {
+	public void processDataModel(final DataModel dataModel, final UpdateFormat updateFormat) throws DMPControllerException {
 
 		GDMModel result = null;
 
@@ -92,7 +95,7 @@ public class XMLConverterEventRecorder {
 
 			final XMLSourceResourceGDMStmtsFlow flow = xmlFlowFactory.get().fromDataModel(dataModel);
 
-			final String path = dataModel.getDataResource().getAttribute("path").asText();
+			final String path = dataModel.getDataResource().getAttribute(ResourceStatics.PATH).asText();
 			final List<GDMModel> gdmModels = flow.applyResource(path);
 
 			// write GDM models at once
@@ -126,30 +129,30 @@ public class XMLConverterEventRecorder {
 
 		} catch (final NullPointerException e) {
 
-			final String message = "couldn't convert the XML data of data model '" + dataModel.getUuid() + "'";
+			final String message = String.format("couldn't convert the XML data of data model '%s'", dataModel.getUuid());
 
 			XMLConverterEventRecorder.LOG.error(message, e);
 
-			throw new DMPControllerException(message + " " + e.getMessage(), e);
+			throw new DMPControllerException(String.format("%s %s", message, e.getMessage()), e);
 		} catch (final Exception e) {
 
-			final String message = "really couldn't convert the XML data of data model '" + dataModel.getUuid() + "'";
+			final String message = String.format("really couldn't convert the XML data of data model '%s'", dataModel.getUuid());
 
 			XMLConverterEventRecorder.LOG.error(message, e);
 
-			throw new DMPControllerException(message + " " + e.getMessage(), e);
+			throw new DMPControllerException(String.format("%s %s", message, e.getMessage()), e);
 		}
 
 		try {
 
-			internalServiceFactory.getInternalGDMGraphService().createObject(dataModel.getUuid(), result);
+			internalServiceFactory.getInternalGDMGraphService().updateObject(dataModel.getUuid(), result, updateFormat);
 		} catch (final DMPPersistenceException e) {
 
-			final String message = "couldn't persist the converted data of data model '" + dataModel.getUuid() + "'";
+			final String message = String.format("couldn't persist the converted data of data model '%s'", dataModel.getUuid());
 
 			XMLConverterEventRecorder.LOG.error(message, e);
 
-			throw new DMPControllerException(message + " " + e.getMessage(), e);
+			throw new DMPControllerException(String.format("%s %s", message, e.getMessage()), e);
 		}
 	}
 }
