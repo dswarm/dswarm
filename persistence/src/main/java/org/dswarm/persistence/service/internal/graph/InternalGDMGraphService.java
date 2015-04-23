@@ -16,8 +16,6 @@
 package org.dswarm.persistence.service.internal.graph;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -28,6 +26,9 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.client.Client;
@@ -50,7 +51,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.media.multipart.MultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
@@ -107,6 +108,9 @@ public class InternalGDMGraphService implements InternalModelService {
 	private static final String SEARCH_RESULT    = "search result";
 	private static final String OBJECT_RETRIEVAL = "object retrieval";
 	private static final String OBJECT_ADDITION  = "object addition";
+
+	private static final ExecutorService EXECUTOR_SERVICE = Executors.newCachedThreadPool(
+			new BasicThreadFactory.Builder().daemon(false).namingPattern("dswarm-model-streamer-%d").build());
 
 	private static final ClientBuilder builder = ClientBuilder.newBuilder();
 
@@ -795,66 +799,52 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final WebTarget target = target("/put");
 
-		final ByteArrayOutputStream content = getBytes(model);
+		if (model == null || model.getResources() == null) {
 
-		if (content == null) {
+			LOG.debug("model or resources are not available");
 
 			return;
 		}
+
+		final PipedInputStream input = new PipedInputStream();
+		final PipedOutputStream output = new PipedOutputStream();
 
 		final String metadata = getMetadata(dataModelUri, optionalContentSchema, optionalDeprecateMissingRecords, optionalRecordClassUri);
 
 		try {
 
-			// convert pipe output stream into input stream
-			final PipedInputStream in = new PipedInputStream();
-			final PipedOutputStream out = new PipedOutputStream(in);
-			final Thread writeThread = new Thread(
-					() -> {
-						try {
-							// write the original OutputStream to the PipedOutputStream
-							content.writeTo(out);
+			final Future<Boolean> modelStreamFuture = EXECUTOR_SERVICE.submit(() -> {
+				output.connect(input);
+				getBytes(output, model);
+				return true; // turns a Runnable into a Callable which handles exceptions
+			});
 
-							// Construct a MultiPart with two body parts
-							final MultiPart multiPart = new MultiPart();
-							multiPart.bodyPart(in, MediaType.APPLICATION_OCTET_STREAM_TYPE)
-									.bodyPart(metadata, MediaType.APPLICATION_JSON_TYPE);
+			final MultiPart multiPart = new MultiPart();
+			multiPart
+					.bodyPart(metadata, MediaType.APPLICATION_JSON_TYPE)
+					.bodyPart(input, MediaType.APPLICATION_OCTET_STREAM_TYPE);
 
-							// POST the request
-							final Response response = target.request(MULTIPART_MIXED).post(Entity.entity(multiPart, MULTIPART_MIXED));
+			// POST the request
+			final Response response = target.request(MULTIPART_MIXED).post(Entity.entity(multiPart, MULTIPART_MIXED));
 
-							multiPart.close();
-							in.close();
-							out.close();
-							content.close();
+			multiPart.close();
+			// TODO: maybe we have to wait on the future?
+			// modelStreamFuture.get()
 
-							if (response.getStatus() != 200) {
+			if (response.getStatus() != 200) {
 
-								throw new DMPPersistenceException(
-										String.format("Couldn't store GDM data into database. Received status code '%s' from database endpoint.",
-												response.getStatus()));
-							}
-						} catch (IOException e) {
-
-							// logging and exception handling should go here
-							LOG.error("couldn't store GDM data into database. something with i/o went wrong", e);
-						} catch(DMPPersistenceException e) {
-
-							LOG.error(e.getMessage(), e);
-						}
-					}
-			);
-			writeThread.start();
-
+				throw new DMPPersistenceException(
+						String.format("Couldn't store GDM data into database. Received status code '%s' from database endpoint.",
+								response.getStatus()));
+			}
 		} catch (IOException e) {
 
-			final String message = "couldn't store GDM data into database. something with i/o went wrong";
+			// logging and exception handling should go here
+			LOG.error("couldn't store GDM data into database. something with i/o went wrong", e);
+		} catch (DMPPersistenceException e) {
 
-			LOG.error(message, e);
-
-			throw new DMPPersistenceException(message, e);
+			LOG.error(e.getMessage(), e);
 		}
-
 	}
 
 	private JsonNode generateContentSchemaJSON(final ContentSchema contentSchema) throws DMPPersistenceException {
@@ -1136,19 +1126,11 @@ public class InternalGDMGraphService implements InternalModelService {
 		return target;
 	}
 
-	private ByteArrayOutputStream getBytes(final org.dswarm.graph.json.Model model) throws DMPPersistenceException {
-
-		if (model == null || model.getResources() == null) {
-
-			LOG.debug("model or resources are not available");
-
-			return null;
-		}
+	private void getBytes(final OutputStream output, final org.dswarm.graph.json.Model model) throws DMPPersistenceException {
 
 		try {
 
-			final ByteArrayOutputStream modelStream = new ByteArrayOutputStream(1024);
-			final ModelBuilder modelBuilder = new ModelBuilder(modelStream);
+			final ModelBuilder modelBuilder = new ModelBuilder(output);
 
 			for (final Resource resource : model.getResources()) {
 
@@ -1157,7 +1139,6 @@ public class InternalGDMGraphService implements InternalModelService {
 
 			modelBuilder.build();
 
-			return modelStream;
 		} catch (final IOException e) {
 
 			throw new DMPPersistenceException("couldn't serialize model", e);
