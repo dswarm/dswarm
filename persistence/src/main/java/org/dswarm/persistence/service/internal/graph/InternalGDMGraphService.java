@@ -92,7 +92,7 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.dswarm.persistence.util.GDMUtil;
 
 /**
- * A internal model service implementation for RDF triples.<br/>
+ * A internal model service implementation for GDM statements processing (read, write, search, ...).<br/>
  * Currently, the Neo4j database is utilised.
  *
  * @author tgaengler
@@ -103,17 +103,25 @@ public class InternalGDMGraphService implements InternalModelService {
 	private static final Logger LOG = LoggerFactory.getLogger(InternalGDMGraphService.class);
 
 	private static final String RESOURCE_IDENTIFIER = "gdm";
-	private static final String MULTIPART_MIXED    = "multipart/mixed";
+	private static final String MULTIPART_MIXED     = "multipart/mixed";
 
 	private static final String SEARCH_RESULT    = "search result";
 	private static final String OBJECT_RETRIEVAL = "object retrieval";
-	private static final String OBJECT_ADDITION  = "object addition";
-	private static final String WRITE_GDM = "write to graph database";
+	private static final String WRITE_GDM        = "write to graph database";
 
-	private static final ExecutorService EXECUTOR_SERVICE = Executors.newCachedThreadPool(
-			new BasicThreadFactory.Builder().daemon(false).namingPattern("dswarm-model-streamer-%d").build());
+	private static final int CHUNK_SIZE = 1024;
 
-	private static final ClientBuilder BUILDER = ClientBuilder.newBuilder();
+	private static final String          DSWARM_MODEL_STREAMER_THREAD_NAMING_PATTERN = "dswarm-model-streamer-%d";
+	private static final ExecutorService EXECUTOR_SERVICE                            = Executors.newCachedThreadPool(
+			new BasicThreadFactory.Builder().daemon(false).namingPattern(DSWARM_MODEL_STREAMER_THREAD_NAMING_PATTERN).build());
+
+	private static final ClientBuilder BUILDER = ClientBuilder.newBuilder().register(MultiPartFeature.class)
+			.property(ClientProperties.CHUNKED_ENCODING_SIZE, CHUNK_SIZE);
+
+	private static final String READ_GDM_ENDPOINT           = "/get";
+	private static final String WRITE_GDM_ENDPOINT          = "/put";
+	private static final String SEARCH_GDM_RECORDS_ENDPOINT = "/searchrecords";
+	private static final String GET_GDM_RECORD_ENDPOINT     = "/getrecord";
 
 	/**
 	 * The data model persistence service.
@@ -795,7 +803,7 @@ public class InternalGDMGraphService implements InternalModelService {
 	private void writeGDMToDB(final org.dswarm.graph.json.Model model, final String dataModelUri, final Optional<ContentSchema> optionalContentSchema,
 			final Optional<Boolean> optionalDeprecateMissingRecords, final Optional<String> optionalRecordClassUri) throws DMPPersistenceException {
 
-		final WebTarget target = target("/put");
+		final WebTarget target = target(WRITE_GDM_ENDPOINT);
 
 		if (model == null || model.getResources() == null) {
 
@@ -907,7 +915,7 @@ public class InternalGDMGraphService implements InternalModelService {
 			final Optional<Integer> optionalAtMost)
 			throws DMPPersistenceException {
 
-		final WebTarget target = target("/get");
+		final WebTarget target = target(READ_GDM_ENDPOINT);
 
 		final ObjectMapper objectMapper = DMPPersistenceUtil.getJSONObjectMapper();
 		final ObjectNode requestJson = objectMapper.createObjectNode();
@@ -948,7 +956,7 @@ public class InternalGDMGraphService implements InternalModelService {
 	private Resource readGDMRecordFromDB(final String recordUri, final String dataModelUri)
 			throws DMPPersistenceException {
 
-		final WebTarget target = target("/getrecord");
+		final WebTarget target = target(GET_GDM_RECORD_ENDPOINT);
 
 		final ObjectMapper objectMapper = DMPPersistenceUtil.getJSONObjectMapper();
 		final ObjectNode requestJson = objectMapper.createObjectNode();
@@ -987,7 +995,7 @@ public class InternalGDMGraphService implements InternalModelService {
 			final Optional<Integer> optionalAtMost)
 			throws DMPPersistenceException {
 
-		final WebTarget target = target("/searchrecords");
+		final WebTarget target = target(SEARCH_GDM_RECORDS_ENDPOINT);
 
 		final ObjectMapper objectMapper = DMPPersistenceUtil.getJSONObjectMapper();
 		final ObjectNode requestJson = objectMapper.createObjectNode();
@@ -1069,7 +1077,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 	private Tuple<Observable<Resource>, InputStream> deserializeModel(final InputStream modelStream) {
 
-		final InputStream bis = new BufferedInputStream(modelStream, 1024);
+		final InputStream bis = new BufferedInputStream(modelStream, CHUNK_SIZE);
 		final ModelParser modelParser = new ModelParser(bis);
 
 		return Tuple.tuple(modelParser.parse(), bis);
@@ -1100,7 +1108,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 	private Client client() {
 
-		return BUILDER.register(MultiPartFeature.class).property(ClientProperties.CHUNKED_ENCODING_SIZE, 1024).build();
+		return BUILDER.build();
 	}
 
 	private WebTarget target() {
