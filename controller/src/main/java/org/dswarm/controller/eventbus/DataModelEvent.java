@@ -35,15 +35,18 @@ public abstract class DataModelEvent {
 	 */
 	private final UpdateFormat updateFormat;
 
+	private final boolean enableVersioning;
+
 	/**
 	 * Creates a new data model event with the given data model.
 	 *
 	 * @param dataModel a data model that can be utilised for further processing
 	 */
-	public DataModelEvent(final DataModel dataModel, final UpdateFormat updateFormat) {
+	public DataModelEvent(final DataModel dataModel, final UpdateFormat updateFormat, final boolean enableVersioning) {
 
 		this.dataModel = dataModel;
 		this.updateFormat = updateFormat;
+		this.enableVersioning = enableVersioning;
 	}
 
 	/**
@@ -64,5 +67,10 @@ public abstract class DataModelEvent {
 	public UpdateFormat getUpdateFormat() {
 
 		return updateFormat;
+	}
+
+	public boolean isEnableVersioning() {
+
+		return enableVersioning;
 	}
 }

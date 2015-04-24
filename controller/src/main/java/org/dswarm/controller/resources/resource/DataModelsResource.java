@@ -300,7 +300,8 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	@POST
 	@Path("/{id}/data")
 	public Response updateDataModelData(@ApiParam(value = "data model identifier", required = true) @PathParam("id") final String uuid,
-			@ApiParam(value = "update format", required = false) @QueryParam("format") @DefaultValue("full") final UpdateFormat updateFormat)
+			@ApiParam(value = "update format", required = false) @QueryParam("format") @DefaultValue("full") final UpdateFormat updateFormat,
+			@ApiParam(value = "enable versioning", required = false) @QueryParam("enableVersioning") @DefaultValue("true") final boolean enableVersioning)
 			throws DMPControllerException {
 
 		DataModelsResource.LOG.debug("try to update {} '{}'", pojoClassName, uuid);
@@ -313,7 +314,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 		}
 
 		final ProxyDataModel updatedProxyDataModel = updateDataModelContent(new ProxyDataModel(objectFromDB, RetrievalType.RETRIEVED), objectFromDB,
-				updateFormat);
+				updateFormat, enableVersioning);
 
 		if (updatedProxyDataModel == null) {
 
@@ -701,7 +702,8 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			return proxyDataModel;
 		}
 
-		return updateDataModel(proxyDataModel, dataModel);
+		// versioning is disabled at data model creation, since there should be any data for this data model in the data hub
+		return updateDataModel(proxyDataModel, dataModel, false);
 
 	}
 
@@ -730,7 +732,8 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	 * @return
 	 * @throws DMPControllerException
 	 */
-	private ProxyDataModel updateDataModel(final ProxyDataModel proxyDataModel, final DataModel dataModel) throws DMPControllerException {
+	private ProxyDataModel updateDataModel(final ProxyDataModel proxyDataModel, final DataModel dataModel, final boolean enableVersioning)
+			throws DMPControllerException {
 
 		final ProxyDataModel newProxyDataModel = addConfigurationToDataResource(proxyDataModel, dataModel);
 
@@ -741,7 +744,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			return proxyDataModel;
 		}
 
-		return updateDataModelContent(newProxyDataModel, newDataModel, UpdateFormat.FULL);
+		return updateDataModelContent(newProxyDataModel, newDataModel, UpdateFormat.FULL, enableVersioning);
 	}
 
 	private ProxyDataModel addConfigurationToDataResource(final ProxyDataModel proxyDataModel, final DataModel dataModel)
@@ -801,7 +804,8 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 		}
 	}
 
-	private ProxyDataModel updateDataModelContent(final ProxyDataModel proxyDataModel, final DataModel dataModel, final UpdateFormat updateFormat) throws DMPControllerException {
+	private ProxyDataModel updateDataModelContent(final ProxyDataModel proxyDataModel, final DataModel dataModel, final UpdateFormat updateFormat,
+			final boolean enableVersioning) throws DMPControllerException {
 
 		// final Timer.Context context = dmpStatus.createNewConfiguration();
 
@@ -827,7 +831,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			try {
 
 				final SchemaEvent.SchemaType type = SchemaEvent.SchemaType.fromString(storageType);
-				final SchemaEvent schemaEvent = new SchemaEvent(dataModel, type, updateFormat);
+				final SchemaEvent schemaEvent = new SchemaEvent(dataModel, type, updateFormat, enableVersioning);
 				schemaEventRecorderProvider.get().convertSchema(schemaEvent);
 			} catch (final IllegalArgumentException e) {
 
@@ -847,7 +851,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 					// eventBusProvider.get().post(new CSVConverterEvent(dataModel));
 
-					final CSVConverterEvent csvConverterEvent = new CSVConverterEvent(dataModel, updateFormat);
+					final CSVConverterEvent csvConverterEvent = new CSVConverterEvent(dataModel, updateFormat, enableVersioning);
 					csvConverterEventRecorderProvider.get().convertConfiguration(csvConverterEvent);
 
 					break;
@@ -861,7 +865,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 					// eventBusProvider.get().post(new XMLConverterEvent(dataModel));
 
-					final XMLConverterEvent xmlConverterEvent = new XMLConverterEvent(dataModel, updateFormat);
+					final XMLConverterEvent xmlConverterEvent = new XMLConverterEvent(dataModel, updateFormat, enableVersioning);
 					xmlConvertEventRecorderProvider.get().processDataModel(xmlConverterEvent);
 
 					break;
@@ -894,14 +898,14 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 		final Iterator<Tuple<String, JsonNode>> iterator = data.get();
 
-		if(iterator == null) {
+		if (iterator == null) {
 
 			DataModelsResource.LOG.debug("couldn't find data for data model with uuid '{}'", uuid);
 
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-		if(!iterator.hasNext()) {
+		if (!iterator.hasNext()) {
 
 			DataModelsResource.LOG.debug("couldn't find data for data model with uuid '{}'", uuid);
 
@@ -919,7 +923,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			tupleIterator = iterator;
 		}
 
-		if(!tupleIterator.hasNext()) {
+		if (!tupleIterator.hasNext()) {
 
 			DataModelsResource.LOG.debug("couldn't find data for data model with uuid '{}'", uuid);
 

@@ -30,8 +30,8 @@ public class ConverterEvent extends DataModelEvent {
 	 * 
 	 * @param dataModel a data model that can be utilised for further processing
 	 */
-	public ConverterEvent(final DataModel dataModel, final UpdateFormat updateFormat) {
+	public ConverterEvent(final DataModel dataModel, final UpdateFormat updateFormat, final boolean enableVersioning) {
 
-		super(dataModel, updateFormat);
+		super(dataModel, updateFormat, enableVersioning);
 	}
 }

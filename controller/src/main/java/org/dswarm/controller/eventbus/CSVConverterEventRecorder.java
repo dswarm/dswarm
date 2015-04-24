@@ -70,13 +70,14 @@ public class CSVConverterEventRecorder {
 
 		final DataModel dataModel = event.getDataModel();
 		final UpdateFormat updateFormat = event.getUpdateFormat();
+		final boolean enableVersioning = event.isEnableVersioning();
 
 		try (final MonitoringHelper ignore = loggerProvider.get().startIngest(dataModel)) {
-			convertConfiguration(dataModel, updateFormat);
+			convertConfiguration(dataModel, updateFormat, enableVersioning);
 		}
 	}
 
-	private void convertConfiguration(final DataModel dataModel, final UpdateFormat updateFormat) throws DMPControllerException {
+	private void convertConfiguration(final DataModel dataModel, final UpdateFormat updateFormat, final boolean enableVersioning) throws DMPControllerException {
 
 		LOG.debug("try to process csv data resource into data model '{}'", dataModel.getUuid());
 
@@ -140,7 +141,7 @@ public class CSVConverterEventRecorder {
 
 			try {
 
-				internalServiceFactory.getInternalGDMGraphService().updateObject(dataModel.getUuid(), gdmModel, updateFormat);
+				internalServiceFactory.getInternalGDMGraphService().updateObject(dataModel.getUuid(), gdmModel, updateFormat, enableVersioning);
 
 				LOG.debug("processed CSV data resource into data model '{}'", dataModel.getUuid());
 			} catch (final DMPPersistenceException e) {

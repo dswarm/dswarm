@@ -190,17 +190,18 @@ public class InternalGDMGraphService implements InternalModelService {
 		LOG.debug("try to create data model '{}' in data hub", dataModelUuid);
 
 		// always full at creation time, i.e., all existing records will be deprecated (however, there shouldn't be any)
-		createOrUpdateObject(dataModelUuid, model, UpdateFormat.FULL);
+		// versioning is disabled at data model creation, since there should be any data for this data model in the data hub
+		createOrUpdateObject(dataModelUuid, model, UpdateFormat.FULL, false);
 
 		LOG.debug("created data model '{}' in data hub", dataModelUuid);
 	}
 
-	@Override public void updateObject(final String dataModelUuid, final Object model, final UpdateFormat updateFormat)
+	@Override public void updateObject(final String dataModelUuid, final Object model, final UpdateFormat updateFormat, final boolean enableVersioning)
 			throws DMPPersistenceException {
 
 		LOG.debug("try to update data model '{}' in data hub", dataModelUuid);
 
-		createOrUpdateObject(dataModelUuid, model, updateFormat);
+		createOrUpdateObject(dataModelUuid, model, updateFormat, enableVersioning);
 
 		LOG.debug("updated data model '{}' in data hub", dataModelUuid);
 	}
@@ -552,7 +553,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		return Optional.of(modelMap);
 	}
 
-	private void createOrUpdateObject(final String dataModelUuid, final Object model, final UpdateFormat updateFormat)
+	private void createOrUpdateObject(final String dataModelUuid, final Object model, final UpdateFormat updateFormat, final boolean enableVersioning)
 			throws DMPPersistenceException {
 
 		if (dataModelUuid == null) {
@@ -581,6 +582,20 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelUuid);
 
+		final DataModel finalDataModel = determineSchema(dataModelUuid, gdmModel, realModel);
+
+		final Optional<ContentSchema> optionalContentSchema = Optional.fromNullable(finalDataModel.getSchema().getContentSchema());
+
+		final Optional<Boolean> optionalDeprecateMissingRecords = determineMissingRecordsFlag(updateFormat);
+		final Optional<String> optionalRecordClassUri = Optional.fromNullable(finalDataModel.getSchema().getRecordClass().getUri());
+
+		writeGDMToDB(realModel, dataModelURI, optionalContentSchema, optionalDeprecateMissingRecords, optionalRecordClassUri, enableVersioning);
+	}
+
+	private DataModel determineSchema(final String dataModelUuid, final GDMModel gdmModel, final org.dswarm.graph.json.Model realModel) throws DMPPersistenceException {
+
+		LOG.debug("determine schema for data model '{}'", dataModelUuid);
+
 		final DataModel dataModel = addRecordClass(dataModelUuid, gdmModel.getRecordClassURI());
 
 		final DataModel finalDataModel;
@@ -594,36 +609,46 @@ public class InternalGDMGraphService implements InternalModelService {
 		}
 
 		if (finalDataModel == null) {
+
 			throw new DMPPersistenceException("Could not get the actual data model to use");
 		}
+
+		determineRecordResources(gdmModel, realModel, finalDataModel);
+
+		determineAttributePaths(finalDataModel, gdmModel.getAttributePaths());
+
+		LOG.debug("determined schema for data model '{}'", dataModelUuid);
+
+		return finalDataModel;
+	}
+
+	private void determineRecordResources(final GDMModel gdmModel, final org.dswarm.graph.json.Model realModel, final DataModel finalDataModel) {
+
+		LOG.debug("determine record resources for data model '{}'", finalDataModel.getUuid());
 
 		if (finalDataModel.getSchema() != null) {
 
 			if (finalDataModel.getSchema().getRecordClass() != null) {
 
-				final String recordClassURI = finalDataModel.getSchema().getRecordClass().getUri();
+				//final String recordClassURI = finalDataModel.getSchema().getRecordClass().getUri();
 
-				final Set<Resource> recordResources = GDMUtil.getRecordResources(recordClassURI, realModel);
+				// TODO: this operation is expensive, so we should only apply it, if really necessary
+				//final Set<Resource> recordResources = GDMUtil.getRecordResources(recordClassURI, realModel);
 
-				if (recordResources != null && !recordResources.isEmpty()) {
+//				if (recordResources != null && !recordResources.isEmpty()) {
+//
+//					final LinkedHashSet<String> recordURIs = Sets.newLinkedHashSet();
+//
+//					recordURIs.addAll(recordResources.stream().map(Resource::getUri).collect(Collectors.toList()));
+//
+//					gdmModel.setRecordURIs(recordURIs);
+//				}
 
-					final LinkedHashSet<String> recordURIs = Sets.newLinkedHashSet();
-
-					recordURIs.addAll(recordResources.stream().map(Resource::getUri).collect(Collectors.toList()));
-
-					gdmModel.setRecordURIs(recordURIs);
-				}
+				gdmModel.setRecordURIs(realModel.getResourceURIs());
 			}
 		}
 
-		addAttributePaths(finalDataModel, gdmModel.getAttributePaths());
-
-		final Optional<ContentSchema> optionalContentSchema = Optional.fromNullable(finalDataModel.getSchema().getContentSchema());
-
-		final Optional<Boolean> optionalDeprecateMissingRecords = determineMissingRecordsFlag(updateFormat);
-		final Optional<String> optionalRecordClassUri = Optional.fromNullable(finalDataModel.getSchema().getRecordClass().getUri());
-
-		writeGDMToDB(realModel, dataModelURI, optionalContentSchema, optionalDeprecateMissingRecords, optionalRecordClassUri);
+		LOG.debug("determined record resources for data model '{}'", finalDataModel.getUuid());
 	}
 
 	private Optional<Boolean> determineMissingRecordsFlag(final UpdateFormat updateFormat) throws DMPPersistenceException {
@@ -651,9 +676,36 @@ public class InternalGDMGraphService implements InternalModelService {
 	 */
 	private DataModel addRecordClass(final String dataModelUuid, final String recordClassUri) throws DMPPersistenceException {
 
+		LOG.debug("add record class '{}' to schema for data model '{}'", recordClassUri, dataModelUuid);
+
 		// (try) add record class uri to schema
 		final DataModel dataModel = getSchemaInternal(dataModelUuid);
 		final Schema schema = dataModel.getSchema();
+
+		if (schema != null) {
+
+			final String schemaUUID = schema.getUuid();
+
+			if (schemaUUID != null) {
+
+				switch (schemaUUID) {
+
+					case SchemaUtils.MABXML_SCHEMA_UUID:
+					case SchemaUtils.MARC21_SCHEMA_UUID:
+					case SchemaUtils.PNX_SCHEMA_UUID:
+					case SchemaUtils.FINC_SOLR_SCHEMA_UUID:
+					case SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID:
+					case SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID:
+					case SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID:
+
+						// those schemas are already there and shouldn't be manipulated by data that differs from those schemas
+
+						LOG.debug("schema for data model '{}' is a preset schema, so record class is already set", dataModelUuid);
+
+						return dataModel;
+				}
+			}
+		}
 
 		final boolean result = SchemaUtils.addRecordClass(schema, recordClassUri, classService);
 
@@ -662,11 +714,15 @@ public class InternalGDMGraphService implements InternalModelService {
 			return dataModel;
 		}
 
+		LOG.debug("added record class to schema for data model '{}'", dataModelUuid);
+
 		return updateDataModel(dataModel);
 	}
 
-	private DataModel addAttributePaths(final DataModel dataModel, final Set<AttributePathHelper> attributePathHelpers)
+	private DataModel determineAttributePaths(final DataModel dataModel, final Set<AttributePathHelper> attributePathHelpers)
 			throws DMPPersistenceException {
+
+		LOG.debug("determine attribute paths of schema for data model '{}'", dataModel.getUuid());
 
 		final Schema schema = dataModel.getSchema();
 		final String schemaUUID = schema.getUuid();
@@ -685,6 +741,8 @@ public class InternalGDMGraphService implements InternalModelService {
 
 					// those schemas are already there and shouldn't be manipulated by data that differs from those schemas
 
+					LOG.debug("schema for data model '{}' is a preset schema, so attribute paths are already set", dataModel.getUuid());
+
 					return dataModel;
 			}
 		}
@@ -696,6 +754,8 @@ public class InternalGDMGraphService implements InternalModelService {
 
 			return dataModel;
 		}
+
+		LOG.debug("determined attribute paths of schema for data model '{}'", dataModel.getUuid());
 
 		return updateDataModel(dataModel);
 	}
@@ -717,7 +777,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final Schema schema;
 
-		if (dataModel.getSchema() == null) {
+		if (dataModel != null && dataModel.getSchema() == null) {
 
 			final Configuration configuration = dataModel.getConfiguration();
 
@@ -743,6 +803,8 @@ public class InternalGDMGraphService implements InternalModelService {
 							case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
 
 								optionalPresetSchema = Optional.of(storageType);
+
+								LOG.debug("found storage type '{}' for preset schema", storageType);
 
 								break;
 						}
@@ -817,6 +879,8 @@ public class InternalGDMGraphService implements InternalModelService {
 				}
 			}
 
+			LOG.debug("set preset schema for data model '{}'", dataModel.getUuid());
+
 			dataModel.setSchema(schema);
 		}
 
@@ -838,7 +902,7 @@ public class InternalGDMGraphService implements InternalModelService {
 	}
 
 	private void writeGDMToDB(final org.dswarm.graph.json.Model model, final String dataModelUri, final Optional<ContentSchema> optionalContentSchema,
-			final Optional<Boolean> optionalDeprecateMissingRecords, final Optional<String> optionalRecordClassUri) throws DMPPersistenceException {
+			final Optional<Boolean> optionalDeprecateMissingRecords, final Optional<String> optionalRecordClassUri, final boolean enableVersioning) throws DMPPersistenceException {
 
 		LOG.debug("try to write GDM data for data model '{}' into data hub", dataModelUri);
 
@@ -854,7 +918,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		final PipedInputStream input = new PipedInputStream();
 		final PipedOutputStream output = new PipedOutputStream();
 
-		final String metadata = getMetadata(dataModelUri, optionalContentSchema, optionalDeprecateMissingRecords, optionalRecordClassUri);
+		final String metadata = getMetadata(dataModelUri, optionalContentSchema, optionalDeprecateMissingRecords, optionalRecordClassUri, enableVersioning);
 
 		try {
 
@@ -1193,7 +1257,7 @@ public class InternalGDMGraphService implements InternalModelService {
 	}
 
 	private String getMetadata(final String dataModelUri, final Optional<ContentSchema> optionalContentSchema,
-			final Optional<Boolean> optionalDeprecateMissingRecords, final Optional<String> optionalRecordClassUri) throws DMPPersistenceException {
+			final Optional<Boolean> optionalDeprecateMissingRecords, final Optional<String> optionalRecordClassUri, final boolean enableVersioning) throws DMPPersistenceException {
 
 		final ObjectNode metadata = objectMapperProvider.get().createObjectNode();
 		metadata.put(DMPStatics.DATA_MODEL_URI_IDENTIFIER, dataModelUri);
@@ -1210,6 +1274,8 @@ public class InternalGDMGraphService implements InternalModelService {
 			metadata.put(DMPStatics.DEPRECATE_MISSING_RECORDS_IDENTIFIER, optionalDeprecateMissingRecords.get().toString());
 			metadata.put(DMPStatics.RECORD_CLASS_URI_IDENTIFIER, optionalRecordClassUri.get());
 		}
+
+		metadata.put(DMPStatics.ENABLE_VERSIONING_IDENTIFIER, "" + enableVersioning);
 
 		try {
 			return objectMapperProvider.get().writeValueAsString(metadata);

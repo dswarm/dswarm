@@ -25,8 +25,8 @@ import org.dswarm.persistence.model.resource.DataModel;
  */
 public class CSVConverterEvent extends ConverterEvent {
 
-	public CSVConverterEvent(final DataModel dataModel, final UpdateFormat updateFormat) {
+	public CSVConverterEvent(final DataModel dataModel, final UpdateFormat updateFormat, final boolean enableVersioning) {
 
-		super(dataModel, updateFormat);
+		super(dataModel, updateFormat, enableVersioning);
 	}
 }

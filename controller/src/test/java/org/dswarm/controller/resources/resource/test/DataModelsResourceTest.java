@@ -306,7 +306,7 @@ public class DataModelsResourceTest extends
 		final CSVConverterEventRecorder recorder = GuicedTest.injector.getInstance(CSVConverterEventRecorder.class);
 
 		try (final ExecutionScope ignore = scope.enter()) {
-			recorder.convertConfiguration(new CSVConverterEvent(datamodelUTF8csv, UpdateFormat.FULL));
+			recorder.convertConfiguration(new CSVConverterEvent(datamodelUTF8csv, UpdateFormat.FULL, false));
 			final MetricRegistry registry = GuicedTest.injector.getInstance(Key.get(MetricRegistry.class, Names.named("Monitoring")));
 
 			final String ingestTimerName = name(DataModel.class, "ingest");

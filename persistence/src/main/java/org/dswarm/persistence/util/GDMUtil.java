@@ -60,6 +60,8 @@ public final class GDMUtil {
 	 */
 	public static Set<Resource> getRecordResources(final String recordClassURI, final Model model) {
 
+		LOG.debug("try to determine record resources for record class '{}'", recordClassURI);
+
 		if (recordClassURI == null || model == null) {
 
 			GDMUtil.LOG.debug("record class URI or model is null");
@@ -104,7 +106,7 @@ public final class GDMUtil {
 				}
 			}
 
-			if (thisResourceStatements == null || thisResourceStatements.isEmpty()) {
+			if (thisResourceStatements.isEmpty()) {
 
 				continue;
 			}
@@ -140,13 +142,15 @@ public final class GDMUtil {
 				}
 			}
 
-			if (recordTypeStatements == null || recordTypeStatements.isEmpty()) {
+			if (recordTypeStatements.isEmpty()) {
 
 				continue;
 			}
 
 			recordResources.add(resource);
 		}
+
+		LOG.debug("determined record resources for record class '{}'", recordClassURI);
 
 		return recordResources;
 	}

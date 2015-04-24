@@ -81,13 +81,14 @@ public class XMLConverterEventRecorder {
 
 		final DataModel dataModel = event.getDataModel();
 		final UpdateFormat updateFormat = event.getUpdateFormat();
+		final boolean enableVersioning = event.isEnableVersioning();
 
 		try (final MonitoringHelper ignore = loggerProvider.get().startIngest(dataModel)) {
-			processDataModel(dataModel, updateFormat);
+			processDataModel(dataModel, updateFormat, enableVersioning);
 		}
 	}
 
-	public void processDataModel(final DataModel dataModel, final UpdateFormat updateFormat) throws DMPControllerException {
+	public void processDataModel(final DataModel dataModel, final UpdateFormat updateFormat, final boolean enableVersioning) throws DMPControllerException {
 
 		LOG.debug("try to process xml data resource into data model '{}'", dataModel.getUuid());
 
@@ -151,7 +152,7 @@ public class XMLConverterEventRecorder {
 
 		try {
 
-			internalServiceFactory.getInternalGDMGraphService().updateObject(dataModel.getUuid(), result, updateFormat);
+			internalServiceFactory.getInternalGDMGraphService().updateObject(dataModel.getUuid(), result, updateFormat, enableVersioning);
 
 			LOG.debug("processed xml data resource  into data model '{}'", dataModel.getUuid());
 		} catch (final DMPPersistenceException e) {

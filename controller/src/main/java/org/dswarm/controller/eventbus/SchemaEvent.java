@@ -55,9 +55,9 @@ public class SchemaEvent extends DataModelEvent {
 
 	private final SchemaType schemaType;
 
-	public SchemaEvent(final DataModel dataModel, final SchemaType schemaType, final UpdateFormat updateFormat) {
+	public SchemaEvent(final DataModel dataModel, final SchemaType schemaType, final UpdateFormat updateFormat, final boolean enableVersioning) {
 
-		super(dataModel, updateFormat);
+		super(dataModel, updateFormat, enableVersioning);
 
 		this.schemaType = schemaType;
 	}

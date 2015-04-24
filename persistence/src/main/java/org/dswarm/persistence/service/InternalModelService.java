@@ -50,7 +50,7 @@ public interface InternalModelService {
 	 * @param model         the model of the object that should be updated
 	 * @throws DMPPersistenceException
 	 */
-	void updateObject(final String dataModelUuid, final Object model, final UpdateFormat updateFormat) throws DMPPersistenceException;
+	void updateObject(final String dataModelUuid, final Object model, final UpdateFormat updateFormat, final boolean enableVersioning) throws DMPPersistenceException;
 
 	/**
 	 * Retrieves a collection of objects from a data model.
