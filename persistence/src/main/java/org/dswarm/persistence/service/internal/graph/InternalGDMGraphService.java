@@ -187,14 +187,22 @@ public class InternalGDMGraphService implements InternalModelService {
 	@Override
 	public void createObject(final String dataModelUuid, final Object model) throws DMPPersistenceException {
 
+		LOG.debug("try to create data model '{}' in data hub", dataModelUuid);
+
 		// always full at creation time, i.e., all existing records will be deprecated (however, there shouldn't be any)
 		createOrUpdateObject(dataModelUuid, model, UpdateFormat.FULL);
+
+		LOG.debug("created data model '{}' in data hub", dataModelUuid);
 	}
 
 	@Override public void updateObject(final String dataModelUuid, final Object model, final UpdateFormat updateFormat)
 			throws DMPPersistenceException {
 
+		LOG.debug("try to update data model '{}' in data hub", dataModelUuid);
+
 		createOrUpdateObject(dataModelUuid, model, updateFormat);
+
+		LOG.debug("updated data model '{}' in data hub", dataModelUuid);
 	}
 
 	/**
@@ -832,6 +840,8 @@ public class InternalGDMGraphService implements InternalModelService {
 	private void writeGDMToDB(final org.dswarm.graph.json.Model model, final String dataModelUri, final Optional<ContentSchema> optionalContentSchema,
 			final Optional<Boolean> optionalDeprecateMissingRecords, final Optional<String> optionalRecordClassUri) throws DMPPersistenceException {
 
+		LOG.debug("try to write GDM data for data model '{}' into data hub", dataModelUri);
+
 		final WebTarget target = target(WRITE_GDM_ENDPOINT);
 
 		if (model == null || model.getResources() == null) {
@@ -879,6 +889,8 @@ public class InternalGDMGraphService implements InternalModelService {
 
 			LOG.error(e.getMessage(), e);
 		}
+
+		LOG.debug("wrote GDM data for data model '{}' into data hub", dataModelUri);
 	}
 
 	private JsonNode generateContentSchemaJSON(final ContentSchema contentSchema) throws DMPPersistenceException {
@@ -944,6 +956,8 @@ public class InternalGDMGraphService implements InternalModelService {
 			final Optional<Integer> optionalAtMost)
 			throws DMPPersistenceException {
 
+		LOG.debug("try to read GDM data for data model '{}' and record class '{}' from data hub", dataModelUri, recordClassUri);
+
 		final WebTarget target = target(READ_GDM_ENDPOINT);
 
 		final ObjectMapper objectMapper = DMPPersistenceUtil.getJSONObjectMapper();
@@ -978,6 +992,8 @@ public class InternalGDMGraphService implements InternalModelService {
 		}
 
 		final InputStream body = response.readEntity(InputStream.class);
+
+		LOG.debug("read GDM data for data model '{}' and record class '{}' from data hub", dataModelUri, recordClassUri);
 
 		return deserializeModel(body);
 	}

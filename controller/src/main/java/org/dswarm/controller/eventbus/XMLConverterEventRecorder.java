@@ -89,6 +89,8 @@ public class XMLConverterEventRecorder {
 
 	public void processDataModel(final DataModel dataModel, final UpdateFormat updateFormat) throws DMPControllerException {
 
+		LOG.debug("try to process xml data resource into data model '{}'", dataModel.getUuid());
+
 		GDMModel result = null;
 
 		try {
@@ -96,6 +98,9 @@ public class XMLConverterEventRecorder {
 			final XMLSourceResourceGDMStmtsFlow flow = xmlFlowFactory.get().fromDataModel(dataModel);
 
 			final String path = dataModel.getDataResource().getAttribute(ResourceStatics.PATH).asText();
+
+			LOG.debug("process xml data resource at '{}' into data model '{}'", path, dataModel.getUuid());
+
 			final List<GDMModel> gdmModels = flow.applyResource(path);
 
 			// write GDM models at once
@@ -127,6 +132,7 @@ public class XMLConverterEventRecorder {
 
 			result = new GDMModel(model, null, recordClassUri);
 
+			LOG.debug("transformed xml data resource at '{}' to GDM for data model '{}'", path, dataModel.getUuid());
 		} catch (final NullPointerException e) {
 
 			final String message = String.format("couldn't convert the XML data of data model '%s'", dataModel.getUuid());
@@ -146,6 +152,8 @@ public class XMLConverterEventRecorder {
 		try {
 
 			internalServiceFactory.getInternalGDMGraphService().updateObject(dataModel.getUuid(), result, updateFormat);
+
+			LOG.debug("processed xml data resource  into data model '{}'", dataModel.getUuid());
 		} catch (final DMPPersistenceException e) {
 
 			final String message = String.format("couldn't persist the converted data of data model '%s'", dataModel.getUuid());
