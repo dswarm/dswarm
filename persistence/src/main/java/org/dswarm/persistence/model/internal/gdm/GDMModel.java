@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -136,15 +137,9 @@ public class GDMModel implements Model {
 				// TODO: do not iterate over all resources of the model - only _record_ resources are needed here (_record_ resources should be contain a statement with the record class as type at least)
 				final Set<Resource> recordResources = Sets.newLinkedHashSet(getModel().getResources());
 
-				if (recordResources != null) {
+				recordURIs.clear();
 
-					recordURIs.clear();
-
-					for (final Resource recordResource : recordResources) {
-
-						recordURIs.add(recordResource.getUri());
-					}
-				}
+				recordURIs.addAll(recordResources.stream().map(Resource::getUri).collect(Collectors.toList()));
 
 				areRecordURIsInitialized = true;
 
@@ -184,7 +179,7 @@ public class GDMModel implements Model {
 
 		if (recordResource == null) {
 
-			GDMModel.LOG.debug("couldn't find record resource for record  uri '" + resourceURI + "' in model");
+			GDMModel.LOG.debug("couldn't find record resource for record  uri '{}' in model", resourceURI);
 
 			return null;
 		}
@@ -196,7 +191,7 @@ public class GDMModel implements Model {
 
 		if (recordResourceNode == null) {
 
-			GDMModel.LOG.debug("couldn't find record resource node for record  uri '" + resourceURI + "' in model");
+			GDMModel.LOG.debug("couldn't find record resource node for record  uri '{}' in model", resourceURI);
 
 			return null;
 		}
@@ -224,6 +219,8 @@ public class GDMModel implements Model {
 	@Override
 	public Set<AttributePathHelper> getAttributePaths() {
 
+		GDMModel.LOG.debug("try to determine attribute paths from model");
+
 		if (model == null) {
 
 			GDMModel.LOG.debug("model is null, can't determine attribute paths from JSON");
@@ -247,7 +244,7 @@ public class GDMModel implements Model {
 
 			if (recordResource == null) {
 
-				GDMModel.LOG.debug("couldn't find record resource for record  uri '" + resourceURI + "' in model");
+				GDMModel.LOG.debug("couldn't find record resource for record  uri '{}' in model", resourceURI);
 
 				continue;
 			}
@@ -259,7 +256,7 @@ public class GDMModel implements Model {
 
 			if (recordResourceNode == null) {
 
-				GDMModel.LOG.debug("couldn't find record resource node for record  uri '" + resourceURI + "' in model");
+				GDMModel.LOG.debug("couldn't find record resource node for record  uri '{}' in model", resourceURI);
 
 				continue;
 			}
@@ -275,6 +272,8 @@ public class GDMModel implements Model {
 				attributePaths.addAll(recordAttributePaths);
 			}
 		}
+
+		GDMModel.LOG.debug("determined attribute paths from model");
 
 		return attributePaths;
 	}
@@ -334,7 +333,7 @@ public class GDMModel implements Model {
 
 			if (recordResource == null) {
 
-				GDMModel.LOG.debug("couldn't find record resource for record  uri '" + resourceURI + "' in model");
+				GDMModel.LOG.debug("couldn't find record resource for record  uri '{}' in model", resourceURI);
 
 				return null;
 			}
@@ -346,7 +345,7 @@ public class GDMModel implements Model {
 
 			if (recordResourceNode == null) {
 
-				GDMModel.LOG.debug("couldn't find record resource node for record  uri '" + resourceURI + "' in model");
+				GDMModel.LOG.debug("couldn't find record resource node for record  uri '{}' in model", resourceURI);
 
 				return null;
 			}

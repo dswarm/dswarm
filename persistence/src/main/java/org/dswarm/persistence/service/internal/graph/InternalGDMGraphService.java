@@ -615,7 +615,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		determineRecordResources(gdmModel, realModel, finalDataModel);
 
-		determineAttributePaths(finalDataModel, gdmModel.getAttributePaths());
+		determineAttributePaths(finalDataModel, gdmModel);
 
 		LOG.debug("determined schema for data model '{}'", dataModelUuid);
 
@@ -719,7 +719,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		return updateDataModel(dataModel);
 	}
 
-	private DataModel determineAttributePaths(final DataModel dataModel, final Set<AttributePathHelper> attributePathHelpers)
+	private DataModel determineAttributePaths(final DataModel dataModel, final Model model)
 			throws DMPPersistenceException {
 
 		LOG.debug("determine attribute paths of schema for data model '{}'", dataModel.getUuid());
@@ -746,6 +746,9 @@ public class InternalGDMGraphService implements InternalModelService {
 					return dataModel;
 			}
 		}
+
+		// note: model.getAttributePaths is expensive atm
+		final Set<AttributePathHelper> attributePathHelpers = model.getAttributePaths();
 
 		final boolean result = SchemaUtils.addAttributePaths(schema, attributePathHelpers,
 				attributePathService, schemaAttributePathInstanceService, attributeService);
