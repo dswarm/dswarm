@@ -23,6 +23,7 @@ import com.google.common.base.Optional;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.resource.DataModel;
+import org.dswarm.persistence.model.resource.UpdateFormat;
 import org.dswarm.persistence.model.schema.Schema;
 
 /**
@@ -41,6 +42,15 @@ public interface InternalModelService {
 	 * @throws DMPPersistenceException
 	 */
 	void createObject(final String dataModelUuid, final Object model) throws DMPPersistenceException;
+
+	/**
+	 * Updates an object (model) to an existing data model.
+	 *
+	 * @param dataModelUuid the identifier of the data model
+	 * @param model         the model of the object that should be updated
+	 * @throws DMPPersistenceException
+	 */
+	void updateObject(final String dataModelUuid, final Object model, final UpdateFormat updateFormat, final boolean enableVersioning) throws DMPPersistenceException;
 
 	/**
 	 * Retrieves a collection of objects from a data model.

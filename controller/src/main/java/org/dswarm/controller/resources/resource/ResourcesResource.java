@@ -84,6 +84,7 @@ import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.ResourceType;
 import org.dswarm.persistence.model.resource.proxy.ProxyConfiguration;
 import org.dswarm.persistence.model.resource.proxy.ProxyResource;
+import org.dswarm.persistence.model.resource.utils.ResourceStatics;
 import org.dswarm.persistence.service.resource.ConfigurationService;
 import org.dswarm.persistence.service.resource.ResourceService;
 
@@ -98,7 +99,8 @@ import org.dswarm.persistence.service.resource.ResourceService;
 @Path("/resources")
 public class ResourcesResource extends AbstractBaseResource {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ResourcesResource.class);
+	private static final Logger LOG                         = LoggerFactory.getLogger(ResourcesResource.class);
+	public static final  String RESOURCES_DIRECTORY_POSTFIX = "resources";
 
 	@Context
 	UriInfo uri;
@@ -108,8 +110,8 @@ public class ResourcesResource extends AbstractBaseResource {
 
 	private final Provider<ConfigurationService> configurationServiceProvider;
 
-	private final ObjectMapper  objectMapper;
-	private final DataModelUtil dataModelUtil;
+	private final ObjectMapper                     objectMapper;
+	private final DataModelUtil                    dataModelUtil;
 	private final Provider<CSVResourceFlowFactory> flowFactory2;
 
 	/**
@@ -147,7 +149,8 @@ public class ResourcesResource extends AbstractBaseResource {
 	 * @return the response
 	 * @throws DMPControllerException
 	 */
-	private static Response buildResponseCreated(final String responseContent, final URI responseURI, final RetrievalType type, final String objectType)
+	private static Response buildResponseCreated(final String responseContent, final URI responseURI, final RetrievalType type,
+			final String objectType)
 			throws DMPControllerException {
 
 		final ResponseBuilder responseBuilder;
@@ -178,11 +181,11 @@ public class ResourcesResource extends AbstractBaseResource {
 	 * This endpoint processes (uploades) the input stream and creates a new resource object with related metadata that will be
 	 * returned as JSON representation.
 	 *
-	 * @param uploadedInputStream the input stream that should be uploaded
 	 * @param fileDetail          file metadata
 	 * @param name                the name of the resource
 	 * @param description         an description of the resource
 	 * @param uuid                a preset resource uuid
+	 * @param uploadedInputStream the input stream that should be uploaded
 	 * @return a JSON representation of the created resource
 	 * @throws DMPControllerException
 	 */
@@ -193,16 +196,16 @@ public class ResourcesResource extends AbstractBaseResource {
 	@Timed
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response uploadResource(
-			@ApiParam(value = "file input stream", required = true) @FormDataParam("file") final InputStream uploadedInputStream,
-			@ApiParam("file metadata") @FormDataParam("file") final FormDataContentDisposition fileDetail,
+	public Response uploadResource(@ApiParam("file metadata") @FormDataParam("file") final FormDataContentDisposition fileDetail,
 			@ApiParam(value = "resource name", required = true) @FormDataParam("name") final String name,
 			@ApiParam("resource description") @FormDataParam("description") final String description,
-			@ApiParam("resource uuid") @FormDataParam("uuid") final String uuid) throws DMPControllerException {
+			@ApiParam("resource uuid") @FormDataParam("uuid") final String uuid,
+			@ApiParam(value = "file input stream", required = true) @FormDataParam("file") final InputStream uploadedInputStream)
+			throws DMPControllerException {
 
 		ResourcesResource.LOG.debug("try to create new resource '{}' for file '{}'", name, fileDetail.getFileName());
 
-		final ProxyResource proxyResource = createResource(uploadedInputStream, fileDetail, name, description, uuid);
+		final ProxyResource proxyResource = createResource(fileDetail, name, description, uuid, uploadedInputStream);
 
 		if (proxyResource == null) {
 			throw new DMPControllerException("couldn't create new resource");
@@ -372,10 +375,10 @@ public class ResourcesResource extends AbstractBaseResource {
 	 * be returned as JSON representation.
 	 *
 	 * @param uuid
-	 * @param uploadedInputStream the input stream that should be uploaded
 	 * @param fileDetail          file metadata
 	 * @param name                the name of the resource
 	 * @param description         an description of the resource
+	 * @param uploadedInputStream the input stream that should be uploaded
 	 * @return a JSON representation of the created resource
 	 * @throws DMPControllerException
 	 */
@@ -389,14 +392,16 @@ public class ResourcesResource extends AbstractBaseResource {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateResource(@ApiParam(value = "resource identifier", required = true) @PathParam("uuid") final String uuid,
-			@ApiParam(value = "file input stream", required = true) @FormDataParam("file") final InputStream uploadedInputStream,
 			@ApiParam("file metadata") @FormDataParam("file") final FormDataContentDisposition fileDetail,
 			@ApiParam(value = "resource name", required = true) @FormDataParam("name") final String name,
-			@ApiParam("resource description") @FormDataParam("description") final String description) throws DMPControllerException {
+			@ApiParam("resource description") @FormDataParam("description") final String description,
+			@ApiParam(value = "file input stream", required = true) @FormDataParam("file") final InputStream uploadedInputStream)
+			throws DMPControllerException {
 
 		final Optional<Resource> resourceOptional = dataModelUtil.fetchResource(uuid);
 
 		if (!resourceOptional.isPresent()) {
+
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
@@ -404,7 +409,7 @@ public class ResourcesResource extends AbstractBaseResource {
 
 		ResourcesResource.LOG.debug("try to update resource '{}' for file '{}'", name, fileDetail.getFileName());
 
-		final ProxyResource proxyResource = refreshResource(resource, uploadedInputStream, fileDetail, name, description);
+		final ProxyResource proxyResource = refreshResource(resource, fileDetail, name, description, uploadedInputStream);
 
 		final Resource updateResource = proxyResource.getObject();
 
@@ -816,15 +821,15 @@ public class ResourcesResource extends AbstractBaseResource {
 	 *
 	 * TODO: reduce transactions (one instead of two)
 	 *
-	 * @param uploadInputedStream an input stream that should be uploaded
 	 * @param fileDetail          metadata of the given input stream
 	 * @param name                the name of the resource
 	 * @param description         an description of the resource
+	 * @param uploadInputedStream an input stream that should be uploaded
 	 * @return a JSON representation of the new resource
 	 * @throws DMPControllerException
 	 */
-	private ProxyResource createResource(final InputStream uploadInputedStream, final FormDataContentDisposition fileDetail, final String name,
-			final String description, final String uuid) throws DMPControllerException {
+	private ProxyResource createResource(final FormDataContentDisposition fileDetail, final String name,
+			final String description, final String uuid, final InputStream uploadInputedStream) throws DMPControllerException {
 
 		final ResourceService resourceService = resourceServiceProvider.get();
 
@@ -854,7 +859,7 @@ public class ResourcesResource extends AbstractBaseResource {
 			throw new DMPControllerException("fresh resource shouldn't be null");
 		}
 
-		final ProxyResource refreshedResource = refreshResource(resource, uploadInputedStream, fileDetail, name, description);
+		final ProxyResource refreshedResource = refreshResource(resource, fileDetail, name, description, uploadInputedStream);
 
 		// re-wrap with correct type (created)
 
@@ -864,17 +869,17 @@ public class ResourcesResource extends AbstractBaseResource {
 	/**
 	 * Process stores the input stream and update a resource with the related metadata.
 	 *
-	 * @param uploadInputedStream an input stream that should be uploaded
 	 * @param fileDetail          metadata of the given input stream
 	 * @param name                the name of the resource
 	 * @param description         an description of the resource
+	 * @param uploadInputedStream an input stream that should be uploaded
 	 * @return a JSON representation of the updated resource
 	 * @throws DMPControllerException
 	 */
-	private ProxyResource refreshResource(final Resource resource, final InputStream uploadInputedStream,
-			final FormDataContentDisposition fileDetail, final String name, final String description) throws DMPControllerException {
+	private ProxyResource refreshResource(final Resource resource, final FormDataContentDisposition fileDetail, final String name,
+			final String description, final InputStream uploadInputedStream) throws DMPControllerException {
 
-		final File file = controllerUtils.writeToFile(uploadInputedStream, fileDetail.getFileName(), "resources");
+		final File file = controllerUtils.writeToFile(uploadInputedStream, fileDetail.getFileName(), RESOURCES_DIRECTORY_POSTFIX);
 
 		final ResourceService resourceService = resourceServiceProvider.get();
 
@@ -895,19 +900,23 @@ public class ResourcesResource extends AbstractBaseResource {
 			attributes = new ObjectNode(objectMapper.getNodeFactory());
 		}
 
-		attributes.put("path", file.getAbsolutePath());
-		attributes.put("filesize", fileDetail.getSize());
+		attributes.put(ResourceStatics.PATH, file.getAbsolutePath());
+		attributes.put(ResourceStatics.FILE_SIZE, fileDetail.getSize());
 
-		String fileType = null;
-		final Tika tika = new Tika();
 		try {
-			fileType = tika.detect(file);
+
+			final Tika tika = new Tika();
+
+			final String fileType = tika.detect(file);
 			// fileType = Files.probeContentType(file.toPath());
+
+			if (fileType != null) {
+
+				attributes.put(ResourceStatics.FILE_TYPE, fileType);
+			}
 		} catch (final IOException e1) {
+
 			ResourcesResource.LOG.debug("couldn't determine file type from file '{}'", file.getAbsolutePath());
-		}
-		if (fileType != null) {
-			attributes.put("filetype", fileType);
 		}
 
 		resource.setAttributes(attributes);
@@ -949,7 +958,7 @@ public class ResourcesResource extends AbstractBaseResource {
 
 		final ConfigurationService configurationService = configurationServiceProvider.get();
 
-		ProxyConfiguration proxyConfiguration = null;
+		ProxyConfiguration proxyConfiguration;
 
 		if (configurationFromJSON.getUuid() == null) {
 

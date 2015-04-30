@@ -15,6 +15,7 @@
  */
 package org.dswarm.controller.utils;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.InputStream;
 
@@ -29,25 +30,27 @@ import org.dswarm.init.util.DMPUtil;
 
 /**
  * A utility class for the controller module.
- * 
+ *
  * @author tgaengler
  */
 @Singleton
 public final class DMPControllerUtils {
 
-	private static final Logger	LOG	= LoggerFactory.getLogger(DMPControllerUtils.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DMPControllerUtils.class);
+	private static final int BUFFER_SIZE = 1024;
 
 	private final DMPUtil dmpUtil;
 
 	@Inject
 	public DMPControllerUtils(final DMPUtil dmpUtil) {
+
 		this.dmpUtil = dmpUtil;
 	}
 
 	/**
 	 * Write a given input source stream into the file with the given file name at the given directory postfix (relative file
 	 * path).
-	 * 
+	 *
 	 * @param source the input source stream
 	 * @param fileName the file name
 	 * @param directoryPostFix the directory postfix (relative file path)
@@ -56,18 +59,31 @@ public final class DMPControllerUtils {
 	 */
 	public File writeToFile(final InputStream source, final String fileName, final String directoryPostFix) throws DMPControllerException {
 
+		if (source == null) {
+
+			final String message = "couldn't write input stream to file, because the input stream is not available";
+
+			DMPControllerUtils.LOG.error(message);
+
+			throw new DMPControllerException(message);
+		}
+
 		try {
 
 			final File file = dmpUtil.createLocalTmpFile(fileName, directoryPostFix);
 
-			FileUtils.copyInputStreamToFile(source, file);
+			final BufferedInputStream bis = new BufferedInputStream(source, BUFFER_SIZE);
+
+			FileUtils.copyInputStreamToFile(bis, file);
+
+			bis.close();
 
 			return file;
 		} catch (final Exception e) {
 
-			DMPControllerUtils.LOG.debug("couldn't write input stream to file '{}'", fileName);
+			DMPControllerUtils.LOG.error("couldn't write input stream to file '{}'", fileName);
 
-			throw new DMPControllerException("couldn't write input stream to file '" + fileName + "'\n" + e.getMessage());
+			throw new DMPControllerException(String.format("couldn't write input stream to file '%s'\n%s", fileName, e.getMessage()));
 		}
 	}
 }

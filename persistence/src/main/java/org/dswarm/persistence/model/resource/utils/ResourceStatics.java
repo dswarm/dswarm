@@ -13,25 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dswarm.controller.eventbus;
-
-import org.dswarm.persistence.model.resource.UpdateFormat;
-import org.dswarm.persistence.model.resource.DataModel;
+package org.dswarm.persistence.model.resource.utils;
 
 /**
- * A converter event that provides a {@link DataModel}.
- * 
  * @author tgaengler
  */
-public class ConverterEvent extends DataModelEvent {
+public final class ResourceStatics {
 
 	/**
-	 * Creates a new converter event with the given data model.
-	 * 
-	 * @param dataModel a data model that can be utilised for further processing
+	 * The path where the data resource is located.
 	 */
-	public ConverterEvent(final DataModel dataModel, final UpdateFormat updateFormat, final boolean enableVersioning) {
+	public static final String PATH = "path";
 
-		super(dataModel, updateFormat, enableVersioning);
-	}
+
+	public static final String FILE_SIZE = "filesize";
+
+	public static final String FILE_TYPE = "filetype";
 }

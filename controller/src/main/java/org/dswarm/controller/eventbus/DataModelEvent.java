@@ -15,6 +15,7 @@
  */
 package org.dswarm.controller.eventbus;
 
+import org.dswarm.persistence.model.resource.UpdateFormat;
 import org.dswarm.persistence.model.resource.DataModel;
 
 /**
@@ -30,22 +31,46 @@ public abstract class DataModelEvent {
 	private final DataModel	dataModel;
 
 	/**
+	 * The update format, i.e., how the data model update should be treated.
+	 */
+	private final UpdateFormat updateFormat;
+
+	private final boolean enableVersioning;
+
+	/**
 	 * Creates a new data model event with the given data model.
-	 * 
+	 *
 	 * @param dataModel a data model that can be utilised for further processing
 	 */
-	public DataModelEvent(final DataModel dataModel) {
+	public DataModelEvent(final DataModel dataModel, final UpdateFormat updateFormat, final boolean enableVersioning) {
 
 		this.dataModel = dataModel;
+		this.updateFormat = updateFormat;
+		this.enableVersioning = enableVersioning;
 	}
 
 	/**
 	 * Gets the data model of the event for further processing.
-	 * 
+	 *
 	 * @return the data model of the event for further processing
 	 */
 	public DataModel getDataModel() {
 
 		return dataModel;
+	}
+
+	/**
+	 * Gets the update format, i.e. how the data model update should be treated.
+	 *
+	 * @return the update format
+	 */
+	public UpdateFormat getUpdateFormat() {
+
+		return updateFormat;
+	}
+
+	public boolean isEnableVersioning() {
+
+		return enableVersioning;
 	}
 }
