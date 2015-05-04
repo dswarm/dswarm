@@ -78,7 +78,6 @@ public interface InternalModelService {
 	 * @return (optional) the schema of the data model
 	 * @throws DMPPersistenceException
 	 */
-	// TODO: Observable
 	Optional<Schema> getSchema(final String dataModelUuid) throws DMPPersistenceException;
 
 	/**
@@ -91,8 +90,7 @@ public interface InternalModelService {
 	 * @return (optional) a map of objects and their identifier
 	 * @throws DMPPersistenceException
 	 */
-	// TODO: Observable
-	Optional<Map<String, Model>> searchObjects(final String dataModelUuid, final String keyAttributePathString, final String searchValue,
+	Observable<Map<String, Model>> searchObjects(final String dataModelUuid, final String keyAttributePathString, final String searchValue,
 			final Optional<Integer> atMost) throws DMPPersistenceException;
 
 	/**

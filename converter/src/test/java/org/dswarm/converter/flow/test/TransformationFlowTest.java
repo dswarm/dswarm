@@ -173,7 +173,7 @@ public class TransformationFlowTest extends GuicedTest {
 		Assert.assertTrue("CSV record model map should be present", optionalModelMap.isPresent());
 		Assert.assertFalse("CSV record model map shouldn't be empty", optionalModelMap.get().isEmpty());
 
-		final Iterator<Tuple<String, JsonNode>> tuples = dataIterator(optionalModelMap.get().entrySet().iterator());
+		final Observable<Tuple<String, JsonNode>> tuples = Observable.from(dataIterable(optionalModelMap.get().entrySet()));
 
 		// final List<Tuple<String, JsonNode>> tuplesList = Lists.newLinkedList();
 		//
@@ -318,7 +318,11 @@ public class TransformationFlowTest extends GuicedTest {
 		Assert.assertEquals("the processing outputs are not equal", expectedResult, resultOutput);
 	}
 
-	private Iterator<Tuple<String, JsonNode>> dataIterator(final Iterator<Map.Entry<String, Model>> triples) {
+	private static Iterable<Tuple<String, JsonNode>> dataIterable(final Iterable<Map.Entry<String, Model>> triples) {
+		return () -> dataIterator(triples.iterator());
+	}
+
+	private static Iterator<Tuple<String, JsonNode>> dataIterator(final Iterator<Map.Entry<String, Model>> triples) {
 		return new AbstractIterator<Tuple<String, JsonNode>>() {
 
 			@Override

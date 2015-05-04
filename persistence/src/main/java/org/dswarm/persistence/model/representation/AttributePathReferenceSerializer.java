@@ -39,8 +39,6 @@ public class AttributePathReferenceSerializer extends JsonSerializer<AttributePa
 			return;
 		}
 
-		System.out.println("attribute path = '" + object.toAttributePath() + "'");
-
 		final AttributePathReference reference = new AttributePathReference(object.getUuid(), object.toAttributePath());
 
 		generator.writeObject(reference);

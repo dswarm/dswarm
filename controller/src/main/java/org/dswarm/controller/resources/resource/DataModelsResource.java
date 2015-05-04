@@ -15,8 +15,6 @@
  */
 package org.dswarm.controller.resources.resource;
 
-import java.util.Iterator;
-
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
@@ -44,7 +42,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
-import com.google.common.collect.Iterators;
 import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
@@ -56,7 +53,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import riotcmd.json;
 import rx.Observable;
 import rx.Observer;
 
@@ -368,9 +364,11 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	@Path("/{uuid}/records/search")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response searchRecords(@ApiParam(value = "data model identifier", required = true) @PathParam("uuid") final String uuid,
+	public void searchRecords(
+			@ApiParam(value = "data model identifier", required = true) @PathParam("uuid") final String uuid,
 			@ApiParam(value = "search request (as JSON)", required = true) final String searchRequestJSONString,
-			@ApiParam("number of records limit") @QueryParam("atMost") final Integer atMost) throws DMPControllerException {
+			@ApiParam("number of records limit") @QueryParam("atMost") final Integer atMost,
+			@Suspended final AsyncResponse asyncResponse) throws DMPControllerException {
 
 		if (searchRequestJSONString == null) {
 
@@ -422,48 +420,10 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 		DataModelsResource.LOG.debug("try to search records for key attribute path '{}' and search value '{}' in data model with uuid '{}'",
 				keyAttributePathString, searchValue, uuid);
 
-		final Optional<Iterator<Tuple<String, JsonNode>>> data = dataModelUtil.searchRecords(keyAttributePathString, searchValue, uuid,
-				Optional.fromNullable(atMost));
+		final Observable<Tuple<String, JsonNode>> data = dataModelUtil.searchRecords(
+				keyAttributePathString, searchValue, uuid, Optional.fromNullable(atMost));
 
-		if (!data.isPresent()) {
-
-			DataModelsResource.LOG.debug("couldn't find records for key attribute path '{}' and search value '{}' in data model with uuid '{}'",
-					keyAttributePathString, searchValue, uuid);
-
-			return Response.status(Status.NOT_FOUND).build();
-		}
-
-		// temp
-		final Iterator<Tuple<String, JsonNode>> tupleIterator;
-
-		if (atMost != null) {
-
-			tupleIterator = Iterators.limit(data.get(), atMost);
-		} else {
-
-			tupleIterator = data.get();
-		}
-
-		final ObjectNode json = objectMapperProvider.get().createObjectNode();
-
-		while (tupleIterator.hasNext()) {
-
-			final Tuple<String, JsonNode> tuple = data.get().next();
-
-			json.set(tuple.v1(), tuple.v2());
-		}
-
-		final String jsonString = serializeObject(json);
-
-		DataModelsResource.LOG.debug("return data for key attribute path '{}' and search value '{}' in data model with uuid '{}'",
-				keyAttributePathString, searchValue, uuid);
-
-		if (DataModelsResource.LOG.isTraceEnabled()) {
-
-			DataModelsResource.LOG.trace("and content '{}'", jsonString);
-		}
-
-		return buildResponse(jsonString);
+		data.subscribe(new StreamingDataObserver(uuid, objectMapperProvider.get(), pojoClassName, asyncResponse));
 	}
 
 	/**

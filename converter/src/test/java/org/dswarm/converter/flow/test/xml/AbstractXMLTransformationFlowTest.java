@@ -181,7 +181,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		Assert.assertNotNull("the model map shouldn't be null", modelMap);
 
-		final Iterator<Tuple<String, JsonNode>> tuples = dataIterator(modelMap.entrySet().iterator());
+		final Observable<Tuple<String, JsonNode>> tuples = Observable.from(dataIterable(modelMap.entrySet()));
 
 		// final List<Tuple<String, JsonNode>> tuplesList = Lists.newLinkedList();
 		//
@@ -270,7 +270,11 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		Assert.assertEquals(finalExpectedJSONString.length(), finalActualJSONString.length());
 	}
 
-	private Iterator<Tuple<String, JsonNode>> dataIterator(final Iterator<Map.Entry<String, Model>> triples) {
+	private static Iterable<Tuple<String, JsonNode>> dataIterable(final Iterable<Map.Entry<String, Model>> triples) {
+		return () -> dataIterator(triples.iterator());
+	}
+
+	private static Iterator<Tuple<String, JsonNode>> dataIterator(final Iterator<Map.Entry<String, Model>> triples) {
 		return new AbstractIterator<Tuple<String, JsonNode>>() {
 
 			@Override

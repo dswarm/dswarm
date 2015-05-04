@@ -29,6 +29,7 @@ import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rx.Observable;
 
 import org.dswarm.common.types.Tuple;
 
@@ -36,7 +37,7 @@ import org.dswarm.common.types.Tuple;
  * @author phorn
  * @author tgaengler
  */
-public class JsonNodeReader extends DefaultObjectPipe<Iterator<Tuple<String, JsonNode>>, StreamReceiver> {
+public class JsonNodeReader extends DefaultObjectPipe<Observable<Tuple<String, JsonNode>>, StreamReceiver> {
 
 	private static final Logger		LOG	= LoggerFactory.getLogger(JsonNodeReader.class);
 	private final Optional<String>	recordPrefix;
@@ -51,10 +52,9 @@ public class JsonNodeReader extends DefaultObjectPipe<Iterator<Tuple<String, Jso
 	}
 
 	@Override
-	public void process(final Iterator<Tuple<String, JsonNode>> obj) {
+	public void process(final Observable<Tuple<String, JsonNode>> obj) {
 		final StreamReceiver receiver = getReceiver();
-		while (obj.hasNext()) {
-			final Tuple<String, JsonNode> tuple = obj.next();
+		obj.subscribe(tuple -> {
 
 			receiver.startRecord(tuple.v1());
 			if (recordPrefix.isPresent()) {
@@ -71,7 +71,7 @@ public class JsonNodeReader extends DefaultObjectPipe<Iterator<Tuple<String, Jso
 				receiver.endEntity();
 			}
 			receiver.endRecord();
-		}
+		});
 	}
 
 	private void processObjectNode(final StreamReceiver receiver, final JsonNode jsonNode) throws IOException {

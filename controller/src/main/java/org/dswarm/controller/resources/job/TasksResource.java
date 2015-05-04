@@ -158,6 +158,9 @@ public class TasksResource {
 			throws IOException,
 			DMPConverterException, DMPControllerException {
 
+		// TODO: clean - validation vs execution
+		// TODO: async response
+
 		if (jsonObjectString == null) {
 
 			final String message = "couldn't process task execution request JSON, because it's null";
@@ -282,9 +285,6 @@ public class TasksResource {
 			inputData = dataModelUtil.getData(inputDataModel.getUuid(), optionalAtMost);
 		}
 
-		// TODO: Observable
-		final Iterator<Tuple<String, JsonNode>> tupleIterator = inputData.toBlocking().getIterator();
-
 		final Optional<Boolean> optionalPersistResult = getBooleanValue(TasksResource.PERSIST_IDENTIFIER, requestJSON);
 
 		final boolean writeResultToDatahub = optionalPersistResult.isPresent() && Boolean.TRUE.equals(optionalPersistResult.get());
@@ -292,7 +292,7 @@ public class TasksResource {
 		final String result;
 		try (final MonitoringHelper ignore = monitoringLogger.get().startExecution(task)) {
 			final TransformationFlow flow = transformationFlowFactory.fromTask(task);
-			result = flow.apply(tupleIterator, writeResultToDatahub);
+			result = flow.apply(inputData, writeResultToDatahub);
 		}
 
 		if (result == null) {

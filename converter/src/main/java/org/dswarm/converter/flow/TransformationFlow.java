@@ -51,6 +51,7 @@ import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.stream.pipe.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rx.Observable;
 
 import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.DMPConverterException;
@@ -159,7 +160,7 @@ public class TransformationFlow {
 			return null;
 		}
 
-		return apply(tuplesList.iterator(), false);
+		return apply(Observable.from(tuplesList), false);
 	}
 
 	public String applyResource(final String resourcePath) throws DMPConverterException {
@@ -185,8 +186,8 @@ public class TransformationFlow {
 	}
 
 	public String apply(
-			final Iterator<Tuple<String, JsonNode>> tuples,
-			final ObjectPipe<Iterator<Tuple<String, JsonNode>>, StreamReceiver> opener,
+			final Observable<Tuple<String, JsonNode>> tuples,
+			final ObjectPipe<Observable<Tuple<String, JsonNode>>, StreamReceiver> opener,
 			final boolean writeResultToDatahub) throws DMPConverterException {
 
 		final Context morphContext = morphTimer.time();
@@ -374,7 +375,7 @@ public class TransformationFlow {
 		return resultString;
 	}
 
-	public String apply(final Iterator<Tuple<String, JsonNode>> tuples, final boolean writeResultToDatahub) throws DMPConverterException {
+	public String apply(final Observable<Tuple<String, JsonNode>> tuples, final boolean writeResultToDatahub) throws DMPConverterException {
 
 		final JsonNodeReader opener = new JsonNodeReader();
 

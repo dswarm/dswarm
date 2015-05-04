@@ -16,7 +16,6 @@
 package org.dswarm.controller.utils;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -144,14 +143,14 @@ public class DataModelUtil {
 	 * @param atMost        the number of records that should be retrieved
 	 * @return the data of the given data model
 	 */
-	public Optional<Iterator<Tuple<String, JsonNode>>> searchRecords(final String keyAttributePathString, final String searchValue,
+	public Observable<Tuple<String, JsonNode>> searchRecords(final String keyAttributePathString, final String searchValue,
 			final String dataModelUuid, final Optional<Integer> atMost) {
 
 		DataModelUtil.LOG.debug(String.format("try to get data for data model with id [%s]", dataModelUuid));
 
 		final InternalModelService internalService = internalServiceFactoryProvider.get().getInternalGDMGraphService();
 
-		final Optional<Map<String, Model>> maybeTriples;
+		final Observable<Map<String, Model>> maybeTriples;
 
 		try {
 
@@ -160,19 +159,10 @@ public class DataModelUtil {
 
 			DataModelUtil.LOG.debug("couldn't find data for key attribute path '{}' and search value '{}' in data model '{}'", keyAttributePathString,
 					searchValue, dataModelUuid, e1);
-			return Optional.absent();
+			return Observable.empty();
 		}
 
-		if (!maybeTriples.isPresent()) {
-
-			DataModelUtil.LOG.debug("couldn't find data for key attribute path '{}' and search value '{}' in data model '{}'", keyAttributePathString,
-					searchValue, dataModelUuid);
-			return Optional.absent();
-		}
-
-		final Iterator<Map.Entry<String, Model>> iterator = maybeTriples.get().entrySet().iterator();
-
-		return Optional.of(dataIterator(iterator));
+		return maybeTriples.flatMapIterable(m -> dataIterable(m.entrySet()));
 	}
 
 	public Optional<ObjectNode> getSchema(final String dataModelUuid) {

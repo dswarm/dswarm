@@ -99,7 +99,6 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 
 				if (path != null) {
 
-					// FIXME DD-533 "/" does not work for windows paths which are "\" (or escaped as "\\")
 					if (path.contains(File.separator)) {
 
 						// e.g. C:\DMP\datamanagement-platform\converter\target\test-classes\test_csv.csv
