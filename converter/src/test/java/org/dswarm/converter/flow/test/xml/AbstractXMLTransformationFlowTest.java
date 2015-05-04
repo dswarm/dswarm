@@ -30,6 +30,7 @@ import com.google.common.collect.AbstractIterator;
 import com.google.inject.Provider;
 import org.junit.Assert;
 import org.junit.Test;
+import rx.Observable;
 
 import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.GuicedTest;
@@ -171,7 +172,8 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		final InternalGDMGraphService gdmService = GuicedTest.injector.getInstance(InternalGDMGraphService.class);
 		gdmService.createObject(updatedInputDataModel.getUuid(), gdmModel);
 
-		final Optional<Map<String, Model>> optionalModelMap = gdmService.getObjects(updatedInputDataModel.getUuid(), Optional.<Integer>absent());
+		final Observable<Map<String, Model>> optionalModelMapObservable = gdmService.getObjects(updatedInputDataModel.getUuid(), Optional.<Integer>absent());
+		final Optional<Map<String, Model>> optionalModelMap = optionalModelMapObservable.map(Optional::of).toBlocking().firstOrDefault(Optional.absent());
 
 		Assert.assertTrue("there is no map of entry models in the database", optionalModelMap.isPresent());
 

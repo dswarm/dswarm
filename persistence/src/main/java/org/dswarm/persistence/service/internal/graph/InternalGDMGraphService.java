@@ -23,14 +23,12 @@ import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -47,7 +45,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -67,6 +64,7 @@ import org.dswarm.graph.json.Resource;
 import org.dswarm.graph.json.stream.ModelBuilder;
 import org.dswarm.graph.json.stream.ModelParser;
 import org.dswarm.graph.json.util.Util;
+import org.dswarm.persistence.DMPPersistenceError;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
@@ -210,7 +208,7 @@ public class InternalGDMGraphService implements InternalModelService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Optional<Map<String, Model>> getObjects(final String dataModelUuid, final Optional<Integer> optionalAtMost)
+	public Observable<Map<String, Model>> getObjects(final String dataModelUuid, final Optional<Integer> optionalAtMost)
 			throws DMPPersistenceException {
 
 		if (dataModelUuid == null) {
@@ -250,48 +248,13 @@ public class InternalGDMGraphService implements InternalModelService {
 					"couldn't find record class in schema '%s' of data model '%s'", schema.getUuid(), dataModelUuid));
 		}
 
+		// TODO: above in method
+
 		final String recordClassUri = recordClass.getUri();
 
 		final Tuple<Observable<Resource>, InputStream> readResult = readGDMFromDB(recordClassUri, dataModelURI, optionalAtMost);
 		final Observable<Resource> recordResourcesObservable = readResult.v1();
 		final InputStream inputStream = readResult.v2();
-
-		final Map<String, Model> modelMap = Maps.newLinkedHashMap();
-
-		final Observable<Void> modelObservable = recordResourcesObservable.map(recordResource -> {
-
-			final org.dswarm.graph.json.Model recordModel = new org.dswarm.graph.json.Model();
-			recordModel.addResource(recordResource);
-
-			final Model gdmModel = new GDMModel(recordModel, recordResource.getUri());
-
-			modelMap.put(recordResource.getUri(), gdmModel);
-
-			return null;
-		});
-
-		try {
-
-			// TODO: move this, if needed
-			final Iterator<Void> iterator = modelObservable.toBlocking().getIterator();
-
-			if (!iterator.hasNext()) {
-
-				InternalGDMGraphService.LOG.debug("model is empty for data model '{}' in database", dataModelUuid);
-
-				return Optional.absent();
-			}
-
-			while (iterator.hasNext()) {
-
-				iterator.next();
-			}
-		} catch (final RuntimeException e) {
-
-			throw new DMPPersistenceException(e.getMessage(), e.getCause());
-		}
-
-		closeResource(inputStream, OBJECT_RETRIEVAL);
 
 		// TODO: this won'T be done right now, but is maybe also not really necessary any more
 		//		final Set<Resource> recordResources = GDMUtil.getRecordResources(recordClassUri, model);
@@ -304,7 +267,15 @@ public class InternalGDMGraphService implements InternalModelService {
 		//					String.format("couldn't find records for record class '%s' in data model '%s'", recordClassUri, dataModelUuid));
 		//		}
 
-		return Optional.of(modelMap);
+		return recordResourcesObservable
+				.map(recordResource -> {
+					final org.dswarm.graph.json.Model recordModel = new org.dswarm.graph.json.Model();
+					recordModel.addResource(recordResource);
+					return new GDMModel(recordModel, recordResource.getUri());
+				})
+				.toMap(gdm -> gdm.getRecordURIs().iterator().next(), gdm -> (Model) gdm, Maps::newLinkedHashMap)
+				.filter(map -> !map.isEmpty())
+				.doOnCompleted(DMPPersistenceError.wrapped(() -> closeResource(inputStream, OBJECT_RETRIEVAL)));
 	}
 
 	/**

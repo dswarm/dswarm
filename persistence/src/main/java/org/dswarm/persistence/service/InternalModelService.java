@@ -19,9 +19,11 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.common.base.Optional;
+import rx.Observable;
 
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.Model;
+import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.UpdateFormat;
 import org.dswarm.persistence.model.schema.Schema;
@@ -60,7 +62,7 @@ public interface InternalModelService {
 	 * @return (optional) a map of objects and their identifier
 	 * @throws DMPPersistenceException
 	 */
-	Optional<Map<String, Model>> getObjects(final String dataModelUuid, final Optional<Integer> atMost) throws DMPPersistenceException;
+	Observable<Map<String, Model>> getObjects(final String dataModelUuid, final Optional<Integer> atMost) throws DMPPersistenceException;
 
 	/**
 	 * Deletes a whole data model (incl. all its objects).

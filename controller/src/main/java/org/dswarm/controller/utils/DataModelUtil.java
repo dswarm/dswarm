@@ -31,6 +31,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rx.Observable;
 
 import org.dswarm.common.types.Tuple;
 import org.dswarm.persistence.DMPPersistenceException;
@@ -86,13 +87,14 @@ public class DataModelUtil {
 	 * @param atMost        the number of records that should be retrieved
 	 * @return the data of the given data model
 	 */
+	// TODO: make observable
 	public Optional<Iterator<Tuple<String, JsonNode>>> getData(final String dataModelUuid, final Optional<Integer> atMost) {
 
 		DataModelUtil.LOG.debug(String.format("try to get data for data model with id [%s]", dataModelUuid));
 
 		final InternalModelService internalService = internalServiceFactoryProvider.get().getInternalGDMGraphService();
 
-		final Optional<Map<String, Model>> maybeTriples;
+		final Observable<Map<String, Model>> maybeTriples;
 
 		try {
 
@@ -103,15 +105,10 @@ public class DataModelUtil {
 			return Optional.absent();
 		}
 
-		if (!maybeTriples.isPresent()) {
+		final Observable<Tuple<String, JsonNode>> jsonNodes = maybeTriples
+				.flatMapIterable(m -> dataIterable(m.entrySet().iterator()));
 
-			DataModelUtil.LOG.debug("couldn't find data");
-			return Optional.absent();
-		}
-
-		final Iterator<Map.Entry<String, Model>> iterator = maybeTriples.get().entrySet().iterator();
-
-		return Optional.of(dataIterator(iterator));
+		return Optional.of(jsonNodes.toBlocking().getIterator());
 	}
 
 	/**
@@ -313,6 +310,10 @@ public class DataModelUtil {
 		final ResourceService resourceService = resourceServiceProvider.get();
 		resourceService.deleteObject(resourceUuid);
 
+	}
+
+	private Iterable<Tuple<String, JsonNode>> dataIterable(final Iterator<Map.Entry<String, Model>> triples) {
+		return () -> dataIterator(triples);
 	}
 
 	private Iterator<Tuple<String, JsonNode>> dataIterator(final Iterator<Map.Entry<String, Model>> triples) {

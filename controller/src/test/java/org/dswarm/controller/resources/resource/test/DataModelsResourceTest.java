@@ -52,6 +52,7 @@ import org.slf4j.LoggerFactory;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.builder.Input;
 import org.xmlunit.diff.Diff;
+import rx.Observable;
 
 import org.dswarm.common.MediaTypeUtil;
 import org.dswarm.controller.eventbus.CSVConverterEvent;
@@ -69,6 +70,7 @@ import org.dswarm.init.ExecutionScope;
 import org.dswarm.persistence.dto.ShortExtendendBasicDMPDTO;
 import org.dswarm.persistence.dto.resource.MediumDataModelDTO;
 import org.dswarm.persistence.model.internal.Model;
+import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
@@ -224,7 +226,8 @@ public class DataModelsResourceTest extends
 
 		final InternalModelServiceFactory serviceFactory = GuicedTest.injector.getInstance(Key.get(InternalModelServiceFactory.class));
 		final InternalModelService service = serviceFactory.getInternalGDMGraphService();
-		final Optional<Map<String, Model>> data = service.getObjects(dataModel.getUuid(), Optional.of(atMost));
+		final Observable<Map<String, Model>> dataObservable = service.getObjects(dataModel.getUuid(), Optional.of(atMost));;
+		final Optional<Map<String, Model>> data = dataObservable.map(Optional::of).toBlocking().firstOrDefault(Optional.absent());
 
 		Assert.assertTrue(data.isPresent());
 		Assert.assertFalse(data.get().isEmpty());
