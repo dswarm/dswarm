@@ -16,6 +16,7 @@
 package org.dswarm.persistence;
 
 import rx.functions.Action0;
+import rx.functions.Func1;
 
 /**
  * An error for persistence work.
@@ -76,9 +77,25 @@ public final class DMPPersistenceError extends RuntimeException {
 		};
 	}
 
+	public static <T, R> Func1<T, R> wrapped(final PersistenceFunction1<T, R> func) {
+		return t -> {
+			try {
+				return func.apply(t);
+			} catch (DMPPersistenceException e) {
+				throw wrap(e);
+			}
+		};
+	}
+
 	@FunctionalInterface
 	public interface PersistenceAction {
 
 		void run() throws DMPPersistenceException;
+	}
+
+	@FunctionalInterface
+	public interface PersistenceFunction1<T, R> {
+
+		R apply(final T t) throws DMPPersistenceException;
 	}
 }

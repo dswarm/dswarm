@@ -33,6 +33,8 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.container.AsyncResponse;
+import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -54,6 +56,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import riotcmd.json;
+import rx.Observable;
+import rx.Observer;
 
 import org.dswarm.common.DMPStatics;
 import org.dswarm.common.types.Tuple;
@@ -477,10 +482,12 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	@GET
 	@Path("/{uuid}/data")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getData(@ApiParam(value = "data model identifier", required = true) @PathParam("uuid") final String uuid,
-			@ApiParam("number of records limit") @QueryParam("atMost") final Integer atMost) throws DMPControllerException {
+	public void getData(
+			@ApiParam(value = "data model identifier", required = true) @PathParam("uuid") final String uuid,
+			@ApiParam("number of records limit") @QueryParam("atMost") final Integer atMost,
+			@Suspended final AsyncResponse asyncResponse) throws DMPControllerException {
 
-		return getDataInternal(uuid, atMost);
+		getDataInternal(uuid, atMost, asyncResponse);
 	}
 
 	/**
@@ -880,76 +887,23 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 		return new ProxyDataModel(freshDataModel, type);
 	}
 
-	private Response getDataInternal(final String uuid, final Integer atMost) throws DMPControllerException {
+	private void getDataInternal(final String uuid, final Integer atMost, final AsyncResponse asyncResponse) throws DMPControllerException {
 
 		// final Timer.Context context = dmpStatus.getConfigurationData();
 
 		DataModelsResource.LOG.debug("try to get data for data model with uuid '{}'", uuid);
 
-		final Optional<Iterator<Tuple<String, JsonNode>>> data = dataModelUtil.getData(uuid, Optional.fromNullable(atMost));
-
-		if (!data.isPresent()) {
-
-			DataModelsResource.LOG.debug("couldn't find data for data model with uuid '{}'", uuid);
-
-			// dmpStatus.stop(context);
-			return Response.status(Status.NOT_FOUND).build();
-		}
-
-		final Iterator<Tuple<String, JsonNode>> iterator = data.get();
-
-		if (iterator == null) {
-
-			DataModelsResource.LOG.debug("couldn't find data for data model with uuid '{}'", uuid);
-
-			return Response.status(Status.NOT_FOUND).build();
-		}
-
-		if (!iterator.hasNext()) {
-
-			DataModelsResource.LOG.debug("couldn't find data for data model with uuid '{}'", uuid);
-
-			return Response.status(Status.NOT_FOUND).build();
-		}
-
-		// temp
-		final Iterator<Tuple<String, JsonNode>> tupleIterator;
+		final Observable<Tuple<String, JsonNode>> data;
 
 		if (atMost != null) {
-
-			tupleIterator = Iterators.limit(iterator, atMost);
+			data = dataModelUtil
+					.getData(uuid, Optional.fromNullable(atMost))
+					.limit(atMost);
 		} else {
-
-			tupleIterator = iterator;
+			data = dataModelUtil.getData(uuid, Optional.absent());
 		}
 
-		if (!tupleIterator.hasNext()) {
-
-			DataModelsResource.LOG.debug("couldn't find data for data model with uuid '{}'", uuid);
-
-			return Response.status(Status.NOT_FOUND).build();
-		}
-
-		final ObjectNode json = objectMapperProvider.get().createObjectNode();
-
-		while (tupleIterator.hasNext()) {
-
-			final Tuple<String, JsonNode> tuple = iterator.next();
-
-			json.set(tuple.v1(), tuple.v2());
-		}
-
-		final String jsonString = serializeObject(json);
-
-		DataModelsResource.LOG.debug("return data for data model with uuid '{}' ", uuid);
-
-		if (DataModelsResource.LOG.isTraceEnabled()) {
-
-			DataModelsResource.LOG.trace("and content '{}'", jsonString);
-		}
-
-		// dmpStatus.stop(context);
-		return buildResponse(jsonString);
+		data.subscribe(new StreamingDataObserver(uuid, objectMapperProvider.get(), pojoClassName, asyncResponse));
 	}
 
 	private Client client() {
@@ -997,4 +951,58 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 		return optionalValue;
 	}
 
+	private static final class StreamingDataObserver implements Observer<Tuple<String, JsonNode>> {
+		private final ObjectMapper objectMapper;
+		private final String pojoClassName;
+		private final AsyncResponse asyncResponse;
+		private final String uuid;
+		private final ObjectNode json;
+
+		private boolean hasData;
+
+		public StreamingDataObserver(final String uuid, final ObjectMapper objectMapper, final String pojoClassName, final AsyncResponse asyncResponse) {
+			this.uuid = uuid;
+			this.objectMapper = objectMapper;
+			this.pojoClassName = pojoClassName;
+			this.asyncResponse = asyncResponse;
+			json = objectMapper.createObjectNode();
+		}
+
+		@Override
+		public void onCompleted() {
+
+			if (!hasData) {
+
+				DataModelsResource.LOG.debug("couldn't find data for data model with uuid '{}'", uuid);
+				asyncResponse.resume(Response.status(Status.NOT_FOUND).build());
+			} else {
+
+				try {
+					final String jsonString = serializesObject(json, objectMapper, pojoClassName);
+
+					DataModelsResource.LOG.debug("return data for data model with uuid '{}' ", uuid);
+					if (DataModelsResource.LOG.isTraceEnabled()) {
+						DataModelsResource.LOG.trace("and content '{}'", jsonString);
+					}
+
+					asyncResponse.resume(buildResponse(jsonString));
+
+				} catch (final DMPControllerException e) {
+
+					asyncResponse.resume(e);
+				}
+			}
+		}
+
+		@Override
+		public void onError(final Throwable e) {
+			asyncResponse.resume(e);
+		}
+
+		@Override
+		public void onNext(final Tuple<String, JsonNode> tuple) {
+			hasData = true;
+			json.set(tuple.v1(), tuple.v2());
+		}
+	}
 }

@@ -484,6 +484,30 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 		return objectJSONString;
 	}
 
+	protected static String serializesObject(final Object object, final ObjectMapper objectMapper, final String pojoClassName) throws DMPControllerException {
+
+		String objectJSONString = null;
+
+		try {
+
+			objectJSONString = objectMapper.writeValueAsString(object);
+		} catch (final JsonProcessingException e) {
+
+			BasicResource.LOG.debug("couldn't serialize enhanced {} JSON.", pojoClassName);
+
+			throw new DMPControllerException("couldn't serialize enhanced " + pojoClassName + " JSON.", e);
+		}
+
+		if (objectJSONString == null) {
+
+			BasicResource.LOG.debug("couldn't serialize enhanced {} JSON correctly.", pojoClassName);
+
+			throw new DMPControllerException("couldn't serialize enhanced " + pojoClassName + " JSON correctly.");
+		}
+
+		return objectJSONString;
+	}
+
 	/**
 	 * Creates and persists a new object into the database.
 	 *

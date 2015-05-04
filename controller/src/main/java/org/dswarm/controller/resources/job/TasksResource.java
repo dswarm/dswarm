@@ -48,6 +48,7 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rx.Observable;
 
 import org.dswarm.common.types.Tuple;
 import org.dswarm.controller.DMPControllerException;
@@ -265,7 +266,7 @@ public class TasksResource {
 			throw new DMPConverterException(message);
 		}
 
-		final Optional<Iterator<Tuple<String, JsonNode>>> inputData;
+		final Observable<Tuple<String, JsonNode>> inputData;
 
 		final Optional<Set<String>> optionalSelectedRecords = getStringSetValue(TasksResource.SELECTED_RECORDS_IDENTIFIER, requestJSON);
 
@@ -281,14 +282,8 @@ public class TasksResource {
 			inputData = dataModelUtil.getData(inputDataModel.getUuid(), optionalAtMost);
 		}
 
-		if (!inputData.isPresent()) {
-
-			TasksResource.LOG.error("couldn't find input data for task execution");
-
-			throw new DMPConverterException("couldn't find input data for task execution");
-		}
-
-		final Iterator<Tuple<String, JsonNode>> tupleIterator = inputData.get();
+		// TODO: Observable
+		final Iterator<Tuple<String, JsonNode>> tupleIterator = inputData.toBlocking().getIterator();
 
 		final Optional<Boolean> optionalPersistResult = getBooleanValue(TasksResource.PERSIST_IDENTIFIER, requestJSON);
 

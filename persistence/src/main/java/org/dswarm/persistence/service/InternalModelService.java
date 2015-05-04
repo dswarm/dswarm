@@ -23,7 +23,6 @@ import rx.Observable;
 
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.Model;
-import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.UpdateFormat;
 import org.dswarm.persistence.model.schema.Schema;
@@ -79,6 +78,7 @@ public interface InternalModelService {
 	 * @return (optional) the schema of the data model
 	 * @throws DMPPersistenceException
 	 */
+	// TODO: Observable
 	Optional<Schema> getSchema(final String dataModelUuid) throws DMPPersistenceException;
 
 	/**
@@ -91,6 +91,7 @@ public interface InternalModelService {
 	 * @return (optional) a map of objects and their identifier
 	 * @throws DMPPersistenceException
 	 */
+	// TODO: Observable
 	Optional<Map<String, Model>> searchObjects(final String dataModelUuid, final String keyAttributePathString, final String searchValue,
 			final Optional<Integer> atMost) throws DMPPersistenceException;
 
@@ -102,7 +103,7 @@ public interface InternalModelService {
 	 * @return
 	 * @throws DMPPersistenceException
 	 */
-	Optional<Model> getRecord(final String recordIdentifier, final String dataModelUuid) throws DMPPersistenceException;
+	Observable<Model> getRecord(final String recordIdentifier, final String dataModelUuid) throws DMPPersistenceException;
 
 	/**
 	 * Retrieves the records in the specific data model with the given record identifiers from the datahub.
@@ -112,5 +113,5 @@ public interface InternalModelService {
 	 * @return
 	 * @throws DMPPersistenceException
 	 */
-	Optional<Map<String, Model>> getRecords(final Set<String> recordIdentifiers, final String dataModelUuid) throws DMPPersistenceException;
+	Observable<Map<String, Model>> getRecords(final Set<String> recordIdentifiers, final String dataModelUuid) throws DMPPersistenceException;
 }
