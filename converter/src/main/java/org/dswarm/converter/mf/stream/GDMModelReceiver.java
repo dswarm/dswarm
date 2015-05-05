@@ -18,7 +18,7 @@ package org.dswarm.converter.mf.stream;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import rx.Observable;
 import rx.functions.Func1;
-import rx.subjects.PublishSubject;
+import rx.subjects.ReplaySubject;
 import rx.subjects.Subject;
 
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
@@ -30,8 +30,7 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 
 	private static final Func1<GDMModel, Boolean> NOT_NULL = m -> m != null;
 
-	// TODO: ReplaySubject ?
-	private final Subject<GDMModel, GDMModel> modelSubject = PublishSubject.create();
+	private final Subject<GDMModel, GDMModel> modelSubject = ReplaySubject.create();
 
 	@Override
 	public void process(final GDMModel gdmModel) {
