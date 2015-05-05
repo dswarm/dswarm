@@ -222,7 +222,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		flow.getScript();
 
-		final String actual = flow.apply(tuples, true);
+		final String actual = flow.apply(tuples, true).get();
 
 		compareResults(expected, actual);
 

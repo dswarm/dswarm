@@ -16,6 +16,7 @@
 package org.dswarm.converter.flow;
 
 import java.io.Reader;
+import java.util.Collections;
 import java.util.List;
 
 import com.codahale.metrics.MetricRegistry;
@@ -140,7 +141,8 @@ public class XMLSourceResourceGDMStmtsFlow {
 
 		morphContext.stop();
 
-		return writer.getCollection();
+		// TODO: return observable
+		return writer.getObservable().toList().toBlocking().firstOrDefault(Collections.emptyList());
 	}
 
 	private static Optional<String> getStringParameter(final Configuration configuration, final String key) throws DMPConverterException {

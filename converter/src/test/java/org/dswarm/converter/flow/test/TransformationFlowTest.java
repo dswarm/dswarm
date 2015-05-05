@@ -239,7 +239,7 @@ public class TransformationFlowTest extends GuicedTest {
 
 		flow.getScript();
 
-		final String actual = flow.apply(tuples, true);
+		final String actual = flow.apply(tuples, true).get();
 
 		final ArrayNode expectedJSONArray = objectMapper.readValue(expected, ArrayNode.class);
 		final ArrayNode actualNodes = objectMapper.readValue(actual, ArrayNode.class);

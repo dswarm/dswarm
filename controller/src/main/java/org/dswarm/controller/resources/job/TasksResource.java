@@ -19,16 +19,15 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -292,7 +291,9 @@ public class TasksResource {
 		final String result;
 		try (final MonitoringHelper ignore = monitoringLogger.get().startExecution(task)) {
 			final TransformationFlow flow = transformationFlowFactory.fromTask(task);
-			result = flow.apply(inputData, writeResultToDatahub);
+			result = flow.apply(inputData, writeResultToDatahub).get();
+		} catch (final InterruptedException | ExecutionException e) {
+			throw new DMPConverterException("Task execution was interrupted", e);
 		}
 
 		if (result == null) {

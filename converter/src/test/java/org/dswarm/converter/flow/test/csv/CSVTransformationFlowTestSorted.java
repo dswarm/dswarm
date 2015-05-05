@@ -55,7 +55,7 @@ public class CSVTransformationFlowTestSorted extends GuicedTest {
 
 		flow.getScript();
 
-		final String actual = flow.applyResource("test_transf.tuples_sorted.json");
+		final String actual = flow.applyResource("test_transf.tuples_sorted.json").get();
 		final ArrayNode array = objectMapper2.readValue(actual, ArrayNode.class);
 		final String finalActual = objectMapper2.writeValueAsString(array);
 

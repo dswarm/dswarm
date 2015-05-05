@@ -219,7 +219,7 @@ public class FilterTransformationFlowTest extends GuicedTest {
 
 		flow.getScript();
 
-		final String actual = flow.applyResource("test-mabxml.tuples.json");
+		final String actual = flow.applyResource("test-mabxml.tuples.json").get();
 		final ArrayNode actualJSONArray = DMPPersistenceUtil.getJSONObjectMapper().readValue(actual, ArrayNode.class);
 		final JsonNode cleanedActualJSONArray = DMPConverterUtils.removeRecordIdFields(actualJSONArray);
 		final String finalActual = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(cleanedActualJSONArray);
@@ -250,7 +250,7 @@ public class FilterTransformationFlowTest extends GuicedTest {
 			flow = flowFactory.fromFile(transformationMorphScriptFileName);
 		}
 
-		final String actual = flow.applyResource(inputTuplesFileName);
+		final String actual = flow.applyResource(inputTuplesFileName).get();
 
 		final ArrayNode expectedJson = replaceKeyWithActualKey(expected, actual);
 		final String finalExpected = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(expectedJson);

@@ -20,8 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.Optional;
 
-import com.google.common.base.Optional;
 import com.google.common.io.CharStreams;
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.stream.pipe.Filter;
@@ -108,32 +108,32 @@ public interface TransformationFlowFactory {
 	default TransformationFlow fromTask(final Task task) throws DMPConverterException {
 
 		final String morphScriptString = new MorphScriptBuilder().apply(task).toString();
-		final Optional<String> maybeFilterScript = Optional.fromNullable(
+		final Optional<String> maybeFilterScript = Optional.ofNullable(
 				new FilterMorphScriptBuilder().apply(task).toString());
 
 		return fromAnything(
 				readString(morphScriptString),
 				readString(maybeFilterScript),
-				Optional.fromNullable(task.getOutputDataModel()));
+				Optional.ofNullable(task.getOutputDataModel()));
 	}
 
 	// private-ish
 
 	default TransformationFlow fromAnything(
 			final Reader morphScript) throws DMPMorphDefException {
-		return fromAnything(morphScript, Optional.absent(), Optional.absent());
+		return fromAnything(morphScript, Optional.empty(), Optional.empty());
 	}
 
 	default TransformationFlow fromAnything(
 			final Reader morphScript,
 			final Reader filterScript) throws DMPMorphDefException {
-		return fromAnything(morphScript, Optional.of(filterScript), Optional.absent());
+		return fromAnything(morphScript, Optional.of(filterScript), Optional.empty());
 	}
 
 	default TransformationFlow fromAnything(
 			final Reader morphScript,
 			final DataModel dataModel) throws DMPMorphDefException {
-		return fromAnything(morphScript, Optional.absent(), Optional.of(dataModel));
+		return fromAnything(morphScript, Optional.empty(), Optional.of(dataModel));
 	}
 
 	default TransformationFlow fromAnything(
@@ -161,7 +161,7 @@ public interface TransformationFlowFactory {
 		if (filterScript.isPresent()) {
 			filter = Optional.of(createFilter(filterScript.get()));
 		} else {
-			filter = Optional.absent();
+			filter = Optional.empty();
 		}
 
 		return create(morph, morphContent, outputDataModel, filter);

@@ -15,8 +15,11 @@
  */
 package org.dswarm.converter.mf.stream;
 
-import com.google.common.collect.ImmutableList;
 import org.culturegraph.mf.framework.ObjectReceiver;
+import rx.Observable;
+import rx.functions.Func1;
+import rx.subjects.PublishSubject;
+import rx.subjects.Subject;
 
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 
@@ -25,39 +28,33 @@ import org.dswarm.persistence.model.internal.gdm.GDMModel;
  */
 public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 
-	private ImmutableList.Builder<GDMModel>	builder	= ImmutableList.builder();
-	private ImmutableList<GDMModel>			collection;
+	private static final Func1<GDMModel, Boolean> NOT_NULL = m -> m != null;
+
+	// TODO: ReplaySubject ?
+	private final Subject<GDMModel, GDMModel> modelSubject = PublishSubject.create();
 
 	@Override
 	public void process(final GDMModel gdmModel) {
 
-		builder.add(gdmModel);
+		modelSubject.onNext(gdmModel);
 	}
 
 	@Override
 	public void resetStream() {
-
-		builder = ImmutableList.builder();
+		// TODO: ?
 	}
 
 	@Override
 	public void closeStream() {
 
-		buildCollection();
+		modelSubject.onCompleted();
 	}
 
-	public ImmutableList<GDMModel> getCollection() {
-
-		if (collection == null) {
-
-			buildCollection();
-		}
-
-		return collection;
+	public void propagateError(final Throwable error) {
+		modelSubject.onError(error);
 	}
 
-	private void buildCollection() {
-
-		collection = builder.build();
+	public Observable<GDMModel> getObservable() {
+		return modelSubject.filter(NOT_NULL);
 	}
 }
