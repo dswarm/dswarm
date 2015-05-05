@@ -15,7 +15,6 @@
  */
 package org.dswarm.converter;
 
-import rx.functions.Action0;
 import rx.functions.Func1;
 
 /**
@@ -25,56 +24,16 @@ import rx.functions.Func1;
  */
 public final class DMPConverterError extends RuntimeException {
 
-	private final DMPConverterException exception;
-
 	public DMPConverterError(final String message) {
 		super(message);
-		exception = null;
 	}
 
 	public DMPConverterError(final Throwable cause) {
 		super(cause);
-		if (cause instanceof DMPConverterException) {
-			exception = (DMPConverterException) cause;
-		} else {
-			exception = null;
-		}
-	}
-
-	public DMPConverterError(final String message, final Throwable cause) {
-		super(message, cause);
-		if (cause instanceof DMPConverterException) {
-			exception = (DMPConverterException) cause;
-		} else {
-			exception = null;
-		}
-	}
-
-	public void unwrap() throws DMPConverterException {
-		if (exception != null) {
-			throw exception;
-		}
 	}
 
 	public static DMPConverterError wrap(final DMPConverterException exception) {
 		return new DMPConverterError(exception);
-	}
-
-	public static Throwable unwrap(final Throwable throwable) throws DMPConverterException {
-		if (throwable instanceof DMPConverterError) {
-			((DMPConverterError) throwable).unwrap();
-		}
-		return throwable;
-	}
-
-	public static Action0 wrapped(final ConverterAction action) {
-		return () -> {
-			try {
-				action.run();
-			} catch (DMPConverterException e) {
-				throw wrap(e);
-			}
-		};
 	}
 
 	public static <T, R> Func1<T, R> wrapped(final ConverterFunction1<T, R> func) {
@@ -85,12 +44,6 @@ public final class DMPConverterError extends RuntimeException {
 				throw wrap(e);
 			}
 		};
-	}
-
-	@FunctionalInterface
-	public interface ConverterAction {
-
-		void run() throws DMPConverterException;
 	}
 
 	@FunctionalInterface

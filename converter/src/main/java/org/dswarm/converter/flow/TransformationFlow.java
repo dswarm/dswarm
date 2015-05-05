@@ -115,13 +115,13 @@ public class TransformationFlow {
 			final TimerBasedFactory timerBasedFactory,
 			@Assisted final Metamorph transformer,
 			@Assisted final String scriptArg,
-			@Assisted final com.google.common.base.Optional<DataModel> outputDataModelArg,
-			@Assisted final com.google.common.base.Optional<Filter> optionalSkipFilterArg) {
+			@Assisted final Optional<DataModel> outputDataModelArg,
+			@Assisted final Optional<Filter> optionalSkipFilterArg) {
 		this.timerBasedFactory = timerBasedFactory;
 		this.transformer = transformer;
 		script = scriptArg == null ? "" : scriptArg;
-		outputDataModel = guavaToJavaOptional(outputDataModelArg);
-		optionalSkipFilter = guavaToJavaOptional(optionalSkipFilterArg);
+		outputDataModel = outputDataModelArg;
+		optionalSkipFilter = optionalSkipFilterArg;
 		internalModelServiceFactoryProvider = internalModelServiceFactoryProviderArg;
 
 		morphTimer = registry.timer("metamorph");
@@ -192,7 +192,7 @@ public class TransformationFlow {
 		final ObjectTimer gdmModelsTimer = timerBasedFactory.forObject("gdm-models");
 		final StreamUnflattener unflattener = new StreamUnflattener("", DMPStatics.ATTRIBUTE_DELIMITER);
 		//		final StreamJsonCollapser collapser = new StreamJsonCollapser();
-		final GDMEncoder converter = new GDMEncoder(javaToGuavaOptional(outputDataModel));
+		final GDMEncoder converter = new GDMEncoder(outputDataModel);
 
 		final GDMModelReceiver writer = new GDMModelReceiver();
 
@@ -384,14 +384,6 @@ public class TransformationFlow {
 				Optional.ofNullable(dataModel.getSchema()).flatMap(schema ->
 						Optional.ofNullable(schema.getRecordClass())
 								.map(Clasz::getUri)));
-	}
-
-	private static <T> Optional<T> guavaToJavaOptional(final com.google.common.base.Optional<T> optional) {
-		return Optional.ofNullable(optional.orNull());
-	}
-
-	private static <T> com.google.common.base.Optional<T> javaToGuavaOptional(final Optional<T> optional) {
-		return com.google.common.base.Optional.fromNullable(optional.orElse(null));
 	}
 
 	private static <T> boolean exists(final Optional<T> optional, final java.util.function.Predicate<T> predicate) {

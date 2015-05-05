@@ -18,12 +18,12 @@ package org.dswarm.persistence.model.schema.utils;
 import java.net.URI;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -72,7 +72,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 	public static final String MABXML_SCHEMA_UUID = "Schema-d87ba5c2-b02b-481d-a62d-2b46dd66d347";
 	public static final String BIBRM_CONTRACT_ITEM_SCHEMA_UUID = "Schema-70228b28-10fc-43fe-9d3e-ad22b038ebdf";
 	public static final String BIBO_DOCUMENT_SCHEMA_UUID = "Schema-ff62ec21-0a11-4c27-a704-d7ca53a21521";
-	public final static String FOAF_SCHEMA_UUID = "Schema-309e901c-3da9-4d82-a694-bab632eaa340";
+	public static final String FOAF_SCHEMA_UUID = "Schema-309e901c-3da9-4d82-a694-bab632eaa340";
 	public static final String PNX_SCHEMA_UUID = "Schema-dbc97499-278d-4551-a65e-8e8bb219ca6c";
 	public static final String MARC21_SCHEMA_UUID = "Schema-781d73f0-d115-462e-9b4c-ec23e4251c8d";
 	public static final String FINC_SOLR_SCHEMA_UUID = "Schema-5664ba0e-ccb3-4b71-8823-13281490de30";
@@ -291,7 +291,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 			try {
 				final URI _uri = URI.create(identifier);
 
-				return _uri != null && _uri.getScheme() != null;
+				return _uri.getScheme() != null;
 			} catch (final IllegalArgumentException e) {
 
 				return false;
@@ -324,7 +324,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 		return uri + HASH + finalLocalName;
 	}
 
-	public static String mintTermUri(@Nullable final String uri, @Nullable final String localName, Optional<String> baseURI) {
+	public static String mintTermUri(@Nullable final String uri, @Nullable final String localName, final Optional<String> baseURI) {
 
 		final boolean canUseLocalName = !Strings.isNullOrEmpty(localName);
 
@@ -429,7 +429,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 			return localTermName;
 		} else {
 
-			final Optional<String> optionalBaseUri = Optional.fromNullable(baseUri);
+			final Optional<String> optionalBaseUri = Optional.ofNullable(baseUri);
 
 			final boolean isValidTermURI = isValidUri(termUri);
 

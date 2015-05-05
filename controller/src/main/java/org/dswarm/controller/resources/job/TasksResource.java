@@ -157,9 +157,6 @@ public class TasksResource {
 			throws IOException,
 			DMPConverterException, DMPControllerException {
 
-		// TODO: clean - validation vs execution
-		// TODO: async response
-
 		if (jsonObjectString == null) {
 
 			final String message = "couldn't process task execution request JSON, because it's null";

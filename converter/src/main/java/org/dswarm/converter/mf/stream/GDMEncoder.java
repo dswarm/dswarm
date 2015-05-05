@@ -16,12 +16,11 @@
 package org.dswarm.converter.mf.stream;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Stack;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.culturegraph.mf.exceptions.MetafactureException;
@@ -64,7 +63,7 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 	private       ResourceNode                          entityNode;
 	private       Resource                              currentResource;
 	private       Stack<Tuple<ResourceNode, Predicate>> entityStack;
-	private       Stack<Resource>                       resourceStack;
+	private final Stack<Resource>                       resourceStack;
 
 	private ResourceNode recordType;
 	private Resource     recordResource;
@@ -270,23 +269,14 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 	private Optional<String> init(final Optional<DataModel> dataModel) {
 
-		if (!dataModel.isPresent()) {
-
-			return Optional.fromNullable(StringUtils.stripEnd(DataModelUtils.determineDataModelSchemaBaseURI(null), SchemaUtils.HASH));
-		}
-
-		return dataModel.transform(new Function<DataModel, String>() {
-
-			@Override
-			public String apply(final DataModel dm) {
-				return StringUtils.stripEnd(DataModelUtils.determineDataModelSchemaBaseURI(dm), SchemaUtils.HASH);
-			}
-		});
+		return Optional.ofNullable(dataModel
+				.map(dm -> StringUtils.stripEnd(DataModelUtils.determineDataModelSchemaBaseURI(dm), SchemaUtils.HASH))
+				.orElseGet(() -> StringUtils.stripEnd(DataModelUtils.determineDataModelSchemaBaseURI(null), SchemaUtils.HASH)));
 	}
 
-	private String mintEntityUri() {
+	private static String mintEntityUri() {
 
-		return RESOURCE_BASE_URI + UUID.randomUUID().toString();
+		return RESOURCE_BASE_URI + UUID.randomUUID();
 	}
 
 	private Predicate getPredicate(final String predicateId) {

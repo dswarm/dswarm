@@ -25,46 +25,12 @@ import rx.functions.Func1;
  */
 public final class DMPPersistenceError extends RuntimeException {
 
-	private final DMPPersistenceException exception;
-
-	public DMPPersistenceError(final String message) {
-		super(message);
-		exception = null;
-	}
-
 	public DMPPersistenceError(final Throwable cause) {
 		super(cause);
-		if (cause instanceof DMPPersistenceException) {
-			exception = (DMPPersistenceException) cause;
-		} else {
-			exception = null;
-		}
-	}
-
-	public DMPPersistenceError(final String message, final Throwable cause) {
-		super(message, cause);
-		if (cause instanceof DMPPersistenceException) {
-			exception = (DMPPersistenceException) cause;
-		} else {
-			exception = null;
-		}
-	}
-
-	public void unwrap() throws DMPPersistenceException {
-		if (exception != null) {
-			throw exception;
-		}
 	}
 
 	public static DMPPersistenceError wrap(final DMPPersistenceException exception) {
 		return new DMPPersistenceError(exception);
-	}
-
-	public static Throwable unwrap(final Throwable throwable) throws DMPPersistenceException {
-		if (throwable instanceof DMPPersistenceError) {
-			((DMPPersistenceError) throwable).unwrap();
-		}
-		return throwable;
 	}
 
 	public static Action0 wrapped(final PersistenceAction action) {
