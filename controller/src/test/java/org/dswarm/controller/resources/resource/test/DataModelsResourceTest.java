@@ -70,7 +70,6 @@ import org.dswarm.init.ExecutionScope;
 import org.dswarm.persistence.dto.ShortExtendendBasicDMPDTO;
 import org.dswarm.persistence.dto.resource.MediumDataModelDTO;
 import org.dswarm.persistence.model.internal.Model;
-import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
