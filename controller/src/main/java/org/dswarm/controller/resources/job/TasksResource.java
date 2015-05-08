@@ -81,6 +81,7 @@ public class TasksResource {
 	public static final String TASK_IDENTIFIER             = "task";
 	public static final String AT_MOST_IDENTIFIER          = "at_most";
 	public static final String PERSIST_IDENTIFIER          = "persist";
+	public static final String RETURN_IDENTIFIER           = "do_not_return_data";
 	public static final String SELECTED_RECORDS_IDENTIFIER = "selected_records";
 
 	/**
@@ -281,9 +282,9 @@ public class TasksResource {
 			inputData = dataModelUtil.getData(inputDataModel.getUuid(), optionalAtMost);
 		}
 
-		final Optional<Boolean> optionalPersistResult = getBooleanValue(TasksResource.PERSIST_IDENTIFIER, requestJSON);
+		final boolean writeResultToDatahub = getBooleanValue(TasksResource.PERSIST_IDENTIFIER, requestJSON, false);
 
-		final boolean writeResultToDatahub = optionalPersistResult.isPresent() && Boolean.TRUE.equals(optionalPersistResult.get());
+		final boolean returnJsonToCaller = getBooleanValue(TasksResource.RETURN_IDENTIFIER, requestJSON, true);
 
 		final String result;
 		try (final MonitoringHelper ignore = monitoringLogger.get().startExecution(task)) {
@@ -297,7 +298,12 @@ public class TasksResource {
 
 			TasksResource.LOG.debug("result of task execution is null");
 
-			return buildResponse(null);
+			return Response.noContent().build();
+		}
+
+		if (!returnJsonToCaller) {
+
+			return Response.noContent().build();
 		}
 
 		// transform model json to fe friendly json
@@ -420,20 +426,17 @@ public class TasksResource {
 		return optionalValue;
 	}
 
-	private Optional<Boolean> getBooleanValue(final String key, final JsonNode json) {
+	private boolean getBooleanValue(final String key, final JsonNode json, final boolean defaultValue) {
 
 		final JsonNode node = json.get(key);
-		final Optional<Boolean> optionalValue;
 
 		if (node != null) {
 
-			optionalValue = Optional.fromNullable(node.asBoolean());
+			return node.asBoolean();
 		} else {
 
-			optionalValue = Optional.absent();
+			return defaultValue;
 		}
-
-		return optionalValue;
 	}
 
 	private Optional<Set<String>> getStringSetValue(final String key, final JsonNode json) {
