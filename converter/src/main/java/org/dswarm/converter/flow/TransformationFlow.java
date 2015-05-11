@@ -75,6 +75,7 @@ import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.DMPObject;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.DataModel;
+import org.dswarm.persistence.model.resource.UpdateFormat;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.utils.ClaszUtils;
 import org.dswarm.persistence.service.InternalModelService;
@@ -292,7 +293,7 @@ public class TransformationFlow {
 				resultObservable = stateObservable.map(state -> {
 
 					try {
-						internalModelService.createObject(outputDataModel.get().getUuid(), state.finalModel());
+						internalModelService.updateObject(outputDataModel.get().getUuid(), state.finalModel(), UpdateFormat.DELTA, true);
 					} catch (DMPPersistenceException e) {
 
 						final String message = "couldn't persist the result of the transformation: " + e.getMessage();
