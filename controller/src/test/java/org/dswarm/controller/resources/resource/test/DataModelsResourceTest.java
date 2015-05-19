@@ -55,6 +55,7 @@ import org.xmlunit.diff.Diff;
 import rx.Observable;
 
 import org.dswarm.common.MediaTypeUtil;
+import org.dswarm.common.types.Tuple;
 import org.dswarm.controller.eventbus.CSVConverterEvent;
 import org.dswarm.controller.eventbus.CSVConverterEventRecorder;
 import org.dswarm.controller.resources.POJOFormat;
@@ -225,7 +226,9 @@ public class DataModelsResourceTest extends
 
 		final InternalModelServiceFactory serviceFactory = GuicedTest.injector.getInstance(Key.get(InternalModelServiceFactory.class));
 		final InternalModelService service = serviceFactory.getInternalGDMGraphService();
-		final Observable<Map<String, Model>> dataObservable = service.getObjects(dataModel.getUuid(), Optional.of(atMost));;
+		final Observable<Map<String, Model>> dataObservable = service
+				.getObjects(dataModel.getUuid(), Optional.of(atMost))
+				.toMap(Tuple::v1, Tuple::v2);
 		final Optional<Map<String, Model>> data = dataObservable.map(Optional::of).toBlocking().firstOrDefault(Optional.absent());
 
 		Assert.assertTrue(data.isPresent());

@@ -61,6 +61,7 @@
 						<argument>-Xms6g</argument>
 						<argument>-Xmx6g</argument>
 						<argument>-Dconfig.file=${project.basedir}/../dswarm.conf</argument>
+                        <!--<argument>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5087</argument>-->
 						<!--argument>-agentpath:/home/phorn/yjp-2015-eap-build-15026/bin/linux-x86-64/libyjpagent.so</argument-->
 						<argument>-classpath</argument>
 						<classpath/>
