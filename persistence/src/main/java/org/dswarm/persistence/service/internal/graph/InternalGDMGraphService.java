@@ -54,6 +54,7 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
+import rx.functions.Action0;
 import rx.functions.Action1;
 
 import org.dswarm.common.DMPStatics;
@@ -107,7 +108,7 @@ public class InternalGDMGraphService implements InternalModelService {
 	private static final String OBJECT_RETRIEVAL = "object retrieval";
 	private static final String WRITE_GDM        = "write to graph database";
 
-	private static final int CHUNK_SIZE = 1024;
+	private static final int CHUNK_SIZE      = 1024;
 	private static final int REQUEST_TIMEOUT = 100000;
 
 	private static final String          DSWARM_MODEL_STREAMER_THREAD_NAMING_PATTERN = "dswarm-model-streamer-%d";
@@ -280,7 +281,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 					final long current = counter.incrementAndGet();
 
-					if(current / 10000 == bigCounter.get()) {
+					if (current / 10000 == bigCounter.get()) {
 
 						bigCounter.incrementAndGet();
 
@@ -288,11 +289,8 @@ public class InternalGDMGraphService implements InternalModelService {
 					}
 				})
 				.map(gdm -> Tuple.tuple(gdm.getRecordURIs().iterator().next(), (Model) gdm))
-				.doOnCompleted(DMPPersistenceError.wrapped(() -> closeResource(inputStream, OBJECT_RETRIEVAL))).doOnNext(
-						stringModelMap -> {
-
-							LOG.debug("finally, retrieved and processed '{}' records", counter.get());
-						});
+				.doOnCompleted(DMPPersistenceError.wrapped(() -> closeResource(inputStream, OBJECT_RETRIEVAL)))
+				.doOnCompleted(() -> LOG.debug("finally, retrieved and processed '{}' records", counter.get()));
 	}
 
 	/**
@@ -396,16 +394,16 @@ public class InternalGDMGraphService implements InternalModelService {
 				searchGDMRecordsInDB(keyAttributePathString, searchValue, dataModelURI, optionalAtMost);
 
 		// TODO:
-//		if (recordResources == null || recordResources.isEmpty()) {
-//
-//			InternalGDMGraphService.LOG
-//					.debug("couldn't find records for record class '{}' in search result of key attribute path = '{}' and search value = '{}' in data model '{}'",
-//							recordClassUri, keyAttributePathString, searchValue, dataModelUuid);
-//
-//			throw new DMPPersistenceException(String.format(
-//					"couldn't find records for record class '%s' in search result of key attribute path = '%s' and search value = '%s' in data model '%s'",
-//					recordClassUri, keyAttributePathString, searchValue, dataModelUuid));
-//		}
+		//		if (recordResources == null || recordResources.isEmpty()) {
+		//
+		//			InternalGDMGraphService.LOG
+		//					.debug("couldn't find records for record class '{}' in search result of key attribute path = '{}' and search value = '{}' in data model '{}'",
+		//							recordClassUri, keyAttributePathString, searchValue, dataModelUuid);
+		//
+		//			throw new DMPPersistenceException(String.format(
+		//					"couldn't find records for record class '%s' in search result of key attribute path = '%s' and search value = '%s' in data model '%s'",
+		//					recordClassUri, keyAttributePathString, searchValue, dataModelUuid));
+		//		}
 
 		return modelObservable
 				.filter(model -> {
@@ -451,7 +449,8 @@ public class InternalGDMGraphService implements InternalModelService {
 			if (resource == null) {
 
 				InternalGDMGraphService.LOG
-						.debug("couldn't find record data for record identifier '{}' in data model '{}' in database", recordIdentifier, dataModelUuid);
+						.debug("couldn't find record data for record identifier '{}' in data model '{}' in database", recordIdentifier,
+								dataModelUuid);
 
 				return false;
 			}
@@ -499,7 +498,8 @@ public class InternalGDMGraphService implements InternalModelService {
 							if (resource == null) {
 
 								InternalGDMGraphService.LOG
-										.debug("couldn't find record data for record identifier '{}' in data model '{}' in database", recordIdentifier,
+										.debug("couldn't find record data for record identifier '{}' in data model '{}' in database",
+												recordIdentifier,
 												dataModelUuid);
 								return false;
 							}
@@ -507,7 +507,8 @@ public class InternalGDMGraphService implements InternalModelService {
 							if (resource.size() <= 0) {
 
 								InternalGDMGraphService.LOG
-										.debug("resource is empty for record identifier '{}' in data model '{}' in database", recordIdentifier, dataModelUuid);
+										.debug("resource is empty for record identifier '{}' in data model '{}' in database", recordIdentifier,
+												dataModelUuid);
 
 								return false;
 
@@ -562,7 +563,8 @@ public class InternalGDMGraphService implements InternalModelService {
 		writeGDMToDB(realModel, dataModelURI, optionalContentSchema, optionalDeprecateMissingRecords, optionalRecordClassUri, enableVersioning);
 	}
 
-	private DataModel determineSchema(final String dataModelUuid, final GDMModel gdmModel, final org.dswarm.graph.json.Model realModel) throws DMPPersistenceException {
+	private DataModel determineSchema(final String dataModelUuid, final GDMModel gdmModel, final org.dswarm.graph.json.Model realModel)
+			throws DMPPersistenceException {
 
 		LOG.debug("determine schema for data model '{}'", dataModelUuid);
 
@@ -605,14 +607,14 @@ public class InternalGDMGraphService implements InternalModelService {
 				// TODO: this operation is expensive, so we should only apply it, if really necessary
 				//final Set<Resource> recordResources = GDMUtil.getRecordResources(recordClassURI, realModel);
 
-//				if (recordResources != null && !recordResources.isEmpty()) {
-//
-//					final LinkedHashSet<String> recordURIs = Sets.newLinkedHashSet();
-//
-//					recordURIs.addAll(recordResources.stream().map(Resource::getUri).collect(Collectors.toList()));
-//
-//					gdmModel.setRecordURIs(recordURIs);
-//				}
+				//				if (recordResources != null && !recordResources.isEmpty()) {
+				//
+				//					final LinkedHashSet<String> recordURIs = Sets.newLinkedHashSet();
+				//
+				//					recordURIs.addAll(recordResources.stream().map(Resource::getUri).collect(Collectors.toList()));
+				//
+				//					gdmModel.setRecordURIs(recordURIs);
+				//				}
 
 				gdmModel.setRecordURIs(realModel.getResourceURIs());
 			}
@@ -876,7 +878,8 @@ public class InternalGDMGraphService implements InternalModelService {
 
 	// TODO: async
 	private void writeGDMToDB(final org.dswarm.graph.json.Model model, final String dataModelUri, final Optional<ContentSchema> optionalContentSchema,
-			final Optional<Boolean> optionalDeprecateMissingRecords, final Optional<String> optionalRecordClassUri, final boolean enableVersioning) throws DMPPersistenceException {
+			final Optional<Boolean> optionalDeprecateMissingRecords, final Optional<String> optionalRecordClassUri, final boolean enableVersioning)
+			throws DMPPersistenceException {
 
 		LOG.debug("try to write GDM data for data model '{}' into data hub", dataModelUri);
 
@@ -892,7 +895,8 @@ public class InternalGDMGraphService implements InternalModelService {
 		final PipedInputStream input = new PipedInputStream();
 		final PipedOutputStream output = new PipedOutputStream();
 
-		final String metadata = getMetadata(dataModelUri, optionalContentSchema, optionalDeprecateMissingRecords, optionalRecordClassUri, enableVersioning);
+		final String metadata = getMetadata(dataModelUri, optionalContentSchema, optionalDeprecateMissingRecords, optionalRecordClassUri,
+				enableVersioning);
 
 		try {
 
@@ -1053,7 +1057,8 @@ public class InternalGDMGraphService implements InternalModelService {
 			requestJsonString = objectMapper.writeValueAsString(requestJson);
 		} catch (final JsonProcessingException e) {
 
-			return Observable.error(new DMPPersistenceException("something went wrong, while creating the request JSON string for the read-gdm-record-from-db request",
+			return Observable.error(new DMPPersistenceException(
+					"something went wrong, while creating the request JSON string for the read-gdm-record-from-db request",
 					e));
 		}
 
@@ -1075,7 +1080,8 @@ public class InternalGDMGraphService implements InternalModelService {
 				.map(DMPPersistenceError.wrapped(this::deserializeResource));
 	}
 
-	private Observable<org.dswarm.graph.json.Model> searchGDMRecordsInDB(final String keyAttributePathString, final String searchValue, final String dataModelUri,
+	private Observable<org.dswarm.graph.json.Model> searchGDMRecordsInDB(final String keyAttributePathString, final String searchValue,
+			final String dataModelUri,
 			final Optional<Integer> optionalAtMost)
 			throws DMPPersistenceException {
 
@@ -1110,9 +1116,9 @@ public class InternalGDMGraphService implements InternalModelService {
 				.post(Entity.entity(requestJsonString, MediaType.APPLICATION_JSON));
 
 		// TODO:
-//		InternalGDMGraphService.LOG
-//				.debug("couldn't find results for key attribute path '{}' and search value '{}' in data model '{}'",
-//						keyAttributePathString, searchValue, dataModelUri);
+		//		InternalGDMGraphService.LOG
+		//				.debug("couldn't find results for key attribute path '{}' and search value '{}' in data model '{}'",
+		//						keyAttributePathString, searchValue, dataModelUri);
 
 		return Observable.from(responseFuture)
 				.flatMap(response -> {
@@ -1208,7 +1214,8 @@ public class InternalGDMGraphService implements InternalModelService {
 	}
 
 	private String getMetadata(final String dataModelUri, final Optional<ContentSchema> optionalContentSchema,
-			final Optional<Boolean> optionalDeprecateMissingRecords, final Optional<String> optionalRecordClassUri, final boolean enableVersioning) throws DMPPersistenceException {
+			final Optional<Boolean> optionalDeprecateMissingRecords, final Optional<String> optionalRecordClassUri, final boolean enableVersioning)
+			throws DMPPersistenceException {
 
 		final ObjectNode metadata = objectMapperProvider.get().createObjectNode();
 		metadata.put(DMPStatics.DATA_MODEL_URI_IDENTIFIER, dataModelUri);
