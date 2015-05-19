@@ -23,7 +23,6 @@ import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -44,7 +43,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
-import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -213,7 +211,7 @@ public class InternalGDMGraphService implements InternalModelService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Observable<Map<String, Model>> getObjects(final String dataModelUuid, final Optional<Integer> optionalAtMost)
+	public Observable<Tuple<String, Model>> getObjects(final String dataModelUuid, final Optional<Integer> optionalAtMost)
 			throws DMPPersistenceException {
 
 		if (dataModelUuid == null) {
@@ -289,8 +287,7 @@ public class InternalGDMGraphService implements InternalModelService {
 						LOG.debug("retrieved and processed '{}' records", current);
 					}
 				})
-				.toMap(gdm -> gdm.getRecordURIs().iterator().next(), gdm -> (Model) gdm, Maps::newLinkedHashMap)
-				.filter(map -> !map.isEmpty())
+				.map(gdm -> Tuple.tuple(gdm.getRecordURIs().iterator().next(), (Model) gdm))
 				.doOnCompleted(DMPPersistenceError.wrapped(() -> closeResource(inputStream, OBJECT_RETRIEVAL))).doOnNext(
 						stringModelMap -> {
 
@@ -354,7 +351,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		return Optional.of(schema);
 	}
 
-	@Override public Observable<Map<String, Model>> searchObjects(final String dataModelUuid, final String keyAttributePathString,
+	@Override public Observable<Tuple<String, Model>> searchObjects(final String dataModelUuid, final String keyAttributePathString,
 			final String searchValue, final Optional<Integer> optionalAtMost) throws DMPPersistenceException {
 
 		if (dataModelUuid == null) {
@@ -425,15 +422,12 @@ public class InternalGDMGraphService implements InternalModelService {
 					return true;
 				})
 				.flatMapIterable(model -> GDMUtil.getRecordResources(recordClassUri, model))
-				.toMap(
-						Resource::getUri,
-						resource -> {
-							final org.dswarm.graph.json.Model recordModel = new org.dswarm.graph.json.Model();
-							recordModel.addResource(resource);
-							return new GDMModel(recordModel, resource.getUri());
-						},
-						Maps::newLinkedHashMap
-				);
+				.map(resource -> {
+					final org.dswarm.graph.json.Model recordModel = new org.dswarm.graph.json.Model();
+					recordModel.addResource(resource);
+					final GDMModel gdmModel = new GDMModel(recordModel, resource.getUri());
+					return Tuple.tuple(resource.getUri(), gdmModel);
+				});
 
 	}
 
@@ -480,7 +474,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		});
 	}
 
-	@Override public Observable<Map<String, Model>> getRecords(final Set<String> recordIdentifiers, final String dataModelUuid)
+	@Override public Observable<Tuple<String, Model>> getRecords(final Set<String> recordIdentifiers, final String dataModelUuid)
 			throws DMPPersistenceException {
 
 		if (recordIdentifiers == null) {
@@ -526,7 +520,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 							return Tuple.tuple(recordIdentifier, gdmModel);
 						})
-		).toMap(Tuple::v1, Tuple::v2, Maps::newLinkedHashMap);
+		);
 	}
 
 	private void createOrUpdateObject(final String dataModelUuid, final Object model, final UpdateFormat updateFormat, final boolean enableVersioning)

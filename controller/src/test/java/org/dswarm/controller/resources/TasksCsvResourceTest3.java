@@ -46,6 +46,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
 
+import org.dswarm.common.types.Tuple;
 import org.dswarm.controller.resources.job.TasksResource;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
@@ -222,7 +223,9 @@ public class TasksCsvResourceTest3 extends ResourceTest {
 
 		final InternalModelServiceFactory serviceFactory = GuicedTest.injector.getInstance(Key.get(InternalModelServiceFactory.class));
 		final InternalModelService service = serviceFactory.getInternalGDMGraphService();
-		final Observable<Map<String, Model>> inputDataObservable = service.getObjects(inputDataModel.getUuid(), Optional.of(10));
+		final Observable<Map<String, Model>> inputDataObservable = service
+				.getObjects(inputDataModel.getUuid(), Optional.of(10))
+				.toMap(Tuple::v1, Tuple::v2);
 		final Optional<Map<String, Model>> inputData = inputDataObservable.map(Optional::of).toBlocking().firstOrDefault(Optional.absent());
 
 		Assert.assertTrue(inputData.isPresent());

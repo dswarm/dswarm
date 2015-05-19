@@ -166,7 +166,9 @@ public class TransformationFlowTest extends GuicedTest {
 
 		final Schema schema = freshInputDataModel.getSchema();
 
-		final Observable<Map<String, Model>> optionalModelMapObservable = gdmService.getObjects(updatedInputDataModel.getUuid(), Optional.<Integer>absent());
+		final Observable<Map<String, Model>> optionalModelMapObservable = gdmService
+				.getObjects(updatedInputDataModel.getUuid(), Optional.<Integer>absent())
+				.toMap(Tuple::v1, Tuple::v2);
 		final Optional<Map<String, Model>> optionalModelMap = optionalModelMapObservable.map(Optional::of).toBlocking().firstOrDefault(Optional.absent());
 
 		Assert.assertNotNull("CSV record model map optional shouldn't be null", optionalModelMap);

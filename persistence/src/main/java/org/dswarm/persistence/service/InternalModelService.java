@@ -15,12 +15,12 @@
  */
 package org.dswarm.persistence.service;
 
-import java.util.Map;
 import java.util.Set;
 
 import com.google.common.base.Optional;
 import rx.Observable;
 
+import org.dswarm.common.types.Tuple;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.resource.DataModel;
@@ -61,7 +61,7 @@ public interface InternalModelService {
 	 * @return (optional) a map of objects and their identifier
 	 * @throws DMPPersistenceException
 	 */
-	Observable<Map<String, Model>> getObjects(final String dataModelUuid, final Optional<Integer> atMost) throws DMPPersistenceException;
+	Observable<Tuple<String, Model>> getObjects(final String dataModelUuid, final Optional<Integer> atMost) throws DMPPersistenceException;
 
 	/**
 	 * Deletes a whole data model (incl. all its objects).
@@ -90,7 +90,7 @@ public interface InternalModelService {
 	 * @return (optional) a map of objects and their identifier
 	 * @throws DMPPersistenceException
 	 */
-	Observable<Map<String, Model>> searchObjects(final String dataModelUuid, final String keyAttributePathString, final String searchValue,
+	Observable<Tuple<String, Model>> searchObjects(final String dataModelUuid, final String keyAttributePathString, final String searchValue,
 			final Optional<Integer> atMost) throws DMPPersistenceException;
 
 	/**
@@ -111,5 +111,5 @@ public interface InternalModelService {
 	 * @return
 	 * @throws DMPPersistenceException
 	 */
-	Observable<Map<String, Model>> getRecords(final Set<String> recordIdentifiers, final String dataModelUuid) throws DMPPersistenceException;
+	Observable<Tuple<String, Model>> getRecords(final Set<String> recordIdentifiers, final String dataModelUuid) throws DMPPersistenceException;
 }

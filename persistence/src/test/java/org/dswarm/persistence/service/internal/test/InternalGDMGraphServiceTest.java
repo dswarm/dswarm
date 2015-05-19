@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
 
+import org.dswarm.common.types.Tuple;
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
@@ -113,7 +114,9 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 
 		final InternalGDMGraphService gdmGraphService = GuicedTest.injector.getInstance(InternalGDMGraphService.class);
 
-		final Observable<Map<String, Model>> optionalModelMapObservable = gdmGraphService.getObjects(updatedDataModel.getUuid(), Optional.<Integer>absent());
+		final Observable<Map<String, Model>> optionalModelMapObservable = gdmGraphService
+				.getObjects(updatedDataModel.getUuid(), Optional.<Integer>absent())
+				.toMap(Tuple::v1, Tuple::v2);
 		final Optional<Map<String, Model>> optionalModelMap = optionalModelMapObservable.map(Optional::of).toBlocking().firstOrDefault(Optional.absent());
 
 		Assert.assertNotNull("Ralf's MABXML record model map optional shouldn't be null", optionalModelMap);
