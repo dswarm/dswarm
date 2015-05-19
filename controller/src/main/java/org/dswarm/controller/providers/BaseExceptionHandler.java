@@ -15,6 +15,8 @@
  */
 package org.dswarm.controller.providers;
 
+import java.io.File;
+
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -26,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A generic exception handler for providing exceptions at client side of the backend API.
- * 
+ *
  * @author phorn
  * @param <E>
  */
@@ -34,14 +36,18 @@ public abstract class BaseExceptionHandler<E extends Exception> implements Excep
 
 	private static final Logger	LOG	= LoggerFactory.getLogger(BaseExceptionHandler.class);
 
+	private static final String EX_FORMAT =
+			String.format("exception was thrown:%stype = '%%s'%smessage = %%s",
+					File.separator, File.separator);
+
 	/**
 	 * Creates a response with the given message and status as payload.
-	 * 
+	 *
 	 * @param message the exception message
 	 * @param status the HTTP status code
 	 * @return the exception response
 	 */
-	protected Response createResponse(final String message, final int status) {
+	private static Response createResponse(final String message, final int status) {
 
 		final JsonNodeFactory factory = JsonNodeFactory.instance;
 		final ObjectNode responseJSON = new ObjectNode(factory);
@@ -50,32 +56,29 @@ public abstract class BaseExceptionHandler<E extends Exception> implements Excep
 		responseJSON.put("status_code", status);
 		responseJSON.put("error", message);
 
-		return Response.status(status).entity(responseJSON.toString()).type(MediaType.APPLICATION_JSON_TYPE).build();
+		return Response.status(status)
+				.entity(responseJSON)
+				.type(MediaType.APPLICATION_JSON_TYPE)
+				.build();
 	}
 
-	/**
-	 * Creates a response with the given message and HTTP status code 500 as payload.
-	 * 
-	 * @param message the exception message
-	 * @return the exception response
-	 */
-	protected Response createResponse(final String message) {
+	@Override
+	public final Response toResponse(final E exception) {
+		logException(exception);
 
-		return createResponse(message, 500);
+		final String message = getErrorMessageFrom(exception);
+		final int status = getStatusFrom(exception).getStatusCode();
+
+		return createResponse(message, status);
 	}
 
-	/**
-	 * Logs and gets the error message of the exception.
-	 * 
-	 * @param exception the exception that was thrown by the backend API
-	 * @return the error message of the exception
-	 */
-	protected String errorMessage(final E exception) {
+	protected abstract Response.Status getStatusFrom(final E exception);
 
-		BaseExceptionHandler.LOG.error(
-				String.format("exception was thrown:\ntype = '%s'\nmessage = %s", exception.getClass().getCanonicalName(), exception.getMessage()),
+	protected abstract String getErrorMessageFrom(final E exception);
+
+	private void logException(final E exception) {
+		LOG.error(
+				String.format(EX_FORMAT, exception.getClass().getCanonicalName(), exception.getMessage()),
 				exception);
-
-		return exception.getMessage();
 	}
 }

@@ -22,21 +22,25 @@ import org.dswarm.controller.providers.BaseExceptionHandler;
 
 /**
  * A default exception handler for providing exceptions at client side of the backend API.
- * 
+ *
  * @author phorn
  */
 @Provider
 public class ExceptionHandler extends BaseExceptionHandler<Exception> {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	public Response toResponse(final Exception exception) {
+	protected Response.Status getStatusFrom(final Exception exception) {
+		return Response.Status.INTERNAL_SERVER_ERROR;
+	}
 
-		final String[] clientSegments = errorMessage(exception).split(":");
-		final String message = clientSegments[clientSegments.length - 1];
-
-		return createResponse(message);
+	@Override
+	protected String getErrorMessageFrom(final Exception exception) {
+		if (exception == null || exception.getMessage() == null) {
+			return "";
+		} else {
+			final String[] clientSegments;
+			clientSegments = exception.getMessage().split(":");
+			return clientSegments[clientSegments.length - 1];
+		}
 	}
 }
