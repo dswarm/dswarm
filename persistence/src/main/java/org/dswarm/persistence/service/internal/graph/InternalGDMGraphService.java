@@ -108,13 +108,16 @@ public class InternalGDMGraphService implements InternalModelService {
 	private static final String WRITE_GDM        = "write to graph database";
 
 	private static final int CHUNK_SIZE = 1024;
+	private static final int REQUEST_TIMEOUT = 100000;
 
 	private static final String          DSWARM_MODEL_STREAMER_THREAD_NAMING_PATTERN = "dswarm-model-streamer-%d";
 	private static final ExecutorService EXECUTOR_SERVICE                            = Executors.newCachedThreadPool(
 			new BasicThreadFactory.Builder().daemon(false).namingPattern(DSWARM_MODEL_STREAMER_THREAD_NAMING_PATTERN).build());
 
 	private static final ClientBuilder BUILDER = ClientBuilder.newBuilder().register(MultiPartFeature.class)
-			.property(ClientProperties.CHUNKED_ENCODING_SIZE, CHUNK_SIZE);
+			.property(ClientProperties.CHUNKED_ENCODING_SIZE, CHUNK_SIZE)
+			.property(ClientProperties.CONNECT_TIMEOUT, REQUEST_TIMEOUT)
+			.property(ClientProperties.READ_TIMEOUT, REQUEST_TIMEOUT);
 
 	private static final String READ_GDM_ENDPOINT           = "/get";
 	private static final String WRITE_GDM_ENDPOINT          = "/put";
@@ -193,7 +196,8 @@ public class InternalGDMGraphService implements InternalModelService {
 		LOG.debug("created data model '{}' in data hub", dataModelUuid);
 	}
 
-	@Override public void updateObject(final String dataModelUuid, final Object model, final UpdateFormat updateFormat, final boolean enableVersioning)
+	@Override public void updateObject(final String dataModelUuid, final Object model, final UpdateFormat updateFormat,
+			final boolean enableVersioning)
 			throws DMPPersistenceException {
 
 		LOG.debug("try to update data model '{}' in data hub", dataModelUuid);
