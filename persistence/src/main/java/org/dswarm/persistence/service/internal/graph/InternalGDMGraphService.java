@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -55,6 +56,7 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
+import rx.functions.Action1;
 
 import org.dswarm.common.DMPStatics;
 import org.dswarm.common.model.util.AttributePathUtil;
@@ -268,15 +270,32 @@ public class InternalGDMGraphService implements InternalModelService {
 		//					String.format("couldn't find records for record class '%s' in data model '%s'", recordClassUri, dataModelUuid));
 		//		}
 
+		final AtomicLong counter = new AtomicLong(0);
+		final AtomicLong bigCounter = new AtomicLong(1);
+
 		return recordResourcesObservable
 				.map(recordResource -> {
 					final org.dswarm.graph.json.Model recordModel = new org.dswarm.graph.json.Model();
 					recordModel.addResource(recordResource);
 					return new GDMModel(recordModel, recordResource.getUri());
+				}).doOnNext(gdmModel -> {
+
+					final long current = counter.incrementAndGet();
+
+					if(current / 10000 == bigCounter.get()) {
+
+						bigCounter.incrementAndGet();
+
+						LOG.debug("retrieved and processed '{}' records", current);
+					}
 				})
 				.toMap(gdm -> gdm.getRecordURIs().iterator().next(), gdm -> (Model) gdm, Maps::newLinkedHashMap)
 				.filter(map -> !map.isEmpty())
-				.doOnCompleted(DMPPersistenceError.wrapped(() -> closeResource(inputStream, OBJECT_RETRIEVAL)));
+				.doOnCompleted(DMPPersistenceError.wrapped(() -> closeResource(inputStream, OBJECT_RETRIEVAL))).doOnNext(
+						stringModelMap -> {
+
+							LOG.debug("finally, retrieved and processed '{}' records", counter.get());
+						});
 	}
 
 	/**
