@@ -527,7 +527,8 @@ public class InternalGDMGraphService implements InternalModelService {
 		);
 	}
 
-	private Future<Void> createOrUpdateObject(final String dataModelUuid, final Observable<Model> model, final UpdateFormat updateFormat, final boolean enableVersioning)
+	private Future<Void> createOrUpdateObject(final String dataModelUuid, final Observable<Model> model, final UpdateFormat updateFormat,
+			final boolean enableVersioning)
 			throws DMPPersistenceException {
 
 		if (dataModelUuid == null) {
@@ -542,6 +543,8 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final Optional<Boolean> optionalDeprecateMissingRecords = determineMissingRecordsFlag(updateFormat);
 		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelUuid);
+		final DataModel dataModel = getSchemaInternal(dataModelUuid);
+		final boolean isSchemaAnInBuiltSchema = isSchemaAnInbuiltSchema(dataModel);
 
 		final Observable<GDMModel> modelObservable = model.cast(GDMModel.class).cache(1);
 
@@ -552,7 +555,8 @@ public class InternalGDMGraphService implements InternalModelService {
 
 			try {
 
-				final DataModel finalDataModel = determineSchema(dataModelUuid, gdm).v1();
+				final org.dswarm.graph.json.Model realModel = getRealModel(gdm);
+				final DataModel finalDataModel = optionallyEnhancedDataModel(dataModel, gdm, realModel, isSchemaAnInBuiltSchema);
 				final Optional<ContentSchema> optionalContentSchema = Optional.fromNullable(finalDataModel.getSchema().getContentSchema());
 				final Optional<String> optionalRecordClassUri = Optional.fromNullable(finalDataModel.getSchema().getRecordClass().getUri());
 
@@ -566,16 +570,14 @@ public class InternalGDMGraphService implements InternalModelService {
 			}
 		});
 
-
 		final Observable<Resource> resourceObservable = modelObservable.map(gdm -> {
 
 			try {
 
-				final Tuple<DataModel, org.dswarm.graph.json.Model> tuple = determineSchema(dataModelUuid, gdm);
+				final org.dswarm.graph.json.Model model1 = getRealModel(gdm);
+				optionallyEnhancedDataModel(dataModel, gdm, model1, isSchemaAnInBuiltSchema);
 
-				final org.dswarm.graph.json.Model model1 = tuple.v2();
-
-				if(model1 == null) {
+				if (model1 == null) {
 
 					// ???
 					return null;
@@ -583,7 +585,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 				final Collection<Resource> resources = model1.getResources();
 
-				if(resources == null || resources.isEmpty()) {
+				if (resources == null || resources.isEmpty()) {
 
 					return null;
 				}
@@ -601,8 +603,20 @@ public class InternalGDMGraphService implements InternalModelService {
 		return completableFuture;
 	}
 
-	private Tuple<DataModel, org.dswarm.graph.json.Model> determineSchema(final String dataModelUuid, final GDMModel gdmModel)
+	private DataModel optionallyEnhancedDataModel(final DataModel dataModel, final GDMModel gdmModel, final org.dswarm.graph.json.Model realModel,
+			final boolean isSchemaAnInBuildSchema)
 			throws DMPPersistenceException {
+
+		if (!isSchemaAnInBuildSchema) {
+
+			return determineSchema(dataModel, gdmModel, realModel);
+		} else {
+
+			return dataModel;
+		}
+	}
+
+	private org.dswarm.graph.json.Model getRealModel(final GDMModel gdmModel) throws DMPPersistenceException {
 
 		final org.dswarm.graph.json.Model realModel = gdmModel.getModel();
 
@@ -611,40 +625,30 @@ public class InternalGDMGraphService implements InternalModelService {
 			throw new DMPPersistenceException("real model that should be added to DB shouldn't be null");
 		}
 
-		final DataModel finalDataModel = determineSchema(dataModelUuid, gdmModel, realModel);
-
-		return Tuple.tuple(finalDataModel, realModel);
+		return realModel;
 	}
 
-	private DataModel determineSchema(final String dataModelUuid, final GDMModel gdmModel, final org.dswarm.graph.json.Model realModel)
+	private DataModel determineSchema(final DataModel dataModel, final GDMModel gdmModel, final org.dswarm.graph.json.Model realModel)
 			throws DMPPersistenceException {
 
-		LOG.debug("determine schema for data model '{}'", dataModelUuid);
+		// TODO: rework schemata determination, i.e., modify schema only, if it is not a preset schema, otherwise, skile whole schema determination before
 
-		final DataModel dataModel = addRecordClass(dataModelUuid, gdmModel.getRecordClassURI());
+		LOG.debug("determine schema for data model '{}'", dataModel.getUuid());
 
-		final DataModel finalDataModel;
+		final DataModel updatedDataModel = addRecordClass(dataModel, gdmModel.getRecordClassURI());
 
-		if (dataModel != null) {
-
-			finalDataModel = dataModel;
-		} else {
-
-			finalDataModel = getDataModel(dataModelUuid);
-		}
-
-		if (finalDataModel == null) {
+		if (updatedDataModel == null) {
 
 			throw new DMPPersistenceException("Could not get the actual data model to use");
 		}
 
-		determineRecordResources(gdmModel, realModel, finalDataModel);
+		determineRecordResources(gdmModel, realModel, updatedDataModel);
 
-		determineAttributePaths(finalDataModel, gdmModel);
+		determineAttributePaths(updatedDataModel, gdmModel);
 
-		LOG.debug("determined schema for data model '{}'", dataModelUuid);
+		LOG.debug("determined schema for data model '{}'", dataModel.getUuid());
 
-		return finalDataModel;
+		return updatedDataModel;
 	}
 
 	private void determineRecordResources(final GDMModel gdmModel, final org.dswarm.graph.json.Model realModel, final DataModel finalDataModel) {
@@ -692,19 +696,49 @@ public class InternalGDMGraphService implements InternalModelService {
 		}
 	}
 
+	private boolean isSchemaAnInbuiltSchema(final DataModel dataModel) throws DMPPersistenceException {
+
+		final Schema schema = dataModel.getSchema();
+
+		if (schema != null) {
+
+			final String schemaUUID = schema.getUuid();
+
+			if (schemaUUID != null) {
+
+				switch (schemaUUID) {
+
+					case SchemaUtils.MABXML_SCHEMA_UUID:
+					case SchemaUtils.MARC21_SCHEMA_UUID:
+					case SchemaUtils.PNX_SCHEMA_UUID:
+					case SchemaUtils.FINC_SOLR_SCHEMA_UUID:
+					case SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID:
+					case SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID:
+					case SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID:
+
+						// those schemas are already there and shouldn't be manipulated by data that differs from those schemas
+						LOG.debug("schema for data model '{}' is a preset schema, so everything is already set", dataModel.getUuid());
+
+						return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
 	/**
 	 * Adds the record class to the schema of the data model.
 	 *
-	 * @param dataModelUuid  the identifier of the data model
+	 * @param dataModel the data model
 	 * @param recordClassUri the identifier of the record class
 	 * @throws DMPPersistenceException
 	 */
-	private DataModel addRecordClass(final String dataModelUuid, final String recordClassUri) throws DMPPersistenceException {
+	private DataModel addRecordClass(final DataModel dataModel, final String recordClassUri) throws DMPPersistenceException {
 
-		LOG.debug("add record class '{}' to schema for data model '{}'", recordClassUri, dataModelUuid);
+		LOG.debug("add record class '{}' to schema for data model '{}'", recordClassUri, dataModel.getUuid());
 
 		// (try) add record class uri to schema
-		final DataModel dataModel = getSchemaInternal(dataModelUuid);
 		final Schema schema = dataModel.getSchema();
 
 		if (schema != null) {
@@ -725,7 +759,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 						// those schemas are already there and shouldn't be manipulated by data that differs from those schemas
 
-						LOG.debug("schema for data model '{}' is a preset schema, so record class is already set", dataModelUuid);
+						LOG.debug("schema for data model '{}' is a preset schema, so record class is already set", dataModel.getUuid());
 
 						return dataModel;
 				}
@@ -739,7 +773,7 @@ public class InternalGDMGraphService implements InternalModelService {
 			return dataModel;
 		}
 
-		LOG.debug("added record class to schema for data model '{}'", dataModelUuid);
+		LOG.debug("added record class to schema for data model '{}'", dataModel.getUuid());
 
 		return updateDataModel(dataModel);
 	}
@@ -930,7 +964,8 @@ public class InternalGDMGraphService implements InternalModelService {
 	}
 
 	// TODO: async
-	private Observer<org.dswarm.graph.json.Resource> writeGDMToDB(final String dataModelUri, final String metadata, final CompletableFuture<Void> completableFuture)
+	private Observer<org.dswarm.graph.json.Resource> writeGDMToDB(final String dataModelUri, final String metadata,
+			final CompletableFuture<Void> completableFuture)
 			throws DMPPersistenceException {
 
 		LOG.debug("try to write GDM data for data model '{}' into data hub", dataModelUri);
