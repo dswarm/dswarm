@@ -170,7 +170,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		// write model and retrieve tuples
 		final InternalGDMGraphService gdmService = GuicedTest.injector.getInstance(InternalGDMGraphService.class);
-		gdmService.createObject(updatedInputDataModel.getUuid(), gdmModel);
+		gdmService.createObject(updatedInputDataModel.getUuid(), Observable.just(gdmModel));
 
 		final Observable<Map<String, Model>> optionalModelMapObservable = gdmService
 				.getObjects(updatedInputDataModel.getUuid(), Optional.<Integer>absent())
@@ -224,7 +224,10 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		flow.getScript();
 
-		final String actual = flow.apply(tuples, true).get();
+		final ArrayNode actual = flow.apply(tuples, true, true).reduce(
+				DMPPersistenceUtil.getJSONObjectMapper().createArrayNode(),
+				ArrayNode::add
+		).toBlocking().first();
 
 		compareResults(expected, actual);
 
@@ -241,7 +244,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		Assert.assertNotNull("the record class of the schema of the fresh data model shouldn't be null", schema.getRecordClass());
 	}
 
-	protected void compareResults(final String expectedResultJSONString, final String actualResultJSONString) throws Exception {
+	protected void compareResults(final String expectedResultJSONString, final ArrayNode actualJSONArray) throws Exception {
 
 		final ArrayNode expectedJSONArray = objectMapper.get().readValue(expectedResultJSONString, ArrayNode.class);
 		final ObjectNode expectedElementInArray = (ObjectNode) expectedJSONArray.get(0);
@@ -249,7 +252,6 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		final ObjectNode expectedJSON = (ObjectNode) expectedElementInArray.get(expectedKeyInArray).get(0);
 		final String finalExpectedJSONString = objectMapper.get().writeValueAsString(expectedJSON);
 
-		final ArrayNode actualJSONArray = objectMapper.get().readValue(actualResultJSONString, ArrayNode.class);
 		final ObjectNode actualElementInArray = (ObjectNode) actualJSONArray.get(0);
 		final String actualKeyInArray = actualElementInArray.fieldNames().next();
 		final Iterable<JsonNode> actualKeyArray = actualElementInArray.get(actualKeyInArray);

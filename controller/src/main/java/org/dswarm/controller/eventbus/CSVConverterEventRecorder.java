@@ -15,8 +15,12 @@
  */
 package org.dswarm.controller.eventbus;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
@@ -114,13 +118,13 @@ public class CSVConverterEventRecorder {
 			// convert result to GDM
 			final Map<Long, Resource> recordResources = Maps.newLinkedHashMap();
 
-			final Model model = new Model();
-
 			final String dataResourceBaseSchemaURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
 			final String recordClassURI = dataResourceBaseSchemaURI + RECORD_TYPE_POSTFIX;
 			final ResourceNode recordClassNode = new ResourceNode(recordClassURI);
 
-			for (final Triple triple : result) {
+			final rx.Observable<org.dswarm.persistence.model.internal.Model> models = rx.Observable.from(result).map(triple -> {
+
+				final Model model = new Model();
 
 				// 1. create resource uri from subject (line number)
 				// 2. create property object from property uri string
@@ -133,18 +137,22 @@ public class CSVConverterEventRecorder {
 				final ResourceNode subject = (ResourceNode) recordResource.getStatements().iterator().next().getSubject();
 
 				recordResource.addStatement(subject, property, new LiteralNode(triple.getObject()));
-			}
 
-			final GDMModel gdmModel = new GDMModel(model, null, recordClassURI);
+				return new GDMModel(model, null, recordClassURI);
+			});
 
 			LOG.debug("transformed CSV data resource to GDM for data model '{}'", dataModel.getUuid());
 
 			try {
 
-				internalServiceFactory.getInternalGDMGraphService().updateObject(dataModel.getUuid(), gdmModel, updateFormat, enableVersioning);
+				// TODO delegate future
+				final Future<Void> future = internalServiceFactory.getInternalGDMGraphService()
+						.updateObject(dataModel.getUuid(), models, updateFormat, enableVersioning);
+
+				future.get();
 
 				LOG.debug("processed CSV data resource into data model '{}'", dataModel.getUuid());
-			} catch (final DMPPersistenceException e) {
+			} catch (final DMPPersistenceException | InterruptedException | ExecutionException e) {
 
 				final String message = String.format("couldn't persist the converted CSV data of data model '%s'", dataModel.getUuid());
 

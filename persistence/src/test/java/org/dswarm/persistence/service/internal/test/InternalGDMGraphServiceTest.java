@@ -103,7 +103,7 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 
 		final InternalGDMGraphService rdfGraphService = GuicedTest.injector.getInstance(InternalGDMGraphService.class);
 
-		rdfGraphService.createObject(dataModel.getUuid(), rdfModel);
+		rdfGraphService.createObject(dataModel.getUuid(), Observable.just(rdfModel));
 		// finished writing RDF statements to graph
 
 		// retrieve updated fresh data model
@@ -195,7 +195,7 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 
 		final InternalGDMGraphService rdfGraphService = GuicedTest.injector.getInstance(InternalGDMGraphService.class);
 
-		rdfGraphService.createObject(dataModel.getUuid(), rdfModel);
+		rdfGraphService.createObject(dataModel.getUuid(), Observable.just(rdfModel));
 		// finished writing RDF statements to graph
 
 		// retrieve updated fresh data model

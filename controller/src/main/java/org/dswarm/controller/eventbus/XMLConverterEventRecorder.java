@@ -17,6 +17,9 @@ package org.dswarm.controller.eventbus;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Observable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -92,7 +95,7 @@ public class XMLConverterEventRecorder {
 
 		LOG.debug("try to process xml data resource into data model '{}'", dataModel.getUuid());
 
-		GDMModel result = null;
+		rx.Observable<org.dswarm.persistence.model.internal.Model> result = null;
 
 		try {
 
@@ -104,34 +107,36 @@ public class XMLConverterEventRecorder {
 
 			final List<GDMModel> gdmModels = flow.applyResource(path);
 
-			// write GDM models at once
-			final Model model = new Model();
-			String recordClassUri = null;
+			result = rx.Observable.from(gdmModels);
 
-			for (final GDMModel gdmModel : gdmModels) {
-
-				if (gdmModel.getModel() != null) {
-
-					final Model aModel = gdmModel.getModel();
-
-					if (aModel.getResources() != null) {
-
-						final Collection<Resource> resources = aModel.getResources();
-
-						for (final Resource resource : resources) {
-
-							model.addResource(resource);
-
-							if (recordClassUri == null) {
-
-								recordClassUri = gdmModel.getRecordClassURI();
-							}
-						}
-					}
-				}
-			}
-
-			result = new GDMModel(model, null, recordClassUri);
+//			// write GDM models at once
+//			final Model model = new Model();
+//			String recordClassUri = null;
+//
+//			for (final GDMModel gdmModel : gdmModels) {
+//
+//				if (gdmModel.getModel() != null) {
+//
+//					final Model aModel = gdmModel.getModel();
+//
+//					if (aModel.getResources() != null) {
+//
+//						final Collection<Resource> resources = aModel.getResources();
+//
+//						for (final Resource resource : resources) {
+//
+//							model.addResource(resource);
+//
+//							if (recordClassUri == null) {
+//
+//								recordClassUri = gdmModel.getRecordClassURI();
+//							}
+//						}
+//					}
+//				}
+//			}
+//
+//			result = new GDMModel(model, null, recordClassUri);
 
 			LOG.debug("transformed xml data resource at '{}' to GDM for data model '{}'", path, dataModel.getUuid());
 		} catch (final NullPointerException e) {
@@ -152,10 +157,14 @@ public class XMLConverterEventRecorder {
 
 		try {
 
-			internalServiceFactory.getInternalGDMGraphService().updateObject(dataModel.getUuid(), result, updateFormat, enableVersioning);
+			// TODO delegate future
+			final Future<Void> future = internalServiceFactory.getInternalGDMGraphService()
+					.updateObject(dataModel.getUuid(), result, updateFormat, enableVersioning);
 
-			LOG.debug("processed xml data resource  into data model '{}'", dataModel.getUuid());
-		} catch (final DMPPersistenceException e) {
+			future.get();
+
+			LOG.debug("processed xml data resource into data model '{}'", dataModel.getUuid());
+		} catch (final DMPPersistenceException | InterruptedException | ExecutionException e) {
 
 			final String message = String.format("couldn't persist the converted data of data model '%s'", dataModel.getUuid());
 

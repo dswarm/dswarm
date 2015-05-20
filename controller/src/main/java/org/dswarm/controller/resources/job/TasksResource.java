@@ -28,12 +28,15 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.container.AsyncResponse;
+import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import com.codahale.metrics.annotation.Timed;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -48,6 +51,7 @@ import com.wordnik.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
+import rx.Observer;
 
 import org.dswarm.common.types.Tuple;
 import org.dswarm.controller.DMPControllerException;
@@ -154,7 +158,8 @@ public class TasksResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response executeTask(@ApiParam(value = "task execution request (as JSON)", required = true) final String jsonObjectString)
+	public void executeTask(@ApiParam(value = "task execution request (as JSON)", required = true) final String jsonObjectString,
+			@Suspended final AsyncResponse asyncResponse)
 			throws IOException,
 			DMPConverterException, DMPControllerException {
 
@@ -286,50 +291,62 @@ public class TasksResource {
 
 		final boolean returnJsonToCaller = getBooleanValue(TasksResource.RETURN_IDENTIFIER, requestJSON, true);
 
-		final String result;
+		final Observable<JsonNode> result;
+
 		try (final MonitoringHelper ignore = monitoringLogger.get().startExecution(task)) {
+
 			final TransformationFlow flow = transformationFlowFactory.fromTask(task);
-			result = flow.apply(inputData, writeResultToDatahub).get();
-		} catch (final InterruptedException | ExecutionException e) {
-			throw new DMPConverterException("Task execution was interrupted", e);
+			result = flow.apply(inputData, writeResultToDatahub, returnJsonToCaller);
 		}
 
 		if (result == null) {
 
 			TasksResource.LOG.debug("result of task execution is null");
 
-			return Response.noContent().build();
+			asyncResponse.resume(Response.noContent().build());
+
+			return;
 		}
 
 		if (!returnJsonToCaller) {
 
-			return Response.noContent().build();
+			asyncResponse.resume(Response.noContent().build());
+
+			return;
 		}
 
 		// transform model json to fe friendly json
-		final ArrayNode resultJSON = objectMapper.readValue(result, ArrayNode.class);
+		final ArrayNode feFriendlyJSON = objectMapper.createArrayNode();
 
-		if (resultJSON == null) {
+		result.subscribe(new Observer<JsonNode>() {
 
-			final String message = "couldn't deserialize result JSON from string";
+			@Override public void onCompleted() {
 
-			TasksResource.LOG.error(message);
+				final String resultString;
+				try {
+					resultString = objectMapper.writeValueAsString(feFriendlyJSON);
 
-			throw new DMPControllerException(message);
-		}
+					asyncResponse.resume(buildResponse(resultString));
+				} catch (JsonProcessingException e) {
 
-		if (resultJSON.size() <= 0) {
+					asyncResponse.resume(e);
+				}
+			}
 
-			TasksResource.LOG.debug("result of task execution is empty");
+			@Override public void onError(Throwable e) {
 
-			return buildResponse(null);
-		}
+				final String message = "couldn't deserialize result JSON from string";
 
-		final ArrayNode feFriendlyJSON = transformModelJSONtoFEFriendlyJSON(resultJSON);
+				TasksResource.LOG.error(message);
 
-		final String resultString = objectMapper.writeValueAsString(feFriendlyJSON);
+				asyncResponse.resume(new DMPControllerException(message));
+			}
 
-		return buildResponse(resultString);
+			@Override public void onNext(JsonNode jsonNode) {
+
+				feFriendlyJSON.add(transformModelJSONtoFEFriendlyJSON(jsonNode));
+			}
+		});
 	}
 
 	/**
@@ -380,34 +397,36 @@ public class TasksResource {
 		return new MorphScriptBuilder().apply(task).toString();
 	}
 
-	private ArrayNode transformModelJSONtoFEFriendlyJSON(final ArrayNode resultJSON) {
+	private JsonNode transformModelJSONtoFEFriendlyJSON(final JsonNode resultJSON) {
+		//
+		//		final ArrayNode feFriendlyJSON = objectMapper.createArrayNode();
+		//
+		//		for (final JsonNode entry : resultJSON) {
 
-		final ArrayNode feFriendlyJSON = objectMapper.createArrayNode();
+		final Iterator<String> fieldNamesIter = resultJSON.fieldNames();
 
-		for (final JsonNode entry : resultJSON) {
+		if (fieldNamesIter == null || !fieldNamesIter.hasNext()) {
 
-			final Iterator<String> fieldNamesIter = entry.fieldNames();
-
-			if (fieldNamesIter == null || !fieldNamesIter.hasNext()) {
-
-				continue;
-			}
-
-			final String recordURI = fieldNamesIter.next();
-			final JsonNode recordContentNode = entry.get(recordURI);
-
-			if (recordContentNode == null) {
-
-				continue;
-			}
-
-			final ObjectNode recordNode = objectMapper.createObjectNode();
-			recordNode.put(DMPPersistenceUtil.RECORD_ID, recordURI);
-			recordNode.set(DMPPersistenceUtil.RECORD_DATA, recordContentNode);
-
-			feFriendlyJSON.add(recordNode);
+			return null;
 		}
-		return feFriendlyJSON;
+
+		final String recordURI = fieldNamesIter.next();
+		final JsonNode recordContentNode = resultJSON.get(recordURI);
+
+		if (recordContentNode == null) {
+
+			return null;
+		}
+
+		final ObjectNode recordNode = objectMapper.createObjectNode();
+		recordNode.put(DMPPersistenceUtil.RECORD_ID, recordURI);
+		recordNode.set(DMPPersistenceUtil.RECORD_DATA, recordContentNode);
+
+		//			feFriendlyJSON.add(recordNode);
+		//		}
+		//		return feFriendlyJSON;
+
+		return recordNode;
 	}
 
 	private Optional<Integer> getIntValue(final String key, final JsonNode json) {

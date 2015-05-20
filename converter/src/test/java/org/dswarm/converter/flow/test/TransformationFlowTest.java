@@ -155,7 +155,7 @@ public class TransformationFlowTest extends GuicedTest {
 		// System.out.println(Util.getJSONObjectMapper().configure(SerializationFeature.INDENT_OUTPUT,
 		// true).writeValueAsString(gdmModel.getModel()));
 
-		gdmService.createObject(inputDataModel.getUuid(), gdmModel);
+		gdmService.createObject(inputDataModel.getUuid(), Observable.just(gdmModel));
 		// finished writing CSV statements to graph
 
 		// retrieve updated fresh data model
@@ -241,10 +241,12 @@ public class TransformationFlowTest extends GuicedTest {
 
 		flow.getScript();
 
-		final String actual = flow.apply(tuples, true).get();
+		final ArrayNode actualNodes = flow.apply(tuples, true, true).reduce(
+				DMPPersistenceUtil.getJSONObjectMapper().createArrayNode(),
+				ArrayNode::add
+		).toBlocking().first();
 
 		final ArrayNode expectedJSONArray = objectMapper.readValue(expected, ArrayNode.class);
-		final ArrayNode actualNodes = objectMapper.readValue(actual, ArrayNode.class);
 
 		objectMapper.writeValueAsString(actualNodes);
 

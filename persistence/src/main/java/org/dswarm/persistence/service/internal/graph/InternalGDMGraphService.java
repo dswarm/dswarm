@@ -22,16 +22,21 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
 
+import javax.ws.rs.client.AsyncInvoker;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.InvocationCallback;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -54,8 +59,7 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
-import rx.functions.Action0;
-import rx.functions.Action1;
+import rx.Observer;
 
 import org.dswarm.common.DMPStatics;
 import org.dswarm.common.model.util.AttributePathUtil;
@@ -186,26 +190,25 @@ public class InternalGDMGraphService implements InternalModelService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void createObject(final String dataModelUuid, final Object model) throws DMPPersistenceException {
+	public Future<Void> createObject(final String dataModelUuid, final Observable<Model> model) throws DMPPersistenceException {
 
 		LOG.debug("try to create data model '{}' in data hub", dataModelUuid);
 
 		// always full at creation time, i.e., all existing records will be deprecated (however, there shouldn't be any)
 		// versioning is disabled at data model creation, since there should be any data for this data model in the data hub
-		createOrUpdateObject(dataModelUuid, model, UpdateFormat.FULL, false);
-
-		LOG.debug("created data model '{}' in data hub", dataModelUuid);
+		final CompletableFuture<Void> future = (CompletableFuture<Void>) createOrUpdateObject(dataModelUuid, model, UpdateFormat.FULL, false);
+		return future.thenAccept(v -> LOG.debug("created data model '{}' in data hub", dataModelUuid));
 	}
 
-	@Override public void updateObject(final String dataModelUuid, final Object model, final UpdateFormat updateFormat,
+	@Override public Future<Void> updateObject(final String dataModelUuid, final Observable<Model> model, final UpdateFormat updateFormat,
 			final boolean enableVersioning)
 			throws DMPPersistenceException {
 
 		LOG.debug("try to update data model '{}' in data hub", dataModelUuid);
 
-		createOrUpdateObject(dataModelUuid, model, updateFormat, enableVersioning);
+		final CompletableFuture<Void> future = (CompletableFuture<Void>) createOrUpdateObject(dataModelUuid, model, updateFormat, enableVersioning);
 
-		LOG.debug("updated data model '{}' in data hub", dataModelUuid);
+		return future.thenAccept(v -> LOG.debug("updated data model '{}' in data hub", dataModelUuid));
 	}
 
 	/**
@@ -524,7 +527,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		);
 	}
 
-	private void createOrUpdateObject(final String dataModelUuid, final Object model, final UpdateFormat updateFormat, final boolean enableVersioning)
+	private Future<Void> createOrUpdateObject(final String dataModelUuid, final Observable<Model> model, final UpdateFormat updateFormat, final boolean enableVersioning)
 			throws DMPPersistenceException {
 
 		if (dataModelUuid == null) {
@@ -537,12 +540,69 @@ public class InternalGDMGraphService implements InternalModelService {
 			throw new DMPPersistenceException("model that should be added to DB shouldn't be null");
 		}
 
-		if (!GDMModel.class.isInstance(model)) {
+		final Optional<Boolean> optionalDeprecateMissingRecords = determineMissingRecordsFlag(updateFormat);
+		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelUuid);
 
-			throw new DMPPersistenceException("this service can only process GDM models");
-		}
+		final Observable<GDMModel> modelObservable = model.cast(GDMModel.class).cache(1);
 
-		final GDMModel gdmModel = (GDMModel) model;
+		final CompletableFuture<Void> completableFuture = new CompletableFuture<>();
+
+		// to determine write request metadata and prepare write
+		final Observable<Observer<Resource>> modelConsumer = modelObservable.take(1).map(gdm -> {
+
+			try {
+
+				final DataModel finalDataModel = determineSchema(dataModelUuid, gdm).v1();
+				final Optional<ContentSchema> optionalContentSchema = Optional.fromNullable(finalDataModel.getSchema().getContentSchema());
+				final Optional<String> optionalRecordClassUri = Optional.fromNullable(finalDataModel.getSchema().getRecordClass().getUri());
+
+				final String metadata = getMetadata(dataModelURI, optionalContentSchema, optionalDeprecateMissingRecords, optionalRecordClassUri,
+						enableVersioning);
+
+				return writeGDMToDB(dataModelURI, metadata, completableFuture);
+			} catch (final DMPPersistenceException e) {
+
+				throw DMPPersistenceError.wrap(e);
+			}
+		});
+
+
+		final Observable<Resource> resourceObservable = modelObservable.map(gdm -> {
+
+			try {
+
+				final Tuple<DataModel, org.dswarm.graph.json.Model> tuple = determineSchema(dataModelUuid, gdm);
+
+				final org.dswarm.graph.json.Model model1 = tuple.v2();
+
+				if(model1 == null) {
+
+					// ???
+					return null;
+				}
+
+				final Collection<Resource> resources = model1.getResources();
+
+				if(resources == null || resources.isEmpty()) {
+
+					return null;
+				}
+
+				// note the model should always consist of one resource only
+				return resources.iterator().next();
+			} catch (final DMPPersistenceException e) {
+
+				throw DMPPersistenceError.wrap(e);
+			}
+		});
+
+		modelConsumer.subscribe(resourceObservable::subscribe);
+
+		return completableFuture;
+	}
+
+	private Tuple<DataModel, org.dswarm.graph.json.Model> determineSchema(final String dataModelUuid, final GDMModel gdmModel)
+			throws DMPPersistenceException {
 
 		final org.dswarm.graph.json.Model realModel = gdmModel.getModel();
 
@@ -551,16 +611,9 @@ public class InternalGDMGraphService implements InternalModelService {
 			throw new DMPPersistenceException("real model that should be added to DB shouldn't be null");
 		}
 
-		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelUuid);
-
 		final DataModel finalDataModel = determineSchema(dataModelUuid, gdmModel, realModel);
 
-		final Optional<ContentSchema> optionalContentSchema = Optional.fromNullable(finalDataModel.getSchema().getContentSchema());
-
-		final Optional<Boolean> optionalDeprecateMissingRecords = determineMissingRecordsFlag(updateFormat);
-		final Optional<String> optionalRecordClassUri = Optional.fromNullable(finalDataModel.getSchema().getRecordClass().getUri());
-
-		writeGDMToDB(realModel, dataModelURI, optionalContentSchema, optionalDeprecateMissingRecords, optionalRecordClassUri, enableVersioning);
+		return Tuple.tuple(finalDataModel, realModel);
 	}
 
 	private DataModel determineSchema(final String dataModelUuid, final GDMModel gdmModel, final org.dswarm.graph.json.Model realModel)
@@ -877,34 +930,24 @@ public class InternalGDMGraphService implements InternalModelService {
 	}
 
 	// TODO: async
-	private void writeGDMToDB(final org.dswarm.graph.json.Model model, final String dataModelUri, final Optional<ContentSchema> optionalContentSchema,
-			final Optional<Boolean> optionalDeprecateMissingRecords, final Optional<String> optionalRecordClassUri, final boolean enableVersioning)
+	private Observer<org.dswarm.graph.json.Resource> writeGDMToDB(final String dataModelUri, final String metadata, final CompletableFuture<Void> completableFuture)
 			throws DMPPersistenceException {
 
 		LOG.debug("try to write GDM data for data model '{}' into data hub", dataModelUri);
 
 		final WebTarget target = target(WRITE_GDM_ENDPOINT);
 
-		if (model == null || model.getResources() == null) {
-
-			LOG.debug("model or resources are not available");
-
-			return;
-		}
-
 		final PipedInputStream input = new PipedInputStream();
 		final PipedOutputStream output = new PipedOutputStream();
 
-		final String metadata = getMetadata(dataModelUri, optionalContentSchema, optionalDeprecateMissingRecords, optionalRecordClassUri,
-				enableVersioning);
-
 		try {
 
-			final Future<Void> modelStreamFuture = EXECUTOR_SERVICE.submit(() -> {
+			final Observer<Resource> modelConsumer = EXECUTOR_SERVICE.submit(() -> {
+
 				output.connect(input);
-				getBytes(output, model);
-				return null; // turns a Runnable into a Callable which handles exceptions
-			});
+
+				return getBytes(output); // turns a Runnable into a Callable which handles exceptions
+			}).get();
 
 			final MultiPart multiPart = new MultiPart();
 			multiPart
@@ -912,27 +955,50 @@ public class InternalGDMGraphService implements InternalModelService {
 					.bodyPart(input, MediaType.APPLICATION_OCTET_STREAM_TYPE);
 
 			// POST the request
-			final Response response = target.request(MULTIPART_MIXED).post(Entity.entity(multiPart, MULTIPART_MIXED));
+			final AsyncInvoker async = target.request(MULTIPART_MIXED).async();
+			final InvocationCallback<Response> callback = new InvocationCallback<Response>() {
 
-			closeResource(multiPart, WRITE_GDM);
-			closeResource(output, WRITE_GDM);
-			closeResource(input, WRITE_GDM);
+				@Override public void completed(final Response response) {
 
-			// TODO: maybe we have to wait on the future?
-			// modelStreamFuture.get()
+					try {
 
-			if (response.getStatus() != 200) {
+						// modelConsumer.onCompleted();
 
-				throw new DMPPersistenceException(
-						String.format("Couldn't store GDM data into database. Received status code '%s' from database endpoint.",
-								response.getStatus()));
-			}
-		} catch (final DMPPersistenceException e) {
+						closeResource(multiPart, WRITE_GDM);
+						closeResource(output, WRITE_GDM);
+						closeResource(input, WRITE_GDM);
 
-			LOG.error(e.getMessage(), e);
+						//TODO maybe check status code here, i.e., should be 200
+
+						LOG.debug("wrote GDM data for data model '{}' into data hub", dataModelUri);
+
+						completableFuture.complete(null);
+					} catch (final DMPPersistenceException e) {
+
+						completableFuture.completeExceptionally(e);
+
+						throw DMPPersistenceError.wrap(e);
+					}
+				}
+
+				@Override public void failed(final Throwable throwable) {
+
+					// modelConsumer.onError(throwable);
+					completableFuture.completeExceptionally(throwable);
+
+					throw DMPPersistenceError.wrap(new DMPPersistenceException(
+							String.format("Couldn't store GDM data into database. Received status code '%s' from database endpoint.",
+									throwable.getMessage())));
+				}
+			};
+
+			async.post(Entity.entity(multiPart, MULTIPART_MIXED), callback);
+
+			return modelConsumer;
+		} catch (final InterruptedException | ExecutionException e) {
+
+			throw new DMPPersistenceException("couldn't store GDM data into database successfully");
 		}
-
-		LOG.debug("wrote GDM data for data model '{}' into data hub", dataModelUri);
 	}
 
 	private JsonNode generateContentSchemaJSON(final ContentSchema contentSchema) throws DMPPersistenceException {
@@ -1194,20 +1260,46 @@ public class InternalGDMGraphService implements InternalModelService {
 		return target;
 	}
 
-	private void getBytes(final OutputStream output, final org.dswarm.graph.json.Model model) throws DMPPersistenceException {
+	private Observer<Resource> getBytes(final OutputStream output) throws DMPPersistenceException {
 
 		try {
 
 			final ModelBuilder modelBuilder = new ModelBuilder(output);
 
-			for (final Resource resource : model.getResources()) {
+			return new Observer<org.dswarm.graph.json.Resource>() {
 
-				modelBuilder.addResource(resource);
-			}
+				@Override public void onCompleted() {
 
-			modelBuilder.build();
+					try {
 
-		} catch (final IOException e) {
+						LOG.debug("in model builder onCompleted");
+
+						modelBuilder.build();
+					} catch (final IOException e) {
+
+						throw new RuntimeException(e);
+					}
+				}
+
+				@Override public void onError(final Throwable e) {
+
+					// TODO
+					LOG.error("couldn't serialize GDM model", e);
+				}
+
+				@Override public void onNext(final Resource resource) {
+
+					try {
+
+						modelBuilder.addResource(resource);
+					} catch (final IOException e) {
+
+						throw new RuntimeException(e);
+					}
+				}
+			};
+
+		} catch (final RuntimeException | IOException e) {
 
 			throw new DMPPersistenceException("couldn't serialize model", e);
 		}

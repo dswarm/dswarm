@@ -42,7 +42,7 @@ public class EdgeCasesTransformationFlowTest extends GuicedTest {
 
 		final TransformationFlow flow = flowFactory.fromFile("ws1ec1morph.xml");
 
-		final String actual = flow.applyResource("ralfs_mabxml.tuples.json").get();
+		final String actual = flow.applyResource("ralfs_mabxml.tuples.json").toBlocking().first();
 
 		final ArrayNode expectedJson = replaceKeyWithActualKey(expected, actual);
 		final String finalExpected = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(expectedJson);

@@ -143,7 +143,7 @@ public class CSVTransformationFlowTest extends GuicedTest {
 
 		flow.getScript();
 
-		final String actual = flow.applyResource(tuplesJSONFileName).get();
+		final String actual = flow.applyResource(tuplesJSONFileName).toBlocking().first();
 		final ArrayNode array = objectMapper2.readValue(actual, ArrayNode.class);
 		final String finalActual = objectMapper2.writeValueAsString(array);
 
@@ -181,7 +181,7 @@ public class CSVTransformationFlowTest extends GuicedTest {
 
 		flow.getScript();
 
-		final String actual = flow.applyResource(tuplesJSONFileName).get();
+		final String actual = flow.applyResource(tuplesJSONFileName).toBlocking().first();
 		final ArrayNode array = objectMapper2.readValue(actual, ArrayNode.class);
 		final String finalActual = objectMapper2.writeValueAsString(array);
 

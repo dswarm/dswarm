@@ -185,31 +185,53 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 		if (attributePathHelpers == null) {
 
-			SchemaUtils.LOG.debug("couldn't determine attribute paths for schema '" + schema.getUuid() + "'");
+			SchemaUtils.LOG.debug("couldn't determine attribute paths for schema '{}'", schema.getUuid());
 
 			return false;
 		}
 
 		if (attributePathHelpers.isEmpty()) {
 
-			SchemaUtils.LOG.debug("there are no attribute paths for schema '" + schema.getUuid() + "'");
+			SchemaUtils.LOG.debug("there are no attribute paths for schema '{}'", schema.getUuid());
+
+			return true;
 		}
+
+		final AttributeService attributeService = attributeServiceProvider.get();
+		final AttributePathService attributePathService = attributePathServiceProvider.get();
+		final SchemaAttributePathInstanceService schemaAttributePathInstanceService =
+				attributePathInstanceServiceProvider.get();
 
 		for (final AttributePathHelper attributePathHelper : attributePathHelpers) {
 
-			final LinkedList<Attribute> attributes = Lists.newLinkedList();
+			final String attributePathString = attributePathHelper.toString();
+
+			if(attributePathString == null || attributePathString.trim().isEmpty()) {
+
+				SchemaUtils.LOG.debug("attribute path is non-existent or empty for schema '{}'", schema.getUuid());
+
+				continue;
+			}
+
+			final SchemaAttributePathInstance attributePathByURIPath = schema.getAttributePathByURIPath(attributePathString);
+
+			if(attributePathByURIPath != null) {
+
+				// attribute path is already in schema
+
+				continue;
+			}
 
 			final LinkedList<String> attributePathFromHelper = attributePathHelper.getAttributePath();
 
 			if (attributePathFromHelper.isEmpty()) {
 
-				SchemaUtils.LOG.debug("there are no attributes for this attribute path for schema '" + schema.getUuid() + "'");
+				SchemaUtils.LOG.debug("there are no attributes for this attribute path for schema '{}'", schema.getUuid());
+
+				continue;
 			}
 
-			final AttributeService attributeService = attributeServiceProvider.get();
-			final AttributePathService attributePathService = attributePathServiceProvider.get();
-			final SchemaAttributePathInstanceService schemaAttributePathInstanceService =
-					attributePathInstanceServiceProvider.get();
+			final LinkedList<Attribute> attributes = Lists.newLinkedList();
 
 			for (final String attributeString : attributePathFromHelper) {
 
