@@ -290,7 +290,7 @@
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-multipart</artifactId>
-			<version>${version.jersey}</version>
+			<version>${version.jersey-client}</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>guava</artifactId>
@@ -301,7 +301,7 @@
 		<dependency>
 			<groupId>org.glassfish.jersey.core</groupId>
 			<artifactId>jersey-client</artifactId>
-			<version>${version.jersey}</version>
+			<version>${version.jersey-client}</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>guava</artifactId>
