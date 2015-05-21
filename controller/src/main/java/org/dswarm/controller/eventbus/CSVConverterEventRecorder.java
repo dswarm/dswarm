@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.function.Supplier;
 
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
@@ -150,10 +151,10 @@ public class CSVConverterEventRecorder {
 			try {
 
 				// TODO delegate future
-				final Future<Void> future = internalServiceFactory.getInternalGDMGraphService()
+				final Supplier<Future<Void>> future = internalServiceFactory.getInternalGDMGraphService()
 						.updateObject(dataModel.getUuid(), models, updateFormat, enableVersioning);
 
-				future.get();
+				future.get().get();
 
 				LOG.debug("processed CSV data resource into data model '{}'", dataModel.getUuid());
 			} catch (final DMPPersistenceException | InterruptedException | ExecutionException e) {

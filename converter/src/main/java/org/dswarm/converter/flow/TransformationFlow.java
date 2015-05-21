@@ -29,6 +29,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
@@ -358,6 +359,7 @@ public class TransformationFlow {
 				return nodeList;
 			});
 		}
+		final Optional<Supplier<Future<Void>>> future;
 
 		if (writeResultToDatahub) {
 
@@ -368,20 +370,11 @@ public class TransformationFlow {
 
 				try {
 
-					final Future<Void> future = internalModelService
-							.updateObject(outputDataModel.get().getUuid(), model, UpdateFormat.DELTA, true);
+					future = Optional.of(internalModelService
+							.updateObject(outputDataModel.get().getUuid(), model, UpdateFormat.DELTA, true));
 
-					model.doOnCompleted(() -> {
 
-						try {
-							future.get();
-
-						} catch (final InterruptedException | ExecutionException e) {
-
-							throw new RuntimeException(e);
-						}
-					});
-				} catch (DMPPersistenceException e) {
+				} catch (final DMPPersistenceException e) {
 
 					final String message = "couldn't persist the result of the transformation: " + e.getMessage();
 					TransformationFlow.LOG.error(message);
@@ -394,11 +387,28 @@ public class TransformationFlow {
 				final String message = "couldn't persist the result of the transformation, because there is no output data model assigned at this task";
 
 				TransformationFlow.LOG.error(message);
+
+				future = Optional.empty();
 			}
 
+		} else {
+
+			future = Optional.empty();
 		}
 
 		tuples.subscribe(opener::process, writer::propagateError, opener::closeStream);
+
+		future.ifPresent(s -> {
+			try {
+				s
+						.get()  // start write process
+						.get();
+			} catch (final InterruptedException | ExecutionException e) {
+
+				throw new RuntimeException(e);
+			}
+		});
+
 
 		morphContext.stop();
 

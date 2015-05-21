@@ -17,6 +17,7 @@ package org.dswarm.persistence.service;
 
 import java.util.Set;
 import java.util.concurrent.Future;
+import java.util.function.Supplier;
 
 import com.google.common.base.Optional;
 import rx.Observable;
@@ -43,7 +44,7 @@ public interface InternalModelService {
 	 * @param model         the model of the object that should be persisted
 	 * @throws DMPPersistenceException
 	 */
-	Future<Void> createObject(final String dataModelUuid, final Observable<Model> model) throws DMPPersistenceException;
+	Supplier<Future<Void>> createObject(final String dataModelUuid, final Observable<Model> model) throws DMPPersistenceException;
 
 	/**
 	 * Updates an object (model) to an existing data model.
@@ -52,7 +53,8 @@ public interface InternalModelService {
 	 * @param model         the model of the object that should be updated
 	 * @throws DMPPersistenceException
 	 */
-	Future<Void> updateObject(final String dataModelUuid, final Observable<Model> model, final UpdateFormat updateFormat, final boolean enableVersioning) throws DMPPersistenceException;
+	Supplier<Future<Void>> updateObject(final String dataModelUuid, final Observable<Model> model, final UpdateFormat updateFormat,
+			final boolean enableVersioning) throws DMPPersistenceException;
 
 	/**
 	 * Retrieves a collection of objects from a data model.

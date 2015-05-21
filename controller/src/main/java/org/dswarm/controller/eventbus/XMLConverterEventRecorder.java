@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.function.Supplier;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -180,10 +181,10 @@ public class XMLConverterEventRecorder {
 		try {
 
 			// TODO delegate future
-			final Future<Void> future = internalServiceFactory.getInternalGDMGraphService()
+			final Supplier<Future<Void>> future = internalServiceFactory.getInternalGDMGraphService()
 					.updateObject(dataModel.getUuid(), result, updateFormat, enableVersioning);
 
-			future.get();
+			future.get().get();
 
 			LOG.debug("processed xml data resource into data model '{}'", dataModel.getUuid());
 		} catch (final DMPPersistenceException | InterruptedException | ExecutionException e) {

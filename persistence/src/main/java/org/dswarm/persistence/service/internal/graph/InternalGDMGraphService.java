@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -33,6 +32,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Supplier;
 
 import javax.ws.rs.client.AsyncInvoker;
 import javax.ws.rs.client.Client;
@@ -50,8 +50,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Iterators;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -194,25 +192,30 @@ public class InternalGDMGraphService implements InternalModelService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Future<Void> createObject(final String dataModelUuid, final Observable<Model> model) throws DMPPersistenceException {
+	public Supplier<Future<Void>> createObject(final String dataModelUuid, final Observable<Model> model) throws DMPPersistenceException {
 
 		LOG.debug("try to create data model '{}' in data hub", dataModelUuid);
 
 		// always full at creation time, i.e., all existing records will be deprecated (however, there shouldn't be any)
 		// versioning is disabled at data model creation, since there should be any data for this data model in the data hub
-		final CompletableFuture<Void> future = (CompletableFuture<Void>) createOrUpdateObject(dataModelUuid, model, UpdateFormat.FULL, false);
-		return future.thenAccept(v -> LOG.debug("created data model '{}' in data hub", dataModelUuid));
+		final Supplier<Future<Void>> future = createOrUpdateObject(dataModelUuid, model, UpdateFormat.FULL, false);
+		return () -> {
+			final CompletableFuture<Void> future1 = (CompletableFuture<Void>) future.get();
+			return future1.thenAccept(v -> LOG.debug("created data model '{}' in data hub", dataModelUuid));
+		};
 	}
 
-	@Override public Future<Void> updateObject(final String dataModelUuid, final Observable<Model> model, final UpdateFormat updateFormat,
+	@Override public Supplier<Future<Void>> updateObject(final String dataModelUuid, final Observable<Model> model, final UpdateFormat updateFormat,
 			final boolean enableVersioning)
 			throws DMPPersistenceException {
 
 		LOG.debug("try to update data model '{}' in data hub", dataModelUuid);
 
-		final CompletableFuture<Void> future = (CompletableFuture<Void>) createOrUpdateObject(dataModelUuid, model, updateFormat, enableVersioning);
-
-		return future.thenAccept(v -> LOG.debug("updated data model '{}' in data hub", dataModelUuid));
+		final Supplier<Future<Void>> future = createOrUpdateObject(dataModelUuid, model, updateFormat, enableVersioning);
+		return () -> {
+			final CompletableFuture<Void> future1 = (CompletableFuture<Void>) future.get();
+			return future1.thenAccept(v -> LOG.debug("Updated data model '{}' in data hub", dataModelUuid));
+		};
 	}
 
 	/**
@@ -531,84 +534,93 @@ public class InternalGDMGraphService implements InternalModelService {
 		);
 	}
 
-	private Future<Void> createOrUpdateObject(final String dataModelUuid, final Observable<Model> model, final UpdateFormat updateFormat,
-			final boolean enableVersioning)
-			throws DMPPersistenceException {
+	private Supplier<Future<Void>> createOrUpdateObject(final String dataModelUuid, final Observable<Model> model, final UpdateFormat updateFormat,
+			final boolean enableVersioning) {
 
-		if (dataModelUuid == null) {
-
-			throw new DMPPersistenceException("data model id shouldn't be null");
-		}
-
-		if (model == null) {
-
-			throw new DMPPersistenceException("model that should be added to DB shouldn't be null");
-		}
-
-		final Optional<Boolean> optionalDeprecateMissingRecords = determineMissingRecordsFlag(updateFormat);
-		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelUuid);
-		final DataModel dataModel = getSchemaInternal(dataModelUuid);
-		final boolean isSchemaAnInBuiltSchema = isSchemaAnInbuiltSchema(dataModel);
-
-		final Observable<GDMModel> modelObservable = model.cast(GDMModel.class).cache(1);
-
-		final CompletableFuture<Void> completableFuture = new CompletableFuture<>();
-
-		// to determine write request metadata and prepare write
-		final Observable<Observer<Resource>> modelConsumer = modelObservable.take(1).map(gdm -> {
+		return () -> {
 
 			try {
 
-				final org.dswarm.graph.json.Model realModel = getRealModel(gdm);
-				final DataModel finalDataModel = optionallyEnhancedDataModel(dataModel, gdm, realModel, isSchemaAnInBuiltSchema);
-				final Optional<ContentSchema> optionalContentSchema = Optional.fromNullable(finalDataModel.getSchema().getContentSchema());
-				final Optional<String> optionalRecordClassUri = Optional.fromNullable(finalDataModel.getSchema().getRecordClass().getUri());
+				if (dataModelUuid == null) {
 
-				final String metadata = getMetadata(dataModelURI, optionalContentSchema, optionalDeprecateMissingRecords, optionalRecordClassUri,
-						enableVersioning);
-
-				return writeGDMToDB(dataModelURI, metadata, completableFuture);
-			} catch (final DMPPersistenceException e) {
-
-				throw DMPPersistenceError.wrap(e);
-			}
-		});
-
-		final Observable<Resource> resourceObservable = modelObservable.flatMapIterable(gdm -> {
-
-			try {
-
-				final org.dswarm.graph.json.Model model1 = getRealModel(gdm);
-
-				if (model1 == null) {
-
-					LOG.debug("no model available");
-
-					return Collections.emptyList();
+					throw new DMPPersistenceException("data model id shouldn't be null");
 				}
 
-				final Collection<Resource> resources = model1.getResources();
+				if (model == null) {
 
-				if (resources == null || resources.isEmpty()) {
-
-					LOG.debug("no resources available in model");
-
-					return Collections.emptyList();
+					throw new DMPPersistenceException("model that should be added to DB shouldn't be null");
 				}
 
-				optionallyEnhancedDataModel(dataModel, gdm, model1, isSchemaAnInBuiltSchema);
+				final Optional<Boolean> optionalDeprecateMissingRecords = determineMissingRecordsFlag(updateFormat);
+				final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelUuid);
+				final DataModel dataModel = getSchemaInternal(dataModelUuid);
+				final boolean isSchemaAnInBuiltSchema = isSchemaAnInbuiltSchema(dataModel);
 
-				// note the model should always consist of one resource only
-				return resources;
-			} catch (final DMPPersistenceException e) {
+				final Observable<GDMModel> modelObservable = model.cast(GDMModel.class).cache(1);
 
+				final CompletableFuture<Void> completableFuture = new CompletableFuture<>();
+
+				// to determine write request metadata and prepare write
+				final Observable<Observer<Resource>> modelConsumer = modelObservable.take(1).map(gdm -> {
+
+					try {
+
+						final org.dswarm.graph.json.Model realModel = getRealModel(gdm);
+						final DataModel finalDataModel = optionallyEnhancedDataModel(dataModel, gdm, realModel, isSchemaAnInBuiltSchema);
+						final Optional<ContentSchema> optionalContentSchema = Optional.fromNullable(finalDataModel.getSchema().getContentSchema());
+						final Optional<String> optionalRecordClassUri = Optional.fromNullable(finalDataModel.getSchema().getRecordClass().getUri());
+
+						final String metadata = getMetadata(dataModelURI, optionalContentSchema, optionalDeprecateMissingRecords,
+								optionalRecordClassUri,
+								enableVersioning);
+
+						return writeGDMToDB(dataModelURI, metadata, completableFuture);
+					} catch (final DMPPersistenceException e) {
+
+						throw DMPPersistenceError.wrap(e);
+					}
+				});
+
+				final Observable<Resource> resourceObservable = modelObservable.flatMapIterable(gdm -> {
+
+					try {
+
+						final org.dswarm.graph.json.Model model1 = getRealModel(gdm);
+
+						if (model1 == null) {
+
+							LOG.debug("no model available");
+
+							return Collections.emptyList();
+						}
+
+						final Collection<Resource> resources = model1.getResources();
+
+						if (resources == null || resources.isEmpty()) {
+
+							LOG.debug("no resources available in model");
+
+							return Collections.emptyList();
+						}
+
+						optionallyEnhancedDataModel(dataModel, gdm, model1, isSchemaAnInBuiltSchema);
+
+						// note the model should always consist of one resource only
+						return resources;
+					} catch (final DMPPersistenceException e) {
+
+						throw DMPPersistenceError.wrap(e);
+					}
+				});
+
+				modelConsumer.subscribe(resourceObservable::subscribe);
+
+				return completableFuture;
+			} catch (DMPPersistenceException e) {
 				throw DMPPersistenceError.wrap(e);
 			}
-		});
+		};
 
-		modelConsumer.subscribe(resourceObservable::subscribe);
-
-		return completableFuture;
 	}
 
 	private DataModel optionallyEnhancedDataModel(final DataModel dataModel, final GDMModel gdmModel, final org.dswarm.graph.json.Model realModel,
