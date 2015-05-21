@@ -997,7 +997,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final WebTarget target = target(WRITE_GDM_ENDPOINT);
 
-		final RxWebTarget<RxObservableInvoker> rxWebTarget = RxObservable.from(target);
+		final RxWebTarget<RxObservableInvoker> rxWebTarget = RxObservable.from(target, EXECUTOR_SERVICE);
 
 		final PipedInputStream input = new PipedInputStream();
 		final PipedOutputStream output = new PipedOutputStream();
@@ -1054,7 +1054,8 @@ public class InternalGDMGraphService implements InternalModelService {
 //				}
 //			};
 
-			rx.post(Entity.entity(multiPart, MULTIPART_MIXED)).subscribe(response -> {
+			final Observable<Response> post = rx.post(Entity.entity(multiPart, MULTIPART_MIXED));
+			post.subscribe(response -> {
 
 				try {
 
