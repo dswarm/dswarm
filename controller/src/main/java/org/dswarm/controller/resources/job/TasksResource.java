@@ -19,16 +19,15 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -48,6 +47,7 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rx.Observable;
 
 import org.dswarm.common.types.Tuple;
 import org.dswarm.controller.DMPControllerException;
@@ -81,6 +81,7 @@ public class TasksResource {
 	public static final String TASK_IDENTIFIER             = "task";
 	public static final String AT_MOST_IDENTIFIER          = "at_most";
 	public static final String PERSIST_IDENTIFIER          = "persist";
+	public static final String RETURN_IDENTIFIER           = "do_not_return_data";
 	public static final String SELECTED_RECORDS_IDENTIFIER = "selected_records";
 
 	/**
@@ -265,7 +266,7 @@ public class TasksResource {
 			throw new DMPConverterException(message);
 		}
 
-		final Optional<Iterator<Tuple<String, JsonNode>>> inputData;
+		final Observable<Tuple<String, JsonNode>> inputData;
 
 		final Optional<Set<String>> optionalSelectedRecords = getStringSetValue(TasksResource.SELECTED_RECORDS_IDENTIFIER, requestJSON);
 
@@ -281,30 +282,28 @@ public class TasksResource {
 			inputData = dataModelUtil.getData(inputDataModel.getUuid(), optionalAtMost);
 		}
 
-		if (!inputData.isPresent()) {
+		final boolean writeResultToDatahub = getBooleanValue(TasksResource.PERSIST_IDENTIFIER, requestJSON, false);
 
-			TasksResource.LOG.error("couldn't find input data for task execution");
-
-			throw new DMPConverterException("couldn't find input data for task execution");
-		}
-
-		final Iterator<Tuple<String, JsonNode>> tupleIterator = inputData.get();
-
-		final Optional<Boolean> optionalPersistResult = getBooleanValue(TasksResource.PERSIST_IDENTIFIER, requestJSON);
-
-		final boolean writeResultToDatahub = optionalPersistResult.isPresent() && Boolean.TRUE.equals(optionalPersistResult.get());
+		final boolean returnJsonToCaller = getBooleanValue(TasksResource.RETURN_IDENTIFIER, requestJSON, true);
 
 		final String result;
 		try (final MonitoringHelper ignore = monitoringLogger.get().startExecution(task)) {
 			final TransformationFlow flow = transformationFlowFactory.fromTask(task);
-			result = flow.apply(tupleIterator, writeResultToDatahub);
+			result = flow.apply(inputData, writeResultToDatahub).get();
+		} catch (final InterruptedException | ExecutionException e) {
+			throw new DMPConverterException("Task execution was interrupted", e);
 		}
 
 		if (result == null) {
 
 			TasksResource.LOG.debug("result of task execution is null");
 
-			return buildResponse(null);
+			return Response.noContent().build();
+		}
+
+		if (!returnJsonToCaller) {
+
+			return Response.noContent().build();
 		}
 
 		// transform model json to fe friendly json
@@ -427,20 +426,17 @@ public class TasksResource {
 		return optionalValue;
 	}
 
-	private Optional<Boolean> getBooleanValue(final String key, final JsonNode json) {
+	private boolean getBooleanValue(final String key, final JsonNode json, final boolean defaultValue) {
 
 		final JsonNode node = json.get(key);
-		final Optional<Boolean> optionalValue;
 
 		if (node != null) {
 
-			optionalValue = Optional.fromNullable(node.asBoolean());
+			return node.asBoolean();
 		} else {
 
-			optionalValue = Optional.absent();
+			return defaultValue;
 		}
-
-		return optionalValue;
 	}
 
 	private Optional<Set<String>> getStringSetValue(final String key, final JsonNode json) {

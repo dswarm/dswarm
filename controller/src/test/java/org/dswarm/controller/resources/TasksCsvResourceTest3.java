@@ -44,6 +44,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rx.Observable;
 
 import org.dswarm.controller.resources.job.TasksResource;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
@@ -51,6 +52,7 @@ import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTest
 import org.dswarm.controller.resources.test.ResourceTest;
 import org.dswarm.controller.test.GuicedTest;
 import org.dswarm.persistence.model.internal.Model;
+import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
@@ -220,7 +222,8 @@ public class TasksCsvResourceTest3 extends ResourceTest {
 
 		final InternalModelServiceFactory serviceFactory = GuicedTest.injector.getInstance(Key.get(InternalModelServiceFactory.class));
 		final InternalModelService service = serviceFactory.getInternalGDMGraphService();
-		final Optional<Map<String, Model>> inputData = service.getObjects(inputDataModel.getUuid(), Optional.of(10));
+		final Observable<Map<String, Model>> inputDataObservable = service.getObjects(inputDataModel.getUuid(), Optional.of(10));
+		final Optional<Map<String, Model>> inputData = inputDataObservable.map(Optional::of).toBlocking().firstOrDefault(Optional.absent());
 
 		Assert.assertTrue(inputData.isPresent());
 		Assert.assertFalse(inputData.get().isEmpty());

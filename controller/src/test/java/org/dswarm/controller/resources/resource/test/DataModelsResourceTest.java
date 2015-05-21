@@ -52,6 +52,7 @@ import org.slf4j.LoggerFactory;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.builder.Input;
 import org.xmlunit.diff.Diff;
+import rx.Observable;
 
 import org.dswarm.common.MediaTypeUtil;
 import org.dswarm.controller.eventbus.CSVConverterEvent;
@@ -224,7 +225,8 @@ public class DataModelsResourceTest extends
 
 		final InternalModelServiceFactory serviceFactory = GuicedTest.injector.getInstance(Key.get(InternalModelServiceFactory.class));
 		final InternalModelService service = serviceFactory.getInternalGDMGraphService();
-		final Optional<Map<String, Model>> data = service.getObjects(dataModel.getUuid(), Optional.of(atMost));
+		final Observable<Map<String, Model>> dataObservable = service.getObjects(dataModel.getUuid(), Optional.of(atMost));;
+		final Optional<Map<String, Model>> data = dataObservable.map(Optional::of).toBlocking().firstOrDefault(Optional.absent());
 
 		Assert.assertTrue(data.isPresent());
 		Assert.assertFalse(data.get().isEmpty());

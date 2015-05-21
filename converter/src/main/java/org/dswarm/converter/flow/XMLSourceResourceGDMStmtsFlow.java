@@ -16,12 +16,13 @@
 package org.dswarm.converter.flow;
 
 import java.io.Reader;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
@@ -83,7 +84,7 @@ public class XMLSourceResourceGDMStmtsFlow {
 			this.dataModel = Optional.of(dataModel);
 		} else {
 
-			this.dataModel = Optional.absent();
+			this.dataModel = Optional.empty();
 		}
 
 		recordTagName = getStringParameter(dataModel.getConfiguration(), ConfigurationStatics.RECORD_TAG);
@@ -137,16 +138,17 @@ public class XMLSourceResourceGDMStmtsFlow {
 				.setReceiver(writer);
 
 		opener.process(object);
+		opener.closeStream();
 
 		morphContext.stop();
 
-		return writer.getCollection();
+		return writer.getObservable().toList().toBlocking().firstOrDefault(Collections.emptyList());
 	}
 
 	private static Optional<String> getStringParameter(final Configuration configuration, final String key) throws DMPConverterException {
 		final JsonNode jsonNode = getParameterValue(configuration, key);
 		if (jsonNode == null) {
-			return Optional.absent();
+			return Optional.empty();
 		}
 
 		return Optional.of(jsonNode.asText());

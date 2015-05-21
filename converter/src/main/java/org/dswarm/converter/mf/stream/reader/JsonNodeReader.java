@@ -29,6 +29,7 @@ import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rx.Observable;
 
 import org.dswarm.common.types.Tuple;
 
@@ -36,7 +37,7 @@ import org.dswarm.common.types.Tuple;
  * @author phorn
  * @author tgaengler
  */
-public class JsonNodeReader extends DefaultObjectPipe<Iterator<Tuple<String, JsonNode>>, StreamReceiver> {
+public class JsonNodeReader extends DefaultObjectPipe<Tuple<String, JsonNode>, StreamReceiver> {
 
 	private static final Logger		LOG	= LoggerFactory.getLogger(JsonNodeReader.class);
 	private final Optional<String>	recordPrefix;
@@ -51,27 +52,24 @@ public class JsonNodeReader extends DefaultObjectPipe<Iterator<Tuple<String, Jso
 	}
 
 	@Override
-	public void process(final Iterator<Tuple<String, JsonNode>> obj) {
+	public void process(final Tuple<String, JsonNode> tuple) {
 		final StreamReceiver receiver = getReceiver();
-		while (obj.hasNext()) {
-			final Tuple<String, JsonNode> tuple = obj.next();
 
-			receiver.startRecord(tuple.v1());
-			if (recordPrefix.isPresent()) {
-				receiver.startEntity(recordPrefix.get());
-			}
-
-			try {
-				processArrayNode(receiver, tuple.v2());
-			} catch (final IOException e) {
-				JsonNodeReader.LOG.error(e.getMessage(), e);
-			}
-
-			if (recordPrefix.isPresent()) {
-				receiver.endEntity();
-			}
-			receiver.endRecord();
+		receiver.startRecord(tuple.v1());
+		if (recordPrefix.isPresent()) {
+			receiver.startEntity(recordPrefix.get());
 		}
+
+		try {
+			processArrayNode(receiver, tuple.v2());
+		} catch (final IOException e) {
+			JsonNodeReader.LOG.error(e.getMessage(), e);
+		}
+
+		if (recordPrefix.isPresent()) {
+			receiver.endEntity();
+		}
+		receiver.endRecord();
 	}
 
 	private void processObjectNode(final StreamReceiver receiver, final JsonNode jsonNode) throws IOException {

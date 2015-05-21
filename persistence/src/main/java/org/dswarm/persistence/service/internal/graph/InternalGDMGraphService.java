@@ -22,15 +22,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -47,7 +44,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -67,6 +63,7 @@ import org.dswarm.graph.json.Resource;
 import org.dswarm.graph.json.stream.ModelBuilder;
 import org.dswarm.graph.json.stream.ModelParser;
 import org.dswarm.graph.json.util.Util;
+import org.dswarm.persistence.DMPPersistenceError;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
@@ -210,7 +207,7 @@ public class InternalGDMGraphService implements InternalModelService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Optional<Map<String, Model>> getObjects(final String dataModelUuid, final Optional<Integer> optionalAtMost)
+	public Observable<Map<String, Model>> getObjects(final String dataModelUuid, final Optional<Integer> optionalAtMost)
 			throws DMPPersistenceException {
 
 		if (dataModelUuid == null) {
@@ -256,43 +253,6 @@ public class InternalGDMGraphService implements InternalModelService {
 		final Observable<Resource> recordResourcesObservable = readResult.v1();
 		final InputStream inputStream = readResult.v2();
 
-		final Map<String, Model> modelMap = Maps.newLinkedHashMap();
-
-		final Observable<Void> modelObservable = recordResourcesObservable.map(recordResource -> {
-
-			final org.dswarm.graph.json.Model recordModel = new org.dswarm.graph.json.Model();
-			recordModel.addResource(recordResource);
-
-			final Model gdmModel = new GDMModel(recordModel, recordResource.getUri());
-
-			modelMap.put(recordResource.getUri(), gdmModel);
-
-			return null;
-		});
-
-		try {
-
-			// TODO: move this, if needed
-			final Iterator<Void> iterator = modelObservable.toBlocking().getIterator();
-
-			if (!iterator.hasNext()) {
-
-				InternalGDMGraphService.LOG.debug("model is empty for data model '{}' in database", dataModelUuid);
-
-				return Optional.absent();
-			}
-
-			while (iterator.hasNext()) {
-
-				iterator.next();
-			}
-		} catch (final RuntimeException e) {
-
-			throw new DMPPersistenceException(e.getMessage(), e.getCause());
-		}
-
-		closeResource(inputStream, OBJECT_RETRIEVAL);
-
 		// TODO: this won'T be done right now, but is maybe also not really necessary any more
 		//		final Set<Resource> recordResources = GDMUtil.getRecordResources(recordClassUri, model);
 		//
@@ -304,7 +264,15 @@ public class InternalGDMGraphService implements InternalModelService {
 		//					String.format("couldn't find records for record class '%s' in data model '%s'", recordClassUri, dataModelUuid));
 		//		}
 
-		return Optional.of(modelMap);
+		return recordResourcesObservable
+				.map(recordResource -> {
+					final org.dswarm.graph.json.Model recordModel = new org.dswarm.graph.json.Model();
+					recordModel.addResource(recordResource);
+					return new GDMModel(recordModel, recordResource.getUri());
+				})
+				.toMap(gdm -> gdm.getRecordURIs().iterator().next(), gdm -> (Model) gdm, Maps::newLinkedHashMap)
+				.filter(map -> !map.isEmpty())
+				.doOnCompleted(DMPPersistenceError.wrapped(() -> closeResource(inputStream, OBJECT_RETRIEVAL)));
 	}
 
 	/**
@@ -363,7 +331,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		return Optional.of(schema);
 	}
 
-	@Override public Optional<Map<String, Model>> searchObjects(final String dataModelUuid, final String keyAttributePathString,
+	@Override public Observable<Map<String, Model>> searchObjects(final String dataModelUuid, final String keyAttributePathString,
 			final String searchValue, final Optional<Integer> optionalAtMost) throws DMPPersistenceException {
 
 		if (dataModelUuid == null) {
@@ -404,55 +372,49 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final String recordClassUri = recordClass.getUri();
 
-		final org.dswarm.graph.json.Model model = searchGDMRecordsInDB(keyAttributePathString, searchValue, dataModelURI, optionalAtMost);
+		final Observable<org.dswarm.graph.json.Model> modelObservable =
+				searchGDMRecordsInDB(keyAttributePathString, searchValue, dataModelURI, optionalAtMost);
 
-		if (model == null) {
+		// TODO:
+//		if (recordResources == null || recordResources.isEmpty()) {
+//
+//			InternalGDMGraphService.LOG
+//					.debug("couldn't find records for record class '{}' in search result of key attribute path = '{}' and search value = '{}' in data model '{}'",
+//							recordClassUri, keyAttributePathString, searchValue, dataModelUuid);
+//
+//			throw new DMPPersistenceException(String.format(
+//					"couldn't find records for record class '%s' in search result of key attribute path = '%s' and search value = '%s' in data model '%s'",
+//					recordClassUri, keyAttributePathString, searchValue, dataModelUuid));
+//		}
 
-			InternalGDMGraphService.LOG
-					.debug("couldn't find records for key attribute path '{}' and search value '{}  in data model '{}' in database",
-							keyAttributePathString, searchValue, dataModelUuid);
+		return modelObservable
+				.filter(model -> {
 
-			return Optional.absent();
-		}
+					if (model.size() <= 0) {
 
-		if (model.size() <= 0) {
+						InternalGDMGraphService.LOG
+								.debug("model is empty for key attribute path '{}' and search value '{}  in data model '{}' in database",
+										keyAttributePathString, searchValue, dataModelUuid);
 
-			InternalGDMGraphService.LOG
-					.debug("model is empty for key attribute path '{}' and search value '{}  in data model '{}' in database", keyAttributePathString,
-							searchValue, dataModelUuid);
+						return false;
+					}
 
-			return Optional.absent();
-		}
+					return true;
+				})
+				.flatMapIterable(model -> GDMUtil.getRecordResources(recordClassUri, model))
+				.toMap(
+						Resource::getUri,
+						resource -> {
+							final org.dswarm.graph.json.Model recordModel = new org.dswarm.graph.json.Model();
+							recordModel.addResource(resource);
+							return new GDMModel(recordModel, resource.getUri());
+						},
+						Maps::newLinkedHashMap
+				);
 
-		final Set<Resource> recordResources = GDMUtil.getRecordResources(recordClassUri, model);
-
-		if (recordResources == null || recordResources.isEmpty()) {
-
-			InternalGDMGraphService.LOG
-					.debug("couldn't find records for record class '{}' in search result of key attribute path = '{}' and search value = '{}' in data model '{}'",
-							recordClassUri, keyAttributePathString, searchValue, dataModelUuid);
-
-			throw new DMPPersistenceException(String.format(
-					"couldn't find records for record class '%s' in search result of key attribute path = '%s' and search value = '%s' in data model '%s'",
-					recordClassUri, keyAttributePathString, searchValue, dataModelUuid));
-		}
-
-		final Map<String, Model> modelMap = Maps.newLinkedHashMap();
-
-		for (final Resource recordResource : recordResources) {
-
-			final org.dswarm.graph.json.Model recordModel = new org.dswarm.graph.json.Model();
-			recordModel.addResource(recordResource);
-
-			final Model gdmModel = new GDMModel(recordModel, recordResource.getUri());
-
-			modelMap.put(recordResource.getUri(), gdmModel);
-		}
-
-		return Optional.of(modelMap);
 	}
 
-	@Override public Optional<Model> getRecord(final String recordIdentifier, final String dataModelUuid) throws DMPPersistenceException {
+	@Override public Observable<Model> getRecord(final String recordIdentifier, final String dataModelUuid) throws DMPPersistenceException {
 
 		if (recordIdentifier == null) {
 
@@ -466,33 +428,36 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelUuid);
 
-		final Resource resource = readGDMRecordFromDB(recordIdentifier, dataModelURI);
+		final Observable<Resource> resourceObservable = readGDMRecordFromDB(recordIdentifier, dataModelURI);
 
-		if (resource == null) {
+		return resourceObservable.filter(resource -> {
+			if (resource == null) {
 
-			InternalGDMGraphService.LOG
-					.debug("couldn't find record data for record identifier '{}' in data model '{}' in database", recordIdentifier, dataModelUuid);
+				InternalGDMGraphService.LOG
+						.debug("couldn't find record data for record identifier '{}' in data model '{}' in database", recordIdentifier, dataModelUuid);
 
-			return Optional.absent();
-		}
+				return false;
+			}
 
-		if (resource.size() <= 0) {
+			if (resource.size() <= 0) {
 
-			InternalGDMGraphService.LOG.debug("resource is empty for record identifier '{}' in data model '{}' in database", recordIdentifier,
-					dataModelUuid);
+				InternalGDMGraphService.LOG.debug("resource is empty for record identifier '{}' in data model '{}' in database", recordIdentifier,
+						dataModelUuid);
 
-			return Optional.absent();
-		}
+				return false;
+			}
 
-		final org.dswarm.graph.json.Model model = new org.dswarm.graph.json.Model();
-		model.addResource(resource);
+			return true;
+		}).map(resource -> {
 
-		final Model gdmModel = new GDMModel(model, recordIdentifier);
+			final org.dswarm.graph.json.Model model = new org.dswarm.graph.json.Model();
+			model.addResource(resource);
 
-		return Optional.of(gdmModel);
+			return new GDMModel(model, recordIdentifier);
+		});
 	}
 
-	@Override public Optional<Map<String, Model>> getRecords(final Set<String> recordIdentifiers, final String dataModelUuid)
+	@Override public Observable<Map<String, Model>> getRecords(final Set<String> recordIdentifiers, final String dataModelUuid)
 			throws DMPPersistenceException {
 
 		if (recordIdentifiers == null) {
@@ -512,45 +477,33 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelUuid);
 
-		final Map<String, Model> modelMap = Maps.newLinkedHashMap();
+		return Observable.from(recordIdentifiers).flatMap(recordIdentifier ->
+						readGDMRecordFromDB(recordIdentifier, dataModelURI).filter(resource -> {
+							if (resource == null) {
 
-		for (final String recordIdentifier : recordIdentifiers) {
+								InternalGDMGraphService.LOG
+										.debug("couldn't find record data for record identifier '{}' in data model '{}' in database", recordIdentifier,
+												dataModelUuid);
+								return false;
+							}
 
-			final Resource resource = readGDMRecordFromDB(recordIdentifier, dataModelURI);
+							if (resource.size() <= 0) {
 
-			if (resource == null) {
+								InternalGDMGraphService.LOG
+										.debug("resource is empty for record identifier '{}' in data model '{}' in database", recordIdentifier, dataModelUuid);
 
-				InternalGDMGraphService.LOG
-						.debug("couldn't find record data for record identifier '{}' in data model '{}' in database", recordIdentifier,
-								dataModelUuid);
+								return false;
 
-				continue;
-			}
+							}
+							return true;
+						}).map(resource -> {
+							final org.dswarm.graph.json.Model model = new org.dswarm.graph.json.Model();
+							model.addResource(resource);
+							final Model gdmModel = new GDMModel(model, recordIdentifier);
 
-			if (resource.size() <= 0) {
-
-				InternalGDMGraphService.LOG
-						.debug("resource is empty for record identifier '{}' in data model '{}' in database", recordIdentifier, dataModelUuid);
-
-				continue;
-			}
-
-			final org.dswarm.graph.json.Model model = new org.dswarm.graph.json.Model();
-			model.addResource(resource);
-
-			final Model gdmModel = new GDMModel(model, recordIdentifier);
-
-			modelMap.put(recordIdentifier, gdmModel);
-		}
-
-		if (modelMap.isEmpty()) {
-
-			InternalGDMGraphService.LOG.debug("couldn't find any record in data model '{}' in database", dataModelUuid);
-
-			return Optional.absent();
-		}
-
-		return Optional.of(modelMap);
+							return Tuple.tuple(recordIdentifier, gdmModel);
+						})
+		).toMap(Tuple::v1, Tuple::v2, Maps::newLinkedHashMap);
 	}
 
 	private void createOrUpdateObject(final String dataModelUuid, final Object model, final UpdateFormat updateFormat, final boolean enableVersioning)
@@ -904,6 +857,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		return dataModel;
 	}
 
+	// TODO: async
 	private void writeGDMToDB(final org.dswarm.graph.json.Model model, final String dataModelUri, final Optional<ContentSchema> optionalContentSchema,
 			final Optional<Boolean> optionalDeprecateMissingRecords, final Optional<String> optionalRecordClassUri, final boolean enableVersioning) throws DMPPersistenceException {
 
@@ -1065,8 +1019,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		return deserializeModel(body);
 	}
 
-	private Resource readGDMRecordFromDB(final String recordUri, final String dataModelUri)
-			throws DMPPersistenceException {
+	private Observable<Resource> readGDMRecordFromDB(final String recordUri, final String dataModelUri) {
 
 		final WebTarget target = target(GET_GDM_RECORD_ENDPOINT);
 
@@ -1083,27 +1036,29 @@ public class InternalGDMGraphService implements InternalModelService {
 			requestJsonString = objectMapper.writeValueAsString(requestJson);
 		} catch (final JsonProcessingException e) {
 
-			throw new DMPPersistenceException("something went wrong, while creating the request JSON string for the read-gdm-record-from-db request",
-					e);
+			return Observable.error(new DMPPersistenceException("something went wrong, while creating the request JSON string for the read-gdm-record-from-db request",
+					e));
 		}
 
 		// POST the request
-		final Response response = target.request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
+		final Future<Response> responseFuture = target.request(MediaType.APPLICATION_JSON_TYPE)
+				.accept(MediaType.APPLICATION_JSON)
+				.async()
 				.post(Entity.entity(requestJsonString, MediaType.APPLICATION_JSON));
 
-		if (response.getStatus() != 200) {
-
-			throw new DMPPersistenceException(
-					String.format("Couldn't read GDM record data from database. Received status code '%s' from database endpoint.",
-							response.getStatus()));
-		}
-
-		final String body = response.readEntity(String.class);
-
-		return deserializeResource(body);
+		return Observable.from(responseFuture)
+				.flatMap(response -> {
+					if (response.getStatus() != 200) {
+						return Observable.error(new DMPPersistenceException(
+								String.format("Couldn't read GDM record data from database. Received status code '%s' from database endpoint.",
+										response.getStatus())));
+					}
+					return Observable.just(response.readEntity(String.class));
+				})
+				.map(DMPPersistenceError.wrapped(this::deserializeResource));
 	}
 
-	private org.dswarm.graph.json.Model searchGDMRecordsInDB(final String keyAttributePathString, final String searchValue, final String dataModelUri,
+	private Observable<org.dswarm.graph.json.Model> searchGDMRecordsInDB(final String keyAttributePathString, final String searchValue, final String dataModelUri,
 			final Optional<Integer> optionalAtMost)
 			throws DMPPersistenceException {
 
@@ -1133,58 +1088,34 @@ public class InternalGDMGraphService implements InternalModelService {
 		}
 
 		// POST the request
-		final Response response = target.request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
+		final Future<Response> responseFuture = target.request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
+				.async()
 				.post(Entity.entity(requestJsonString, MediaType.APPLICATION_JSON));
 
-		if (response.getStatus() != 200) {
+		// TODO:
+//		InternalGDMGraphService.LOG
+//				.debug("couldn't find results for key attribute path '{}' and search value '{}' in data model '{}'",
+//						keyAttributePathString, searchValue, dataModelUri);
 
-			throw new DMPPersistenceException(
-					String.format("Couldn't find GDM records in database. Received status code '%s' from database endpoint.", response.getStatus()));
-		}
+		return Observable.from(responseFuture)
+				.flatMap(response -> {
+					if (response.getStatus() != 200) {
+						return Observable.error(new DMPPersistenceException(
+								String.format("Couldn't find GDM records in database. Received status code '%s' from database endpoint.",
+										response.getStatus())));
+					}
 
-		final InputStream body = response.readEntity(InputStream.class);
+					final InputStream body = response.readEntity(InputStream.class);
 
-		final org.dswarm.graph.json.Model model = new org.dswarm.graph.json.Model();
+					final Tuple<Observable<Resource>, InputStream> searchResultTuple = deserializeModel(body);
+					final Observable<Resource> searchResult = searchResultTuple.v1();
+					final InputStream is = searchResultTuple.v2();
 
-		final Tuple<Observable<Resource>, InputStream> searchResultTuple = deserializeModel(body);
-		final Observable<Resource> searchResult = searchResultTuple.v1();
-		final InputStream is = searchResultTuple.v2();
-
-		final Observable<Void> resultObservable = searchResult.map(resource -> {
-
-			model.addResource(resource);
-
-			return null;
-		});
-
-		try {
-
-			// TODO: move this, if needed
-			final Iterator<Void> iterator = resultObservable.toBlocking().getIterator();
-
-			if (!iterator.hasNext()) {
-
-				InternalGDMGraphService.LOG
-						.debug("couldn't find results for key attribute path '{}' and search value '{}' in data model '{}'",
-								keyAttributePathString, searchValue, dataModelUri);
-
-				closeResource(is, SEARCH_RESULT);
-
-				return null;
-			}
-
-			while (iterator.hasNext()) {
-
-				iterator.next();
-			}
-		} catch (final RuntimeException e) {
-
-			throw new DMPPersistenceException(e.getMessage(), e.getCause());
-		}
-
-		closeResource(is, SEARCH_RESULT);
-
-		return model;
+					return searchResult.reduce(
+							new org.dswarm.graph.json.Model(),
+							org.dswarm.graph.json.Model::addResource)
+							.doOnCompleted(DMPPersistenceError.wrapped(() -> closeResource(is, SEARCH_RESULT)));
+				});
 	}
 
 	private Tuple<Observable<Resource>, InputStream> deserializeModel(final InputStream modelStream) {
@@ -1278,7 +1209,7 @@ public class InternalGDMGraphService implements InternalModelService {
 			metadata.put(DMPStatics.RECORD_CLASS_URI_IDENTIFIER, optionalRecordClassUri.get());
 		}
 
-		metadata.put(DMPStatics.ENABLE_VERSIONING_IDENTIFIER, "" + enableVersioning);
+		metadata.put(DMPStatics.ENABLE_VERSIONING_IDENTIFIER, String.valueOf(enableVersioning));
 
 		try {
 			return objectMapperProvider.get().writeValueAsString(metadata);
@@ -1292,7 +1223,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		}
 	}
 
-	private void closeResource(final Closeable closeable, final String type) throws DMPPersistenceException {
+	private static void closeResource(final Closeable closeable, final String type) throws DMPPersistenceException {
 
 		if (closeable != null) {
 

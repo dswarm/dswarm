@@ -93,95 +93,11 @@ public class TasksResourceTest extends ResourceTest {
 
 		final String resourceFileName = "controller_test-mabxml.xml";
 
-		final String resource1Uuid = UUIDService.getUUID(Resource.class.getSimpleName());
+		final PrepareResource prepareResource = new PrepareResource(resourceFileName).invoke();
+		final PrepareConfiguration prepareConfiguration = new PrepareConfiguration(prepareResource).invoke();
+		DataModel inputDataModel = prepareDataModel(prepareResource, prepareConfiguration);
 
-		final Resource res1 = new Resource(resource1Uuid);
-		res1.setName(resourceFileName);
-		res1.setDescription("this is a description");
-		res1.setType(ResourceType.FILE);
-
-		final URL fileURL = Resources.getResource(resourceFileName);
-		final File resourceFile = FileUtils.toFile(fileURL);
-
-		final ObjectNode attributes1 = new ObjectNode(objectMapper.getNodeFactory());
-		attributes1.put("path", resourceFile.getAbsolutePath());
-
-		String fileType = null;
-		final Tika tika = new Tika();
-		try {
-			fileType = tika.detect(resourceFile);
-			// fileType = Files.probeContentType(resourceFile.toPath());
-		} catch (final IOException e1) {
-
-			TasksResourceTest.LOG.debug("couldn't determine file type from file '" + resourceFile.getAbsolutePath() + "'");
-		}
-
-		if (fileType != null) {
-
-			attributes1.put("filetype", fileType);
-		}
-
-		// hint: size is not important to know since its value is skipped in the comparison of actual and expected resource
-		attributes1.put("filesize", -1);
-
-		res1.setAttributes(attributes1);
-
-		// upload data resource
-		Resource resource = resourcesResourceTestUtils.uploadResource(resourceFile, res1);
-
-		final String configuration1Uuid = UUIDService.getUUID(Configuration.class.getSimpleName());
-
-		// process input data model
-		final Configuration conf1 = new Configuration(configuration1Uuid);
-
-		conf1.setName("configuration 1");
-		conf1.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("datensatz"));
-		conf1.addParameter(ConfigurationStatics.XML_NAMESPACE, new TextNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd"));
-		conf1.addParameter(ConfigurationStatics.STORAGE_TYPE, new TextNode("xml"));
-
-		final String configurationJSONString = objectMapper.writeValueAsString(conf1);
-
-		// create configuration
-		Configuration configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
-
-		final String dataModel1Uuid = UUIDService.getUUID(DataModel.class.getSimpleName());
-
-		final DataModel data1 = new DataModel(dataModel1Uuid);
-		data1.setName("'" + res1.getName() + "' + '" + conf1.getName() + "' data model");
-		data1.setDescription("data model of resource '" + res1.getName() + "' and configuration '" + conf1.getName() + "'");
-		data1.setDataResource(resource);
-		data1.setConfiguration(configuration);
-
-		// TODO: add schema to data1
-
-		final String inputDataModelJSONString = objectMapper.writeValueAsString(data1);
-
-		DataModel inputDataModel = dataModelsResourceTestUtils.createObjectWithoutComparison(inputDataModelJSONString);
-
-		Assert.assertNotNull("the data model shouldn't be null", inputDataModel);
-
-		// check processed data
-		final String data = dataModelsResourceTestUtils.getData(inputDataModel.getUuid(), 1);
-
-		Assert.assertNotNull("the data shouldn't be null", data);
-
-		// manipulate input data model
-		final String finalInputDataModelJSONString = objectMapper.writeValueAsString(inputDataModel);
-		final ObjectNode finalInputDataModelJSON = objectMapper.readValue(finalInputDataModelJSONString, ObjectNode.class);
-
-		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
-		taskJSON.set("input_data_model", finalInputDataModelJSON);
-
-		// utilise internal model as output data model
-		final DataModel outputDataModel = dataModelsResourceTestUtils.getObject(DataModelUtils.BIBO_DOCUMENT_DATA_MODEL_UUID);
-		final String outputDataModelJSONString = objectMapper.writeValueAsString(outputDataModel);
-		final ObjectNode outputDataModelJSON = objectMapper.readValue(outputDataModelJSONString, ObjectNode.class);
-
-		taskJSON.set("output_data_model", outputDataModelJSON);
-
-		final ObjectNode requestJSON = objectMapper.createObjectNode();
-		requestJSON.set(TasksResource.TASK_IDENTIFIER, taskJSON);
-		requestJSON.put(TasksResource.PERSIST_IDENTIFIER, Boolean.TRUE);
+		final ObjectNode requestJSON = prepareTeask(inputDataModel);
 
 		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE)
 				.accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(requestJSON));
@@ -207,7 +123,7 @@ public class TasksResourceTest extends ResourceTest {
 
 		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
 
-		TasksResourceTest.LOG.debug("task execution response = '" + responseString + "'");
+		TasksResourceTest.LOG.debug("task execution response = '{}'", responseString);
 
 		final String expectedResultString = DMPPersistenceUtil.getResourceAsString("controller_task-result.json");
 
@@ -242,14 +158,181 @@ public class TasksResourceTest extends ResourceTest {
 		Assert.assertNotNull("the data model shouldn't be null", inputDataModel);
 		Assert.assertNotNull("the data model schema shouldn't be null", inputDataModel.getSchema());
 
-		Schema schema1 = inputDataModel.getSchema();
+		final Schema schema1 = inputDataModel.getSchema();
 
 		Assert.assertNotNull("the data model schema record class shouldn't be null", schema1.getRecordClass());
 
-		final DataModel finalOutputDataModel = dataModelsResourceTestUtils.getObject(outputDataModel.getUuid());
-		finalOutputDataModel.setSchema(null);
-		dataModelsResourceTestUtils.updateObjectWithoutComparison(finalOutputDataModel);
+//		final DataModel finalOutputDataModel = dataModelsResourceTestUtils.getObject(outputDataModel.getUuid());
+//		finalOutputDataModel.setSchema(null);
+//		dataModelsResourceTestUtils.updateObjectWithoutComparison(finalOutputDataModel);
 
 		TasksResourceTest.LOG.debug("end task execution test");
+	}
+
+	@Test
+	public void testTaskExecutionWithNoReturn() throws Exception {
+
+		TasksResourceTest.LOG.debug("start task execution with no return test");
+
+		final String resourceFileName = "controller_test-mabxml.xml";
+
+		final PrepareResource prepareResource = new PrepareResource(resourceFileName).invoke();
+		final PrepareConfiguration prepareConfiguration = new PrepareConfiguration(prepareResource).invoke();
+		final DataModel inputDataModel = prepareDataModel(prepareResource, prepareConfiguration);
+
+		final ObjectNode requestJSON = prepareTeask(inputDataModel);
+		requestJSON.put(TasksResource.RETURN_IDENTIFIER, false);
+
+		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE)
+				.accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(requestJSON));
+
+		Assert.assertEquals("204 No Content was expected", 204, response.getStatus());
+
+		TasksResourceTest.LOG.debug("end task execution with no return test");
+	}
+
+	private ObjectNode prepareTeask(final DataModel inputDataModel) throws Exception {
+		// check processed data
+		final String data = dataModelsResourceTestUtils.getData(inputDataModel.getUuid(), 1);
+
+		Assert.assertNotNull("the data shouldn't be null", data);
+
+		// manipulate input data model
+		final String finalInputDataModelJSONString = objectMapper.writeValueAsString(inputDataModel);
+		final ObjectNode finalInputDataModelJSON = objectMapper.readValue(finalInputDataModelJSONString, ObjectNode.class);
+
+		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
+		taskJSON.set("input_data_model", finalInputDataModelJSON);
+
+		// utilise internal model as output data model
+		final DataModel outputDataModel = dataModelsResourceTestUtils.getObject(DataModelUtils.BIBO_DOCUMENT_DATA_MODEL_UUID);
+		final String outputDataModelJSONString = objectMapper.writeValueAsString(outputDataModel);
+		final ObjectNode outputDataModelJSON = objectMapper.readValue(outputDataModelJSONString, ObjectNode.class);
+
+		taskJSON.set("output_data_model", outputDataModelJSON);
+
+		final ObjectNode requestJSON = objectMapper.createObjectNode();
+		requestJSON.set(TasksResource.TASK_IDENTIFIER, taskJSON);
+		requestJSON.put(TasksResource.PERSIST_IDENTIFIER, Boolean.TRUE);
+		return requestJSON;
+	}
+
+	private DataModel prepareDataModel(final PrepareResource prepareResource, final PrepareConfiguration prepareConfiguration) throws Exception {
+
+		final Resource resource = prepareResource.getResource();
+		final Resource res1 = prepareResource.getRes1();
+		final Configuration conf1 = prepareConfiguration.getConf1();
+		final Configuration configuration = prepareConfiguration.getConfiguration();
+
+		final String dataModel1Uuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+
+		final DataModel data1 = new DataModel(dataModel1Uuid);
+		data1.setName("'" + res1.getName() + "' + '" + conf1.getName() + "' data model");
+		data1.setDescription("data model of resource '" + res1.getName() + "' and configuration '" + conf1.getName() + "'");
+		data1.setDataResource(resource);
+		data1.setConfiguration(configuration);
+
+		// TODO: add schema to data1
+
+		final String inputDataModelJSONString = objectMapper.writeValueAsString(data1);
+
+		final DataModel inputDataModel = dataModelsResourceTestUtils.createObjectWithoutComparison(inputDataModelJSONString);
+
+		Assert.assertNotNull("the data model shouldn't be null", inputDataModel);
+
+		return inputDataModel;
+	}
+
+	private class PrepareResource {
+		private Resource res1;
+		private Resource resource;
+		private final String resourceFileName;
+
+		public PrepareResource(final String resourceFileName) {
+			this.resourceFileName = resourceFileName;
+		}
+
+		public Resource getRes1() {
+			return res1;
+		}
+
+		public Resource getResource() {
+			return resource;
+		}
+
+		public PrepareResource invoke() throws Exception {
+			final String resource1Uuid = UUIDService.getUUID(Resource.class.getSimpleName());
+
+			res1 = new Resource(resource1Uuid);
+			res1.setName(resourceFileName);
+			res1.setDescription("this is a description");
+			res1.setType(ResourceType.FILE);
+
+			final URL fileURL = Resources.getResource(resourceFileName);
+			final File resourceFile = FileUtils.toFile(fileURL);
+
+			final ObjectNode attributes1 = new ObjectNode(objectMapper.getNodeFactory());
+			attributes1.put("path", resourceFile.getAbsolutePath());
+
+			String fileType = null;
+			final Tika tika = new Tika();
+			try {
+				fileType = tika.detect(resourceFile);
+				// fileType = Files.probeContentType(resourceFile.toPath());
+			} catch (final IOException e1) {
+
+				TasksResourceTest.LOG.debug("couldn't determine file type from file '{}'", resourceFile.getAbsolutePath());
+			}
+
+			if (fileType != null) {
+
+				attributes1.put("filetype", fileType);
+			}
+
+			// hint: size is not important to know since its value is skipped in the comparison of actual and expected resource
+			attributes1.put("filesize", -1);
+
+			res1.setAttributes(attributes1);
+
+			// upload data resource
+			resource = resourcesResourceTestUtils.uploadResource(resourceFile, res1);
+			return this;
+		}
+	}
+
+	private class PrepareConfiguration {
+		private Configuration conf1;
+		private Configuration configuration;
+		private final Resource resource;
+
+		public PrepareConfiguration(final PrepareResource prepareResource) {
+			this.resource = prepareResource.getResource();
+		}
+
+		public Configuration getConf1() {
+			return conf1;
+		}
+
+		public Configuration getConfiguration() {
+			return configuration;
+		}
+
+		public PrepareConfiguration invoke() throws Exception {
+			final String configuration1Uuid = UUIDService.getUUID(Configuration.class.getSimpleName());
+
+			// process input data model
+			conf1 = new Configuration(configuration1Uuid);
+
+			conf1.setName("configuration 1");
+			conf1.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("datensatz"));
+			conf1.addParameter(ConfigurationStatics.XML_NAMESPACE, new TextNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd"));
+			conf1.addParameter(ConfigurationStatics.STORAGE_TYPE, new TextNode("xml"));
+
+			final String configurationJSONString = objectMapper.writeValueAsString(conf1);
+
+			// create configuration
+			configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
+			return this;
+		}
 	}
 }

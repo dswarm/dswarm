@@ -45,8 +45,6 @@ public class SetAttributePathReferenceSerializer extends JsonSerializer<Set<Attr
 
 		for (final AttributePath object : objects) {
 
-			System.out.println("attribute path = '" + object.toAttributePath() + "'");
-
 			references.add(new AttributePathReference(object.getUuid(), object.toAttributePath()));
 		}
 

@@ -16,6 +16,7 @@
 package org.dswarm.converter.mf.stream.source;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Stack;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
@@ -23,8 +24,6 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
 
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
@@ -339,14 +338,8 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 		}
 	}
 
-	private Optional<String> init(final Optional<DataModel> dataModel) {
-		return dataModel.transform(new Function<DataModel, String>() {
-
-			@Override
-			public String apply(final DataModel dm) {
-				return StringUtils.stripEnd(DataModelUtils.determineDataModelSchemaBaseURI(dm), SchemaUtils.HASH);
-			}
-		});
+	private static Optional<String> init(final Optional<DataModel> dataModel) {
+		return dataModel.map(dm -> StringUtils.stripEnd(DataModelUtils.determineDataModelSchemaBaseURI(dm), SchemaUtils.HASH));
 	}
 
 	private String mintDataModelUri(@Nullable final String uri) {

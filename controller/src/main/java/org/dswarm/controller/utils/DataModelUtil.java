@@ -31,6 +31,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rx.Observable;
 
 import org.dswarm.common.types.Tuple;
 import org.dswarm.persistence.DMPPersistenceException;
@@ -75,7 +76,7 @@ public class DataModelUtil {
 	 * @param dataModelUuid the identifier of the data model.
 	 * @return the data of the given data model
 	 */
-	public Optional<Iterator<Tuple<String, JsonNode>>> getData(final String dataModelUuid) {
+	public Observable<Tuple<String, JsonNode>> getData(final String dataModelUuid) {
 		return getData(dataModelUuid, Optional.<Integer>absent());
 	}
 
@@ -86,32 +87,24 @@ public class DataModelUtil {
 	 * @param atMost        the number of records that should be retrieved
 	 * @return the data of the given data model
 	 */
-	public Optional<Iterator<Tuple<String, JsonNode>>> getData(final String dataModelUuid, final Optional<Integer> atMost) {
+	public Observable<Tuple<String, JsonNode>> getData(final String dataModelUuid, final Optional<Integer> atMost) {
 
 		DataModelUtil.LOG.debug(String.format("try to get data for data model with id [%s]", dataModelUuid));
 
 		final InternalModelService internalService = internalServiceFactoryProvider.get().getInternalGDMGraphService();
 
-		final Optional<Map<String, Model>> maybeTriples;
+		final Observable<Map<String, Model>> modelObservable;
 
 		try {
 
-			maybeTriples = internalService.getObjects(dataModelUuid, atMost);
+			modelObservable = internalService.getObjects(dataModelUuid, atMost);
 		} catch (final DMPPersistenceException e1) {
 
 			DataModelUtil.LOG.debug("couldn't find data", e1);
-			return Optional.absent();
+			return Observable.empty();
 		}
 
-		if (!maybeTriples.isPresent()) {
-
-			DataModelUtil.LOG.debug("couldn't find data");
-			return Optional.absent();
-		}
-
-		final Iterator<Map.Entry<String, Model>> iterator = maybeTriples.get().entrySet().iterator();
-
-		return Optional.of(dataIterator(iterator));
+		return modelObservable.flatMapIterable(m -> dataIterable(m.entrySet()));
 	}
 
 	/**
@@ -121,13 +114,13 @@ public class DataModelUtil {
 	 * @param dataModelUuid the identifier of the data model
 	 * @return the data of the given data model
 	 */
-	public Optional<Iterator<Tuple<String, JsonNode>>> getRecordsData(final Set<String> recordIdentifiers, final String dataModelUuid) {
+	public Observable<Tuple<String, JsonNode>> getRecordsData(final Set<String> recordIdentifiers, final String dataModelUuid) {
 
 		DataModelUtil.LOG.debug(String.format("try to get record's data for some records in data model with id [%s]", dataModelUuid));
 
 		final InternalModelService internalService = internalServiceFactoryProvider.get().getInternalGDMGraphService();
 
-		final Optional<Map<String, Model>> maybeTriples;
+		final Observable<Map<String, Model>> maybeTriples;
 
 		try {
 
@@ -135,18 +128,10 @@ public class DataModelUtil {
 		} catch (final DMPPersistenceException e1) {
 
 			DataModelUtil.LOG.debug("couldn't find record's data data in data model with id [{}]", dataModelUuid, e1);
-			return Optional.absent();
+			return Observable.empty();
 		}
 
-		if (!maybeTriples.isPresent()) {
-
-			DataModelUtil.LOG.debug("couldn't find record's data in data model with id [{}]", dataModelUuid);
-			return Optional.absent();
-		}
-
-		final Iterator<Map.Entry<String, Model>> iterator = maybeTriples.get().entrySet().iterator();
-
-		return Optional.of(dataIterator(iterator));
+		return maybeTriples.flatMapIterable(m -> dataIterable(m.entrySet()));
 	}
 
 	/**
@@ -158,14 +143,14 @@ public class DataModelUtil {
 	 * @param atMost        the number of records that should be retrieved
 	 * @return the data of the given data model
 	 */
-	public Optional<Iterator<Tuple<String, JsonNode>>> searchRecords(final String keyAttributePathString, final String searchValue,
+	public Observable<Tuple<String, JsonNode>> searchRecords(final String keyAttributePathString, final String searchValue,
 			final String dataModelUuid, final Optional<Integer> atMost) {
 
 		DataModelUtil.LOG.debug(String.format("try to get data for data model with id [%s]", dataModelUuid));
 
 		final InternalModelService internalService = internalServiceFactoryProvider.get().getInternalGDMGraphService();
 
-		final Optional<Map<String, Model>> maybeTriples;
+		final Observable<Map<String, Model>> maybeTriples;
 
 		try {
 
@@ -174,19 +159,10 @@ public class DataModelUtil {
 
 			DataModelUtil.LOG.debug("couldn't find data for key attribute path '{}' and search value '{}' in data model '{}'", keyAttributePathString,
 					searchValue, dataModelUuid, e1);
-			return Optional.absent();
+			return Observable.empty();
 		}
 
-		if (!maybeTriples.isPresent()) {
-
-			DataModelUtil.LOG.debug("couldn't find data for key attribute path '{}' and search value '{}' in data model '{}'", keyAttributePathString,
-					searchValue, dataModelUuid);
-			return Optional.absent();
-		}
-
-		final Iterator<Map.Entry<String, Model>> iterator = maybeTriples.get().entrySet().iterator();
-
-		return Optional.of(dataIterator(iterator));
+		return maybeTriples.flatMapIterable(m -> dataIterable(m.entrySet()));
 	}
 
 	public Optional<ObjectNode> getSchema(final String dataModelUuid) {
@@ -210,7 +186,7 @@ public class DataModelUtil {
 			return Optional.absent();
 		}
 
-		String schemaJSONString;
+		final String schemaJSONString;
 		try {
 
 			schemaJSONString = objectMapper.writeValueAsString(schemaOptional.get());
@@ -221,7 +197,7 @@ public class DataModelUtil {
 			return Optional.absent();
 		}
 
-		ObjectNode node;
+		final ObjectNode node;
 		try {
 			node = objectMapper.readValue(schemaJSONString, ObjectNode.class);
 		} catch (final IOException e) {
@@ -313,6 +289,10 @@ public class DataModelUtil {
 		final ResourceService resourceService = resourceServiceProvider.get();
 		resourceService.deleteObject(resourceUuid);
 
+	}
+
+	private Iterable<Tuple<String, JsonNode>> dataIterable(final Iterable<Map.Entry<String, Model>> triples) {
+		return () -> dataIterator(triples.iterator());
 	}
 
 	private Iterator<Tuple<String, JsonNode>> dataIterator(final Iterator<Map.Entry<String, Model>> triples) {

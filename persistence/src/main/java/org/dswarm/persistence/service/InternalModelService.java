@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.common.base.Optional;
+import rx.Observable;
 
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.Model;
@@ -60,7 +61,7 @@ public interface InternalModelService {
 	 * @return (optional) a map of objects and their identifier
 	 * @throws DMPPersistenceException
 	 */
-	Optional<Map<String, Model>> getObjects(final String dataModelUuid, final Optional<Integer> atMost) throws DMPPersistenceException;
+	Observable<Map<String, Model>> getObjects(final String dataModelUuid, final Optional<Integer> atMost) throws DMPPersistenceException;
 
 	/**
 	 * Deletes a whole data model (incl. all its objects).
@@ -89,7 +90,7 @@ public interface InternalModelService {
 	 * @return (optional) a map of objects and their identifier
 	 * @throws DMPPersistenceException
 	 */
-	Optional<Map<String, Model>> searchObjects(final String dataModelUuid, final String keyAttributePathString, final String searchValue,
+	Observable<Map<String, Model>> searchObjects(final String dataModelUuid, final String keyAttributePathString, final String searchValue,
 			final Optional<Integer> atMost) throws DMPPersistenceException;
 
 	/**
@@ -100,7 +101,7 @@ public interface InternalModelService {
 	 * @return
 	 * @throws DMPPersistenceException
 	 */
-	Optional<Model> getRecord(final String recordIdentifier, final String dataModelUuid) throws DMPPersistenceException;
+	Observable<Model> getRecord(final String recordIdentifier, final String dataModelUuid) throws DMPPersistenceException;
 
 	/**
 	 * Retrieves the records in the specific data model with the given record identifiers from the datahub.
@@ -110,5 +111,5 @@ public interface InternalModelService {
 	 * @return
 	 * @throws DMPPersistenceException
 	 */
-	Optional<Map<String, Model>> getRecords(final Set<String> recordIdentifiers, final String dataModelUuid) throws DMPPersistenceException;
+	Observable<Map<String, Model>> getRecords(final Set<String> recordIdentifiers, final String dataModelUuid) throws DMPPersistenceException;
 }
