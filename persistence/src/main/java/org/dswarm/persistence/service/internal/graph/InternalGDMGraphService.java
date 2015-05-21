@@ -56,12 +56,17 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.client.rx.Rx;
+import org.glassfish.jersey.client.rx.RxWebTarget;
+import org.glassfish.jersey.client.rx.rxjava.RxObservable;
+import org.glassfish.jersey.client.rx.rxjava.RxObservableInvoker;
 import org.glassfish.jersey.media.multipart.MultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
 import rx.Observer;
+import rx.functions.Action1;
 
 import org.dswarm.common.DMPStatics;
 import org.dswarm.common.model.util.AttributePathUtil;
@@ -992,6 +997,8 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final WebTarget target = target(WRITE_GDM_ENDPOINT);
 
+		final RxWebTarget<RxObservableInvoker> rxWebTarget = RxObservable.from(target);
+
 		final PipedInputStream input = new PipedInputStream();
 		final PipedOutputStream output = new PipedOutputStream();
 
@@ -1010,59 +1017,90 @@ public class InternalGDMGraphService implements InternalModelService {
 					.bodyPart(input, MediaType.APPLICATION_OCTET_STREAM_TYPE);
 
 			// POST the request
-			final AsyncInvoker async = target.request(MULTIPART_MIXED).async();
-			final InvocationCallback<Response> callback = new InvocationCallback<Response>() {
+			final RxObservableInvoker rx = rxWebTarget.request(MULTIPART_MIXED).rx();
+//			final InvocationCallback<Response> callback = new InvocationCallback<Response>() {
+//
+//				@Override public void completed(final Response response) {
+//
+//					try {
+//
+//						// modelConsumer.onCompleted();
+//
+//						closeResource(multiPart, WRITE_GDM);
+//						closeResource(output, WRITE_GDM);
+//						closeResource(input, WRITE_GDM);
+//
+//						//TODO maybe check status code here, i.e., should be 200
+//
+//						LOG.debug("wrote GDM data for data model '{}' into data hub", dataModelUri);
+//
+//						completableFuture.complete(null);
+//					} catch (final DMPPersistenceException e) {
+//
+//						completableFuture.completeExceptionally(e);
+//
+//						throw DMPPersistenceError.wrap(e);
+//					}
+//				}
+//
+//				@Override public void failed(final Throwable throwable) {
+//
+//					// modelConsumer.onError(throwable);
+//					completableFuture.completeExceptionally(throwable);
+//
+//					throw DMPPersistenceError.wrap(new DMPPersistenceException(
+//							String.format("Couldn't store GDM data into database. Received status code '%s' from database endpoint.",
+//									throwable.getMessage())));
+//				}
+//			};
 
-				@Override public void completed(final Response response) {
-
-					try {
-
-						// modelConsumer.onCompleted();
-
-						closeResource(multiPart, WRITE_GDM);
-						closeResource(output, WRITE_GDM);
-						closeResource(input, WRITE_GDM);
-
-						//TODO maybe check status code here, i.e., should be 200
-
-						LOG.debug("wrote GDM data for data model '{}' into data hub", dataModelUri);
-
-						completableFuture.complete(null);
-					} catch (final DMPPersistenceException e) {
-
-						completableFuture.completeExceptionally(e);
-
-						throw DMPPersistenceError.wrap(e);
-					}
-				}
-
-				@Override public void failed(final Throwable throwable) {
-
-					// modelConsumer.onError(throwable);
-					completableFuture.completeExceptionally(throwable);
-
-					throw DMPPersistenceError.wrap(new DMPPersistenceException(
-							String.format("Couldn't store GDM data into database. Received status code '%s' from database endpoint.",
-									throwable.getMessage())));
-				}
-			};
-
-			final Future<Response> post = async.post(Entity.entity(multiPart, MULTIPART_MIXED), callback);
-
-			EXECUTOR_SERVICE.submit(() -> {
+			rx.post(Entity.entity(multiPart, MULTIPART_MIXED)).subscribe(response -> {
 
 				try {
 
-					LOG.debug("trigger async GDM write POST request");
+					// modelConsumer.onCompleted();
 
-					post.get();
-				} catch (final InterruptedException | ExecutionException e) {
+					closeResource(multiPart, WRITE_GDM);
+					closeResource(output, WRITE_GDM);
+					closeResource(input, WRITE_GDM);
 
-					throw new RuntimeException(e);
+					//TODO maybe check status code here, i.e., should be 200
+
+					LOG.debug("wrote GDM data for data model '{}' into data hub", dataModelUri);
+
+					completableFuture.complete(null);
+				} catch (final DMPPersistenceException e) {
+
+					completableFuture.completeExceptionally(e);
+
+					throw DMPPersistenceError.wrap(e);
 				}
+			}, throwable -> {
 
-				return null;
+				// modelConsumer.onError(throwable);
+				completableFuture.completeExceptionally(throwable);
+
+				throw DMPPersistenceError.wrap(new DMPPersistenceException(
+						String.format("Couldn't store GDM data into database. Received status code '%s' from database endpoint.",
+								throwable.getMessage())));
 			});
+
+//			final Future<Response> post = async.post(Entity.entity(multiPart, MULTIPART_MIXED), callback);
+//
+//			EXECUTOR_SERVICE.submit(() -> {
+//
+//				try {
+//
+//					LOG.debug("trigger async GDM write POST request");
+//
+//					post.get();
+//				} catch (final InterruptedException | ExecutionException e) {
+//
+//					throw new RuntimeException(e);
+//				}
+//
+//				return null;
+//			});
 
 			return modelConsumer;
 		} catch (final InterruptedException | ExecutionException e) {

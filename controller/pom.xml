@@ -34,7 +34,7 @@
 	<properties>
 		<version.es-metrics-reporter>2.0</version.es-metrics-reporter>
 		<version.grizzly-http>2.3.8</version.grizzly-http>
-		<version.h2k>2.4.0-b24</version.h2k>
+		<version.h2k>2.4.0-b10</version.h2k>
 		<version.javax.servlet-api>3.1.0</version.javax.servlet-api>
 		<version.jcl-over-slf4j>1.7.10</version.jcl-over-slf4j>
 		<version.jena>2.12.1</version.jena>
