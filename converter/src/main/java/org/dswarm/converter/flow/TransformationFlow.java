@@ -31,6 +31,8 @@ import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import javax.ws.rs.core.Response;
+
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.codahale.metrics.Timer.Context;
@@ -360,7 +362,7 @@ public class TransformationFlow {
 				return nodeList;
 			});
 		}
-		final Optional<Supplier<Future<Void>>> future;
+		final Observable<Response> writeResponse;
 
 		if (writeResultToDatahub) {
 
@@ -371,10 +373,7 @@ public class TransformationFlow {
 
 				try {
 
-					future = Optional.of(internalModelService
-							.updateObject(outputDataModel.get().getUuid(), model, UpdateFormat.DELTA, true));
-
-
+					writeResponse = internalModelService.updateObject(outputDataModel.get().getUuid(), model, UpdateFormat.DELTA, true);
 				} catch (final DMPPersistenceException e) {
 
 					final String message = "couldn't persist the result of the transformation: " + e.getMessage();
@@ -389,27 +388,17 @@ public class TransformationFlow {
 
 				TransformationFlow.LOG.error(message);
 
-				future = Optional.empty();
+				writeResponse = Observable.empty();
 			}
 
 		} else {
 
-			future = Optional.empty();
+			writeResponse = Observable.empty();
 		}
 
 		tuples.subscribeOn(Schedulers.newThread()).subscribe(opener::process, writer::propagateError, opener::closeStream);
 
-		future.ifPresent(s -> {
-			try {
-				s
-						.get()  // start write process
-						.get();
-			} catch (final InterruptedException | ExecutionException e) {
-
-				throw new RuntimeException(e);
-			}
-		});
-
+		writeResponse.toBlocking().first();
 
 		morphContext.stop();
 

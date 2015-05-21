@@ -17,9 +17,8 @@ package org.dswarm.controller.eventbus;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.function.Supplier;
+
+import javax.ws.rs.core.Response;
 
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
@@ -151,13 +150,13 @@ public class CSVConverterEventRecorder {
 			try {
 
 				// TODO delegate future
-				final Supplier<Future<Void>> future = internalServiceFactory.getInternalGDMGraphService()
+				final Observable<Response> writeResponse = internalServiceFactory.getInternalGDMGraphService()
 						.updateObject(dataModel.getUuid(), models, updateFormat, enableVersioning);
 
-				future.get().get();
+				writeResponse.toBlocking().first();
 
 				LOG.debug("processed CSV data resource into data model '{}'", dataModel.getUuid());
-			} catch (final DMPPersistenceException | InterruptedException | ExecutionException e) {
+			} catch (final DMPPersistenceException e) {
 
 				final String message = String.format("couldn't persist the converted CSV data of data model '%s'", dataModel.getUuid());
 

@@ -19,6 +19,8 @@ import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.function.Supplier;
 
+import javax.ws.rs.core.Response;
+
 import com.google.common.base.Optional;
 import rx.Observable;
 
@@ -44,7 +46,7 @@ public interface InternalModelService {
 	 * @param model         the model of the object that should be persisted
 	 * @throws DMPPersistenceException
 	 */
-	Supplier<Future<Void>> createObject(final String dataModelUuid, final Observable<Model> model) throws DMPPersistenceException;
+	Observable<Response> createObject(final String dataModelUuid, final Observable<Model> model) throws DMPPersistenceException;
 
 	/**
 	 * Updates an object (model) to an existing data model.
@@ -53,7 +55,7 @@ public interface InternalModelService {
 	 * @param model         the model of the object that should be updated
 	 * @throws DMPPersistenceException
 	 */
-	Supplier<Future<Void>> updateObject(final String dataModelUuid, final Observable<Model> model, final UpdateFormat updateFormat,
+	Observable<Response> updateObject(final String dataModelUuid, final Observable<Model> model, final UpdateFormat updateFormat,
 			final boolean enableVersioning) throws DMPPersistenceException;
 
 	/**
