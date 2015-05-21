@@ -61,6 +61,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
 import rx.functions.Func2;
+import rx.schedulers.Schedulers;
 
 import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.DMPConverterError;
@@ -396,7 +397,7 @@ public class TransformationFlow {
 			future = Optional.empty();
 		}
 
-		tuples.subscribe(opener::process, writer::propagateError, opener::closeStream);
+		tuples.subscribeOn(Schedulers.newThread()).subscribe(opener::process, writer::propagateError, opener::closeStream);
 
 		future.ifPresent(s -> {
 			try {
