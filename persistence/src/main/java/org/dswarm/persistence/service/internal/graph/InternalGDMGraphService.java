@@ -1361,6 +1361,8 @@ public class InternalGDMGraphService implements InternalModelService {
 
 					try {
 
+						LOG.debug("add resource to output stream");
+
 						modelBuilder.addResource(resource);
 						output.flush();
 					} catch (final IOException e) {
