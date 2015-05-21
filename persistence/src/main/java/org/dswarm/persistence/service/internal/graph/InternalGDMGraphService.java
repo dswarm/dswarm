@@ -1047,7 +1047,22 @@ public class InternalGDMGraphService implements InternalModelService {
 				}
 			};
 
-			async.post(Entity.entity(multiPart, MULTIPART_MIXED), callback);
+			final Future<Response> post = async.post(Entity.entity(multiPart, MULTIPART_MIXED), callback);
+
+			EXECUTOR_SERVICE.submit(() -> {
+
+				try {
+
+					LOG.debug("trigger async GDM write POST request");
+
+					post.get();
+				} catch (final InterruptedException | ExecutionException e) {
+
+					throw new RuntimeException(e);
+				}
+
+				return null;
+			});
 
 			return modelConsumer;
 		} catch (final InterruptedException | ExecutionException e) {
