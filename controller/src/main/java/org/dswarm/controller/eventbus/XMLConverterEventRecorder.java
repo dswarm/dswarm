@@ -17,7 +17,6 @@ package org.dswarm.controller.eventbus;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Observable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -26,6 +25,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rx.Observable;
 
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.converter.flow.XMLSourceResourceGDMStmtsFlow;
@@ -33,12 +33,12 @@ import org.dswarm.converter.flow.XmlResourceFlowFactory;
 import org.dswarm.graph.json.Model;
 import org.dswarm.graph.json.Resource;
 import org.dswarm.persistence.DMPPersistenceException;
-import org.dswarm.persistence.model.resource.UpdateFormat;
-import org.dswarm.persistence.model.resource.utils.ResourceStatics;
-import org.dswarm.persistence.monitoring.MonitoringLogger;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.DataModel;
+import org.dswarm.persistence.model.resource.UpdateFormat;
+import org.dswarm.persistence.model.resource.utils.ResourceStatics;
 import org.dswarm.persistence.monitoring.MonitoringHelper;
+import org.dswarm.persistence.monitoring.MonitoringLogger;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
 
 /**
@@ -107,7 +107,29 @@ public class XMLConverterEventRecorder {
 
 			final List<GDMModel> gdmModels = flow.applyResource(path);
 
-			result = rx.Observable.from(gdmModels);
+			result = Observable.from(gdmModels).filter(gdmModel -> {
+
+				final Model model = gdmModel.getModel();
+
+				if (model == null) {
+
+					LOG.debug("model is not available");
+
+					return false;
+				}
+
+				final Collection<Resource> resources = model.getResources();
+
+				if (resources == null || resources.isEmpty()) {
+
+					LOG.debug("resources from model are not available");
+
+					return false;
+				}
+
+				return true;
+
+			}).cast(org.dswarm.persistence.model.internal.Model.class);
 
 //			// write GDM models at once
 //			final Model model = new Model();

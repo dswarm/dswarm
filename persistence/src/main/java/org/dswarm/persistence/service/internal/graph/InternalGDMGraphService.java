@@ -22,7 +22,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -48,6 +50,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -570,28 +574,32 @@ public class InternalGDMGraphService implements InternalModelService {
 			}
 		});
 
-		final Observable<Resource> resourceObservable = modelObservable.map(gdm -> {
+		final Observable<Resource> resourceObservable = modelObservable.flatMapIterable(gdm -> {
 
 			try {
 
 				final org.dswarm.graph.json.Model model1 = getRealModel(gdm);
-				optionallyEnhancedDataModel(dataModel, gdm, model1, isSchemaAnInBuiltSchema);
 
 				if (model1 == null) {
 
-					// ???
-					return null;
+					LOG.debug("no model available");
+
+					return Collections.emptyList();
 				}
 
 				final Collection<Resource> resources = model1.getResources();
 
 				if (resources == null || resources.isEmpty()) {
 
-					return null;
+					LOG.debug("no resources available in model");
+
+					return Collections.emptyList();
 				}
 
+				optionallyEnhancedDataModel(dataModel, gdm, model1, isSchemaAnInBuiltSchema);
+
 				// note the model should always consist of one resource only
-				return resources.iterator().next();
+				return resources;
 			} catch (final DMPPersistenceException e) {
 
 				throw DMPPersistenceError.wrap(e);

@@ -15,10 +15,8 @@
  */
 package org.dswarm.controller.eventbus;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Observable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -29,6 +27,7 @@ import com.google.inject.Singleton;
 import org.culturegraph.mf.types.Triple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rx.Observable;
 
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.converter.DMPConverterException;
@@ -40,19 +39,19 @@ import org.dswarm.graph.json.Predicate;
 import org.dswarm.graph.json.Resource;
 import org.dswarm.graph.json.ResourceNode;
 import org.dswarm.persistence.DMPPersistenceException;
-import org.dswarm.persistence.model.resource.UpdateFormat;
-import org.dswarm.persistence.model.resource.utils.ResourceStatics;
-import org.dswarm.persistence.monitoring.MonitoringLogger;
-import org.dswarm.persistence.monitoring.MonitoringHelper;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.DataModel;
+import org.dswarm.persistence.model.resource.UpdateFormat;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
+import org.dswarm.persistence.model.resource.utils.ResourceStatics;
+import org.dswarm.persistence.monitoring.MonitoringHelper;
+import org.dswarm.persistence.monitoring.MonitoringLogger;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
 
 @Singleton
 public class CSVConverterEventRecorder {
 
-	private static final Logger					LOG	= LoggerFactory.getLogger(CSVConverterEventRecorder.class);
+	private static final Logger LOG                 = LoggerFactory.getLogger(CSVConverterEventRecorder.class);
 	private static final String RECORD_TYPE_POSTFIX = "RecordType";
 
 	private final Provider<CSVResourceFlowFactory> flowFactory;
@@ -81,7 +80,8 @@ public class CSVConverterEventRecorder {
 		}
 	}
 
-	private void convertConfiguration(final DataModel dataModel, final UpdateFormat updateFormat, final boolean enableVersioning) throws DMPControllerException {
+	private void convertConfiguration(final DataModel dataModel, final UpdateFormat updateFormat, final boolean enableVersioning)
+			throws DMPControllerException {
 
 		LOG.debug("try to process csv data resource into data model '{}'", dataModel.getUuid());
 
@@ -122,7 +122,9 @@ public class CSVConverterEventRecorder {
 			final String recordClassURI = dataResourceBaseSchemaURI + RECORD_TYPE_POSTFIX;
 			final ResourceNode recordClassNode = new ResourceNode(recordClassURI);
 
-			final rx.Observable<org.dswarm.persistence.model.internal.Model> models = rx.Observable.from(result).map(triple -> {
+			// TODO: optimize this processing, i.e., we iterate over all triples to collect the statements of the different resources; whereby, each resource should result in a separate model (i.e. in a separate GDMModel)
+
+			final Observable<org.dswarm.persistence.model.internal.Model> models = rx.Observable.from(result).map(triple -> {
 
 				final Model model = new Model();
 
@@ -137,6 +139,8 @@ public class CSVConverterEventRecorder {
 				final ResourceNode subject = (ResourceNode) recordResource.getStatements().iterator().next().getSubject();
 
 				recordResource.addStatement(subject, property, new LiteralNode(triple.getObject()));
+
+				// TODO: emit models/GDMModels only, when they are complete
 
 				return new GDMModel(model, null, recordClassURI);
 			});

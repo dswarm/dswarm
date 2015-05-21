@@ -239,7 +239,20 @@ public class TransformationFlow {
 
 		final Observable<org.dswarm.persistence.model.internal.Model> model = writer.getObservable().filter(gdmModel -> {
 
-			if (gdmModel.getModel() == null) {
+			final Model model1 = gdmModel.getModel();
+
+			if (model1 == null) {
+
+				LOG.debug("no model available");
+
+				return false;
+			}
+
+			final Collection<Resource> resources = model1.getResources();
+
+			if(resources == null || resources.isEmpty()) {
+
+				LOG.debug("no resources in model available");
 
 				return false;
 			}
@@ -363,7 +376,7 @@ public class TransformationFlow {
 						try {
 							future.get();
 
-						} catch (InterruptedException | ExecutionException e) {
+						} catch (final InterruptedException | ExecutionException e) {
 
 							throw new RuntimeException(e);
 						}
