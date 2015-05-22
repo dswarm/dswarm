@@ -135,11 +135,16 @@ public class InternalGDMGraphService implements InternalModelService {
 			.property(ClientProperties.CONNECT_TIMEOUT, REQUEST_TIMEOUT)
 			.property(ClientProperties.READ_TIMEOUT, REQUEST_TIMEOUT);
 
+	static {
+
+		System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
+	}
+
 	private static final String READ_GDM_ENDPOINT           = "/get";
 	private static final String WRITE_GDM_ENDPOINT          = "/put";
 	private static final String SEARCH_GDM_RECORDS_ENDPOINT = "/searchrecords";
 	private static final String GET_GDM_RECORD_ENDPOINT     = "/getrecord";
-	public static final String CHUNKED_TRANSFER_ENCODING = "chunked";
+	public static final  String CHUNKED_TRANSFER_ENCODING   = "chunked";
 
 	/**
 	 * The data model persistence service.
