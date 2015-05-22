@@ -21,6 +21,7 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -68,6 +69,7 @@ import org.dswarm.persistence.service.resource.ConfigurationService;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.service.resource.ResourceService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
+import org.dswarm.persistence.util.GDMUtil;
 
 public class TransformationFlowTest extends GuicedTest {
 
@@ -132,7 +134,7 @@ public class TransformationFlowTest extends GuicedTest {
 
 		for (final org.culturegraph.mf.types.Triple triple : csvRecordTriples) {
 
-			final org.dswarm.graph.json.Resource recordResource = DataModelUtils.mintRecordResource(Long.valueOf(triple.getSubject()),
+			final org.dswarm.graph.json.Resource recordResource = mintRecordResource(Long.valueOf(triple.getSubject()),
 					inputDataModel, recordResources, model, recordClasz);
 			final Predicate property = new Predicate(triple.getPredicate());
 
@@ -169,7 +171,8 @@ public class TransformationFlowTest extends GuicedTest {
 		final Observable<Map<String, Model>> optionalModelMapObservable = gdmService
 				.getObjects(updatedInputDataModel.getUuid(), Optional.<Integer>absent())
 				.toMap(Tuple::v1, Tuple::v2);
-		final Optional<Map<String, Model>> optionalModelMap = optionalModelMapObservable.map(Optional::of).toBlocking().firstOrDefault(Optional.absent());
+		final Optional<Map<String, Model>> optionalModelMap = optionalModelMapObservable.map(Optional::of).toBlocking()
+				.firstOrDefault(Optional.absent());
 
 		Assert.assertNotNull("CSV record model map optional shouldn't be null", optionalModelMap);
 		Assert.assertTrue("CSV record model map should be present", optionalModelMap.isPresent());
@@ -366,5 +369,49 @@ public class TransformationFlowTest extends GuicedTest {
 		}
 
 		return null;
+	}
+
+	private static org.dswarm.graph.json.Resource mintRecordResource(final Long identifier, final DataModel dataModel,
+			final Map<Long, org.dswarm.graph.json.Resource> recordResources, final org.dswarm.graph.json.Model model,
+			final ResourceNode recordClassNode) {
+
+		if (identifier != null) {
+
+			if (recordResources.containsKey(identifier)) {
+
+				return recordResources.get(identifier);
+			}
+		}
+
+		// mint completely new uri
+
+		final StringBuilder sb = new StringBuilder();
+
+		if (dataModel != null) {
+
+			// create uri from resource id and configuration id and random uuid
+
+			sb.append("http://data.slub-dresden.de/datamodels/").append(dataModel.getUuid()).append("/records/");
+		} else {
+
+			// create uri from random uuid
+
+			sb.append("http://data.slub-dresden.de/records/");
+		}
+
+		final String recordURI = sb.append(UUID.randomUUID()).toString();
+
+		final org.dswarm.graph.json.Resource recordResource = new org.dswarm.graph.json.Resource(recordURI);
+
+		if (identifier != null) {
+
+			recordResources.put(identifier, recordResource);
+		}
+
+		// add resource type statement to model
+		recordResource.addStatement(new ResourceNode(recordResource.getUri()), new Predicate(GDMUtil.RDF_type), recordClassNode);
+		model.addResource(recordResource);
+
+		return recordResource;
 	}
 }

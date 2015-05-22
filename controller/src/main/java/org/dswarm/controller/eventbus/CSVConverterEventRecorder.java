@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import rx.Observable;
 
 import org.dswarm.controller.DMPControllerException;
+import org.dswarm.controller.utils.DataModelUtil;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.flow.CSVResourceFlowFactory;
 import org.dswarm.converter.flow.CSVSourceResourceTriplesFlow;
@@ -47,6 +48,7 @@ import org.dswarm.persistence.model.resource.utils.ResourceStatics;
 import org.dswarm.persistence.monitoring.MonitoringHelper;
 import org.dswarm.persistence.monitoring.MonitoringLogger;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
+import org.dswarm.persistence.util.GDMUtil;
 
 @Singleton
 public class CSVConverterEventRecorder {
@@ -116,34 +118,43 @@ public class CSVConverterEventRecorder {
 			LOG.debug("transformed CSV data resource to triples for data model '{}'", dataModel.getUuid());
 
 			// convert result to GDM
-			final Map<Long, Resource> recordResources = Maps.newLinkedHashMap();
 
 			final String dataResourceBaseSchemaURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
 			final String recordClassURI = dataResourceBaseSchemaURI + RECORD_TYPE_POSTFIX;
 			final ResourceNode recordClassNode = new ResourceNode(recordClassURI);
 
-			// TODO: optimize this processing, i.e., we iterate over all triples to collect the statements of the different resources; whereby, each resource should result in a separate model (i.e. in a separate GDMModel)
+			final Observable<org.dswarm.persistence.model.internal.Model> models = Observable.from(result)
+					.groupBy(Triple::getSubject)
+					.flatMap(triples -> {
 
-			final Observable<org.dswarm.persistence.model.internal.Model> models = rx.Observable.from(result).map(triple -> {
+						// 1. create resource uri from subject (line number)
+						final Resource recordResource = DataModelUtils.mintRecordResource(dataModel);
 
-				final Model model = new Model();
+						// add resource type statement to model
+						recordResource.addStatement(new ResourceNode(recordResource.getUri()), new Predicate(GDMUtil.RDF_type), recordClassNode);
 
-				// 1. create resource uri from subject (line number)
-				// 2. create property object from property uri string
-				// 3. convert objects (string literals) to string literals (?)
+						return triples.reduce(recordResource, (resource, triple) -> {
 
-				final Resource recordResource = DataModelUtils.mintRecordResource(Long.valueOf(triple.getSubject()), dataModel, recordResources,
-						model, recordClassNode);
-				final Predicate property = new Predicate(triple.getPredicate());
+							// 2. create property object from property uri string
+							final Predicate property = new Predicate(triple.getPredicate());
 
-				final ResourceNode subject = (ResourceNode) recordResource.getStatements().iterator().next().getSubject();
+							final ResourceNode subject = (ResourceNode) resource.getStatements().iterator().next().getSubject();
 
-				recordResource.addStatement(subject, property, new LiteralNode(triple.getObject()));
+							// 3. convert objects (string literals) to string literals (?)
+							final LiteralNode object = new LiteralNode(triple.getObject());
 
-				// TODO: emit models/GDMModels only, when they are complete
+							resource.addStatement(subject, property, object);
 
-				return new GDMModel(model, null, recordClassURI);
-			});
+							return resource;
+						}).map(finalResource -> {
+
+							final Model model = new Model();
+							model.addResource(finalResource);
+
+							return new GDMModel(model, null, recordClassURI);
+						});
+
+					});
 
 			LOG.debug("transformed CSV data resource to GDM for data model '{}'", dataModel.getUuid());
 
@@ -153,7 +164,9 @@ public class CSVConverterEventRecorder {
 				final Observable<Response> writeResponse = internalServiceFactory.getInternalGDMGraphService()
 						.updateObject(dataModel.getUuid(), models, updateFormat, enableVersioning);
 
-				writeResponse.toBlocking().first();
+				LOG.debug("before to blocking");
+
+				writeResponse.toBlocking().firstOrDefault(null);
 
 				LOG.debug("processed CSV data resource into data model '{}'", dataModel.getUuid());
 			} catch (final DMPPersistenceException e) {

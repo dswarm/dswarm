@@ -178,17 +178,7 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 		return dataResourceBaseURI;
 	}
 
-	public static org.dswarm.graph.json.Resource mintRecordResource(final Long identifier, final DataModel dataModel,
-			final Map<Long, org.dswarm.graph.json.Resource> recordResources, final org.dswarm.graph.json.Model model,
-			final ResourceNode recordClassNode) {
-
-		if (identifier != null) {
-
-			if (recordResources.containsKey(identifier)) {
-
-				return recordResources.get(identifier);
-			}
-		}
+	public static org.dswarm.graph.json.Resource mintRecordResource(final DataModel dataModel) {
 
 		// mint completely new uri
 
@@ -207,17 +197,7 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 		}
 
 		final String recordURI = sb.append(UUID.randomUUID()).toString();
-		final org.dswarm.graph.json.Resource recordResource = new org.dswarm.graph.json.Resource(recordURI);
 
-		if (identifier != null) {
-
-			recordResources.put(identifier, recordResource);
-		}
-
-		// add resource type statement to model
-		recordResource.addStatement(new ResourceNode(recordResource.getUri()), new Predicate(GDMUtil.RDF_type), recordClassNode);
-		model.addResource(recordResource);
-
-		return recordResource;
+		return new org.dswarm.graph.json.Resource(recordURI);
 	}
 }

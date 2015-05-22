@@ -30,6 +30,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.ws.rs.client.Client;
@@ -61,8 +62,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
 import rx.Observer;
+import rx.Subscriber;
 import rx.schedulers.Schedulers;
 import rx.subjects.AsyncSubject;
+import rx.subjects.PublishSubject;
 import rx.subjects.ReplaySubject;
 
 import org.dswarm.common.DMPStatics;
@@ -559,66 +562,146 @@ public class InternalGDMGraphService implements InternalModelService {
 			final DataModel dataModel = getSchemaInternal(dataModelUuid);
 			final boolean isSchemaAnInBuiltSchema = isSchemaAnInbuiltSchema(dataModel);
 
-			final Observable<GDMModel> modelObservable = model.cast(GDMModel.class).cache(1);
+
+
+			final Observable<GDMModel> modelObservable = model.cast(GDMModel.class);
+
+		final RequestOperator operator = new RequestOperator(dataModel, isSchemaAnInBuiltSchema, dataModelURI, optionalDeprecateMissingRecords,
+				enableVersioning);
+		final Observable<Resource> resourceObservable = modelObservable.lift(operator).flatMapIterable(gdm -> {
+
+			try {
+
+				final org.dswarm.graph.json.Model model1 = getRealModel(gdm);
+
+				if (model1 == null) {
+
+					LOG.debug("no model available");
+
+					return Collections.emptyList();
+				}
+
+				final Collection<Resource> resources = model1.getResources();
+
+				if (resources == null || resources.isEmpty()) {
+
+					LOG.debug("no resources available in model");
+
+					return Collections.emptyList();
+				}
+
+				optionallyEnhancedDataModel(dataModel, gdm, model1, isSchemaAnInBuiltSchema);
+
+				// note the model should always consist of one resource only
+				return resources;
+			} catch (final DMPPersistenceException e) {
+
+				throw DMPPersistenceError.wrap(e);
+			}
+		});
 
 			// to determine write request metadata and prepare write
-			final Observable<Tuple<Observer<Resource>, Observable<Response>>> writeRequestTuple = modelObservable.take(1).map(gdm -> {
+//			final Observable<Tuple<Observer<Resource>, Observable<Response>>> writeRequestTuple = modelObservable.take(1).map(gdm -> {
+//
+//				try {
+//
+//					final org.dswarm.graph.json.Model realModel = getRealModel(gdm);
+//					final DataModel finalDataModel = optionallyEnhancedDataModel(dataModel, gdm, realModel, isSchemaAnInBuiltSchema);
+//					final Optional<ContentSchema> optionalContentSchema = Optional.fromNullable(finalDataModel.getSchema().getContentSchema());
+//					final Optional<String> optionalRecordClassUri = Optional.fromNullable(finalDataModel.getSchema().getRecordClass().getUri());
+//
+//					final String metadata = getMetadata(dataModelURI, optionalContentSchema, optionalDeprecateMissingRecords,
+//							optionalRecordClassUri,
+//							enableVersioning);
+//
+//					final Tuple<Observer<Resource>, Observable<Response>> observerObservableTuple = writeGDMToDB(dataModelURI, metadata);
+//
+//					final Observable<Response> responseObservable = observerObservableTuple.v2();
+//
+//					responseObservable.subscribe(new Observer<Response>() {
+//
+//						@Override public void onCompleted() {
+//
+//							LOG.debug("in onCompleted: subscribed on subject after POST in request observable");
+//						}
+//
+//						@Override public void onError(Throwable e) {
+//
+//							LOG.debug("in onError: subscribed on subject after POST in request observable");
+//						}
+//
+//						@Override public void onNext(Response response) {
+//
+//							LOG.debug("in onNext: subscribed on subject after POST in request observable");
+//						}
+//					});
+//
+//					return observerObservableTuple;
+//				} catch (final DMPPersistenceException e) {
+//
+//					throw DMPPersistenceError.wrap(e);
+//				}
+//			});
 
-				try {
+//			final Observable<Observer<Resource>> modelConsumer = writeRequestTuple.map(Tuple::v1);
 
-					final org.dswarm.graph.json.Model realModel = getRealModel(gdm);
-					final DataModel finalDataModel = optionallyEnhancedDataModel(dataModel, gdm, realModel, isSchemaAnInBuiltSchema);
-					final Optional<ContentSchema> optionalContentSchema = Optional.fromNullable(finalDataModel.getSchema().getContentSchema());
-					final Optional<String> optionalRecordClassUri = Optional.fromNullable(finalDataModel.getSchema().getRecordClass().getUri());
+//			final Observable<Resource> resourceObservable = modelObservable.flatMapIterable(gdm -> {
+//
+//				try {
+//
+//					final org.dswarm.graph.json.Model model1 = getRealModel(gdm);
+//
+//					if (model1 == null) {
+//
+//						LOG.debug("no model available");
+//
+//						return Collections.emptyList();
+//					}
+//
+//					final Collection<Resource> resources = model1.getResources();
+//
+//					if (resources == null || resources.isEmpty()) {
+//
+//						LOG.debug("no resources available in model");
+//
+//						return Collections.emptyList();
+//					}
+//
+//					optionallyEnhancedDataModel(dataModel, gdm, model1, isSchemaAnInBuiltSchema);
+//
+//					// note the model should always consist of one resource only
+//					return resources;
+//				} catch (final DMPPersistenceException e) {
+//
+//					throw DMPPersistenceError.wrap(e);
+//				}
+//			});
 
-					final String metadata = getMetadata(dataModelURI, optionalContentSchema, optionalDeprecateMissingRecords,
-							optionalRecordClassUri,
-							enableVersioning);
+		resourceObservable.subscribe(operator.resourceObserver());
 
-					return writeGDMToDB(dataModelURI, metadata);
-				} catch (final DMPPersistenceException e) {
+//			modelConsumer.subscribeOn(Schedulers.from(EXECUTOR_SERVICE)).subscribe(resourceObservable::subscribe);
 
-					throw DMPPersistenceError.wrap(e);
-				}
-			});
+		final Observable<Response> responseObservable = operator.responseObservable(); //  writeRequestTuple.flatMap(Tuple::v2);
 
-			final Observable<Observer<Resource>> modelConsumer = writeRequestTuple.map(Tuple::v1);
+//		responseObservable.subscribe(new Observer<Response>() {
+//
+//			@Override public void onCompleted() {
+//
+//				LOG.debug("in onCompleted: subscribed on subject after POST after flatMap");
+//			}
+//
+//			@Override public void onError(Throwable e) {
+//
+//				LOG.debug("in onError: subscribed on subject after POST after flatMap");
+//			}
+//
+//			@Override public void onNext(Response response) {
+//
+//				LOG.debug("in onNext: subscribed on subject after POST after flatMap");
+//			}
+//		});
 
-			final Observable<Resource> resourceObservable = modelObservable.flatMapIterable(gdm -> {
-
-				try {
-
-					final org.dswarm.graph.json.Model model1 = getRealModel(gdm);
-
-					if (model1 == null) {
-
-						LOG.debug("no model available");
-
-						return Collections.emptyList();
-					}
-
-					final Collection<Resource> resources = model1.getResources();
-
-					if (resources == null || resources.isEmpty()) {
-
-						LOG.debug("no resources available in model");
-
-						return Collections.emptyList();
-					}
-
-					optionallyEnhancedDataModel(dataModel, gdm, model1, isSchemaAnInBuiltSchema);
-
-					// note the model should always consist of one resource only
-					return resources;
-				} catch (final DMPPersistenceException e) {
-
-					throw DMPPersistenceError.wrap(e);
-				}
-			});
-
-			modelConsumer.subscribeOn(Schedulers.from(EXECUTOR_SERVICE)).subscribe(resourceObservable::subscribe);
-
-			return writeRequestTuple.flatMap(Tuple::v2);
+		return responseObservable;
 	}
 
 	private DataModel optionallyEnhancedDataModel(final DataModel dataModel, final GDMModel gdmModel, final org.dswarm.graph.json.Model realModel,
@@ -1078,7 +1161,25 @@ public class InternalGDMGraphService implements InternalModelService {
 				LOG.debug("completely wrote GDM data for data model '{}' into data hub", dataModelUri);
 			});
 
-			post.subscribe(asyncPost);
+			asyncPost.subscribe(new Observer<Response>() {
+
+									@Override public void onCompleted() {
+
+										LOG.debug("in onCompleted: subscribed on subject before POST");
+									}
+
+									@Override public void onError(Throwable e) {
+
+										LOG.debug("in onError: subscribed on subject before POST");
+									}
+
+									@Override public void onNext(Response response) {
+
+										LOG.debug("in onNext: subscribed on subject before POST");
+									}
+								});
+
+					post.subscribe(asyncPost);
 
 			//			final Future<Response> post = async.post(Entity.entity(multiPart, MULTIPART_MIXED), callback);
 			//
@@ -1096,6 +1197,24 @@ public class InternalGDMGraphService implements InternalModelService {
 			//
 			//				return null;
 			//			});
+
+			asyncPost.subscribe(new Observer<Response>() {
+
+				@Override public void onCompleted() {
+
+					LOG.debug("in onCompleted: subscribed on subject after POST");
+				}
+
+				@Override public void onError(Throwable e) {
+
+					LOG.debug("in onError: subscribed on subject after POST");
+				}
+
+				@Override public void onNext(Response response) {
+
+					LOG.debug("in onNext: subscribed on subject after POST");
+				}
+			});
 
 			return Tuple.tuple(modelConsumer, asyncPost);
 		} catch (final InterruptedException | ExecutionException e) {
@@ -1457,5 +1576,101 @@ public class InternalGDMGraphService implements InternalModelService {
 				throw new DMPPersistenceException(String.format("couldn't finish %s processing", type), e);
 			}
 		}
+	}
+
+	private class RequestOperator implements Observable.Operator<GDMModel, GDMModel> {
+
+		private final DataModel dataModel	;
+		private final boolean isSchemaAnInBuiltSchema;
+		private final String dataModelURI;
+		private final Optional<Boolean> optionalDeprecateMissingRecords;
+		private final boolean enableVersioning;
+
+		private final AsyncSubject<Response> responseAsyncSubject = AsyncSubject.create();
+		private final PublishSubject<Resource> resourcePublishSubject = PublishSubject.create();
+
+		private RequestOperator(DataModel dataModel, boolean isSchemaAnInBuiltSchema, String dataModelURI,
+				Optional<Boolean> optionalDeprecateMissingRecords, boolean enableVersioning) {
+			this.dataModel = dataModel;
+			this.isSchemaAnInBuiltSchema = isSchemaAnInBuiltSchema;
+			this.dataModelURI = dataModelURI;
+			this.optionalDeprecateMissingRecords = optionalDeprecateMissingRecords;
+			this.enableVersioning = enableVersioning;
+		}
+
+		Observer<Resource> resourceObserver() {
+			return resourcePublishSubject;
+		}
+
+		Observable<Response> responseObservable() {
+			return responseAsyncSubject;
+		}
+
+		@Override public Subscriber<? super GDMModel> call(Subscriber<? super GDMModel> subscriber) {
+
+			final AtomicBoolean seenFirstModel = new AtomicBoolean();
+
+			return new Subscriber<GDMModel>() {
+
+				@Override public void onCompleted() {
+					subscriber.onCompleted();
+				}
+
+				@Override public void onError(Throwable e) {
+
+					subscriber.onError(e);
+				}
+
+				@Override public void onNext(GDMModel gdm) {
+
+					if (seenFirstModel.compareAndSet(false, true)) {
+						try {
+
+							final org.dswarm.graph.json.Model realModel = getRealModel(gdm);
+							final DataModel finalDataModel = optionallyEnhancedDataModel(dataModel, gdm, realModel, isSchemaAnInBuiltSchema);
+							final Optional<ContentSchema> optionalContentSchema = Optional
+									.fromNullable(finalDataModel.getSchema().getContentSchema());
+							final Optional<String> optionalRecordClassUri = Optional
+									.fromNullable(finalDataModel.getSchema().getRecordClass().getUri());
+
+							final String metadata = getMetadata(dataModelURI, optionalContentSchema, optionalDeprecateMissingRecords,
+									optionalRecordClassUri,
+									enableVersioning);
+
+							final Tuple<Observer<Resource>, Observable<Response>> observerObservableTuple = writeGDMToDB(dataModelURI, metadata);
+							final Observer<Resource> resourceObserver = observerObservableTuple.v1();
+							resourcePublishSubject.subscribe(resourceObserver);
+
+							final Observable<Response> responseObservable = observerObservableTuple.v2();
+							responseObservable.subscribe(responseAsyncSubject);
+
+							responseObservable.subscribe(new Observer<Response>() {
+
+								@Override public void onCompleted() {
+
+									LOG.debug("in onCompleted: subscribed on subject after POST in request observable");
+								}
+
+								@Override public void onError(Throwable e) {
+
+									LOG.debug("in onError: subscribed on subject after POST in request observable");
+								}
+
+								@Override public void onNext(Response response) {
+
+									LOG.debug("in onNext: subscribed on subject after POST in request observable");
+								}
+							});
+						} catch (final DMPPersistenceException e) {
+
+							throw DMPPersistenceError.wrap(e);
+						}
+					}
+					subscriber.onNext(gdm);
+				}
+			};
+
+		}
+
 	}
 }

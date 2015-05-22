@@ -398,7 +398,9 @@ public class TransformationFlow {
 
 		tuples.subscribeOn(Schedulers.newThread()).subscribe(opener::process, writer::propagateError, opener::closeStream);
 
-		writeResponse.toBlocking().first();
+		LOG.debug("before to blocking in transformation flow");
+
+		writeResponse.toBlocking().firstOrDefault(null);
 
 		morphContext.stop();
 
