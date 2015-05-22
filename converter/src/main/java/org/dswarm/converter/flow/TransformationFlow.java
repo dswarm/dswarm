@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -241,7 +242,13 @@ public class TransformationFlow {
 		final String defaultRecordClassURI =
 				optionalDataModelSchemaRecordClassURI.orElse(ClaszUtils.BIBO_DOCUMENT_URI);
 
+		final AtomicInteger counter = new AtomicInteger(0);
+
 		final Observable<org.dswarm.persistence.model.internal.Model> model = writer.getObservable().filter(gdmModel -> {
+
+			final int current = counter.incrementAndGet();
+
+			LOG.debug("processed resource model number '{}'", current);
 
 			final Model model1 = gdmModel.getModel();
 
@@ -260,6 +267,8 @@ public class TransformationFlow {
 
 				return false;
 			}
+
+			LOG.debug("processed resource model number '{}' with '{}' and resource site '{}'", current, resources.iterator().next().getUri(), resources.size());
 
 			final Set<String> recordURIsFromGDMModel = gdmModel.getRecordURIs();
 

@@ -31,6 +31,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.ws.rs.client.Client;
@@ -1131,7 +1132,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 			final Observable<Response> post = rx.post(Entity.entity(multiPart, MULTIPART_MIXED)).subscribeOn(Schedulers.from(EXECUTOR_SERVICE));
 
-			final ReplaySubject<Response> asyncPost = ReplaySubject.create();
+			final PublishSubject<Response> asyncPost = PublishSubject.create();
 			asyncPost.subscribe(response -> {
 
 				try {
@@ -1490,11 +1491,13 @@ public class InternalGDMGraphService implements InternalModelService {
 
 			return new Observer<org.dswarm.graph.json.Resource>() {
 
+				final AtomicInteger counter = new AtomicInteger(0);
+
 				@Override public void onCompleted() {
 
 					try {
 
-						LOG.debug("in model builder onCompleted");
+						LOG.debug("in model builder onCompleted with '{}' resources", counter.get());
 
 						modelBuilder.build();
 					} catch (final IOException e) {
@@ -1513,7 +1516,12 @@ public class InternalGDMGraphService implements InternalModelService {
 
 					try {
 
-						LOG.debug("add resource to output stream");
+						LOG.debug("add resource number '{}' with '{}' to output stream", counter.incrementAndGet(), resource.getUri());
+
+						if(counter.get() == 1) {
+
+							LOG.debug("added first resource to output stream '{}'", resource.getUri());
+						}
 
 						modelBuilder.addResource(resource);
 						output.flush();
@@ -1580,13 +1588,13 @@ public class InternalGDMGraphService implements InternalModelService {
 
 	private class RequestOperator implements Observable.Operator<GDMModel, GDMModel> {
 
-		private final DataModel dataModel	;
-		private final boolean isSchemaAnInBuiltSchema;
-		private final String dataModelURI;
+		private final DataModel         dataModel;
+		private final boolean           isSchemaAnInBuiltSchema;
+		private final String            dataModelURI;
 		private final Optional<Boolean> optionalDeprecateMissingRecords;
-		private final boolean enableVersioning;
+		private final boolean           enableVersioning;
 
-		private final AsyncSubject<Response> responseAsyncSubject = AsyncSubject.create();
+		private final AsyncSubject<Response>   responseAsyncSubject   = AsyncSubject.create();
 		private final PublishSubject<Resource> resourcePublishSubject = PublishSubject.create();
 
 		private RequestOperator(DataModel dataModel, boolean isSchemaAnInBuiltSchema, String dataModelURI,

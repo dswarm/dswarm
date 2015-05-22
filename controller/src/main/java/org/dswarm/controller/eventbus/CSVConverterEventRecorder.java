@@ -17,6 +17,7 @@ package org.dswarm.controller.eventbus;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.ws.rs.core.Response;
 
@@ -123,6 +124,10 @@ public class CSVConverterEventRecorder {
 			final String recordClassURI = dataResourceBaseSchemaURI + RECORD_TYPE_POSTFIX;
 			final ResourceNode recordClassNode = new ResourceNode(recordClassURI);
 
+			final AtomicInteger counter = new AtomicInteger(0);
+
+			LOG.debug("CSV triples = '{}'", result.size());
+
 			final Observable<org.dswarm.persistence.model.internal.Model> models = Observable.from(result)
 					.groupBy(Triple::getSubject)
 					.flatMap(triples -> {
@@ -130,10 +135,14 @@ public class CSVConverterEventRecorder {
 						// 1. create resource uri from subject (line number)
 						final Resource recordResource = DataModelUtils.mintRecordResource(dataModel);
 
+						final int current = counter.incrementAndGet();
+
+						LOG.debug("CSV resource number '{}' with '{}'", current, recordResource.getUri());
+
 						// add resource type statement to model
 						recordResource.addStatement(new ResourceNode(recordResource.getUri()), new Predicate(GDMUtil.RDF_type), recordClassNode);
 
-						return triples.reduce(recordResource, (resource, triple) -> {
+						final Observable<GDMModel> gdmModel = triples.reduce(recordResource, (resource, triple) -> {
 
 							// 2. create property object from property uri string
 							final Predicate property = new Predicate(triple.getPredicate());
@@ -151,9 +160,15 @@ public class CSVConverterEventRecorder {
 							final Model model = new Model();
 							model.addResource(finalResource);
 
+							final int current2 = counter.get();
+
+							LOG.debug("CSV resource number '{}' with '{}' and '{}' statement", current2, recordResource.getUri(),
+									finalResource.size());
+
 							return new GDMModel(model, null, recordClassURI);
 						});
 
+						return gdmModel;
 					});
 
 			LOG.debug("transformed CSV data resource to GDM for data model '{}'", dataModel.getUuid());
