@@ -17,6 +17,7 @@ package org.dswarm.controller.eventbus;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.ws.rs.core.Response;
 
@@ -108,6 +109,10 @@ public class XMLConverterEventRecorder {
 
 			final List<GDMModel> gdmModels = flow.applyResource(path);
 
+			final AtomicInteger counter = new AtomicInteger(0);
+
+			LOG.debug("XML records = '{}'", gdmModels.size());
+
 			result = Observable.from(gdmModels).filter(gdmModel -> {
 
 				final Model model = gdmModel.getModel();
@@ -127,6 +132,10 @@ public class XMLConverterEventRecorder {
 
 					return false;
 				}
+
+				final int current = counter.incrementAndGet();
+
+				LOG.debug("XML resource number '{}' with '{}' and resources size = '{}'", current, resources.iterator().next().getUri(), resources.size());
 
 				return true;
 

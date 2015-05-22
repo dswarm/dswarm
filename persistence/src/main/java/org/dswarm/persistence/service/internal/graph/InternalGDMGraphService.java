@@ -48,6 +48,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
+import com.google.common.net.HttpHeaders;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -67,7 +68,6 @@ import rx.Subscriber;
 import rx.schedulers.Schedulers;
 import rx.subjects.AsyncSubject;
 import rx.subjects.PublishSubject;
-import rx.subjects.ReplaySubject;
 
 import org.dswarm.common.DMPStatics;
 import org.dswarm.common.model.util.AttributePathUtil;
@@ -115,6 +115,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 	private static final String RESOURCE_IDENTIFIER = "gdm";
 	private static final String MULTIPART_MIXED     = "multipart/mixed";
+	private static final String CHUNKED             = "CHUNKED";
 
 	private static final String SEARCH_RESULT    = "search result";
 	private static final String OBJECT_RETRIEVAL = "object retrieval";
@@ -129,6 +130,8 @@ public class InternalGDMGraphService implements InternalModelService {
 
 	private static final ClientBuilder BUILDER = ClientBuilder.newBuilder().register(MultiPartFeature.class)
 			.property(ClientProperties.CHUNKED_ENCODING_SIZE, CHUNK_SIZE)
+			.property(ClientProperties.REQUEST_ENTITY_PROCESSING, CHUNKED)
+			.property(ClientProperties.OUTBOUND_CONTENT_LENGTH_BUFFER, CHUNK_SIZE)
 			.property(ClientProperties.CONNECT_TIMEOUT, REQUEST_TIMEOUT)
 			.property(ClientProperties.READ_TIMEOUT, REQUEST_TIMEOUT);
 
@@ -136,6 +139,7 @@ public class InternalGDMGraphService implements InternalModelService {
 	private static final String WRITE_GDM_ENDPOINT          = "/put";
 	private static final String SEARCH_GDM_RECORDS_ENDPOINT = "/searchrecords";
 	private static final String GET_GDM_RECORD_ENDPOINT     = "/getrecord";
+	public static final String CHUNKED_TRANSFER_ENCODING = "chunked";
 
 	/**
 	 * The data model persistence service.
@@ -1088,12 +1092,18 @@ public class InternalGDMGraphService implements InternalModelService {
 			}).get();
 
 			final MultiPart multiPart = new MultiPart();
+			final BufferedInputStream entity1 = new BufferedInputStream(input, CHUNK_SIZE);
+
 			multiPart
 					.bodyPart(metadata, MediaType.APPLICATION_JSON_TYPE)
-					.bodyPart(input, MediaType.APPLICATION_OCTET_STREAM_TYPE);
+					.bodyPart(entity1, MediaType.APPLICATION_OCTET_STREAM_TYPE);
+
+//			final PublishSubject<Response>
+//
+//			final Response post1 = target.request(MULTIPART_MIXED).post(Entity.entity(multiPart, MULTIPART_MIXED));
 
 			// POST the request
-			final RxObservableInvoker rx = rxWebTarget.request(MULTIPART_MIXED).rx();
+			final RxObservableInvoker rx = rxWebTarget.request(MULTIPART_MIXED).header(HttpHeaders.TRANSFER_ENCODING, CHUNKED_TRANSFER_ENCODING).rx();
 			//			final InvocationCallback<Response> callback = new InvocationCallback<Response>() {
 			//
 			//				@Override public void completed(final Response response) {
@@ -1130,7 +1140,9 @@ public class InternalGDMGraphService implements InternalModelService {
 			//				}
 			//			};
 
-			final Observable<Response> post = rx.post(Entity.entity(multiPart, MULTIPART_MIXED)).subscribeOn(Schedulers.from(EXECUTOR_SERVICE));
+			final Entity<MultiPart> entity = Entity.entity(multiPart, MULTIPART_MIXED);
+
+			final Observable<Response> post = rx.post(entity).subscribeOn(Schedulers.from(EXECUTOR_SERVICE));
 
 			final PublishSubject<Response> asyncPost = PublishSubject.create();
 			asyncPost.subscribe(response -> {
@@ -1216,6 +1228,8 @@ public class InternalGDMGraphService implements InternalModelService {
 					LOG.debug("in onNext: subscribed on subject after POST");
 				}
 			});
+
+			LOG.debug("finished initializing GDM write request");
 
 			return Tuple.tuple(modelConsumer, asyncPost);
 		} catch (final InterruptedException | ExecutionException e) {
@@ -1597,8 +1611,8 @@ public class InternalGDMGraphService implements InternalModelService {
 		private final AsyncSubject<Response>   responseAsyncSubject   = AsyncSubject.create();
 		private final PublishSubject<Resource> resourcePublishSubject = PublishSubject.create();
 
-		private RequestOperator(DataModel dataModel, boolean isSchemaAnInBuiltSchema, String dataModelURI,
-				Optional<Boolean> optionalDeprecateMissingRecords, boolean enableVersioning) {
+		private RequestOperator(final DataModel dataModel, final boolean isSchemaAnInBuiltSchema, final String dataModelURI,
+				final Optional<Boolean> optionalDeprecateMissingRecords, final boolean enableVersioning) {
 			this.dataModel = dataModel;
 			this.isSchemaAnInBuiltSchema = isSchemaAnInBuiltSchema;
 			this.dataModelURI = dataModelURI;
@@ -1614,7 +1628,7 @@ public class InternalGDMGraphService implements InternalModelService {
 			return responseAsyncSubject;
 		}
 
-		@Override public Subscriber<? super GDMModel> call(Subscriber<? super GDMModel> subscriber) {
+		@Override public Subscriber<? super GDMModel> call(final Subscriber<? super GDMModel> subscriber) {
 
 			final AtomicBoolean seenFirstModel = new AtomicBoolean();
 
@@ -1624,14 +1638,17 @@ public class InternalGDMGraphService implements InternalModelService {
 					subscriber.onCompleted();
 				}
 
-				@Override public void onError(Throwable e) {
+				@Override public void onError(final Throwable e) {
 
 					subscriber.onError(e);
 				}
 
-				@Override public void onNext(GDMModel gdm) {
+				@Override public void onNext(final GDMModel gdm) {
 
 					if (seenFirstModel.compareAndSet(false, true)) {
+
+						LOG.debug("start initializing GDM write request");
+
 						try {
 
 							final org.dswarm.graph.json.Model realModel = getRealModel(gdm);
