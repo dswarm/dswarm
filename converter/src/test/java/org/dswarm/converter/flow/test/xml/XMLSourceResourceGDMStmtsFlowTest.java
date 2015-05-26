@@ -54,7 +54,7 @@ public class XMLSourceResourceGDMStmtsFlowTest extends GuicedTest {
 	private void testFlow(final XMLSourceResourceGDMStmtsFlow flow, final String fileName, final String expectedResultFileName, final Integer offset)
 			throws DMPConverterException {
 
-		final List<GDMModel> gdmModels = flow.applyResource(fileName);
+		final List<GDMModel> gdmModels = flow.applyResource(fileName).toList().toBlocking().first();
 
 		if (gdmModels != null && !gdmModels.isEmpty()) {
 

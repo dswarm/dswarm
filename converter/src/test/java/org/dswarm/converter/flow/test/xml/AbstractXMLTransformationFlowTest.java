@@ -125,7 +125,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 				.getInstance(XmlResourceFlowFactory.class)
 				.fromDataModel(updatedInputDataModel);
 
-		final List<GDMModel> gdmModels = flow2.applyResource(exampleDataResourceFileName);
+		final List<GDMModel> gdmModels = flow2.applyResource(exampleDataResourceFileName).toList().toBlocking().first();
 
 		Assert.assertNotNull("GDM model list shouldn't be null", gdmModels);
 		Assert.assertFalse("GDM model list shouldn't be empty", gdmModels.isEmpty());

@@ -107,13 +107,13 @@ public class XMLConverterEventRecorder {
 
 			LOG.debug("process xml data resource at '{}' into data model '{}'", path, dataModel.getUuid());
 
-			final List<GDMModel> gdmModels = flow.applyResource(path);
+			final Observable<GDMModel> gdmModels = flow.applyResource(path);
 
 			final AtomicInteger counter = new AtomicInteger(0);
 
-			LOG.debug("XML records = '{}'", gdmModels.size());
+			//LOG.debug("XML records = '{}'", gdmModels.size());
 
-			result = Observable.from(gdmModels).filter(gdmModel -> {
+			result = gdmModels.filter(gdmModel -> {
 
 				final Model model = gdmModel.getModel();
 

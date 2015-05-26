@@ -63,6 +63,7 @@ import org.culturegraph.mf.stream.pipe.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
+import rx.Subscriber;
 import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
@@ -199,7 +200,7 @@ public class TransformationFlow {
 	public Observable<JsonNode> apply(
 			final Observable<Tuple<String, JsonNode>> tuples,
 			final ObjectPipe<Tuple<String, JsonNode>, StreamReceiver> opener,
-			final boolean writeResultToDatahub, final boolean returnJsonToCaller) throws DMPConverterException {
+			final boolean writeResultToDatahub, final boolean doNotReturnJsonToCaller) throws DMPConverterException {
 
 		final Context morphContext = morphTimer.time();
 
@@ -357,7 +358,7 @@ public class TransformationFlow {
 
 		final Observable<JsonNode> resultObservable;
 
-		if (!returnJsonToCaller) {
+		if (doNotReturnJsonToCaller) {
 
 			resultObservable = Observable.empty();
 		} else {
@@ -405,23 +406,29 @@ public class TransformationFlow {
 			writeResponse = Observable.empty();
 		}
 
-		tuples.subscribeOn(Schedulers.newThread()).subscribe(opener::process, writer::propagateError, opener::closeStream);
+		return Observable.create(new Observable.OnSubscribe<JsonNode>() {
 
-		LOG.debug("before to blocking in transformation flow");
+			@Override public void call(final Subscriber<? super JsonNode> subscriber) {
 
-		writeResponse.toBlocking().firstOrDefault(null);
+				resultObservable.subscribe(subscriber);
 
-		morphContext.stop();
+				tuples.subscribeOn(Schedulers.newThread()).subscribe(opener::process, writer::propagateError, opener::closeStream);
 
-		return resultObservable;
+				LOG.debug("before to blocking in transformation flow");
+
+				writeResponse.toBlocking().firstOrDefault(null);
+
+				morphContext.stop();
+			}
+		});
 	}
 
 	public Observable<JsonNode> apply(final Observable<Tuple<String, JsonNode>> tuples, final boolean writeResultToDatahub,
-			final boolean returnJsonToCaller) throws DMPConverterException {
+			final boolean doNotReturnJsonToCaller) throws DMPConverterException {
 
 		final JsonNodeReader opener = new JsonNodeReader();
 
-		return apply(tuples, opener, writeResultToDatahub, returnJsonToCaller);
+		return apply(tuples, opener, writeResultToDatahub, doNotReturnJsonToCaller);
 	}
 
 	static Metamorph createMorph(final Reader morphString) throws DMPMorphDefException {

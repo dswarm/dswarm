@@ -289,7 +289,7 @@ public class TasksResource {
 
 		final boolean writeResultToDatahub = getBooleanValue(TasksResource.PERSIST_IDENTIFIER, requestJSON, false);
 
-		final boolean doNotReturnJsonToCaller = getBooleanValue(TasksResource.RETURN_IDENTIFIER, requestJSON, true);
+		final boolean doNotReturnJsonToCaller = getBooleanValue(TasksResource.RETURN_IDENTIFIER, requestJSON, false);
 
 		final Observable<JsonNode> result;
 
