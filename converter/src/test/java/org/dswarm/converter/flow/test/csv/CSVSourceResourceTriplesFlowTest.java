@@ -57,7 +57,7 @@ public class CSVSourceResourceTriplesFlowTest extends GuicedTest {
 		}
 		final Iterator<String> subjectsIterator = subjects.iterator();
 
-		final ImmutableList<Triple> triples = flow.apply(fileName, opener);
+		final List<Triple> triples = flow.apply(fileName, opener).toList().toBlocking().first();
 		for (final Triple triple : triples) {
 			MatcherAssert.assertThat(triple.getSubject(), CoreMatchers.equalTo(subjectsIterator.next()));
 			MatcherAssert.assertThat(triple.getPredicate(), predicateMatcher);

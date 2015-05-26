@@ -88,8 +88,9 @@ public class CSVConverterEventRecorder {
 
 		LOG.debug("try to process csv data resource into data model '{}'", dataModel.getUuid());
 
-		List<Triple> result = null;
+		Observable<Triple> result = null;
 		try {
+
 			final CSVSourceResourceTriplesFlow flow = flowFactory.get().fromDataModel(dataModel);
 
 			final String path = dataModel.getDataResource().getAttribute(ResourceStatics.PATH).asText();
@@ -126,9 +127,9 @@ public class CSVConverterEventRecorder {
 
 			final AtomicInteger counter = new AtomicInteger(0);
 
-			LOG.debug("CSV triples = '{}'", result.size());
+			//LOG.debug("CSV triples = '{}'", result.size());
 
-			final Observable<org.dswarm.persistence.model.internal.Model> models = Observable.from(result)
+			final Observable<org.dswarm.persistence.model.internal.Model> models = result
 					.groupBy(Triple::getSubject)
 					.flatMap(triples -> {
 

@@ -17,13 +17,14 @@ package org.dswarm.converter.flow;
 
 import java.io.Reader;
 
-import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.stream.converter.StreamToTriples;
 import org.culturegraph.mf.types.Triple;
+import rx.Observable;
+import rx.Subscriber;
 
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.mf.stream.reader.CsvReader;
@@ -48,9 +49,9 @@ public class MonitoringCSVSourceResourceTriplesFlow extends CSVSourceResourceTri
 	}
 
 	@Override
-	protected ImmutableList<Triple> process(final ObjectPipe<String, ObjectReceiver<Reader>> opener, final String obj, final CsvReader pipe) {
+	protected Observable<Triple> process(final ObjectPipe<String, ObjectReceiver<Reader>> opener, final String obj, final CsvReader pipe) {
 
-		final ListTripleReceiver tripleReceiver = new ListTripleReceiver();
+		final ObservableTripleReceiver tripleReceiver = new ObservableTripleReceiver();
 		final ObjectTimer<Reader> csvReaderTimer = timerBasedFactory.forObject(MonitoringFlowStatics.INPUT_RESOURCE_FILES);
 		final StreamTimer csvInputTimer = timerBasedFactory.forStream(MonitoringFlowStatics.CSV_RECORDS);
 		final ObjectTimer<Triple> csvTriplesTimer = timerBasedFactory.forObject(MonitoringFlowStatics.CSV_TRIPLES);
@@ -63,7 +64,15 @@ public class MonitoringCSVSourceResourceTriplesFlow extends CSVSourceResourceTri
 
 		opener.setReceiver(csvReaderTimer).setReceiver(pipe);
 
-		opener.process(obj);
-		return tripleReceiver.getCollection();
+		return Observable.create(new Observable.OnSubscribe<Triple>() {
+
+			@Override public void call(final Subscriber<? super Triple> subscriber) {
+
+				tripleReceiver.getObservable().subscribe(subscriber);
+
+				opener.process(obj);
+				opener.closeStream();
+			}
+		});
 	}
 }

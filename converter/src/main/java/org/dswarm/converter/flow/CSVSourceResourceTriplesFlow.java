@@ -17,13 +17,14 @@ package org.dswarm.converter.flow;
 
 import java.io.Reader;
 
-import com.google.common.collect.ImmutableList;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.stream.converter.StreamToTriples;
 import org.culturegraph.mf.types.Triple;
+import rx.Observable;
+import rx.Subscriber;
 
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.mf.stream.reader.CsvReader;
@@ -33,7 +34,7 @@ import org.dswarm.persistence.model.resource.DataModel;
 /**
  * @author phorn
  */
-public class CSVSourceResourceTriplesFlow extends AbstractCSVResourceFlow<ImmutableList<Triple>> {
+public class CSVSourceResourceTriplesFlow extends AbstractCSVResourceFlow<Observable<Triple>> {
 
 	@AssistedInject
 	private CSVSourceResourceTriplesFlow(
@@ -55,14 +56,22 @@ public class CSVSourceResourceTriplesFlow extends AbstractCSVResourceFlow<Immuta
 	}
 
 	@Override
-	protected ImmutableList<Triple> process(final ObjectPipe<String, ObjectReceiver<Reader>> opener, final String obj, final CsvReader pipe) {
+	protected Observable<Triple> process(final ObjectPipe<String, ObjectReceiver<Reader>> opener, final String obj, final CsvReader pipe) {
 
-		final ListTripleReceiver tripleReceiver = new ListTripleReceiver();
+		final ObservableTripleReceiver tripleReceiver = new ObservableTripleReceiver();
 
 		pipe.setReceiver(new StreamToTriples())
 				.setReceiver(tripleReceiver);
 
-		opener.process(obj);
-		return tripleReceiver.getCollection();
+		return Observable.create(new Observable.OnSubscribe<Triple>() {
+
+			@Override public void call(final Subscriber<? super Triple> subscriber) {
+
+				tripleReceiver.getObservable().subscribe(subscriber);
+
+				opener.process(obj);
+				opener.closeStream();
+			}
+		});
 	}
 }

@@ -251,7 +251,8 @@ public class SchemaEventRecorder {
 		try {
 			final CSVSourceResourceTriplesFlow flow = flowFactory2.get().fromConfiguration(configuration);
 
-			result = flow.applyFile(filePath);
+			// TODO: change, if necessary
+			result = flow.applyFile(filePath).toList().toBlocking().first();
 
 		} catch (final DMPConverterException e) {
 			SchemaEventRecorder.LOG.error("could not transform CSV", e);
