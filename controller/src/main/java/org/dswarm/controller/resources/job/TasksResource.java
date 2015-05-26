@@ -310,6 +310,8 @@ public class TasksResource {
 
 		if (doNotReturnJsonToCaller) {
 
+			result.subscribe();
+
 			asyncResponse.resume(Response.noContent().build());
 
 			return;

@@ -410,15 +410,12 @@ public class TransformationFlow {
 
 			@Override public void call(final Subscriber<? super JsonNode> subscriber) {
 
-				resultObservable.subscribe(subscriber);
+				// TODO: replace with operator
+				final Observable<ArrayNode> responseHacky = writeResponse.map(r -> DMPPersistenceUtil.getJSONObjectMapper().createArrayNode()).skip(1);
+
+				resultObservable.concatWith(responseHacky).doOnCompleted(morphContext::stop).subscribe(subscriber);
 
 				tuples.subscribeOn(Schedulers.newThread()).subscribe(opener::process, writer::propagateError, opener::closeStream);
-
-				LOG.debug("before to blocking in transformation flow");
-
-				writeResponse.toBlocking().firstOrDefault(null);
-
-				morphContext.stop();
 			}
 		});
 	}
