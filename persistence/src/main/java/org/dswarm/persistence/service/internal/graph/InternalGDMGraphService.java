@@ -122,7 +122,7 @@ public class InternalGDMGraphService implements InternalModelService {
 	private static final String WRITE_GDM        = "write to graph database";
 
 	private static final int CHUNK_SIZE      = 1024;
-	private static final int REQUEST_TIMEOUT = 1000000;
+	private static final int REQUEST_TIMEOUT = 20000000;
 
 	private static final String          DSWARM_MODEL_STREAMER_THREAD_NAMING_PATTERN = "dswarm-model-streamer-%d";
 	private static final ExecutorService EXECUTOR_SERVICE                            = Executors.newCachedThreadPool(
