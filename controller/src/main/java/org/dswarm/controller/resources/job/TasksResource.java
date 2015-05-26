@@ -310,9 +310,29 @@ public class TasksResource {
 
 		if (doNotReturnJsonToCaller) {
 
-			result.subscribe();
+			result.subscribe(new Observer<JsonNode>() {
 
-			asyncResponse.resume(Response.noContent().build());
+				@Override public void onCompleted() {
+
+					TasksResource.LOG.debug("processed task successfully, don't return data to caller");
+
+					asyncResponse.resume(Response.noContent().build());
+				}
+
+				@Override public void onError(final Throwable e) {
+
+					final String message = "couldn't process task successfully";
+
+					TasksResource.LOG.error(message);
+
+					asyncResponse.resume(new DMPControllerException(message, e));
+				}
+
+				@Override public void onNext(final JsonNode jsonNode) {
+
+					// nothing to do here
+				}
+			});
 
 			return;
 		}
@@ -328,6 +348,8 @@ public class TasksResource {
 				try {
 					resultString = objectMapper.writeValueAsString(feFriendlyJSON);
 
+					TasksResource.LOG.debug("processed task successfully, return data to caller");
+
 					asyncResponse.resume(buildResponse(resultString));
 				} catch (JsonProcessingException e) {
 
@@ -335,16 +357,16 @@ public class TasksResource {
 				}
 			}
 
-			@Override public void onError(Throwable e) {
+			@Override public void onError(final Throwable e) {
 
 				final String message = "couldn't deserialize result JSON from string";
 
 				TasksResource.LOG.error(message);
 
-				asyncResponse.resume(new DMPControllerException(message));
+				asyncResponse.resume(new DMPControllerException(message, e));
 			}
 
-			@Override public void onNext(JsonNode jsonNode) {
+			@Override public void onNext(final JsonNode jsonNode) {
 
 				feFriendlyJSON.add(transformModelJSONtoFEFriendlyJSON(jsonNode));
 			}
