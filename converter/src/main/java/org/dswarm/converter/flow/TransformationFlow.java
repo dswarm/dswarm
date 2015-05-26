@@ -410,10 +410,10 @@ public class TransformationFlow {
 
 			@Override public void call(final Subscriber<? super JsonNode> subscriber) {
 
-				// TODO: replace with operator
-				final Observable<ArrayNode> responseHacky = writeResponse.map(r -> DMPPersistenceUtil.getJSONObjectMapper().createArrayNode()).skip(1);
-
-				resultObservable.concatWith(responseHacky).doOnCompleted(morphContext::stop).subscribe(subscriber);
+				resultObservable
+						.compose(new AndThenWaitFor<>(writeResponse, DMPPersistenceUtil.getJSONObjectMapper()::createArrayNode))
+						.doOnCompleted(morphContext::stop)
+						.subscribe(subscriber);
 
 				tuples.subscribeOn(Schedulers.newThread()).subscribe(opener::process, writer::propagateError, opener::closeStream);
 			}
@@ -484,6 +484,21 @@ public class TransformationFlow {
 
 	private static <T, U> boolean hasDefined(final Optional<T> optional, final Function<T, U> access) {
 		return exists(optional, t -> access.apply(t) != null);
+	}
+
+	private static class AndThenWaitFor<T, U> implements Observable.Transformer<T, T> {
+		private final Observable<U> other;
+		private final Supplier<T> emptyResultValue;
+
+		public AndThenWaitFor(final Observable<U> other, final Supplier<T> emptyResultValue) {
+			this.other = other;
+			this.emptyResultValue = emptyResultValue;
+		}
+
+		@Override
+		public Observable<T> call(final Observable<T> thisOne) {
+			return thisOne.concatWith(other.ignoreElements().map(ignored -> emptyResultValue.get()));
+		}
 	}
 
 	private static final class GDMTransformationState {
