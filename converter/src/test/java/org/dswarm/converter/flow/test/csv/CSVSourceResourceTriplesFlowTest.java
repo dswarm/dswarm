@@ -16,6 +16,7 @@
 package org.dswarm.converter.flow.test.csv;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -57,7 +58,9 @@ public class CSVSourceResourceTriplesFlowTest extends GuicedTest {
 		}
 		final Iterator<String> subjectsIterator = subjects.iterator();
 
-		final List<Triple> triples = flow.apply(fileName, opener).toList().toBlocking().first();
+		final Collection<Triple> triples = flow.apply(fileName, opener).flatMap(x -> {
+			return x;
+		}).toBlocking().first();
 		for (final Triple triple : triples) {
 			MatcherAssert.assertThat(triple.getSubject(), CoreMatchers.equalTo(subjectsIterator.next()));
 			MatcherAssert.assertThat(triple.getPredicate(), predicateMatcher);

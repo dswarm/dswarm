@@ -18,6 +18,7 @@ package org.dswarm.converter.flow.test;
 import java.io.File;
 import java.io.StringWriter;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -118,7 +119,7 @@ public class TransformationFlowTest extends GuicedTest {
 				.getInstance(CSVResourceFlowFactory.class)
 				.fromDataModel(updatedInputDataModel);
 
-		final List<Triple> csvRecordTriples = flow2.applyResource("test_csv.csv").toList().toBlocking().first();
+		final Collection<Triple> csvRecordTriples = flow2.applyResource("test_csv.csv").toBlocking().first();
 
 		Assert.assertNotNull("CSV record triple list shouldn't be null", csvRecordTriples);
 		Assert.assertFalse("CSV record triple list shouldn't be empty", csvRecordTriples.isEmpty());

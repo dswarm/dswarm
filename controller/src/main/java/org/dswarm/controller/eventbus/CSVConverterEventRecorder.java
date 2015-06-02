@@ -15,12 +15,15 @@
  */
 package org.dswarm.controller.eventbus;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -61,6 +64,8 @@ public class CSVConverterEventRecorder {
 	private final InternalModelServiceFactory      internalServiceFactory;
 	private final Provider<MonitoringLogger>       loggerProvider;
 
+	private static final ObjectMapper objectMapper = new ObjectMapper();
+
 	@Inject
 	public CSVConverterEventRecorder(
 			final Provider<CSVResourceFlowFactory> flowFactory,
@@ -88,7 +93,7 @@ public class CSVConverterEventRecorder {
 
 		LOG.debug("try to process csv data resource into data model '{}'", dataModel.getUuid());
 
-		Observable<Triple> result = null;
+		Observable<Collection<Triple>> result = null;
 		try {
 
 			final CSVSourceResourceTriplesFlow flow = flowFactory.get().fromDataModel(dataModel);
@@ -130,8 +135,7 @@ public class CSVConverterEventRecorder {
 			//LOG.debug("CSV triples = '{}'", result.size());
 
 			final Observable<org.dswarm.persistence.model.internal.Model> models = result
-					.groupBy(Triple::getSubject)
-					.flatMap(triples -> {
+					.map(triples -> {
 
 						// 1. create resource uri from subject (line number)
 						final Resource recordResource = DataModelUtils.mintRecordResource(dataModel);
@@ -143,33 +147,37 @@ public class CSVConverterEventRecorder {
 						// add resource type statement to model
 						recordResource.addStatement(new ResourceNode(recordResource.getUri()), new Predicate(GDMUtil.RDF_type), recordClassNode);
 
-						final Observable<GDMModel> gdmModel = triples.reduce(recordResource, (resource, triple) -> {
+						triples.stream().forEach(triple -> {
 
 							// 2. create property object from property uri string
 							final Predicate property = new Predicate(triple.getPredicate());
 
-							final ResourceNode subject = (ResourceNode) resource.getStatements().iterator().next().getSubject();
+							final ResourceNode subject = (ResourceNode) recordResource.getStatements().iterator().next().getSubject();
 
 							// 3. convert objects (string literals) to string literals (?)
 							final LiteralNode object = new LiteralNode(triple.getObject());
 
-							resource.addStatement(subject, property, object);
-
-							return resource;
-						}).map(finalResource -> {
-
-							final Model model = new Model();
-							model.addResource(finalResource);
-
-							final int current2 = counter.get();
-
-							LOG.debug("CSV resource number '{}' with '{}' and '{}' statement", current2, recordResource.getUri(),
-									finalResource.size());
-
-							return new GDMModel(model, null, recordClassURI);
+							recordResource.addStatement(subject, property, object);
 						});
 
-						return gdmModel;
+						return recordResource;
+					}).map(finalResource -> {
+
+						final Model model = new Model();
+						model.addResource(finalResource);
+
+						try {
+							LOG.debug("resource in csv converter recorder = " + objectMapper.writeValueAsString(finalResource));
+						} catch (JsonProcessingException e) {
+							e.printStackTrace();
+						}
+
+						final int current2 = counter.get();
+
+						LOG.debug("CSV resource number '{}' with '{}' and '{}' statement", current2, finalResource.getUri(),
+								finalResource.size());
+
+						return new GDMModel(model, null, recordClassURI);
 					});
 
 			LOG.debug("transformed CSV data resource to GDM for data model '{}'", dataModel.getUuid());

@@ -16,17 +16,18 @@
 package org.dswarm.converter.flow;
 
 import java.io.Reader;
+import java.util.Collection;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
-import org.culturegraph.mf.stream.converter.StreamToTriples;
 import org.culturegraph.mf.types.Triple;
 import rx.Observable;
 import rx.Subscriber;
 
 import org.dswarm.converter.DMPConverterException;
+import org.dswarm.converter.mf.stream.converter.StreamToRecordTriples;
 import org.dswarm.converter.mf.stream.reader.CsvReader;
 import org.dswarm.converter.pipe.timing.ObjectTimer;
 import org.dswarm.converter.pipe.timing.StreamTimer;
@@ -49,24 +50,25 @@ public class MonitoringCSVSourceResourceTriplesFlow extends CSVSourceResourceTri
 	}
 
 	@Override
-	protected Observable<Triple> process(final ObjectPipe<String, ObjectReceiver<Reader>> opener, final String obj, final CsvReader pipe) {
+	protected Observable<Collection<Triple>> process(final ObjectPipe<String, ObjectReceiver<Reader>> opener, final String obj,
+			final CsvReader pipe) {
 
-		final ObservableTripleReceiver tripleReceiver = new ObservableTripleReceiver();
+		final ObservableRecordTriplesReceiver tripleReceiver = new ObservableRecordTriplesReceiver();
 		final ObjectTimer<Reader> csvReaderTimer = timerBasedFactory.forObject(MonitoringFlowStatics.INPUT_RESOURCE_FILES);
 		final StreamTimer csvInputTimer = timerBasedFactory.forStream(MonitoringFlowStatics.CSV_RECORDS);
-		final ObjectTimer<Triple> csvTriplesTimer = timerBasedFactory.forObject(MonitoringFlowStatics.CSV_TRIPLES);
+		final ObjectTimer<Collection<Triple>> csvTriplesTimer = timerBasedFactory.forObject(MonitoringFlowStatics.CSV_TRIPLES);
 
 		pipe
 				.setReceiver(csvInputTimer)
-				.setReceiver(new StreamToTriples())
+				.setReceiver(new StreamToRecordTriples())
 				.setReceiver(csvTriplesTimer)
 				.setReceiver(tripleReceiver);
 
 		opener.setReceiver(csvReaderTimer).setReceiver(pipe);
 
-		return Observable.create(new Observable.OnSubscribe<Triple>() {
+		return Observable.create(new Observable.OnSubscribe<Collection<Triple>>() {
 
-			@Override public void call(final Subscriber<? super Triple> subscriber) {
+			@Override public void call(final Subscriber<? super Collection<Triple>> subscriber) {
 
 				tripleReceiver.getObservable().subscribe(subscriber);
 

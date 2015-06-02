@@ -15,6 +15,7 @@
  */
 package org.dswarm.controller.eventbus;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -116,7 +117,7 @@ public class SchemaEventRecorder {
 	}
 	private void createSchemaFromCsv(final DataModel dataModel) throws DMPPersistenceException, DMPConverterException {
 
-		final List<Triple> triples = dataModel == null ? null : triplesFromCsv(dataModel.getDataResource(), dataModel.getConfiguration()).orNull();
+		final Collection<Triple> triples = dataModel == null ? null : triplesFromCsv(dataModel.getDataResource(), dataModel.getConfiguration()).orNull();
 
 		if (triples == null) {
 
@@ -236,7 +237,7 @@ public class SchemaEventRecorder {
 		dataModelServiceProvider.get().updateObjectTransactional(dataModel);
 	}
 
-	private Optional<List<Triple>> triplesFromCsv(final Resource resource, final Configuration configuration) {
+	private Optional<Collection<Triple>> triplesFromCsv(final Resource resource, final Configuration configuration) {
 		final JsonNode jsonPath = resource.getAttribute("path");
 
 		if (jsonPath == null) {
@@ -246,13 +247,13 @@ public class SchemaEventRecorder {
 
 		final String filePath = jsonPath.asText();
 
-		final List<Triple> result;
+		final Collection<Triple> result;
 
 		try {
 			final CSVSourceResourceTriplesFlow flow = flowFactory2.get().fromConfiguration(configuration);
 
 			// TODO: change, if necessary
-			result = flow.applyFile(filePath).toList().toBlocking().first();
+			result = flow.applyFile(filePath).toBlocking().first();
 
 		} catch (final DMPConverterException e) {
 			SchemaEventRecorder.LOG.error("could not transform CSV", e);

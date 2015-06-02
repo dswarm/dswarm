@@ -1542,6 +1542,8 @@ public class InternalGDMGraphService implements InternalModelService {
 							LOG.debug("added first resource to output stream '{}'", resource.getUri());
 						}
 
+						System.out.println("resource in model builder = " + objectMapperProvider.get().writeValueAsString(resource));
+
 						modelBuilder.addResource(resource);
 						output.flush();
 					} catch (final IOException e) {
