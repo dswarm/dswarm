@@ -20,6 +20,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.core.Response;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -170,7 +172,10 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		// write model and retrieve tuples
 		final InternalGDMGraphService gdmService = GuicedTest.injector.getInstance(InternalGDMGraphService.class);
-		gdmService.createObject(updatedInputDataModel.getUuid(), Observable.just(gdmModel));
+		final Observable<Response> responseObservable = gdmService.createObject(updatedInputDataModel.getUuid(), Observable.just(gdmModel));
+		final Response response = responseObservable.toBlocking().firstOrDefault(null);
+
+		Assert.assertNotNull(response);
 
 		final Observable<Map<String, Model>> optionalModelMapObservable = gdmService
 				.getObjects(updatedInputDataModel.getUuid(), Optional.<Integer>absent())
@@ -224,7 +229,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		flow.getScript();
 
-		final ArrayNode actual = flow.apply(tuples, true, true).reduce(
+		final ArrayNode actual = flow.apply(tuples, true, false).reduce(
 				DMPPersistenceUtil.getJSONObjectMapper().createArrayNode(),
 				ArrayNode::add
 		).toBlocking().first();

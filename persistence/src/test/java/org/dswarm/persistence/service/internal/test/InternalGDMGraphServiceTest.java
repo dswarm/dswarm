@@ -20,6 +20,8 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 
+import javax.ws.rs.core.Response;
+
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
@@ -103,8 +105,12 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 
 		final InternalGDMGraphService rdfGraphService = GuicedTest.injector.getInstance(InternalGDMGraphService.class);
 
-		rdfGraphService.createObject(dataModel.getUuid(), Observable.just(rdfModel));
+		final Observable<Response> responseObservable = rdfGraphService.createObject(dataModel.getUuid(), Observable.just(rdfModel));
+
+		final Response response = responseObservable.toBlocking().firstOrDefault(null);
 		// finished writing RDF statements to graph
+
+		Assert.assertNotNull(response);
 
 		// retrieve updated fresh data model
 		final DataModel freshDataModel = dataModelService.getObject(updatedDataModel.getUuid());

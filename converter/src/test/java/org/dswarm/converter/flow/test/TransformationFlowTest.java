@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.ws.rs.core.Response;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -157,8 +159,11 @@ public class TransformationFlowTest extends GuicedTest {
 		// System.out.println(Util.getJSONObjectMapper().configure(SerializationFeature.INDENT_OUTPUT,
 		// true).writeValueAsString(gdmModel.getModel()));
 
-		gdmService.createObject(inputDataModel.getUuid(), Observable.just(gdmModel));
+		final Observable<Response> responseObservable = gdmService.createObject(inputDataModel.getUuid(), Observable.just(gdmModel));
+		final Response response = responseObservable.toBlocking().firstOrDefault(null);
 		// finished writing CSV statements to graph
+
+		Assert.assertNotNull(response);
 
 		// retrieve updated fresh data model
 		final DataModel freshInputDataModel = dataModelService.getObject(updatedInputDataModel.getUuid());
@@ -244,7 +249,7 @@ public class TransformationFlowTest extends GuicedTest {
 
 		flow.getScript();
 
-		final ArrayNode actualNodes = flow.apply(tuples, true, true).reduce(
+		final ArrayNode actualNodes = flow.apply(tuples, true, false).reduce(
 				DMPPersistenceUtil.getJSONObjectMapper().createArrayNode(),
 				ArrayNode::add
 		).toBlocking().first();

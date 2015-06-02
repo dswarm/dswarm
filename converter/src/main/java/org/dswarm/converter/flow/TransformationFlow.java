@@ -174,7 +174,7 @@ public class TransformationFlow {
 			return Observable.error(new DMPConverterException(msg));
 		}
 
-		return apply(Observable.from(tuplesList), false, true).reduce(
+		return apply(Observable.from(tuplesList), false, false).reduce(
 				DMPPersistenceUtil.getJSONObjectMapper().createArrayNode(),
 				ArrayNode::add
 		).map(arrayNode -> {
