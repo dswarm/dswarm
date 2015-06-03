@@ -31,7 +31,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.ws.rs.client.Client;
@@ -227,12 +226,8 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final Observable<Response> result = createOrUpdateObject(dataModelUuid, model, updateFormat, enableVersioning);
 
-		LOG.debug("before do on completed");
-
 		result.doOnCompleted(
-				() -> {
-					LOG.debug("updated data model '{}' in data hub", dataModelUuid);
-				});
+				() -> LOG.debug("updated data model '{}' in data hub", dataModelUuid));
 
 		return result;
 	}
@@ -363,7 +358,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 			InternalGDMGraphService.LOG.debug("couldn't find data model '{}' to retrieve it's schema", dataModelUuid);
 
-			throw new DMPPersistenceException("couldn't find data model '" + dataModelUuid + "' to retrieve it's schema");
+			throw new DMPPersistenceException(String.format("couldn't find data model '%s' to retrieve it's schema", dataModelUuid));
 		}
 
 		final Schema schema = dataModel.getSchema();
@@ -556,27 +551,25 @@ public class InternalGDMGraphService implements InternalModelService {
 	private Observable<Response> createOrUpdateObject(final String dataModelUuid, final Observable<Model> model, final UpdateFormat updateFormat,
 			final boolean enableVersioning) throws DMPPersistenceException {
 
+		if (dataModelUuid == null) {
 
-			if (dataModelUuid == null) {
+			throw new DMPPersistenceException("data model id shouldn't be null");
+		}
 
-				throw new DMPPersistenceException("data model id shouldn't be null");
-			}
+		if (model == null) {
 
-			if (model == null) {
+			throw new DMPPersistenceException("model that should be added to DB shouldn't be null");
+		}
 
-				throw new DMPPersistenceException("model that should be added to DB shouldn't be null");
-			}
+		final Optional<Boolean> optionalDeprecateMissingRecords = determineMissingRecordsFlag(updateFormat);
+		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelUuid);
+		final DataModel dataModel = getSchemaInternal(dataModelUuid);
+		final boolean isSchemaAnInBuiltSchema = isSchemaAnInbuiltSchema(dataModel);
 
-			final Optional<Boolean> optionalDeprecateMissingRecords = determineMissingRecordsFlag(updateFormat);
-			final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelUuid);
-			final DataModel dataModel = getSchemaInternal(dataModelUuid);
-			final boolean isSchemaAnInBuiltSchema = isSchemaAnInbuiltSchema(dataModel);
+		final Observable<GDMModel> modelObservable = model.cast(GDMModel.class);
 
-
-
-			final Observable<GDMModel> modelObservable = model.cast(GDMModel.class);
-
-		final RequestOperator operator = new RequestOperator(dataModel, isSchemaAnInBuiltSchema, dataModelURI, optionalDeprecateMissingRecords,
+		final GDMWriteRequestOperator operator = new GDMWriteRequestOperator(dataModel, isSchemaAnInBuiltSchema, dataModelURI,
+				optionalDeprecateMissingRecords,
 				enableVersioning);
 		final Observable<Resource> resourceObservable = modelObservable.lift(operator).flatMapIterable(gdm -> {
 
@@ -610,108 +603,9 @@ public class InternalGDMGraphService implements InternalModelService {
 			}
 		});
 
-			// to determine write request metadata and prepare write
-//			final Observable<Tuple<Observer<Resource>, Observable<Response>>> writeRequestTuple = modelObservable.take(1).map(gdm -> {
-//
-//				try {
-//
-//					final org.dswarm.graph.json.Model realModel = getRealModel(gdm);
-//					final DataModel finalDataModel = optionallyEnhancedDataModel(dataModel, gdm, realModel, isSchemaAnInBuiltSchema);
-//					final Optional<ContentSchema> optionalContentSchema = Optional.fromNullable(finalDataModel.getSchema().getContentSchema());
-//					final Optional<String> optionalRecordClassUri = Optional.fromNullable(finalDataModel.getSchema().getRecordClass().getUri());
-//
-//					final String metadata = getMetadata(dataModelURI, optionalContentSchema, optionalDeprecateMissingRecords,
-//							optionalRecordClassUri,
-//							enableVersioning);
-//
-//					final Tuple<Observer<Resource>, Observable<Response>> observerObservableTuple = writeGDMToDB(dataModelURI, metadata);
-//
-//					final Observable<Response> responseObservable = observerObservableTuple.v2();
-//
-//					responseObservable.subscribe(new Observer<Response>() {
-//
-//						@Override public void onCompleted() {
-//
-//							LOG.debug("in onCompleted: subscribed on subject after POST in request observable");
-//						}
-//
-//						@Override public void onError(Throwable e) {
-//
-//							LOG.debug("in onError: subscribed on subject after POST in request observable");
-//						}
-//
-//						@Override public void onNext(Response response) {
-//
-//							LOG.debug("in onNext: subscribed on subject after POST in request observable");
-//						}
-//					});
-//
-//					return observerObservableTuple;
-//				} catch (final DMPPersistenceException e) {
-//
-//					throw DMPPersistenceError.wrap(e);
-//				}
-//			});
-
-//			final Observable<Observer<Resource>> modelConsumer = writeRequestTuple.map(Tuple::v1);
-
-//			final Observable<Resource> resourceObservable = modelObservable.flatMapIterable(gdm -> {
-//
-//				try {
-//
-//					final org.dswarm.graph.json.Model model1 = getRealModel(gdm);
-//
-//					if (model1 == null) {
-//
-//						LOG.debug("no model available");
-//
-//						return Collections.emptyList();
-//					}
-//
-//					final Collection<Resource> resources = model1.getResources();
-//
-//					if (resources == null || resources.isEmpty()) {
-//
-//						LOG.debug("no resources available in model");
-//
-//						return Collections.emptyList();
-//					}
-//
-//					optionallyEnhancedDataModel(dataModel, gdm, model1, isSchemaAnInBuiltSchema);
-//
-//					// note the model should always consist of one resource only
-//					return resources;
-//				} catch (final DMPPersistenceException e) {
-//
-//					throw DMPPersistenceError.wrap(e);
-//				}
-//			});
-
 		resourceObservable.subscribe(operator.resourceObserver());
 
-//			modelConsumer.subscribeOn(Schedulers.from(EXECUTOR_SERVICE)).subscribe(resourceObservable::subscribe);
-
-		final Observable<Response> responseObservable = operator.responseObservable(); //  writeRequestTuple.flatMap(Tuple::v2);
-
-//		responseObservable.subscribe(new Observer<Response>() {
-//
-//			@Override public void onCompleted() {
-//
-//				LOG.debug("in onCompleted: subscribed on subject after POST after flatMap");
-//			}
-//
-//			@Override public void onError(Throwable e) {
-//
-//				LOG.debug("in onError: subscribed on subject after POST after flatMap");
-//			}
-//
-//			@Override public void onNext(Response response) {
-//
-//				LOG.debug("in onNext: subscribed on subject after POST after flatMap");
-//			}
-//		});
-
-		return responseObservable;
+		return operator.responseObservable();
 	}
 
 	private DataModel optionallyEnhancedDataModel(final DataModel dataModel, final GDMModel gdmModel, final org.dswarm.graph.json.Model realModel,
@@ -742,8 +636,6 @@ public class InternalGDMGraphService implements InternalModelService {
 	private DataModel determineSchema(final DataModel dataModel, final GDMModel gdmModel, final org.dswarm.graph.json.Model realModel)
 			throws DMPPersistenceException {
 
-		// TODO: rework schemata determination, i.e., modify schema only, if it is not a preset schema, otherwise, skile whole schema determination before
-
 		LOG.debug("determine schema for data model '{}'", dataModel.getUuid());
 
 		final DataModel updatedDataModel = addRecordClass(dataModel, gdmModel.getRecordClassURI());
@@ -769,20 +661,6 @@ public class InternalGDMGraphService implements InternalModelService {
 		if (finalDataModel.getSchema() != null) {
 
 			if (finalDataModel.getSchema().getRecordClass() != null) {
-
-				//final String recordClassURI = finalDataModel.getSchema().getRecordClass().getUri();
-
-				// TODO: this operation is expensive, so we should only apply it, if really necessary
-				//final Set<Resource> recordResources = GDMUtil.getRecordResources(recordClassURI, realModel);
-
-				//				if (recordResources != null && !recordResources.isEmpty()) {
-				//
-				//					final LinkedHashSet<String> recordURIs = Sets.newLinkedHashSet();
-				//
-				//					recordURIs.addAll(recordResources.stream().map(Resource::getUri).collect(Collectors.toList()));
-				//
-				//					gdmModel.setRecordURIs(recordURIs);
-				//				}
 
 				gdmModel.setRecordURIs(realModel.getResourceURIs());
 			}
@@ -854,39 +732,19 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		if (schema != null) {
 
-			final String schemaUUID = schema.getUuid();
+			final boolean result = SchemaUtils.addRecordClass(schema, recordClassUri, classService);
 
-			if (schemaUUID != null) {
+			if (!result) {
 
-				switch (schemaUUID) {
-
-					case SchemaUtils.MABXML_SCHEMA_UUID:
-					case SchemaUtils.MARC21_SCHEMA_UUID:
-					case SchemaUtils.PNX_SCHEMA_UUID:
-					case SchemaUtils.FINC_SOLR_SCHEMA_UUID:
-					case SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID:
-					case SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID:
-					case SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID:
-
-						// those schemas are already there and shouldn't be manipulated by data that differs from those schemas
-
-						LOG.debug("schema for data model '{}' is a preset schema, so record class is already set", dataModel.getUuid());
-
-						return dataModel;
-				}
+				return dataModel;
 			}
+
+			LOG.debug("added record class to schema for data model '{}'", dataModel.getUuid());
+
+			return updateDataModel(dataModel);
 		}
 
-		final boolean result = SchemaUtils.addRecordClass(schema, recordClassUri, classService);
-
-		if (!result) {
-
-			return dataModel;
-		}
-
-		LOG.debug("added record class to schema for data model '{}'", dataModel.getUuid());
-
-		return updateDataModel(dataModel);
+		return dataModel;
 	}
 
 	private DataModel determineAttributePaths(final DataModel dataModel, final Model model)
@@ -895,42 +753,26 @@ public class InternalGDMGraphService implements InternalModelService {
 		LOG.debug("determine attribute paths of schema for data model '{}'", dataModel.getUuid());
 
 		final Schema schema = dataModel.getSchema();
-		final String schemaUUID = schema.getUuid();
 
-		if (schemaUUID != null) {
+		if (schema != null) {
 
-			switch (schemaUUID) {
+			// note: model.getAttributePaths is expensive atm
+			final Set<AttributePathHelper> attributePathHelpers = model.getAttributePaths();
 
-				case SchemaUtils.MABXML_SCHEMA_UUID:
-				case SchemaUtils.MARC21_SCHEMA_UUID:
-				case SchemaUtils.PNX_SCHEMA_UUID:
-				case SchemaUtils.FINC_SOLR_SCHEMA_UUID:
-				case SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID:
-				case SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID:
-				case SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID:
+			final boolean result = SchemaUtils.addAttributePaths(schema, attributePathHelpers,
+					attributePathService, schemaAttributePathInstanceService, attributeService);
 
-					// those schemas are already there and shouldn't be manipulated by data that differs from those schemas
+			if (!result) {
 
-					LOG.debug("schema for data model '{}' is a preset schema, so attribute paths are already set", dataModel.getUuid());
-
-					return dataModel;
+				return dataModel;
 			}
+
+			LOG.debug("determined attribute paths of schema for data model '{}'", dataModel.getUuid());
+
+			return updateDataModel(dataModel);
 		}
 
-		// note: model.getAttributePaths is expensive atm
-		final Set<AttributePathHelper> attributePathHelpers = model.getAttributePaths();
-
-		final boolean result = SchemaUtils.addAttributePaths(schema, attributePathHelpers,
-				attributePathService, schemaAttributePathInstanceService, attributeService);
-
-		if (!result) {
-
-			return dataModel;
-		}
-
-		LOG.debug("determined attribute paths of schema for data model '{}'", dataModel.getUuid());
-
-		return updateDataModel(dataModel);
+		return dataModel;
 	}
 
 	private DataModel updateDataModel(final DataModel dataModel) throws DMPPersistenceException {
@@ -1074,7 +916,6 @@ public class InternalGDMGraphService implements InternalModelService {
 		return dataModel;
 	}
 
-	// TODO: async
 	private Tuple<Observer<org.dswarm.graph.json.Resource>, Observable<Response>> writeGDMToDB(final String dataModelUri, final String metadata)
 			throws DMPPersistenceException {
 
@@ -1103,47 +944,8 @@ public class InternalGDMGraphService implements InternalModelService {
 					.bodyPart(metadata, MediaType.APPLICATION_JSON_TYPE)
 					.bodyPart(entity1, MediaType.APPLICATION_OCTET_STREAM_TYPE);
 
-//			final PublishSubject<Response>
-//
-//			final Response post1 = target.request(MULTIPART_MIXED).post(Entity.entity(multiPart, MULTIPART_MIXED));
-
 			// POST the request
 			final RxObservableInvoker rx = rxWebTarget.request(MULTIPART_MIXED).header(HttpHeaders.TRANSFER_ENCODING, CHUNKED_TRANSFER_ENCODING).rx();
-			//			final InvocationCallback<Response> callback = new InvocationCallback<Response>() {
-			//
-			//				@Override public void completed(final Response response) {
-			//
-			//					try {
-			//
-			//						// modelConsumer.onCompleted();
-			//
-			//						closeResource(multiPart, WRITE_GDM);
-			//						closeResource(output, WRITE_GDM);
-			//						closeResource(input, WRITE_GDM);
-			//
-			//						//TODO maybe check status code here, i.e., should be 200
-			//
-			//						LOG.debug("wrote GDM data for data model '{}' into data hub", dataModelUri);
-			//
-			//						completableFuture.complete(null);
-			//					} catch (final DMPPersistenceException e) {
-			//
-			//						completableFuture.completeExceptionally(e);
-			//
-			//						throw DMPPersistenceError.wrap(e);
-			//					}
-			//				}
-			//
-			//				@Override public void failed(final Throwable throwable) {
-			//
-			//					// modelConsumer.onError(throwable);
-			//					completableFuture.completeExceptionally(throwable);
-			//
-			//					throw DMPPersistenceError.wrap(new DMPPersistenceException(
-			//							String.format("Couldn't store GDM data into database. Received status code '%s' from database endpoint.",
-			//									throwable.getMessage())));
-			//				}
-			//			};
 
 			final Entity<MultiPart> entity = Entity.entity(multiPart, MULTIPART_MIXED);
 
@@ -1153,8 +955,6 @@ public class InternalGDMGraphService implements InternalModelService {
 			asyncPost.subscribe(response -> {
 
 				try {
-
-					// modelConsumer.onCompleted();
 
 					closeResource(multiPart, WRITE_GDM);
 					closeResource(output, WRITE_GDM);
@@ -1169,72 +969,12 @@ public class InternalGDMGraphService implements InternalModelService {
 				}
 			}, throwable -> {
 
-				// modelConsumer.onError(throwable);
-
 				throw DMPPersistenceError.wrap(new DMPPersistenceException(
 						String.format("Couldn't store GDM data into database. Received status code '%s' from database endpoint.",
 								throwable.getMessage())));
-			}, () -> {
+			}, () -> LOG.debug("completely wrote GDM data for data model '{}' into data hub", dataModelUri));
 
-				LOG.debug("completely wrote GDM data for data model '{}' into data hub", dataModelUri);
-			});
-
-			asyncPost.subscribe(new Observer<Response>() {
-
-									@Override public void onCompleted() {
-
-										LOG.debug("in onCompleted: subscribed on subject before POST");
-									}
-
-									@Override public void onError(Throwable e) {
-
-										LOG.debug("in onError: subscribed on subject before POST");
-									}
-
-									@Override public void onNext(Response response) {
-
-										LOG.debug("in onNext: subscribed on subject before POST");
-									}
-								});
-
-					post.subscribe(asyncPost);
-
-			//			final Future<Response> post = async.post(Entity.entity(multiPart, MULTIPART_MIXED), callback);
-			//
-			//			EXECUTOR_SERVICE.submit(() -> {
-			//
-			//				try {
-			//
-			//					LOG.debug("trigger async GDM write POST request");
-			//
-			//					post.get();
-			//				} catch (final InterruptedException | ExecutionException e) {
-			//
-			//					throw new RuntimeException(e);
-			//				}
-			//
-			//				return null;
-			//			});
-
-			asyncPost.subscribe(new Observer<Response>() {
-
-				@Override public void onCompleted() {
-
-					LOG.debug("in onCompleted: subscribed on subject after POST");
-				}
-
-				@Override public void onError(Throwable e) {
-
-					LOG.debug("in onError: subscribed on subject after POST");
-				}
-
-				@Override public void onNext(Response response) {
-
-					LOG.debug("in onNext: subscribed on subject after POST");
-				}
-			});
-
-			LOG.debug("finished initializing GDM write request");
+			post.subscribe(asyncPost);
 
 			return Tuple.tuple(modelConsumer, asyncPost);
 		} catch (final InterruptedException | ExecutionException e) {
@@ -1332,6 +1072,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		}
 
 		// POST the request
+		// TODO: async ?
 		final Response response = target.request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
 				.post(Entity.entity(requestJsonString, MediaType.APPLICATION_JSON));
 
@@ -1371,6 +1112,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		}
 
 		// POST the request
+		// TODO: re-work to rxjava jersey client
 		final Future<Response> responseFuture = target.request(MediaType.APPLICATION_JSON_TYPE)
 				.accept(MediaType.APPLICATION_JSON)
 				.async()
@@ -1419,6 +1161,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		}
 
 		// POST the request
+		// TODO: re-work to rxjava jersey client
 		final Future<Response> responseFuture = target.request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
 				.async()
 				.post(Entity.entity(requestJsonString, MediaType.APPLICATION_JSON));
@@ -1510,13 +1253,13 @@ public class InternalGDMGraphService implements InternalModelService {
 
 			return new Observer<org.dswarm.graph.json.Resource>() {
 
-				final AtomicInteger counter = new AtomicInteger(0);
+				//final AtomicInteger counter = new AtomicInteger(0);
 
 				@Override public void onCompleted() {
 
 					try {
 
-						LOG.debug("in model builder onCompleted with '{}' resources", counter.get());
+						//LOG.debug("in model builder onCompleted with '{}' resources", counter.get());
 
 						modelBuilder.build();
 					} catch (final IOException e) {
@@ -1535,14 +1278,14 @@ public class InternalGDMGraphService implements InternalModelService {
 
 					try {
 
-						LOG.debug("add resource number '{}' with '{}' to output stream", counter.incrementAndGet(), resource.getUri());
-
-						if(counter.get() == 1) {
-
-							LOG.debug("added first resource to output stream '{}'", resource.getUri());
-						}
-
-						System.out.println("resource in model builder = " + objectMapperProvider.get().writeValueAsString(resource));
+						//						LOG.debug("add resource number '{}' with '{}' to output stream", counter.incrementAndGet(), resource.getUri());
+						//
+						//						if(counter.get() == 1) {
+						//
+						//							LOG.debug("added first resource to output stream '{}'", resource.getUri());
+						//						}
+						//
+						//						System.out.println("resource in model builder = " + objectMapperProvider.get().writeValueAsString(resource));
 
 						modelBuilder.addResource(resource);
 						output.flush();
@@ -1607,7 +1350,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		}
 	}
 
-	private class RequestOperator implements Observable.Operator<GDMModel, GDMModel> {
+	private class GDMWriteRequestOperator implements Observable.Operator<GDMModel, GDMModel> {
 
 		private final DataModel         dataModel;
 		private final boolean           isSchemaAnInBuiltSchema;
@@ -1618,7 +1361,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		private final AsyncSubject<Response>   responseAsyncSubject   = AsyncSubject.create();
 		private final PublishSubject<Resource> resourcePublishSubject = PublishSubject.create();
 
-		private RequestOperator(final DataModel dataModel, final boolean isSchemaAnInBuiltSchema, final String dataModelURI,
+		private GDMWriteRequestOperator(final DataModel dataModel, final boolean isSchemaAnInBuiltSchema, final String dataModelURI,
 				final Optional<Boolean> optionalDeprecateMissingRecords, final boolean enableVersioning) {
 			this.dataModel = dataModel;
 			this.isSchemaAnInBuiltSchema = isSchemaAnInBuiltSchema;
@@ -1654,8 +1397,6 @@ public class InternalGDMGraphService implements InternalModelService {
 
 					if (seenFirstModel.compareAndSet(false, true)) {
 
-						LOG.debug("start initializing GDM write request");
-
 						try {
 
 							final org.dswarm.graph.json.Model realModel = getRealModel(gdm);
@@ -1675,24 +1416,6 @@ public class InternalGDMGraphService implements InternalModelService {
 
 							final Observable<Response> responseObservable = observerObservableTuple.v2();
 							responseObservable.subscribe(responseAsyncSubject);
-
-							responseObservable.subscribe(new Observer<Response>() {
-
-								@Override public void onCompleted() {
-
-									LOG.debug("in onCompleted: subscribed on subject after POST in request observable");
-								}
-
-								@Override public void onError(Throwable e) {
-
-									LOG.debug("in onError: subscribed on subject after POST in request observable");
-								}
-
-								@Override public void onNext(Response response) {
-
-									LOG.debug("in onNext: subscribed on subject after POST in request observable");
-								}
-							});
 						} catch (final DMPPersistenceException e) {
 
 							throw DMPPersistenceError.wrap(e);

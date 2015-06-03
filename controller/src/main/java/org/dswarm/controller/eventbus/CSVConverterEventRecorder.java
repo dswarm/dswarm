@@ -16,15 +16,9 @@
 package org.dswarm.controller.eventbus;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.ws.rs.core.Response;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -34,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import rx.Observable;
 
 import org.dswarm.controller.DMPControllerException;
-import org.dswarm.controller.utils.DataModelUtil;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.flow.CSVResourceFlowFactory;
 import org.dswarm.converter.flow.CSVSourceResourceTriplesFlow;
@@ -63,8 +56,6 @@ public class CSVConverterEventRecorder {
 	private final Provider<CSVResourceFlowFactory> flowFactory;
 	private final InternalModelServiceFactory      internalServiceFactory;
 	private final Provider<MonitoringLogger>       loggerProvider;
-
-	private static final ObjectMapper objectMapper = new ObjectMapper();
 
 	@Inject
 	public CSVConverterEventRecorder(
@@ -130,7 +121,7 @@ public class CSVConverterEventRecorder {
 			final String recordClassURI = dataResourceBaseSchemaURI + RECORD_TYPE_POSTFIX;
 			final ResourceNode recordClassNode = new ResourceNode(recordClassURI);
 
-			final AtomicInteger counter = new AtomicInteger(0);
+			//final AtomicInteger counter = new AtomicInteger(0);
 
 			//LOG.debug("CSV triples = '{}'", result.size());
 
@@ -140,9 +131,9 @@ public class CSVConverterEventRecorder {
 						// 1. create resource uri from subject (line number)
 						final Resource recordResource = DataModelUtils.mintRecordResource(dataModel);
 
-						final int current = counter.incrementAndGet();
+						//final int current = counter.incrementAndGet();
 
-						LOG.debug("CSV resource number '{}' with '{}'", current, recordResource.getUri());
+						//LOG.debug("CSV resource number '{}' with '{}'", current, recordResource.getUri());
 
 						// add resource type statement to model
 						recordResource.addStatement(new ResourceNode(recordResource.getUri()), new Predicate(GDMUtil.RDF_type), recordClassNode);
@@ -166,30 +157,23 @@ public class CSVConverterEventRecorder {
 						final Model model = new Model();
 						model.addResource(finalResource);
 
-						try {
-							LOG.debug("resource in csv converter recorder = " + objectMapper.writeValueAsString(finalResource));
-						} catch (JsonProcessingException e) {
-							e.printStackTrace();
-						}
-
-						final int current2 = counter.get();
-
-						LOG.debug("CSV resource number '{}' with '{}' and '{}' statement", current2, finalResource.getUri(),
-								finalResource.size());
+						//final int current2 = counter.get();
+						//LOG.debug("CSV resource number '{}' with '{}' and '{}' statement", current2, finalResource.getUri(),
+						//		finalResource.size());
 
 						return new GDMModel(model, null, recordClassURI);
 					});
 
-			LOG.debug("transformed CSV data resource to GDM for data model '{}'", dataModel.getUuid());
+			models.doOnCompleted(() -> LOG.debug("transformed CSV data resource to GDM for data model '{}'", dataModel.getUuid()));
 
 			try {
 
-				// TODO delegate future
 				final Observable<Response> writeResponse = internalServiceFactory.getInternalGDMGraphService()
 						.updateObject(dataModel.getUuid(), models, updateFormat, enableVersioning);
 
-				LOG.debug("before to blocking");
+				//LOG.debug("before to blocking");
 
+				// TODO: delegate observable
 				writeResponse.toBlocking().firstOrDefault(null);
 
 				LOG.debug("processed CSV data resource into data model '{}'", dataModel.getUuid());

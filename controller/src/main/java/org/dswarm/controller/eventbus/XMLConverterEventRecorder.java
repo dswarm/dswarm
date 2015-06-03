@@ -27,6 +27,7 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
+import rx.functions.Action0;
 
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.converter.flow.XMLSourceResourceGDMStmtsFlow;
@@ -109,7 +110,7 @@ public class XMLConverterEventRecorder {
 
 			final Observable<GDMModel> gdmModels = flow.applyResource(path);
 
-			final AtomicInteger counter = new AtomicInteger(0);
+			//final AtomicInteger counter = new AtomicInteger(0);
 
 			//LOG.debug("XML records = '{}'", gdmModels.size());
 
@@ -133,44 +134,14 @@ public class XMLConverterEventRecorder {
 					return false;
 				}
 
-				final int current = counter.incrementAndGet();
+				//final int current = counter.incrementAndGet();
 
-				LOG.debug("XML resource number '{}' with '{}' and resources size = '{}'", current, resources.iterator().next().getUri(), resources.size());
+				//LOG.debug("XML resource number '{}' with '{}' and resources size = '{}'", current, resources.iterator().next().getUri(), resources.size());
 
 				return true;
 
-			}).cast(org.dswarm.persistence.model.internal.Model.class);
-
-			//			// write GDM models at once
-			//			final Model model = new Model();
-			//			String recordClassUri = null;
-			//
-			//			for (final GDMModel gdmModel : gdmModels) {
-			//
-			//				if (gdmModel.getModel() != null) {
-			//
-			//					final Model aModel = gdmModel.getModel();
-			//
-			//					if (aModel.getResources() != null) {
-			//
-			//						final Collection<Resource> resources = aModel.getResources();
-			//
-			//						for (final Resource resource : resources) {
-			//
-			//							model.addResource(resource);
-			//
-			//							if (recordClassUri == null) {
-			//
-			//								recordClassUri = gdmModel.getRecordClassURI();
-			//							}
-			//						}
-			//					}
-			//				}
-			//			}
-			//
-			//			result = new GDMModel(model, null, recordClassUri);
-
-			LOG.debug("transformed xml data resource at '{}' to GDM for data model '{}'", path, dataModel.getUuid());
+			}).cast(org.dswarm.persistence.model.internal.Model.class).doOnCompleted(
+					() -> LOG.debug("transformed xml data resource at '{}' to GDM for data model '{}'", path, dataModel.getUuid()));
 		} catch (final NullPointerException e) {
 
 			final String message = String.format("couldn't convert the XML data of data model '%s'", dataModel.getUuid());
@@ -189,12 +160,12 @@ public class XMLConverterEventRecorder {
 
 		try {
 
-			// TODO delegate future
 			final Observable<Response> writeResponse = internalServiceFactory.getInternalGDMGraphService()
 					.updateObject(dataModel.getUuid(), result, updateFormat, enableVersioning);
 
-			LOG.debug("before to blocking");
+			//LOG.debug("before to blocking");
 
+			// TODO: delegate observable
 			writeResponse.toBlocking().firstOrDefault(null);
 
 			LOG.debug("processed xml data resource into data model '{}'", dataModel.getUuid());

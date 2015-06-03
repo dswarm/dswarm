@@ -25,9 +25,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -42,12 +39,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
 import com.google.inject.Inject;
@@ -64,7 +57,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
 import rx.Subscriber;
-import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 import org.dswarm.common.types.Tuple;
@@ -302,60 +294,6 @@ public class TransformationFlow {
 			return finalGDMModel;
 		});
 
-		//		final Observable<GDMTransformationState> stateObservable =
-		//				writer.getObservable().reduce(new GDMTransformationState(objectMapper), (state, gdmModel) -> {
-		//					if (gdmModel.getModel() == null) {
-		//						state.addModel(gdmModel);
-		//						return state;
-		//					}
-		//
-		//					final Set<String> recordURIsFromGDMModel = gdmModel.getRecordURIs();
-		//
-		//					if (recordURIsFromGDMModel == null || recordURIsFromGDMModel.isEmpty()) {
-		//
-		//						// skip, since it seems to look like that there are no records in the model
-		//						return state;
-		//					}
-
-		//					state.addResources(gdmModel.getModel().getResources());
-
-		//					final GDMModel finalGDMModel;
-		//
-		//					// TODO: this a WORKAROUND to insert a default type (data model schema record class URI or bibo:Document) for records in the output data model
-		//					if (gdmModel.getRecordClassURI() == null) {
-		//
-		//						final String recordURI = gdmModel.getRecordURIs().iterator().next();
-		//
-		//						final Resource recordResource = state.model.getResource(recordURI);
-		//
-		//						if (recordResource != null) {
-		//
-		//							// TODO check this: subject OK?
-		//							recordResource.addStatement(new ResourceNode(recordResource.getUri()), new Predicate(GDMUtil.RDF_type),
-		//									new ResourceNode(defaultRecordClassURI));
-		//						}
-		//
-		//						// re-write GDM model
-		//						finalGDMModel = new GDMModel(gdmModel.getModel(), recordURI, defaultRecordClassURI);
-		//					} else {
-		//
-		//						finalGDMModel = gdmModel;
-		//					}
-
-		//					return state
-		//							.setRecordClassUriIfUnset(finalGDMModel.getRecordClassURI())
-		//							.addModel(finalGDMModel)
-		//							.addRecordUris(recordURIsFromGDMModel);
-		//				})
-		//				.map(state -> {
-		//					if (state.recordClassUri == null && optionalDataModelSchemaRecordClassURI.isPresent()) {
-		//						state.setRecordClassUriIfUnset(optionalDataModelSchemaRecordClassURI.get());
-		//					}
-		//					return state;
-		//				});
-
-		//		final Observable<GDMTransformationState> resultObservable;
-
 		final Observable<JsonNode> resultObservable;
 
 		if (doNotReturnJsonToCaller) {
@@ -498,64 +436,6 @@ public class TransformationFlow {
 		@Override
 		public Observable<T> call(final Observable<T> thisOne) {
 			return thisOne.concatWith(other.ignoreElements().map(ignored -> emptyResultValue.get()));
-		}
-	}
-
-	private static final class GDMTransformationState {
-
-		private final ObjectMapper objectMapper;
-		private final Set<String>    recordURIs     = Sets.newLinkedHashSet();
-		private final List<GDMModel> finalGDMModels = Lists.newArrayList();
-		private final Model          model          = new Model();
-		private String   recordClassUri;
-		private GDMModel finalModel;
-
-		GDMTransformationState(final ObjectMapper objectMapper) {
-			this.objectMapper = objectMapper;
-		}
-
-		GDMTransformationState addModel(final GDMModel gdmModel) {
-			finalGDMModels.add(gdmModel);
-			return this;
-		}
-
-		GDMTransformationState addResources(final Iterable<Resource> resources) {
-			resources.forEach(model::addResource);
-			return this;
-		}
-
-		GDMTransformationState addRecordUris(final Collection<String> recordURIs) {
-			this.recordURIs.addAll(recordURIs);
-			return this;
-		}
-
-		GDMTransformationState setRecordClassUriIfUnset(final String recordClassUri) {
-			if (this.recordClassUri == null) {
-				this.recordClassUri = recordClassUri;
-			}
-			return this;
-		}
-
-		GDMModel finalModel() {
-			if (finalModel == null) {
-				// note: we may don't really need the record class uri here (I guess), because we can provide the record identifiers
-				// separately
-				finalModel = new GDMModel(model, null, recordClassUri);
-				finalModel.setRecordURIs(recordURIs);
-			}
-
-			return finalModel;
-		}
-
-		String jsonEncoded() throws DMPConverterException {
-			final GDMModel model = finalModel();
-			final JsonNode json = model.toJSON();
-
-			try {
-				return objectMapper.writeValueAsString(json);
-			} catch (final JsonProcessingException e) {
-				throw new DMPConverterException(e.getMessage(), e);
-			}
 		}
 	}
 }
