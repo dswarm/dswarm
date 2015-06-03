@@ -119,7 +119,8 @@ public class TransformationFlowTest extends GuicedTest {
 				.getInstance(CSVResourceFlowFactory.class)
 				.fromDataModel(updatedInputDataModel);
 
-		final Collection<Triple> csvRecordTriples = flow2.applyResource("test_csv.csv").toBlocking().first();
+		final Collection<Triple> csvRecordTriples = flow2.applyResource("test_csv.csv").flatMap(Observable::<Triple>from).toList().toBlocking()
+				.first();
 
 		Assert.assertNotNull("CSV record triple list shouldn't be null", csvRecordTriples);
 		Assert.assertFalse("CSV record triple list shouldn't be empty", csvRecordTriples.isEmpty());

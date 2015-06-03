@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.base.Charsets;
@@ -31,6 +32,8 @@ import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.junit.Assert;
 import org.junit.Test;
+import rx.Observable;
+import rx.functions.Func1;
 
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.GuicedTest;
@@ -58,9 +61,8 @@ public class CSVSourceResourceTriplesFlowTest extends GuicedTest {
 		}
 		final Iterator<String> subjectsIterator = subjects.iterator();
 
-		final Collection<Triple> triples = flow.apply(fileName, opener).flatMap(x -> {
-			return x;
-		}).toBlocking().first();
+		final Collection<Triple> triples = flow.apply(fileName, opener).flatMap(Observable::<Triple>from).toList().toBlocking().first();
+
 		for (final Triple triple : triples) {
 			MatcherAssert.assertThat(triple.getSubject(), CoreMatchers.equalTo(subjectsIterator.next()));
 			MatcherAssert.assertThat(triple.getPredicate(), predicateMatcher);
