@@ -64,7 +64,7 @@
 		<version.maven.core>2.2.1</version.maven.core>
 		<version.maven.plugin.antrun>1.8</version.maven.plugin.antrun>
 		<version.maven.plugin.assembly>2.5.3</version.maven.plugin.assembly>
-		<version.maven.plugin.checkstyle>2.15</version.maven.plugin.checkstyle>
+		<version.maven.plugin.checkstyle>2.12.1</version.maven.plugin.checkstyle>
 		<version.maven.plugin.clean>2.6.1</version.maven.plugin.clean>
 		<version.maven.plugin.cobertura>2.7</version.maven.plugin.cobertura>
 		<version.maven.plugin.compiler>3.2</version.maven.plugin.compiler>
