@@ -260,6 +260,13 @@ public class InternalGDMGraphService implements InternalModelService {
 			throw new DMPPersistenceException(String.format("couldn't find data model '%s' to retrieve record class from", dataModelUuid));
 		}
 
+		if(dataModel.isDeprecated()) {
+
+			InternalGDMGraphService.LOG.debug("cannot retrieve data from data model '{}', because the data model is deprecated", dataModelUuid);
+
+			return Observable.empty();
+		}
+
 		final Schema schema = dataModel.getSchema();
 
 		if (schema == null) {
@@ -609,6 +616,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		final Optional<Boolean> optionalDeprecateMissingRecords = determineMissingRecordsFlag(updateFormat);
 		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelUuid);
 		final DataModel dataModel = getSchemaInternal(dataModelUuid);
+
 		final boolean isSchemaAnInBuiltSchema = isSchemaAnInbuiltSchema(dataModel);
 
 		final Observable<GDMModel> modelObservable = model.cast(GDMModel.class);
@@ -650,7 +658,26 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		resourceObservable.subscribe(operator.resourceObserver());
 
-		return operator.responseObservable();
+		final Observable<Response> responseObservable = operator.responseObservable();
+
+		return responseObservable.doOnCompleted(() -> {
+
+			if(dataModel.isDeprecated()) {
+
+				// reincarnate data model
+				dataModel.setDeprecated(false);
+
+				final DataModelService dataModelService = this.dataModelService.get();
+
+				try {
+
+					dataModelService.updateObjectTransactional(dataModel);
+				} catch (final DMPPersistenceException e) {
+
+					throw DMPPersistenceError.wrap(e);
+				}
+			}
+		});
 	}
 
 	private DataModel optionallyEnhancedDataModel(final DataModel dataModel, final GDMModel gdmModel, final org.dswarm.graph.json.Model realModel,
