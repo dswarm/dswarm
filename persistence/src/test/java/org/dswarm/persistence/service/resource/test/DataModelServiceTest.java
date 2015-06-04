@@ -47,6 +47,8 @@ public class DataModelServiceTest extends BasicJPAServiceTest<ProxyDataModel, Da
 
 		final DataModel dataModel = dataModelServiceTestUtils.createAndPersistDefaultObject();
 
+		dataModel.setDeprecated(true);
+
 		final DataModel updatedDataModel = dataModelServiceTestUtils.updateAndCompareObject(dataModel, dataModel);
 
 		logObjectJSON(updatedDataModel);

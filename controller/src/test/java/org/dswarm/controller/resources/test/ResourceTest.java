@@ -15,10 +15,14 @@
  */
 package org.dswarm.controller.resources.test;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -45,6 +49,10 @@ public class ResourceTest extends GuicedTest {
 	protected static final ServerConfig SERVER_CONFIG = new ServerConfig(9998, "127.0.0.1", "/test");
 
 	protected MaintainDBService maintainDBService;
+
+	private static final   String          DSWARM_TEST_THREAD_NAMING_PATTERN = "dswarm-test-%d";
+	protected static final ExecutorService EXECUTOR_SERVICE                  = Executors.newCachedThreadPool(
+			new BasicThreadFactory.Builder().daemon(false).namingPattern(DSWARM_TEST_THREAD_NAMING_PATTERN).build());
 
 	public ResourceTest(final String resourceIdentifier) {
 

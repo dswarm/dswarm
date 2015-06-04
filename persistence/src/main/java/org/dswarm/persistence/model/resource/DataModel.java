@@ -89,7 +89,8 @@ public class DataModel extends ExtendedBasicDMPJPAObject {
 	/**
 	 * The flag that indicated, whether the data model is deprecated atm, or not
 	 */
-	@Column(name = "DEPRECATED")
+	@Access(AccessType.FIELD)
+	@Column(name = "DEPRECATED", columnDefinition = "TINYINT(1)")
 	private boolean deprecated;
 
 	public DataModel(final String uuidArg) {

@@ -18,6 +18,8 @@ package org.dswarm.controller.utils;
 import java.io.IOException;
 import java.util.Set;
 
+import javax.ws.rs.core.Response;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import rx.Observable;
 
 import org.dswarm.common.types.Tuple;
+import org.dswarm.controller.DMPControllerException;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.resource.Configuration;
@@ -160,6 +163,25 @@ public class DataModelUtil {
 		}
 
 		return maybeTriples.map(this::transformDataNode);
+	}
+
+	public Observable<Response> deprecateDataModel(final String dataModelUuid) throws DMPControllerException {
+
+		DataModelUtil.LOG.debug(String.format("try to deprecated data model with id [%s]", dataModelUuid));
+
+		final InternalModelService internalService = internalServiceFactoryProvider.get().getInternalGDMGraphService();
+
+		try {
+
+			return internalService.deprecateDataModel(dataModelUuid);
+		} catch (final DMPPersistenceException e1) {
+
+			final String message = String.format("couldn't deprecate data model '%s'", dataModelUuid);
+
+			DataModelUtil.LOG.error(message, dataModelUuid, e1);
+
+			throw new DMPControllerException(message, e1);
+		}
 	}
 
 	public Optional<ObjectNode> getSchema(final String dataModelUuid) {

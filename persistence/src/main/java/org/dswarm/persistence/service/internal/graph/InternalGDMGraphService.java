@@ -112,9 +112,10 @@ public class InternalGDMGraphService implements InternalModelService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(InternalGDMGraphService.class);
 
-	private static final String RESOURCE_IDENTIFIER = "gdm";
-	private static final String MULTIPART_MIXED     = "multipart/mixed";
-	private static final String CHUNKED             = "CHUNKED";
+	private static final String GDM_RESOURCE_IDENTIFIER      = "gdm";
+	private static final String MAINTAIN_RESOURCE_IDENTIFIER = "maintain";
+	private static final String MULTIPART_MIXED              = "multipart/mixed";
+	private static final String CHUNKED                      = "CHUNKED";
 
 	private static final String SEARCH_RESULT    = "search result";
 	private static final String OBJECT_RETRIEVAL = "object retrieval";
@@ -127,23 +128,26 @@ public class InternalGDMGraphService implements InternalModelService {
 	private static final ExecutorService EXECUTOR_SERVICE                            = Executors.newCachedThreadPool(
 			new BasicThreadFactory.Builder().daemon(false).namingPattern(DSWARM_MODEL_STREAMER_THREAD_NAMING_PATTERN).build());
 
-	private static final ClientBuilder BUILDER = ClientBuilder.newBuilder().register(MultiPartFeature.class)
+	private static final ClientBuilder BUILDER                   = ClientBuilder.newBuilder().register(MultiPartFeature.class)
 			.property(ClientProperties.CHUNKED_ENCODING_SIZE, CHUNK_SIZE)
 			.property(ClientProperties.REQUEST_ENTITY_PROCESSING, CHUNKED)
 			.property(ClientProperties.OUTBOUND_CONTENT_LENGTH_BUFFER, CHUNK_SIZE)
 			.property(ClientProperties.CONNECT_TIMEOUT, REQUEST_TIMEOUT)
 			.property(ClientProperties.READ_TIMEOUT, REQUEST_TIMEOUT);
+	public static final  String        METADATA_TYPE             = "metadata";
+	public static final  String        DEPRECATE_DATA_MODEL_TYPE = "deprecate data model";
 
 	static {
 
 		System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
 	}
 
-	private static final String READ_GDM_ENDPOINT           = "/get";
-	private static final String WRITE_GDM_ENDPOINT          = "/put";
-	private static final String SEARCH_GDM_RECORDS_ENDPOINT = "/searchrecords";
-	private static final String GET_GDM_RECORD_ENDPOINT     = "/getrecord";
-	public static final  String CHUNKED_TRANSFER_ENCODING   = "chunked";
+	private static final String READ_GDM_ENDPOINT             = "/get";
+	private static final String WRITE_GDM_ENDPOINT            = "/put";
+	private static final String DEPRECATE_DATA_MODEL_ENDPOINT = "/deprecate/datamodel";
+	private static final String SEARCH_GDM_RECORDS_ENDPOINT   = "/searchrecords";
+	private static final String GET_GDM_RECORD_ENDPOINT       = "/getrecord";
+	public static final  String CHUNKED_TRANSFER_ENCODING     = "chunked";
 
 	/**
 	 * The data model persistence service.
@@ -339,6 +343,47 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		// TODO
 
+	}
+
+	@Override public Observable<Response> deprecateDataModel(final String dataModelUuid) throws DMPPersistenceException {
+
+		if (dataModelUuid == null) {
+
+			throw new DMPPersistenceException("data model id shouldn't be null");
+		}
+
+		final DataModel dataModel = getDataModel(dataModelUuid);
+
+		if (dataModel == null) {
+
+			final String message = String.format("data model '%s' is not available", dataModelUuid);
+
+			LOG.debug(message);
+
+			return Observable.empty();
+		}
+
+		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelUuid);
+
+		final Observable<Response> result = deprecateDataModelInternal(dataModelURI);
+
+		return result.doOnCompleted(
+				() -> {
+
+					LOG.debug("deprecated data model '{}' in data hub", dataModelUuid);
+
+					dataModel.setDeprecated(true);
+
+					final DataModelService dataModelService = this.dataModelService.get();
+
+					try {
+
+						dataModelService.updateObjectTransactional(dataModel);
+					} catch (final DMPPersistenceException e) {
+
+						throw DMPPersistenceError.wrap(e);
+					}
+				});
 	}
 
 	/**
@@ -908,7 +953,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		if (dataModel == null) {
 
-			InternalGDMGraphService.LOG.debug("couldn't find data model '{}'", dataModelUuid);
+			InternalGDMGraphService.LOG.error("couldn't find data model '{}'", dataModelUuid);
 
 			return null;
 		}
@@ -916,12 +961,51 @@ public class InternalGDMGraphService implements InternalModelService {
 		return dataModel;
 	}
 
+	private Observable<Response> deprecateDataModelInternal(final String dataModelURI) throws DMPPersistenceException {
+
+		LOG.debug("try to deprecate data model '{}' in data hub", dataModelURI);
+
+		final WebTarget target = maintainTarget(DEPRECATE_DATA_MODEL_ENDPOINT);
+
+		final RxWebTarget<RxObservableInvoker> rxWebTarget = RxObservable.from(target);
+
+		final ObjectNode requestJSON = objectMapperProvider.get().createObjectNode();
+		requestJSON.put(DMPStatics.DATA_MODEL_URI_IDENTIFIER, dataModelURI);
+
+		final String requestJSONString = serializeObject(requestJSON, DEPRECATE_DATA_MODEL_TYPE);
+
+		// POST the request
+		final RxObservableInvoker rx = rxWebTarget.request(MediaType.APPLICATION_JSON).rx();
+
+		final Entity<String> entity = Entity.entity(requestJSONString, MediaType.APPLICATION_JSON);
+
+		final Observable<Response> post = rx.post(entity).subscribeOn(Schedulers.from(EXECUTOR_SERVICE));
+
+		final PublishSubject<Response> asyncPost = PublishSubject.create();
+		asyncPost.subscribe(response -> {
+
+			//TODO maybe check status code here, i.e., should be 200
+
+			LOG.debug("deprecated data model '{}' in data hub", dataModelURI);
+		}, throwable -> {
+
+			throw DMPPersistenceError.wrap(new DMPPersistenceException(
+					String.format("Couldn't deprecate data model in database. Received status code '%s' from database endpoint.",
+							throwable.getMessage())));
+
+		}, () -> LOG.debug("completely deprecated data model '{}' in data hub", dataModelURI));
+
+		post.subscribe(asyncPost);
+
+		return asyncPost;
+	}
+
 	private Tuple<Observer<org.dswarm.graph.json.Resource>, Observable<Response>> writeGDMToDB(final String dataModelUri, final String metadata)
 			throws DMPPersistenceException {
 
 		LOG.debug("try to write GDM data for data model '{}' into data hub", dataModelUri);
 
-		final WebTarget target = target(WRITE_GDM_ENDPOINT);
+		final WebTarget target = gdmTarget(WRITE_GDM_ENDPOINT);
 
 		final RxWebTarget<RxObservableInvoker> rxWebTarget = RxObservable.from(target);
 
@@ -1048,7 +1132,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		LOG.debug("try to read GDM data for data model '{}' and record class '{}' from data hub", dataModelUri, recordClassUri);
 
-		final WebTarget target = target(READ_GDM_ENDPOINT);
+		final WebTarget target = gdmTarget(READ_GDM_ENDPOINT);
 
 		final ObjectMapper objectMapper = DMPPersistenceUtil.getJSONObjectMapper();
 		final ObjectNode requestJson = objectMapper.createObjectNode();
@@ -1091,7 +1175,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 	private Observable<Resource> readGDMRecordFromDB(final String recordUri, final String dataModelUri) {
 
-		final WebTarget target = target(GET_GDM_RECORD_ENDPOINT);
+		final WebTarget target = gdmTarget(GET_GDM_RECORD_ENDPOINT);
 
 		final ObjectMapper objectMapper = DMPPersistenceUtil.getJSONObjectMapper();
 		final ObjectNode requestJson = objectMapper.createObjectNode();
@@ -1135,7 +1219,7 @@ public class InternalGDMGraphService implements InternalModelService {
 			final Optional<Integer> optionalAtMost)
 			throws DMPPersistenceException {
 
-		final WebTarget target = target(SEARCH_GDM_RECORDS_ENDPOINT);
+		final WebTarget target = gdmTarget(SEARCH_GDM_RECORDS_ENDPOINT);
 
 		final ObjectMapper objectMapper = DMPPersistenceUtil.getJSONObjectMapper();
 		final ObjectNode requestJson = objectMapper.createObjectNode();
@@ -1228,14 +1312,31 @@ public class InternalGDMGraphService implements InternalModelService {
 		return BUILDER.build();
 	}
 
-	private WebTarget target() {
+	private WebTarget gdmTarget() {
 
-		return client().target(graphEndpoint).path(InternalGDMGraphService.RESOURCE_IDENTIFIER);
+		return client().target(graphEndpoint).path(InternalGDMGraphService.GDM_RESOURCE_IDENTIFIER);
 	}
 
-	private WebTarget target(final String... path) {
+	private WebTarget maintainTarget() {
 
-		WebTarget target = target();
+		return client().target(graphEndpoint).path(InternalGDMGraphService.MAINTAIN_RESOURCE_IDENTIFIER);
+	}
+
+	private WebTarget gdmTarget(final String... path) {
+
+		WebTarget target = gdmTarget();
+
+		for (final String p : path) {
+
+			target = target.path(p);
+		}
+
+		return target;
+	}
+
+	private WebTarget maintainTarget(final String... path) {
+
+		WebTarget target = maintainTarget();
 
 		for (final String p : path) {
 
@@ -1324,11 +1425,17 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		metadata.put(DMPStatics.ENABLE_VERSIONING_IDENTIFIER, String.valueOf(enableVersioning));
 
+		return serializeObject(metadata, METADATA_TYPE);
+	}
+
+	private String serializeObject(final ObjectNode object, final String type) throws DMPPersistenceException {
+
 		try {
-			return objectMapperProvider.get().writeValueAsString(metadata);
+
+			return objectMapperProvider.get().writeValueAsString(object);
 		} catch (final JsonProcessingException e) {
 
-			final String message = "couldn't serialize metadata";
+			final String message = String.format("couldn't serialize %s", type);
 
 			InternalGDMGraphService.LOG.error(message, e);
 
