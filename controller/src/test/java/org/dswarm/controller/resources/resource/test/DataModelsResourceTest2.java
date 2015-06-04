@@ -602,7 +602,9 @@ public class DataModelsResourceTest2 extends
 
 		final InternalModelServiceFactory serviceFactory = GuicedTest.injector.getInstance(Key.get(InternalModelServiceFactory.class));
 		final InternalModelService service = serviceFactory.getInternalGDMGraphService();
-		final Observable<Map<String, Model>> dataObservable = service.getObjects(dataModel.getUuid(), optionalAtMost);
+		final Observable<Map<String, Model>> dataObservable = service
+				.getObjects(dataModel.getUuid(), optionalAtMost)
+				.toMap(Tuple::v1, Tuple::v2);
 		final Optional<Map<String, Model>> data = dataObservable.map(Optional::of).toBlocking().firstOrDefault(Optional.absent());
 
 		Assert.assertTrue(data.isPresent());

@@ -58,7 +58,7 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 	private static final String RESOURCE_BASE_URI = SchemaUtils.BASE_URI + "resource/";
 	private       String                                currentId;
-	private final Model                                 internalGDMModel;
+	private       Model                                 internalGDMModel;
 	private       ResourceNode                          recordNode;
 	private       ResourceNode                          entityNode;
 	private       Resource                              currentResource;
@@ -83,8 +83,6 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 		this.dataModel = dataModel;
 		dataModelUri = init(dataModel);
 
-		internalGDMModel = new Model();
-
 		resourceStack = new Stack<>();
 
 	}
@@ -96,6 +94,7 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		currentId = SchemaUtils.isValidUri(identifier) ? identifier : SchemaUtils.mintRecordUri(identifier, currentId, dataModel);
 
+		internalGDMModel = new Model();
 		recordResource = getOrCreateResource(currentId);
 
 		recordNode = new ResourceNode(currentId);

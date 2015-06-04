@@ -13,48 +13,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dswarm.converter.mf.stream;
+package org.dswarm.converter.flow;
+
+import java.util.Collection;
 
 import org.culturegraph.mf.framework.ObjectReceiver;
+import org.culturegraph.mf.types.Triple;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.subjects.PublishSubject;
-import rx.subjects.ReplaySubject;
 import rx.subjects.Subject;
 
-import org.dswarm.persistence.model.internal.gdm.GDMModel;
+final class ObservableRecordTriplesReceiver implements ObjectReceiver<Collection<Triple>> {
 
-/**
- * @author tgaengler
- */
-public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
+	private static final Func1<Collection<Triple>, Boolean> NOT_NULL = m -> m != null;
 
-	private static final Func1<GDMModel, Boolean> NOT_NULL = m -> m != null;
-
-	private final Subject<GDMModel, GDMModel> modelSubject = PublishSubject.create();
+	private final Subject<Collection<Triple>, Collection<Triple>> tripleSubject = PublishSubject.create();
 
 	@Override
-	public void process(final GDMModel gdmModel) {
+	public void process(final Collection<Triple> triple) {
 
-		modelSubject.onNext(gdmModel);
+		tripleSubject.onNext(triple);
 	}
 
 	@Override
 	public void resetStream() {
-		// TODO: ?
+
+		// TODO ?
 	}
 
 	@Override
 	public void closeStream() {
 
-		modelSubject.onCompleted();
+		tripleSubject.onCompleted();
 	}
 
 	public void propagateError(final Throwable error) {
-		modelSubject.onError(error);
+
+		tripleSubject.onError(error);
 	}
 
-	public Observable<GDMModel> getObservable() {
-		return modelSubject.filter(NOT_NULL);
+	public Observable<Collection<Triple>> getObservable() {
+
+		return tripleSubject.filter(NOT_NULL);
 	}
 }

@@ -20,13 +20,16 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
+import java.util.function.Supplier;
+
+import javax.ws.rs.core.Response;
 
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
@@ -36,9 +39,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.google.common.collect.Iterators;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
 import com.google.inject.Inject;
@@ -54,6 +56,8 @@ import org.culturegraph.mf.stream.pipe.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
+import rx.Subscriber;
+import rx.schedulers.Schedulers;
 
 import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.DMPConverterError;
@@ -93,7 +97,7 @@ import org.dswarm.persistence.util.GDMUtil;
  */
 public class TransformationFlow {
 
-	private static final Logger LOG               = LoggerFactory.getLogger(TransformationFlow.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TransformationFlow.class);
 
 	private final Metamorph transformer;
 
@@ -133,7 +137,7 @@ public class TransformationFlow {
 		return script;
 	}
 
-	public Future<String> applyRecord(final String record) throws DMPConverterException {
+	public Observable<String> applyRecord(final String record) throws DMPConverterException {
 
 		// TODO: convert JSON string to Iterator with tuples of string + JsonNode pairs
 		List<Tuple<String, JsonNode>> tuplesList = null;
@@ -159,31 +163,36 @@ public class TransformationFlow {
 			final String msg = "couldn't process the transformation result tuples to a JSON string";
 			TransformationFlow.LOG.debug(msg);
 
-			final CompletableFuture<String> future = new CompletableFuture<>();
-			future.completeExceptionally(new DMPConverterException(msg));
-			return future;
+			return Observable.error(new DMPConverterException(msg));
 		}
 
-		return apply(Observable.from(tuplesList), false);
+		return apply(Observable.from(tuplesList), false, false).reduce(
+				DMPPersistenceUtil.getJSONObjectMapper().createArrayNode(),
+				ArrayNode::add
+		).map(arrayNode -> {
+			try {
+				return DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(arrayNode);
+			} catch (JsonProcessingException e) {
+				throw new RuntimeException(e);
+			}
+		});
 	}
 
-	public Future<String> applyResource(final String resourcePath) throws DMPConverterException {
+	public Observable<String> applyResource(final String resourcePath) throws DMPConverterException {
 
 		try {
 			return applyRecord(DMPPersistenceUtil.getResourceAsString(resourcePath));
 		} catch (final IOException e) {
 
-			final CompletableFuture<String> future = new CompletableFuture<>();
-			future.completeExceptionally(new DMPConverterException(e.getMessage(), e));
-			return future;
+			return Observable.error(new DMPConverterException(e.getMessage(), e));
 		}
 	}
 
 	// TODO: Observable String / Model / Future String
-	public Future<String> apply(
+	public Observable<JsonNode> apply(
 			final Observable<Tuple<String, JsonNode>> tuples,
 			final ObjectPipe<Tuple<String, JsonNode>, StreamReceiver> opener,
-			final boolean writeResultToDatahub) throws DMPConverterException {
+			final boolean writeResultToDatahub, final boolean doNotReturnJsonToCaller) throws DMPConverterException {
 
 		final Context morphContext = morphTimer.time();
 
@@ -226,62 +235,82 @@ public class TransformationFlow {
 		final String defaultRecordClassURI =
 				optionalDataModelSchemaRecordClassURI.orElse(ClaszUtils.BIBO_DOCUMENT_URI);
 
-		final ObjectMapper objectMapper =
-				DMPPersistenceUtil.getJSONObjectMapper();
+		final AtomicInteger counter = new AtomicInteger(0);
 
-		final Observable<GDMTransformationState> stateObservable =
-				writer.getObservable().reduce(new GDMTransformationState(objectMapper), (state, gdmModel) -> {
-					if (gdmModel.getModel() == null) {
-						state.addModel(gdmModel);
-						return state;
-					}
+		final Observable<org.dswarm.persistence.model.internal.Model> model = writer.getObservable().filter(gdmModel -> {
 
-					final Set<String> recordURIsFromGDMModel = gdmModel.getRecordURIs();
+			final int current = counter.incrementAndGet();
 
-					if (recordURIsFromGDMModel == null || recordURIsFromGDMModel.isEmpty()) {
+			LOG.debug("processed resource model number '{}'", current);
 
-						// skip, since it seems to look like that there are no records in the model
-						return state;
-					}
+			final Model model1 = gdmModel.getModel();
 
-					state.addResources(gdmModel.getModel().getResources());
+			if (model1 == null) {
 
-					final GDMModel finalGDMModel;
+				LOG.debug("no model available");
 
-					// TODO: this a WORKAROUND to insert a default type (data model schema record class URI or bibo:Document) for records in the output data model
-					if (gdmModel.getRecordClassURI() == null) {
+				return false;
+			}
 
-						final String recordURI = gdmModel.getRecordURIs().iterator().next();
+			final Collection<Resource> resources = model1.getResources();
 
-						final Resource recordResource = state.model.getResource(recordURI);
+			if(resources == null || resources.isEmpty()) {
 
-						if (recordResource != null) {
+				LOG.debug("no resources in model available");
 
-							// TODO check this: subject OK?
-							recordResource.addStatement(new ResourceNode(recordResource.getUri()), new Predicate(GDMUtil.RDF_type),
-									new ResourceNode(defaultRecordClassURI));
-						}
+				return false;
+			}
 
-						// re-write GDM model
-						finalGDMModel = new GDMModel(gdmModel.getModel(), recordURI, defaultRecordClassURI);
-					} else {
+			LOG.debug("processed resource model number '{}' with '{}' and resource site '{}'", current, resources.iterator().next().getUri(), resources.size());
 
-						finalGDMModel = gdmModel;
-					}
+			final Set<String> recordURIsFromGDMModel = gdmModel.getRecordURIs();
 
-					return state
-							.setRecordClassUriIfUnset(finalGDMModel.getRecordClassURI())
-							.addModel(finalGDMModel)
-							.addRecordUris(recordURIsFromGDMModel);
-				})
-				.map(state -> {
-					if (state.recordClassUri == null && optionalDataModelSchemaRecordClassURI.isPresent()) {
-						state.setRecordClassUriIfUnset(optionalDataModelSchemaRecordClassURI.get());
-					}
-					return state;
-				});
+			return !(recordURIsFromGDMModel == null || recordURIsFromGDMModel.isEmpty());
+		}).map(gdmModel -> {
 
-		final Observable<GDMTransformationState> resultObservable;
+			final GDMModel finalGDMModel;
+
+			// TODO: this a WORKAROUND to insert a default type (data model schema record class URI or bibo:Document) for records in the output data model
+			if (gdmModel.getRecordClassURI() == null) {
+
+				final String recordURI = gdmModel.getRecordURIs().iterator().next();
+
+				final Resource recordResource = gdmModel.getModel().getResource(recordURI);
+
+				if (recordResource != null) {
+
+					// TODO check this: subject OK?
+					recordResource.addStatement(new ResourceNode(recordResource.getUri()), new Predicate(GDMUtil.RDF_type),
+							new ResourceNode(defaultRecordClassURI));
+				}
+
+				// re-write GDM model
+				finalGDMModel = new GDMModel(gdmModel.getModel(), recordURI, defaultRecordClassURI);
+			} else {
+
+				finalGDMModel = gdmModel;
+			}
+
+			return finalGDMModel;
+		});
+
+		final Observable<JsonNode> resultObservable;
+
+		if (doNotReturnJsonToCaller) {
+
+			resultObservable = Observable.empty();
+		} else {
+
+			resultObservable = model.map(org.dswarm.persistence.model.internal.Model::toJSON).flatMapIterable(nodes -> {
+
+				final ArrayList<JsonNode> nodeList = new ArrayList<>();
+
+				Iterators.addAll(nodeList, nodes.elements());
+
+				return nodeList;
+			});
+		}
+		final Observable<Response> writeResponse;
 
 		if (writeResultToDatahub) {
 
@@ -290,20 +319,16 @@ public class TransformationFlow {
 				// write result to graph db
 				final InternalModelService internalModelService = internalModelServiceFactoryProvider.get().getInternalGDMGraphService();
 
-				resultObservable = stateObservable.map(state -> {
+				try {
 
-					try {
-						internalModelService.updateObject(outputDataModel.get().getUuid(), state.finalModel(), UpdateFormat.DELTA, true);
-					} catch (DMPPersistenceException e) {
+					writeResponse = internalModelService.updateObject(outputDataModel.get().getUuid(), model, UpdateFormat.DELTA, true);
+				} catch (final DMPPersistenceException e) {
 
-						final String message = "couldn't persist the result of the transformation: " + e.getMessage();
-						TransformationFlow.LOG.error(message);
+					final String message = "couldn't persist the result of the transformation: " + e.getMessage();
+					TransformationFlow.LOG.error(message);
 
-						throw DMPConverterError.wrap(new DMPConverterException(message, e));
-					}
-
-					return state;
-				});
+					throw DMPConverterError.wrap(new DMPConverterException(message, e));
+				}
 
 			} else {
 
@@ -311,30 +336,34 @@ public class TransformationFlow {
 
 				TransformationFlow.LOG.error(message);
 
-				resultObservable = Observable.error(new DMPConverterException(message));
-
+				writeResponse = Observable.empty();
 			}
 
 		} else {
 
-			resultObservable = stateObservable;
+			writeResponse = Observable.empty();
 		}
 
-		tuples.subscribe(opener::process, writer::propagateError, opener::closeStream);
+		return Observable.create(new Observable.OnSubscribe<JsonNode>() {
 
-		morphContext.stop();
+			@Override public void call(final Subscriber<? super JsonNode> subscriber) {
 
-		return resultObservable
-				.map(DMPConverterError.wrapped(GDMTransformationState::jsonEncoded))
-				.single()
-				.toBlocking().toFuture();
+				resultObservable
+						.compose(new AndThenWaitFor<>(writeResponse, DMPPersistenceUtil.getJSONObjectMapper()::createArrayNode))
+						.doOnCompleted(morphContext::stop)
+						.subscribe(subscriber);
+
+				tuples.subscribeOn(Schedulers.newThread()).subscribe(opener::process, writer::propagateError, opener::closeStream);
+			}
+		});
 	}
 
-	public Future<String> apply(final Observable<Tuple<String, JsonNode>> tuples, final boolean writeResultToDatahub) throws DMPConverterException {
+	public Observable<JsonNode> apply(final Observable<Tuple<String, JsonNode>> tuples, final boolean writeResultToDatahub,
+			final boolean doNotReturnJsonToCaller) throws DMPConverterException {
 
 		final JsonNodeReader opener = new JsonNodeReader();
 
-		return apply(tuples, opener, writeResultToDatahub);
+		return apply(tuples, opener, writeResultToDatahub, doNotReturnJsonToCaller);
 	}
 
 	static Metamorph createMorph(final Reader morphString) throws DMPMorphDefException {
@@ -395,60 +424,18 @@ public class TransformationFlow {
 		return exists(optional, t -> access.apply(t) != null);
 	}
 
-	private static final class GDMTransformationState {
-		private final ObjectMapper objectMapper;
-		private final Set<String> recordURIs = Sets.newLinkedHashSet();
-		private final List<GDMModel> finalGDMModels = Lists.newArrayList();
-		private final Model model = new Model();
-		private String recordClassUri;
-		private GDMModel finalModel;
+	private static class AndThenWaitFor<T, U> implements Observable.Transformer<T, T> {
+		private final Observable<U> other;
+		private final Supplier<T> emptyResultValue;
 
-		GDMTransformationState(final ObjectMapper objectMapper) {
-			this.objectMapper = objectMapper;
+		public AndThenWaitFor(final Observable<U> other, final Supplier<T> emptyResultValue) {
+			this.other = other;
+			this.emptyResultValue = emptyResultValue;
 		}
 
-		GDMTransformationState addModel(final GDMModel gdmModel) {
-			finalGDMModels.add(gdmModel);
-			return this;
-		}
-
-		GDMTransformationState addResources(final Iterable<Resource> resources) {
-			resources.forEach(model::addResource);
-			return this;
-		}
-
-		GDMTransformationState addRecordUris(final Collection<String> recordURIs) {
-			this.recordURIs.addAll(recordURIs);
-			return this;
-		}
-
-		GDMTransformationState setRecordClassUriIfUnset(final String recordClassUri) {
-			if (this.recordClassUri == null) {
-				this.recordClassUri = recordClassUri;
-			}
-			return this;
-		}
-
-		GDMModel finalModel() {
-			if (finalModel == null) {
-				// note: we may don't really need the record class uri here (I guess), because we can provide the record identifiers
-				// separately
-				finalModel = new GDMModel(model, null, recordClassUri);
-				finalModel.setRecordURIs(recordURIs);
-			}
-
-			return finalModel;
-		}
-
-		String jsonEncoded() throws DMPConverterException {
-			final GDMModel model = finalModel();
-			final JsonNode json = model.toJSON();
-
-			try {
-				return objectMapper.writeValueAsString(json);
-			} catch (final JsonProcessingException e) {
-				throw new DMPConverterException(e.getMessage(), e);
-			}
+		@Override
+		public Observable<T> call(final Observable<T> thisOne) {
+			return thisOne.concatWith(other.ignoreElements().map(ignored -> emptyResultValue.get()));
 		}
 	}
 }

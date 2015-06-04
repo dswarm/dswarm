@@ -20,6 +20,8 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 
+import javax.ws.rs.core.Response;
+
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
@@ -31,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
 
+import org.dswarm.common.types.Tuple;
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
@@ -102,8 +105,12 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 
 		final InternalGDMGraphService rdfGraphService = GuicedTest.injector.getInstance(InternalGDMGraphService.class);
 
-		rdfGraphService.createObject(dataModel.getUuid(), rdfModel);
+		final Observable<Response> responseObservable = rdfGraphService.createObject(dataModel.getUuid(), Observable.just(rdfModel));
+
+		final Response response = responseObservable.toBlocking().firstOrDefault(null);
 		// finished writing RDF statements to graph
+
+		Assert.assertNotNull(response);
 
 		// retrieve updated fresh data model
 		final DataModel freshDataModel = dataModelService.getObject(updatedDataModel.getUuid());
@@ -113,7 +120,9 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 
 		final InternalGDMGraphService gdmGraphService = GuicedTest.injector.getInstance(InternalGDMGraphService.class);
 
-		final Observable<Map<String, Model>> optionalModelMapObservable = gdmGraphService.getObjects(updatedDataModel.getUuid(), Optional.<Integer>absent());
+		final Observable<Map<String, Model>> optionalModelMapObservable = gdmGraphService
+				.getObjects(updatedDataModel.getUuid(), Optional.<Integer>absent())
+				.toMap(Tuple::v1, Tuple::v2);
 		final Optional<Map<String, Model>> optionalModelMap = optionalModelMapObservable.map(Optional::of).toBlocking().firstOrDefault(Optional.absent());
 
 		Assert.assertNotNull("Ralf's MABXML record model map optional shouldn't be null", optionalModelMap);
@@ -192,7 +201,7 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 
 		final InternalGDMGraphService rdfGraphService = GuicedTest.injector.getInstance(InternalGDMGraphService.class);
 
-		rdfGraphService.createObject(dataModel.getUuid(), rdfModel);
+		rdfGraphService.createObject(dataModel.getUuid(), Observable.just(rdfModel));
 		// finished writing RDF statements to graph
 
 		// retrieve updated fresh data model

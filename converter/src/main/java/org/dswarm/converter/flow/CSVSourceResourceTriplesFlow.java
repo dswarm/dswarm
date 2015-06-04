@@ -16,16 +16,18 @@
 package org.dswarm.converter.flow;
 
 import java.io.Reader;
+import java.util.Collection;
 
-import com.google.common.collect.ImmutableList;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
-import org.culturegraph.mf.stream.converter.StreamToTriples;
 import org.culturegraph.mf.types.Triple;
+import rx.Observable;
+import rx.Subscriber;
 
 import org.dswarm.converter.DMPConverterException;
+import org.dswarm.converter.mf.stream.converter.StreamToRecordTriples;
 import org.dswarm.converter.mf.stream.reader.CsvReader;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
@@ -33,7 +35,7 @@ import org.dswarm.persistence.model.resource.DataModel;
 /**
  * @author phorn
  */
-public class CSVSourceResourceTriplesFlow extends AbstractCSVResourceFlow<ImmutableList<Triple>> {
+public class CSVSourceResourceTriplesFlow extends AbstractCSVResourceFlow<Observable<Collection<Triple>>> {
 
 	@AssistedInject
 	private CSVSourceResourceTriplesFlow(
@@ -55,14 +57,23 @@ public class CSVSourceResourceTriplesFlow extends AbstractCSVResourceFlow<Immuta
 	}
 
 	@Override
-	protected ImmutableList<Triple> process(final ObjectPipe<String, ObjectReceiver<Reader>> opener, final String obj, final CsvReader pipe) {
+	protected Observable<Collection<Triple>> process(final ObjectPipe<String, ObjectReceiver<Reader>> opener, final String obj,
+			final CsvReader pipe) {
 
-		final ListTripleReceiver tripleReceiver = new ListTripleReceiver();
+		final ObservableRecordTriplesReceiver tripleReceiver = new ObservableRecordTriplesReceiver();
 
-		pipe.setReceiver(new StreamToTriples())
+		pipe.setReceiver(new StreamToRecordTriples())
 				.setReceiver(tripleReceiver);
 
-		opener.process(obj);
-		return tripleReceiver.getCollection();
+		return Observable.create(new Observable.OnSubscribe<Collection<Triple>>() {
+
+			@Override public void call(final Subscriber<? super Collection<Triple>> subscriber) {
+
+				tripleReceiver.getObservable().subscribe(subscriber);
+
+				opener.process(obj);
+				opener.closeStream();
+			}
+		});
 	}
 }

@@ -15,12 +15,16 @@
  */
 package org.dswarm.persistence.service;
 
-import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Future;
+import java.util.function.Supplier;
+
+import javax.ws.rs.core.Response;
 
 import com.google.common.base.Optional;
 import rx.Observable;
 
+import org.dswarm.common.types.Tuple;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.resource.DataModel;
@@ -42,7 +46,7 @@ public interface InternalModelService {
 	 * @param model         the model of the object that should be persisted
 	 * @throws DMPPersistenceException
 	 */
-	void createObject(final String dataModelUuid, final Object model) throws DMPPersistenceException;
+	Observable<Response> createObject(final String dataModelUuid, final Observable<Model> model) throws DMPPersistenceException;
 
 	/**
 	 * Updates an object (model) to an existing data model.
@@ -51,7 +55,8 @@ public interface InternalModelService {
 	 * @param model         the model of the object that should be updated
 	 * @throws DMPPersistenceException
 	 */
-	void updateObject(final String dataModelUuid, final Object model, final UpdateFormat updateFormat, final boolean enableVersioning) throws DMPPersistenceException;
+	Observable<Response> updateObject(final String dataModelUuid, final Observable<Model> model, final UpdateFormat updateFormat,
+			final boolean enableVersioning) throws DMPPersistenceException;
 
 	/**
 	 * Retrieves a collection of objects from a data model.
@@ -61,7 +66,7 @@ public interface InternalModelService {
 	 * @return (optional) a map of objects and their identifier
 	 * @throws DMPPersistenceException
 	 */
-	Observable<Map<String, Model>> getObjects(final String dataModelUuid, final Optional<Integer> atMost) throws DMPPersistenceException;
+	Observable<Tuple<String, Model>> getObjects(final String dataModelUuid, final Optional<Integer> atMost) throws DMPPersistenceException;
 
 	/**
 	 * Deletes a whole data model (incl. all its objects).
@@ -90,7 +95,7 @@ public interface InternalModelService {
 	 * @return (optional) a map of objects and their identifier
 	 * @throws DMPPersistenceException
 	 */
-	Observable<Map<String, Model>> searchObjects(final String dataModelUuid, final String keyAttributePathString, final String searchValue,
+	Observable<Tuple<String, Model>> searchObjects(final String dataModelUuid, final String keyAttributePathString, final String searchValue,
 			final Optional<Integer> atMost) throws DMPPersistenceException;
 
 	/**
@@ -111,5 +116,5 @@ public interface InternalModelService {
 	 * @return
 	 * @throws DMPPersistenceException
 	 */
-	Observable<Map<String, Model>> getRecords(final Set<String> recordIdentifiers, final String dataModelUuid) throws DMPPersistenceException;
+	Observable<Tuple<String, Model>> getRecords(final Set<String> recordIdentifiers, final String dataModelUuid) throws DMPPersistenceException;
 }

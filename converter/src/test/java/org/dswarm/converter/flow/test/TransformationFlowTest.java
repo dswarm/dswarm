@@ -18,9 +18,13 @@ package org.dswarm.converter.flow.test;
 import java.io.File;
 import java.io.StringWriter;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
+import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -68,6 +72,7 @@ import org.dswarm.persistence.service.resource.ConfigurationService;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.service.resource.ResourceService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
+import org.dswarm.persistence.util.GDMUtil;
 
 public class TransformationFlowTest extends GuicedTest {
 
@@ -114,7 +119,8 @@ public class TransformationFlowTest extends GuicedTest {
 				.getInstance(CSVResourceFlowFactory.class)
 				.fromDataModel(updatedInputDataModel);
 
-		final List<Triple> csvRecordTriples = flow2.applyResource("test_csv.csv");
+		final Collection<Triple> csvRecordTriples = flow2.applyResource("test_csv.csv").flatMap(Observable::<Triple>from).toList().toBlocking()
+				.first();
 
 		Assert.assertNotNull("CSV record triple list shouldn't be null", csvRecordTriples);
 		Assert.assertFalse("CSV record triple list shouldn't be empty", csvRecordTriples.isEmpty());
@@ -132,7 +138,7 @@ public class TransformationFlowTest extends GuicedTest {
 
 		for (final org.culturegraph.mf.types.Triple triple : csvRecordTriples) {
 
-			final org.dswarm.graph.json.Resource recordResource = DataModelUtils.mintRecordResource(Long.valueOf(triple.getSubject()),
+			final org.dswarm.graph.json.Resource recordResource = mintRecordResource(Long.valueOf(triple.getSubject()),
 					inputDataModel, recordResources, model, recordClasz);
 			final Predicate property = new Predicate(triple.getPredicate());
 
@@ -155,8 +161,11 @@ public class TransformationFlowTest extends GuicedTest {
 		// System.out.println(Util.getJSONObjectMapper().configure(SerializationFeature.INDENT_OUTPUT,
 		// true).writeValueAsString(gdmModel.getModel()));
 
-		gdmService.createObject(inputDataModel.getUuid(), gdmModel);
+		final Observable<Response> responseObservable = gdmService.createObject(inputDataModel.getUuid(), Observable.just(gdmModel));
+		final Response response = responseObservable.toBlocking().firstOrDefault(null);
 		// finished writing CSV statements to graph
+
+		Assert.assertNotNull(response);
 
 		// retrieve updated fresh data model
 		final DataModel freshInputDataModel = dataModelService.getObject(updatedInputDataModel.getUuid());
@@ -166,8 +175,11 @@ public class TransformationFlowTest extends GuicedTest {
 
 		final Schema schema = freshInputDataModel.getSchema();
 
-		final Observable<Map<String, Model>> optionalModelMapObservable = gdmService.getObjects(updatedInputDataModel.getUuid(), Optional.<Integer>absent());
-		final Optional<Map<String, Model>> optionalModelMap = optionalModelMapObservable.map(Optional::of).toBlocking().firstOrDefault(Optional.absent());
+		final Observable<Map<String, Model>> optionalModelMapObservable = gdmService
+				.getObjects(updatedInputDataModel.getUuid(), Optional.<Integer>absent())
+				.toMap(Tuple::v1, Tuple::v2);
+		final Optional<Map<String, Model>> optionalModelMap = optionalModelMapObservable.map(Optional::of).toBlocking()
+				.firstOrDefault(Optional.absent());
 
 		Assert.assertNotNull("CSV record model map optional shouldn't be null", optionalModelMap);
 		Assert.assertTrue("CSV record model map should be present", optionalModelMap.isPresent());
@@ -239,10 +251,12 @@ public class TransformationFlowTest extends GuicedTest {
 
 		flow.getScript();
 
-		final String actual = flow.apply(tuples, true).get();
+		final ArrayNode actualNodes = flow.apply(tuples, true, false).reduce(
+				DMPPersistenceUtil.getJSONObjectMapper().createArrayNode(),
+				ArrayNode::add
+		).toBlocking().first();
 
 		final ArrayNode expectedJSONArray = objectMapper.readValue(expected, ArrayNode.class);
-		final ArrayNode actualNodes = objectMapper.readValue(actual, ArrayNode.class);
 
 		objectMapper.writeValueAsString(actualNodes);
 
@@ -362,5 +376,49 @@ public class TransformationFlowTest extends GuicedTest {
 		}
 
 		return null;
+	}
+
+	private static org.dswarm.graph.json.Resource mintRecordResource(final Long identifier, final DataModel dataModel,
+			final Map<Long, org.dswarm.graph.json.Resource> recordResources, final org.dswarm.graph.json.Model model,
+			final ResourceNode recordClassNode) {
+
+		if (identifier != null) {
+
+			if (recordResources.containsKey(identifier)) {
+
+				return recordResources.get(identifier);
+			}
+		}
+
+		// mint completely new uri
+
+		final StringBuilder sb = new StringBuilder();
+
+		if (dataModel != null) {
+
+			// create uri from resource id and configuration id and random uuid
+
+			sb.append("http://data.slub-dresden.de/datamodels/").append(dataModel.getUuid()).append("/records/");
+		} else {
+
+			// create uri from random uuid
+
+			sb.append("http://data.slub-dresden.de/records/");
+		}
+
+		final String recordURI = sb.append(UUID.randomUUID()).toString();
+
+		final org.dswarm.graph.json.Resource recordResource = new org.dswarm.graph.json.Resource(recordURI);
+
+		if (identifier != null) {
+
+			recordResources.put(identifier, recordResource);
+		}
+
+		// add resource type statement to model
+		recordResource.addStatement(new ResourceNode(recordResource.getUri()), new Predicate(GDMUtil.RDF_type), recordClassNode);
+		model.addResource(recordResource);
+
+		return recordResource;
 	}
 }
