@@ -30,6 +30,7 @@ import javax.ws.rs.core.Response;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -230,6 +231,53 @@ public class DataModelsResourceTest extends
 		final RxObservableInvoker rx = rxWebTarget.request(MediaType.TEXT_PLAIN).rx();
 
 		final Entity<String> entity = Entity.entity("", MediaType.TEXT_PLAIN);
+
+		final Observable<Response> post = rx.post(entity).subscribeOn(Schedulers.from(EXECUTOR_SERVICE));
+
+		final Response response = post.toBlocking().firstOrDefault(null);
+
+		Assert.assertNotNull(response);
+
+		final int status = response.getStatus();
+
+		Assert.assertEquals(200, status);
+
+		final String body = response.readEntity(String.class);
+
+		final ObjectNode bodyJSON = objectMapper.readValue(body, ObjectNode.class);
+
+		final JsonNode deprecated = bodyJSON.get("deprecated");
+
+		Assert.assertNotNull(deprecated);
+
+		final int deprecatedRelationships = deprecated.asInt();
+
+		Assert.assertEquals(152, deprecatedRelationships);
+	}
+
+	@Test
+	public void testDeprecateRecords() throws Exception {
+
+		final String dataModelUuid = testMABXMLDataInternal();
+
+		final WebTarget target = target(dataModelUuid, "deprecate", "records");
+
+		final RxWebTarget<RxObservableInvoker> rxWebTarget = RxObservable.from(target);
+
+		// POST the request
+		final RxObservableInvoker rx = rxWebTarget.request(MediaType.APPLICATION_JSON).rx();
+
+		final ArrayNode recordURIsArray = objectMapper.createArrayNode();
+
+		final ObjectNode dataArray = getData(dataModelUuid);
+
+		final String recordURI = dataArray.fieldNames().next();
+
+		recordURIsArray.add(recordURI);
+
+		final String recordURIsArrayJSONString = objectMapper.writeValueAsString(recordURIsArray);
+
+		final Entity<String> entity = Entity.entity(recordURIsArrayJSONString, MediaType.APPLICATION_JSON);
 
 		final Observable<Response> post = rx.post(entity).subscribeOn(Schedulers.from(EXECUTOR_SERVICE));
 
@@ -896,5 +944,12 @@ public class DataModelsResourceTest extends
 		Assert.assertEquals(SchemaUtils.MABXML_SCHEMA_UUID, dataModel.getSchema().getUuid());
 
 		return dataModel1Uuid;
+	}
+
+	private ObjectNode getData(final String dataModelUuid) throws IOException {
+
+		final String data = pojoClassResourceTestUtils.getData(dataModelUuid, 1);
+
+		return objectMapper.readValue(data, ObjectNode.class);
 	}
 }

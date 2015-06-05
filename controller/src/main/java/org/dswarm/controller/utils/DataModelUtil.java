@@ -16,6 +16,7 @@
 package org.dswarm.controller.utils;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Set;
 
 import javax.ws.rs.core.Response;
@@ -177,6 +178,25 @@ public class DataModelUtil {
 		} catch (final DMPPersistenceException e1) {
 
 			final String message = String.format("couldn't deprecate data model '%s'", dataModelUuid);
+
+			DataModelUtil.LOG.error(message, dataModelUuid, e1);
+
+			throw new DMPControllerException(message, e1);
+		}
+	}
+
+	public Observable<Response> deprecateRecords(final Collection<String> recordURIs, final String dataModelUuid) throws DMPControllerException {
+
+		DataModelUtil.LOG.debug(String.format("try to deprecated '%d' records data model with id [%s]", recordURIs.size(), dataModelUuid));
+
+		final InternalModelService internalService = internalServiceFactoryProvider.get().getInternalGDMGraphService();
+
+		try {
+
+			return internalService.deprecateRecords(recordURIs, dataModelUuid);
+		} catch (final DMPPersistenceException e1) {
+
+			final String message = String.format("couldn't deprecate some records in data model '%s'", dataModelUuid);
 
 			DataModelUtil.LOG.error(message, dataModelUuid, e1);
 

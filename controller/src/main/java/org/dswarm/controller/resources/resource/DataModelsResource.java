@@ -15,6 +15,10 @@
  */
 package org.dswarm.controller.resources.resource;
 
+import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
@@ -38,6 +42,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.codahale.metrics.annotation.Timed;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -607,7 +612,6 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	 * This endpoint deprecates a data model that matches the given id.
 	 *
 	 * @param id a data model identifier
-	 * @return status 200 if deprecation was successful, 404 if id not found, or 500 if something else
 	 * went wrong
 	 * @throws DMPControllerException
 	 */
@@ -617,12 +621,66 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@POST
 	@Path("/{id}/deprecate")
-	public void deprecateObject(@ApiParam(value = "data model identifier", required = true) @PathParam("id") final String id, @Suspended final AsyncResponse asyncResponse)
+	@Produces(MediaType.APPLICATION_JSON)
+	public void deprecateObject(@ApiParam(value = "data model identifier", required = true) @PathParam("id") final String id,
+			@Suspended final AsyncResponse asyncResponse)
 			throws DMPControllerException {
 
 		final Observable<Response> responseObservable = dataModelUtil.deprecateDataModel(id);
 
 		responseObservable.subscribe(new ResponseObserver(id, asyncResponse));
+	}
+
+	/**
+	 * This endpoint deprecates a data model that matches the given id.
+	 *
+	 * @param id a data model identifier
+	 * went wrong
+	 * @throws DMPControllerException
+	 */
+	@ApiOperation(value = "deprecates data model that matches the given id", notes = "Returns status 200 if deprecation was successful, 404 if id not found, or 500 if something else went wrong.")
+	@ApiResponses(value = { @ApiResponse(code = 204, message = "data model was successfully deprecated"),
+			@ApiResponse(code = 404, message = "could not find a data model for the given id"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@POST
+	@Path("/{id}/deprecate/records")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public void deprecateRecords(@ApiParam(value = "data model identifier", required = true) @PathParam("id") final String id,
+			@ApiParam(value = "record URIs (as JSON array)", required = true) final String recordURIsJSONString,
+			@Suspended final AsyncResponse asyncResponse)
+			throws DMPControllerException {
+
+		if (recordURIsJSONString == null) {
+
+			final String message = "couldn't deprecate records, because the request JSON string is null";
+
+			DataModelsResource.LOG.error(message);
+
+			throw new DMPControllerException(message);
+		}
+
+		Collection<String> recordURIs = parseRecordURIs(recordURIsJSONString);
+
+		final Observable<Response> responseObservable = dataModelUtil.deprecateRecords(recordURIs, id);
+
+		responseObservable.subscribe(new ResponseObserver(id, asyncResponse));
+	}
+
+	private Collection<String> parseRecordURIs(final String recordURIsJSONString) throws DMPControllerException {
+
+		try {
+			return objectMapperProvider.get().readValue(recordURIsJSONString, new TypeReference<List<String>>() {
+
+			});
+		} catch (final IOException e) {
+
+			final String message = "couldn't parse record URIs JSON array";
+
+			LOG.error(message, e);
+
+			throw new DMPControllerException(message, e);
+		}
 	}
 
 	/**

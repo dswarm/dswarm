@@ -45,6 +45,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
 import com.google.common.net.HttpHeaders;
@@ -136,6 +137,7 @@ public class InternalGDMGraphService implements InternalModelService {
 			.property(ClientProperties.READ_TIMEOUT, REQUEST_TIMEOUT);
 	public static final  String        METADATA_TYPE             = "metadata";
 	public static final  String        DEPRECATE_DATA_MODEL_TYPE = "deprecate data model";
+	public static final  String        DEPRECATE_RECORDS_TYPE = "deprecate records";
 
 	static {
 
@@ -145,6 +147,7 @@ public class InternalGDMGraphService implements InternalModelService {
 	private static final String READ_GDM_ENDPOINT             = "/get";
 	private static final String WRITE_GDM_ENDPOINT            = "/put";
 	private static final String DEPRECATE_DATA_MODEL_ENDPOINT = "/deprecate/datamodel";
+	private static final String DEPRECATE_RECORDS_ENDPOINT = "/deprecate/records";
 	private static final String SEARCH_GDM_RECORDS_ENDPOINT   = "/searchrecords";
 	private static final String GET_GDM_RECORD_ENDPOINT       = "/getrecord";
 	public static final  String CHUNKED_TRANSFER_ENCODING     = "chunked";
@@ -391,6 +394,30 @@ public class InternalGDMGraphService implements InternalModelService {
 						throw DMPPersistenceError.wrap(e);
 					}
 				});
+	}
+
+	@Override public Observable<Response> deprecateRecords(final Collection<String> recordURIs, final String dataModelUuid)
+			throws DMPPersistenceException {
+
+		if (dataModelUuid == null) {
+
+			throw new DMPPersistenceException("data model id shouldn't be null");
+		}
+
+		final DataModel dataModel = getDataModel(dataModelUuid);
+
+		if (dataModel == null) {
+
+			final String message = String.format("data model '%s' is not available", dataModelUuid);
+
+			LOG.debug(message);
+
+			return Observable.empty();
+		}
+
+		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelUuid);
+
+		return deprecateRecordsInternal(recordURIs, dataModelURI);
 	}
 
 	/**
@@ -1025,6 +1052,60 @@ public class InternalGDMGraphService implements InternalModelService {
 		post.subscribe(asyncPost);
 
 		return asyncPost;
+	}
+
+	private Observable<Response> deprecateRecordsInternal(final Collection<String> recordURIs, final String dataModelURI) throws DMPPersistenceException {
+
+		LOG.debug("try to deprecate '{}' records in data model '{}' in data hub", recordURIs.size(), dataModelURI);
+
+		final WebTarget target = maintainTarget(DEPRECATE_RECORDS_ENDPOINT);
+
+		final RxWebTarget<RxObservableInvoker> rxWebTarget = RxObservable.from(target);
+
+		final ObjectNode requestJSON = objectMapperProvider.get().createObjectNode();
+		requestJSON.put(DMPStatics.DATA_MODEL_URI_IDENTIFIER, dataModelURI);
+
+		final ArrayNode recordURIsArray = createRecordURIsArray(recordURIs);
+		requestJSON.set(DMPStatics.RECORDS_IDENTIFIER, recordURIsArray);
+
+		final String requestJSONString = serializeObject(requestJSON, DEPRECATE_RECORDS_TYPE);
+
+		// POST the request
+		final RxObservableInvoker rx = rxWebTarget.request(MediaType.APPLICATION_JSON).rx();
+
+		final Entity<String> entity = Entity.entity(requestJSONString, MediaType.APPLICATION_JSON);
+
+		final Observable<Response> post = rx.post(entity).subscribeOn(Schedulers.from(EXECUTOR_SERVICE));
+
+		final PublishSubject<Response> asyncPost = PublishSubject.create();
+		asyncPost.subscribe(response -> {
+
+			//TODO maybe check status code here, i.e., should be 200
+
+			LOG.debug("deprecated some records in data model '{}' in data hub", dataModelURI);
+		}, throwable -> {
+
+			throw DMPPersistenceError.wrap(new DMPPersistenceException(
+					String.format("Couldn't deprecate some records in data model '%s' in database. Received status code '%s' from database endpoint.", dataModelURI,
+							throwable.getMessage())));
+
+		}, () -> LOG.debug("completely deprecated data model '{}' in data hub", dataModelURI));
+
+		post.subscribe(asyncPost);
+
+		return asyncPost;
+	}
+
+	private ArrayNode createRecordURIsArray(final Collection<String> recordURIs) {
+
+		final ArrayNode recordURIsArray = objectMapperProvider.get().createArrayNode();
+
+		for(final String recordURI : recordURIs) {
+
+			recordURIsArray.add(recordURI);
+		}
+
+		return recordURIsArray;
 	}
 
 	private Tuple<Observer<org.dswarm.graph.json.Resource>, Observable<Response>> writeGDMToDB(final String dataModelUri, final String metadata)
