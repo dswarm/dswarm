@@ -1,0 +1,24 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+    <meta>
+        <name>Regex-Map-Test</name>
+    </meta>
+    <rules>
+   		<data name="newName" source="givenname">
+<!--    			<whitelist map="normalMap"/> -->
+   			<lookup in="normalMap"/>
+<!--    		<replace  pattern="^J(.).*"  with="X$1"/> -->
+<!--    		<replace  pattern="[ony]"  with="X"/> -->
+   		</data>
+
+    </rules>
+    <maps>
+        <map name="regexMap">
+            <entry name="^J(.).*" value="Tim"/>
+        </map>
+        <map name="normalMap">
+            <entry name="Jim" value="Tim"/>
+            <entry name="Jonny" value="Tommy"/>
+        </map>
+    </maps>
+</metamorph>
