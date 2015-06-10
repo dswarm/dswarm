@@ -1,0 +1,28 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+    <meta>
+        <name>Regex-Map-Test</name>
+    </meta>
+    <rules>
+   		<data name="newName" source="attributes">
+<!--    			<whitelist map="normalMap"/> -->
+<!--    			<lookup in="normalMap"/> -->
+<!--    		<replace  pattern="^J(.).*"  with="X$1"/> -->
+<!--    		<replace  pattern="[ony]"  with="X"/> -->
+	   		<regexlookup in="regexMap">
+<!--             	 <entry name="^J(.).*" value="1"/> -->
+<!--                 <entry name="^Ja(.).*" value="2"/> -->
+<!--                 <entry name="^J.{0,20}" value="3"/> -->
+			</regexlookup>
+   		</data>
+
+    </rules>
+    <maps>
+        <map name="regexMap">
+	        <entry name="(A[A-Z] [0-9]+.*)" value="Allgemeines $1"/>
+			<entry name="(B[A-Z] [0-9]+.*)" value="Theologie und Religionswissenschaft $1"/>
+			<entry name="(C[A-I] [0-9]+.*)" value="Philosophie $1"/>
+			<entry name="(C[L-Z] [0-9]+.*)" value="Psychologie $1"/>
+        </map>
+    </maps>
+</metamorph>

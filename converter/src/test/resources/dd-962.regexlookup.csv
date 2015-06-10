@@ -1,0 +1,13 @@
+d,subtitle,sn,givenname,isbn,language,attributes,date
+title X, and the 1,Öß'äü,Jim,ISBN 978-3-86680-192-9,en,a||b|,2013/31/05
+title Y,,Èuhg,Jack,978-3-86680-192-9,en,||b|c,2014/01/01
+title Z,(Part 3),Ú'üöäßí,Jonny,ISBN 978-3-86680-192-9 (note),en,|||,2012/31/12
+title Z,(Part 3),Ú'üöäßí,Janny,ISBN 978-3-86680-192-9 (note),en-us,|||,2012/31/12
+title Z,(Part 3),Ú'üöäßí,Jim Jon and Jim,ISBN 978-3-86680-192-9 (note),en-us,|||,2012/31/12
+test,test,test,test,test,test,BB 3,should match
+test,test,test,test,test,test,AA A,should not match
+test,test,test,test,test,test,CI 1,should match
+test,test,test,test,test,test,CL 1xx,should match
+test,test,test,test,test,test,CL 11,should match
+test,test,test,test,test,test,AA,should not match
+test,test,test,test,test,test,AA 1zz,should match
