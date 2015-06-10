@@ -1,24 +1,26 @@
 package org.dswarm.converter.morph;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 
 import com.google.common.io.Resources;
-import org.culturegraph.mf.formeta.formatter.FormatterStyle;
 import org.culturegraph.mf.morph.Metamorph;
-import org.culturegraph.mf.stream.converter.FormetaEncoder;
 import org.culturegraph.mf.stream.converter.xml.SimpleXmlEncoder;
 import org.culturegraph.mf.stream.reader.CsvReader;
 import org.culturegraph.mf.stream.sink.ObjectJavaIoWriter;
 import org.culturegraph.mf.stream.source.FileOpener;
 import org.junit.Test;
 
-public class RegexMapMFTest {
+import org.dswarm.persistence.util.DMPPersistenceUtil;
+
+public class RegexLookupTest {
 	
-	public final static String MORPH_DEFINITION = "dd-962.regexmap.morph.xml";
-	public final static String MAB_XML_EXAMPLE = "mabxml.tuples.json";
-	public final static String EXAMPLE_DATA_CSV = "dd-962.regexmap.csv";
+	public final static String MORPH_DEFINITION = "dd-962.regexlookup.morph.xml";
+	public final static String EXAMPLE_DATA_CSV = "dd-962.regexlookup.csv";
+	public final static String RESULT_XML = "dd-962.regexlookup.result.xml";
 	
 	@Test
 	public void testRegexMap() throws IOException {
@@ -31,8 +33,6 @@ public class RegexMapMFTest {
 		csvReader.setHasHeader(true);
 
 		final SimpleXmlEncoder xmlEncoder = new SimpleXmlEncoder();	
-		final FormetaEncoder formetaEncoder = new FormetaEncoder();	
-		formetaEncoder.setStyle(FormatterStyle.MULTILINE);
 
 		opener
 		.setReceiver(csvReader)
@@ -48,7 +48,10 @@ public class RegexMapMFTest {
 		
 		String result = stringWriter.toString();
 		System.out.println(result);		
+		
+		final String expected = DMPPersistenceUtil.getResourceAsString(RESULT_XML);
+		
+		assertEquals(expected, result);
 	}
-	
 
 }
