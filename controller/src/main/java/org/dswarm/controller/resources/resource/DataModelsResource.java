@@ -105,6 +105,8 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 	private static final Logger LOG = LoggerFactory.getLogger(DataModelsResource.class);
 
+	public static final String DO_INGEST_IDENTIFIER = "do_ingest";
+
 	/**
 	 * The data model util
 	 */
@@ -176,6 +178,38 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			throws DMPControllerException {
 
 		return super.getObject(id, format);
+	}
+
+	/**
+	 * This endpoint consumes a data model as JSON representation and optionally persists this data model in the database, i.e., the data
+	 * resource of this data model will be processed re. the parameters in the configuration of the data model. Thereby, the
+	 * schema of the data will be created as well.
+	 *
+	 * @param jsonObjectString a JSON representation of one data model
+	 * @return the persisted data model as JSON representation
+	 * @throws DMPControllerException
+	 */
+	@ApiOperation(value = "create a new data model", notes = "Returns a new DataModel object. The data resource of this data model will be processed re. the parameters in the configuration of the data model. Thereby, the schema of the data will be created as well. ", response = DataModel.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "data model was successfully persisted"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response createObject2(@ApiParam(value = "data model (as JSON)", required = true) final String jsonObjectString, @ApiParam("do ingest") @QueryParam("doIngest") final Boolean doIngest)
+			throws DMPControllerException {
+
+		final ObjectNode contextNode;
+
+		if(doIngest != null) {
+
+			contextNode = objectMapperProvider.get().createObjectNode();
+			contextNode.put(DataModelsResource.DO_INGEST_IDENTIFIER, doIngest);
+		} else {
+
+			contextNode = null;
+		}
+
+		return super.createObject2(jsonObjectString, contextNode);
 	}
 
 	/**
@@ -688,9 +722,9 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	 * The data of the data model will also be converted and persisted.
 	 */
 	@Override
-	protected ProxyDataModel addObject(final String objectJSONString) throws DMPControllerException {
+	protected ProxyDataModel addObject(final String objectJSONString, final JsonNode contextJSON) throws DMPControllerException {
 
-		final ProxyDataModel proxyDataModel = super.addObject(objectJSONString);
+		final ProxyDataModel proxyDataModel = super.addObject(objectJSONString, contextJSON);
 
 		if (proxyDataModel == null) {
 
@@ -704,8 +738,34 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			return proxyDataModel;
 		}
 
-		// versioning is disabled at data model creation, since there should be any data for this data model in the data hub
-		return updateDataModel(proxyDataModel, dataModel, false);
+		if(contextJSON == null) {
+
+
+			// versioning is disabled at data model creation, since there should be any data for this data model in the data hub
+			return updateDataModel(proxyDataModel, dataModel, false);
+		}
+
+		final JsonNode doIngestNode = contextJSON.get(DO_INGEST_IDENTIFIER);
+
+		if(doIngestNode == null) {
+
+			// versioning is disabled at data model creation, since there should be any data for this data model in the data hub
+			return updateDataModel(proxyDataModel, dataModel, false);
+		}
+
+		final boolean doIngest = doIngestNode.asBoolean();
+
+		if(doIngest) {
+
+			// versioning is disabled at data model creation, since there should be any data for this data model in the data hub
+			return updateDataModel(proxyDataModel, dataModel, false);
+		} else {
+
+			DataModelsResource.LOG.debug("skip ingest for data model '{}'", dataModel.getUuid());
+
+			// skip ingest
+			return proxyDataModel;
+		}
 
 	}
 

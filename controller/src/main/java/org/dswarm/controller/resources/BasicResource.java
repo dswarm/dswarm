@@ -27,6 +27,7 @@ import javax.ws.rs.core.Response.Status;
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
@@ -142,7 +143,80 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 
 		BasicResource.LOG.debug("try to create new {}", pojoClassName);
 
-		final PROXYPOJOCLASS proxyObject = addObject(jsonObjectString);
+		final PROXYPOJOCLASS proxyObject = addObject(jsonObjectString, null);
+
+		if (proxyObject == null) {
+
+			BasicResource.LOG.debug("couldn't add {}", pojoClassName);
+			throw new DMPControllerException("couldn't add " + pojoClassName);
+		}
+
+		final POJOCLASS object = proxyObject.getObject();
+
+		if (object == null) {
+
+			BasicResource.LOG.debug("couldn't add {}", pojoClassName);
+			throw new DMPControllerException("couldn't add " + pojoClassName);
+		}
+
+		BasicResource.LOG.debug("added new {} with id = '{}' ", pojoClassName, object.getUuid());
+		BasicResource.LOG.trace(" = '{}'", ToStringBuilder.reflectionToString(object));
+
+		final String objectJSON = serializeObject(object);
+
+		final URI objectURI = createObjectURI(object);
+
+		if (objectURI == null) {
+
+			BasicResource.LOG.debug("something went wrong, while minting the URL of the new {}", pojoClassName);
+			throw new DMPControllerException("something went wrong, while minting the URL of the new " + pojoClassName);
+		}
+
+		BasicResource.LOG.debug("return new {} at '{}'", pojoClassName, objectURI);
+		BasicResource.LOG.trace("with content '{}'", objectJSON);
+
+		final ResponseBuilder responseBuilder;
+		final RetrievalType type = proxyObject.getType();
+
+		switch (type) {
+
+			case CREATED:
+
+				responseBuilder = Response.created(objectURI);
+
+				break;
+			case RETRIEVED:
+
+				responseBuilder = Response.ok().contentLocation(objectURI);
+
+				break;
+			default:
+
+				BasicResource.LOG.debug("something went wrong, while evaluating the retrieval type of the {}", pojoClassName);
+				throw new DMPControllerException("something went wrong, while evaluating the retrieval type of the "
+						+ pojoClassName);
+		}
+
+		return responseBuilder.entity(objectJSON).build();
+	}
+
+	/**
+	 * This endpoint consumes an object of the type of the POJO class as JSON representation and persists this object in the
+	 * database.
+	 *
+	 * @param jsonObjectString a JSON representation of one object of the type of the POJO class
+	 * @return the persisted object as JSON representation
+	 * @throws DMPControllerException
+	 */
+	// @POST
+	// @Consumes(MediaType.APPLICATION_JSON)
+	// @Produces(MediaType.APPLICATION_JSON)
+	@Timed
+	public Response createObject2(final String jsonObjectString, final JsonNode contextJSON) throws DMPControllerException {
+
+		BasicResource.LOG.debug("try to create new {}", pojoClassName);
+
+		final PROXYPOJOCLASS proxyObject = addObject(jsonObjectString, contextJSON);
 
 		if (proxyObject == null) {
 
@@ -336,7 +410,7 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 	 * @return
 	 * @throws DMPControllerException
 	 */
-	protected PROXYPOJOCLASS addObject(final String objectJSONString) throws DMPControllerException {
+	protected PROXYPOJOCLASS addObject(final String objectJSONString, final JsonNode contextJSON) throws DMPControllerException {
 
 		// get the deserialisised object from the object JSON string
 
