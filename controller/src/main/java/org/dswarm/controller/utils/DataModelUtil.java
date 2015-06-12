@@ -35,11 +35,21 @@ import rx.Observable;
 
 import org.dswarm.common.types.Tuple;
 import org.dswarm.controller.DMPControllerException;
+import org.dswarm.controller.eventbus.CSVConverterEvent;
+import org.dswarm.controller.eventbus.CSVConverterEventRecorder;
+import org.dswarm.controller.eventbus.SchemaEvent;
+import org.dswarm.controller.eventbus.SchemaEventRecorder;
+import org.dswarm.controller.eventbus.XMLConverterEvent;
+import org.dswarm.controller.eventbus.XMLConverterEventRecorder;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.Model;
+import org.dswarm.persistence.model.proxy.RetrievalType;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
+import org.dswarm.persistence.model.resource.UpdateFormat;
+import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
+import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.service.InternalModelService;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
@@ -61,14 +71,24 @@ public class DataModelUtil {
 	private final Provider<ResourceService>             resourceServiceProvider;
 	private final Provider<InternalModelServiceFactory> internalServiceFactoryProvider;
 	private final Provider<DataModelService>            dataModelServiceProvider;
+	private final Provider<SchemaEventRecorder>         schemaEventRecorderProvider;
+	private final Provider<CSVConverterEventRecorder>   csvConverterEventRecorderProvider;
+	private final Provider<XMLConverterEventRecorder>   xmlConvertEventRecorderProvider;
 
 	@Inject
 	public DataModelUtil(final ObjectMapper objectMapper, final Provider<ResourceService> resourceServiceProvider,
-			final Provider<InternalModelServiceFactory> internalServiceFactoryProvider, final Provider<DataModelService> dataModelServiceProvider) {
+			final Provider<InternalModelServiceFactory> internalServiceFactoryProvider, final Provider<DataModelService> dataModelServiceProvider,
+			final Provider<SchemaEventRecorder> schemaEventRecorderProviderArg,
+			final Provider<CSVConverterEventRecorder> csvConverterEventRecorderProviderArg,
+			final Provider<XMLConverterEventRecorder> xmlConverterEventRecorderProviderArg) {
+
 		this.objectMapper = objectMapper;
 		this.resourceServiceProvider = resourceServiceProvider;
 		this.internalServiceFactoryProvider = internalServiceFactoryProvider;
 		this.dataModelServiceProvider = dataModelServiceProvider;
+		schemaEventRecorderProvider = schemaEventRecorderProviderArg;
+		csvConverterEventRecorderProvider = csvConverterEventRecorderProviderArg;
+		xmlConvertEventRecorderProvider = xmlConverterEventRecorderProviderArg;
 	}
 
 	/**
@@ -330,9 +350,83 @@ public class DataModelUtil {
 
 	}
 
+	public Observable<Tuple<String, JsonNode>> doIngest(final DataModel dataModel)
+			throws DMPControllerException {
+
+		DataModelUtil.LOG.debug("try to process data for data model with id '{}'", dataModel.getUuid());
+
+		final Configuration configuration = dataModel.getConfiguration();
+
+		if (configuration == null) {
+
+			DataModelUtil.LOG
+					.debug("The data model '{}' has no configuration. Hence, the data of the data model cannot be processed.", dataModel.getUuid());
+
+			return Observable.empty();
+		}
+
+		final JsonNode jsStorageType = configuration.getParameters().get(ConfigurationStatics.STORAGE_TYPE);
+
+		if (jsStorageType == null) {
+
+			DataModelUtil.LOG
+					.debug("The configuration of the data model '{}' has no storage type. Hence, the data of the data model cannot be processed.",
+							dataModel.getUuid());
+
+			return Observable.empty();
+		}
+
+		final String storageType = jsStorageType.asText();
+
+		try {
+
+			final SchemaEvent.SchemaType type = SchemaEvent.SchemaType.fromString(storageType);
+			final SchemaEvent schemaEvent = new SchemaEvent(dataModel, type, null, false);
+			schemaEventRecorderProvider.get().convertSchema(schemaEvent);
+		} catch (final IllegalArgumentException e) {
+
+			DataModelUtil.LOG.warn("could not determine schema type", e);
+		}
+
+		final Observable<Model> modelObservable;
+
+		switch (storageType) {
+
+			case ConfigurationStatics.CSV_STORAGE_TYPE:
+
+				modelObservable = csvConverterEventRecorderProvider.get().doIngest(dataModel);
+
+				break;
+			case ConfigurationStatics.XML_STORAGE_TYPE:
+			case ConfigurationStatics.MABXML_STORAGE_TYPE:
+			case ConfigurationStatics.MARCXML_STORAGE_TYPE:
+			case ConfigurationStatics.PNX_STORAGE_TYPE:
+			case ConfigurationStatics.OAI_PMH_DC_ELEMENTS_STORAGE_TYPE:
+			case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:
+			case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
+
+				modelObservable = xmlConvertEventRecorderProvider.get().doIngest(dataModel);
+
+				break;
+			default:
+
+				DataModelUtil.LOG
+						.error("couldn't match storage type of configuration of data model '{}'. Hence, the data of the data model cannot be processed.",
+								dataModel.getUuid());
+
+				modelObservable = Observable.empty();
+		}
+
+		return modelObservable.cast(org.dswarm.persistence.model.internal.gdm.GDMModel.class)
+				.map(gdm -> Tuple.tuple(gdm.getRecordURIs().iterator().next(), (Model) gdm))
+				.map(this::transformDataNode);
+	}
+
 	private Tuple<String, JsonNode> transformDataNode(final Tuple<String, Model> input) {
+
 		final String recordId = input.v1();
 		final JsonNode jsonNode = input.v2().toRawJSON();
+
 		return Tuple.tuple(recordId, jsonNode);
 	}
 }

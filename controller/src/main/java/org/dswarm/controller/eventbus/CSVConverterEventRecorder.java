@@ -82,34 +82,32 @@ public class CSVConverterEventRecorder {
 	private void convertConfiguration(final DataModel dataModel, final UpdateFormat updateFormat, final boolean enableVersioning)
 			throws DMPControllerException {
 
-		LOG.debug("try to process csv data resource into data model '{}'", dataModel.getUuid());
+		final Observable<org.dswarm.persistence.model.internal.Model> models = doIngest(dataModel);
 
-		Observable<Collection<Triple>> result = null;
 		try {
 
-			final CSVSourceResourceTriplesFlow flow = flowFactory.get().fromDataModel(dataModel);
+			final Observable<Response> writeResponse = internalServiceFactory.getInternalGDMGraphService()
+					.updateObject(dataModel.getUuid(), models, updateFormat, enableVersioning);
 
-			final String path = dataModel.getDataResource().getAttribute(ResourceStatics.PATH).asText();
+			//LOG.debug("before to blocking");
 
-			LOG.debug("process csv data resource at '{}' into data model '{}'", path, dataModel.getUuid());
+			// TODO: delegate observable
+			writeResponse.toBlocking().firstOrDefault(null);
 
-			result = flow.applyFile(path);
+			LOG.debug("processed CSV data resource into data model '{}'", dataModel.getUuid());
+		} catch (final DMPPersistenceException e) {
 
-		} catch (final DMPConverterException | NullPointerException e) {
-
-			final String message = String.format("couldn't convert the CSV data of data model '%s'", dataModel.getUuid());
-
-			CSVConverterEventRecorder.LOG.error(message, e);
-
-			throw new DMPControllerException(String.format("%s %s", message, e.getMessage()), e);
-		} catch (final Exception e) {
-
-			final String message = String.format("really couldn't convert the CSV data of data model '%s'", dataModel.getUuid());
+			final String message = String.format("couldn't persist the converted CSV data of data model '%s'", dataModel.getUuid());
 
 			CSVConverterEventRecorder.LOG.error(message, e);
 
 			throw new DMPControllerException(String.format("%s %s", message, e.getMessage()), e);
 		}
+	}
+
+	public Observable<org.dswarm.persistence.model.internal.Model> doIngest(final DataModel dataModel) throws DMPControllerException {
+
+		final Observable<Collection<Triple>> result = doCSVIngest(dataModel);
 
 		if (result != null) {
 
@@ -166,25 +164,40 @@ public class CSVConverterEventRecorder {
 
 			models.doOnCompleted(() -> LOG.debug("transformed CSV data resource to GDM for data model '{}'", dataModel.getUuid()));
 
-			try {
+			return models;
+		}
 
-				final Observable<Response> writeResponse = internalServiceFactory.getInternalGDMGraphService()
-						.updateObject(dataModel.getUuid(), models, updateFormat, enableVersioning);
+		return Observable.empty();
+	}
 
-				//LOG.debug("before to blocking");
+	private Observable<Collection<Triple>> doCSVIngest(final DataModel dataModel) throws DMPControllerException {
 
-				// TODO: delegate observable
-				writeResponse.toBlocking().firstOrDefault(null);
+		LOG.debug("try to process csv data resource into data model '{}'", dataModel.getUuid());
 
-				LOG.debug("processed CSV data resource into data model '{}'", dataModel.getUuid());
-			} catch (final DMPPersistenceException e) {
+		try {
 
-				final String message = String.format("couldn't persist the converted CSV data of data model '%s'", dataModel.getUuid());
+			final CSVSourceResourceTriplesFlow flow = flowFactory.get().fromDataModel(dataModel);
 
-				CSVConverterEventRecorder.LOG.error(message, e);
+			final String path = dataModel.getDataResource().getAttribute(ResourceStatics.PATH).asText();
 
-				throw new DMPControllerException(String.format("%s %s", message, e.getMessage()), e);
-			}
+			LOG.debug("process csv data resource at '{}' into data model '{}'", path, dataModel.getUuid());
+
+			return flow.applyFile(path);
+
+		} catch (final DMPConverterException | NullPointerException e) {
+
+			final String message = String.format("couldn't convert the CSV data of data model '%s'", dataModel.getUuid());
+
+			CSVConverterEventRecorder.LOG.error(message, e);
+
+			throw new DMPControllerException(String.format("%s %s", message, e.getMessage()), e);
+		} catch (final Exception e) {
+
+			final String message = String.format("really couldn't convert the CSV data of data model '%s'", dataModel.getUuid());
+
+			CSVConverterEventRecorder.LOG.error(message, e);
+
+			throw new DMPControllerException(String.format("%s %s", message, e.getMessage()), e);
 		}
 	}
 }

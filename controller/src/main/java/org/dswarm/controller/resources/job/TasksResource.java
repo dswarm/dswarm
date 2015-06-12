@@ -82,11 +82,12 @@ public class TasksResource {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TasksResource.class);
 
-	public static final String TASK_IDENTIFIER             = "task";
-	public static final String AT_MOST_IDENTIFIER          = "at_most";
-	public static final String PERSIST_IDENTIFIER          = "persist";
-	public static final String RETURN_IDENTIFIER           = "do_not_return_data";
-	public static final String SELECTED_RECORDS_IDENTIFIER = "selected_records";
+	public static final String TASK_IDENTIFIER                 = "task";
+	public static final String AT_MOST_IDENTIFIER              = "at_most";
+	public static final String PERSIST_IDENTIFIER              = "persist";
+	public static final String RETURN_IDENTIFIER               = "do_not_return_data";
+	public static final String SELECTED_RECORDS_IDENTIFIER     = "selected_records";
+	public static final String DO_INGEST_ON_THE_FLY_IDENTIFIER = "do_ingest_on_the_fly";
 
 	/**
 	 * The base URI of this resource.
@@ -273,18 +274,28 @@ public class TasksResource {
 
 		final Observable<Tuple<String, JsonNode>> inputData;
 
-		final Optional<Set<String>> optionalSelectedRecords = getStringSetValue(TasksResource.SELECTED_RECORDS_IDENTIFIER, requestJSON);
+		final boolean doIngestOnTheFly = getBooleanValue(TasksResource.DO_INGEST_ON_THE_FLY_IDENTIFIER, requestJSON, false);
 
-		if (optionalSelectedRecords.isPresent()) {
+		if (doIngestOnTheFly) {
 
-			// retrieve data only for selected records
+			LOG.debug("do ingest on-the-fly for task execution of task '{}'", task.getUuid());
 
-			inputData = dataModelUtil.getRecordsData(optionalSelectedRecords.get(), inputDataModel.getUuid());
+			inputData = dataModelUtil.doIngest(inputDataModel);
 		} else {
 
-			final Optional<Integer> optionalAtMost = getIntValue(TasksResource.AT_MOST_IDENTIFIER, requestJSON);
+			final Optional<Set<String>> optionalSelectedRecords = getStringSetValue(TasksResource.SELECTED_RECORDS_IDENTIFIER, requestJSON);
 
-			inputData = dataModelUtil.getData(inputDataModel.getUuid(), optionalAtMost);
+			if (optionalSelectedRecords.isPresent()) {
+
+				// retrieve data only for selected records
+
+				inputData = dataModelUtil.getRecordsData(optionalSelectedRecords.get(), inputDataModel.getUuid());
+			} else {
+
+				final Optional<Integer> optionalAtMost = getIntValue(TasksResource.AT_MOST_IDENTIFIER, requestJSON);
+
+				inputData = dataModelUtil.getData(inputDataModel.getUuid(), optionalAtMost);
+			}
 		}
 
 		final boolean writeResultToDatahub = getBooleanValue(TasksResource.PERSIST_IDENTIFIER, requestJSON, false);
