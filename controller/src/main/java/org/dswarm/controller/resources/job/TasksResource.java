@@ -88,6 +88,7 @@ public class TasksResource {
 	public static final String RETURN_IDENTIFIER               = "do_not_return_data";
 	public static final String SELECTED_RECORDS_IDENTIFIER     = "selected_records";
 	public static final String DO_INGEST_ON_THE_FLY_IDENTIFIER = "do_ingest_on_the_fly";
+	public static final String DO_VERSIONING_ON_RESULT_IDENTIFIER = "do_versioning_on_result";
 
 	/**
 	 * The base URI of this resource.
@@ -302,12 +303,19 @@ public class TasksResource {
 
 		final boolean doNotReturnJsonToCaller = getBooleanValue(TasksResource.RETURN_IDENTIFIER, requestJSON, false);
 
+		final boolean doVersioningOnResult = getBooleanValue(TasksResource.DO_VERSIONING_ON_RESULT_IDENTIFIER, requestJSON, true);
+
+		if(!doVersioningOnResult) {
+
+			TasksResource.LOG.debug("skip result versioning");
+		}
+
 		final Observable<JsonNode> result;
 
 		try (final MonitoringHelper ignore = monitoringLogger.get().startExecution(task)) {
 
 			final TransformationFlow flow = transformationFlowFactory.fromTask(task);
-			result = flow.apply(inputData, writeResultToDatahub, doNotReturnJsonToCaller);
+			result = flow.apply(inputData, writeResultToDatahub, doNotReturnJsonToCaller, doVersioningOnResult);
 		}
 
 		if (result == null) {

@@ -229,7 +229,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		flow.getScript();
 
-		final ArrayNode actual = flow.apply(tuples, true, false).reduce(
+		final ArrayNode actual = flow.apply(tuples, true, false, true).reduce(
 				DMPPersistenceUtil.getJSONObjectMapper().createArrayNode(),
 				ArrayNode::add
 		).toBlocking().first();

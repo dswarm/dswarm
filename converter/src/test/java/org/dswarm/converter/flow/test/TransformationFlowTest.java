@@ -251,7 +251,7 @@ public class TransformationFlowTest extends GuicedTest {
 
 		flow.getScript();
 
-		final ArrayNode actualNodes = flow.apply(tuples, true, false).reduce(
+		final ArrayNode actualNodes = flow.apply(tuples, true, false, true).reduce(
 				DMPPersistenceUtil.getJSONObjectMapper().createArrayNode(),
 				ArrayNode::add
 		).toBlocking().first();

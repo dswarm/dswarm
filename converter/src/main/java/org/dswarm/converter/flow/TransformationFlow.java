@@ -166,7 +166,7 @@ public class TransformationFlow {
 			return Observable.error(new DMPConverterException(msg));
 		}
 
-		return apply(Observable.from(tuplesList), false, false).reduce(
+		return apply(Observable.from(tuplesList), false, false, true).reduce(
 				DMPPersistenceUtil.getJSONObjectMapper().createArrayNode(),
 				ArrayNode::add
 		).map(arrayNode -> {
@@ -192,7 +192,7 @@ public class TransformationFlow {
 	public Observable<JsonNode> apply(
 			final Observable<Tuple<String, JsonNode>> tuples,
 			final ObjectPipe<Tuple<String, JsonNode>, StreamReceiver> opener,
-			final boolean writeResultToDatahub, final boolean doNotReturnJsonToCaller) throws DMPConverterException {
+			final boolean writeResultToDatahub, final boolean doNotReturnJsonToCaller, final boolean enableVersioning) throws DMPConverterException {
 
 		final Context morphContext = morphTimer.time();
 
@@ -321,7 +321,7 @@ public class TransformationFlow {
 
 				try {
 
-					writeResponse = internalModelService.updateObject(outputDataModel.get().getUuid(), model, UpdateFormat.DELTA, true);
+					writeResponse = internalModelService.updateObject(outputDataModel.get().getUuid(), model, UpdateFormat.DELTA, enableVersioning);
 				} catch (final DMPPersistenceException e) {
 
 					final String message = "couldn't persist the result of the transformation: " + e.getMessage();
@@ -359,11 +359,11 @@ public class TransformationFlow {
 	}
 
 	public Observable<JsonNode> apply(final Observable<Tuple<String, JsonNode>> tuples, final boolean writeResultToDatahub,
-			final boolean doNotReturnJsonToCaller) throws DMPConverterException {
+			final boolean doNotReturnJsonToCaller, final boolean enableVersioning) throws DMPConverterException {
 
 		final JsonNodeReader opener = new JsonNodeReader();
 
-		return apply(tuples, opener, writeResultToDatahub, doNotReturnJsonToCaller);
+		return apply(tuples, opener, writeResultToDatahub, doNotReturnJsonToCaller, enableVersioning);
 	}
 
 	static Metamorph createMorph(final Reader morphString) throws DMPMorphDefException {
