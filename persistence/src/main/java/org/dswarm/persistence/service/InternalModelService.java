@@ -15,6 +15,7 @@
  */
 package org.dswarm.persistence.service;
 
+import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.function.Supplier;
@@ -83,6 +84,14 @@ public interface InternalModelService {
 	 * @throws DMPPersistenceException
 	 */
 	Observable<Response> deprecateDataModel(final String dataModelUuid) throws DMPPersistenceException;
+
+	/**
+	 * Deprecate some records of a data model.
+	 *
+	 * @param dataModelUuid the identifier of the data model
+	 * @throws DMPPersistenceException
+	 */
+	Observable<Response> deprecateRecords(final Collection<String> recordURIs, final String dataModelUuid) throws DMPPersistenceException;
 
 	/**
 	 * Retrieves the schema of the data model.
