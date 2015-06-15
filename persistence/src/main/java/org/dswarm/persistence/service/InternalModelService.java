@@ -77,6 +77,14 @@ public interface InternalModelService {
 	void deleteObject(final String dataModelUuid) throws DMPPersistenceException;
 
 	/**
+	 * Deprecates a whole data model (incl. all its objects).
+	 *
+	 * @param dataModelUuid the identifier of the data model
+	 * @throws DMPPersistenceException
+	 */
+	Observable<Response> deprecateDataModel(final String dataModelUuid) throws DMPPersistenceException;
+
+	/**
 	 * Retrieves the schema of the data model.
 	 *
 	 * @param dataModelUuid the identifier of the data model

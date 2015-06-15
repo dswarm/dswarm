@@ -15,15 +15,22 @@
  */
 package org.dswarm.persistence.model.resource;
 
+import java.util.Objects;
+
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import org.dswarm.persistence.model.ExtendedBasicDMPJPAObject;
@@ -78,6 +85,13 @@ public class DataModel extends ExtendedBasicDMPJPAObject {
 	// @JsonSerialize(using = DMPJPAObjectReferenceSerializer.class)
 	// @XmlIDREF
 	private Schema				schema;
+
+	/**
+	 * The flag that indicated, whether the data model is deprecated atm, or not
+	 */
+	@Access(AccessType.FIELD)
+	@Column(name = "DEPRECATED", columnDefinition = "TINYINT(1)")
+	private boolean deprecated;
 
 	public DataModel(final String uuidArg) {
 
@@ -148,12 +162,23 @@ public class DataModel extends ExtendedBasicDMPJPAObject {
 		schema = schemaArg;
 	}
 
+	public boolean isDeprecated() {
+
+		return deprecated;
+	}
+
+	public void setDeprecated(final boolean deprecatedArg) {
+
+		this.deprecated = deprecatedArg;
+	}
+
 	@Override
 	public boolean completeEquals(final Object obj) {
 
 		return DataModel.class.isInstance(obj) && super.completeEquals(obj)
 				&& DMPPersistenceUtil.getResourceUtils().completeEquals(((DataModel) obj).getDataResource(), getDataResource())
 				&& DMPPersistenceUtil.getConfigurationUtils().completeEquals(((DataModel) obj).getConfiguration(), getConfiguration())
-				&& DMPPersistenceUtil.getSchemaUtils().completeEquals(((DataModel) obj).getSchema(), getSchema());
+				&& DMPPersistenceUtil.getSchemaUtils().completeEquals(((DataModel) obj).getSchema(), getSchema())
+				&& Objects.equals(((DataModel) obj).isDeprecated(), isDeprecated());
 	}
 }

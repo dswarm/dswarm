@@ -130,6 +130,7 @@ SET foreign_key_checks = 0;
         CONFIGURATION VARCHAR(160),
         DATA_RESOURCE VARCHAR(160),
         DATA_SCHEMA VARCHAR(160),
+        DEPRECATED TINYINT(1),
         primary key (UUID)
     ) ENGINE=InnoDB;
 
