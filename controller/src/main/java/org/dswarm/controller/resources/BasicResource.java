@@ -145,59 +145,7 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 
 		final PROXYPOJOCLASS proxyObject = addObject(jsonObjectString, null);
 
-		if (proxyObject == null) {
-
-			BasicResource.LOG.debug("couldn't add {}", pojoClassName);
-			throw new DMPControllerException("couldn't add " + pojoClassName);
-		}
-
-		final POJOCLASS object = proxyObject.getObject();
-
-		if (object == null) {
-
-			BasicResource.LOG.debug("couldn't add {}", pojoClassName);
-			throw new DMPControllerException("couldn't add " + pojoClassName);
-		}
-
-		BasicResource.LOG.debug("added new {} with id = '{}' ", pojoClassName, object.getUuid());
-		BasicResource.LOG.trace(" = '{}'", ToStringBuilder.reflectionToString(object));
-
-		final String objectJSON = serializeObject(object);
-
-		final URI objectURI = createObjectURI(object);
-
-		if (objectURI == null) {
-
-			BasicResource.LOG.debug("something went wrong, while minting the URL of the new {}", pojoClassName);
-			throw new DMPControllerException("something went wrong, while minting the URL of the new " + pojoClassName);
-		}
-
-		BasicResource.LOG.debug("return new {} at '{}'", pojoClassName, objectURI);
-		BasicResource.LOG.trace("with content '{}'", objectJSON);
-
-		final ResponseBuilder responseBuilder;
-		final RetrievalType type = proxyObject.getType();
-
-		switch (type) {
-
-			case CREATED:
-
-				responseBuilder = Response.created(objectURI);
-
-				break;
-			case RETRIEVED:
-
-				responseBuilder = Response.ok().contentLocation(objectURI);
-
-				break;
-			default:
-
-				BasicResource.LOG.debug("something went wrong, while evaluating the retrieval type of the {}", pojoClassName);
-				throw new DMPControllerException("something went wrong, while evaluating the retrieval type of the "
-						+ pojoClassName);
-		}
-
-		return responseBuilder.entity(objectJSON).build();
+		return createObjectInternal(proxyObject);
 	}
 
 	/**
@@ -218,59 +166,7 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 
 		final PROXYPOJOCLASS proxyObject = addObject(jsonObjectString, contextJSON);
 
-		if (proxyObject == null) {
-
-			BasicResource.LOG.debug("couldn't add {}", pojoClassName);
-			throw new DMPControllerException("couldn't add " + pojoClassName);
-		}
-
-		final POJOCLASS object = proxyObject.getObject();
-
-		if (object == null) {
-
-			BasicResource.LOG.debug("couldn't add {}", pojoClassName);
-			throw new DMPControllerException("couldn't add " + pojoClassName);
-		}
-
-		BasicResource.LOG.debug("added new {} with id = '{}' ", pojoClassName, object.getUuid());
-		BasicResource.LOG.trace(" = '{}'", ToStringBuilder.reflectionToString(object));
-
-		final String objectJSON = serializeObject(object);
-
-		final URI objectURI = createObjectURI(object);
-
-		if (objectURI == null) {
-
-			BasicResource.LOG.debug("something went wrong, while minting the URL of the new {}", pojoClassName);
-			throw new DMPControllerException("something went wrong, while minting the URL of the new " + pojoClassName);
-		}
-
-		BasicResource.LOG.debug("return new {} at '{}'", pojoClassName, objectURI);
-		BasicResource.LOG.trace("with content '{}'", objectJSON);
-
-		final ResponseBuilder responseBuilder;
-		final RetrievalType type = proxyObject.getType();
-
-		switch (type) {
-
-			case CREATED:
-
-				responseBuilder = Response.created(objectURI);
-
-				break;
-			case RETRIEVED:
-
-				responseBuilder = Response.ok().contentLocation(objectURI);
-
-				break;
-			default:
-
-				BasicResource.LOG.debug("something went wrong, while evaluating the retrieval type of the {}", pojoClassName);
-				throw new DMPControllerException("something went wrong, while evaluating the retrieval type of the "
-						+ pojoClassName);
-		}
-
-		return responseBuilder.entity(objectJSON).build();
+		return createObjectInternal(proxyObject);
 	}
 
 	/**
@@ -651,6 +547,63 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 
 				BasicResource.LOG.debug("something went wrong, while evaluating the retrieval type of the {}", pojoClassName);
 
+				throw new DMPControllerException("something went wrong, while evaluating the retrieval type of the "
+						+ pojoClassName);
+		}
+
+		return responseBuilder.entity(objectJSON).build();
+	}
+
+	private Response createObjectInternal(final PROXYPOJOCLASS proxyObject) throws DMPControllerException {
+
+		if (proxyObject == null) {
+
+			BasicResource.LOG.debug("couldn't add {}", pojoClassName);
+			throw new DMPControllerException("couldn't add " + pojoClassName);
+		}
+
+		final POJOCLASS object = proxyObject.getObject();
+
+		if (object == null) {
+
+			BasicResource.LOG.debug("couldn't add {}", pojoClassName);
+			throw new DMPControllerException("couldn't add " + pojoClassName);
+		}
+
+		BasicResource.LOG.debug("added new {} with id = '{}' ", pojoClassName, object.getUuid());
+		BasicResource.LOG.trace(" = '{}'", ToStringBuilder.reflectionToString(object));
+
+		final String objectJSON = serializeObject(object);
+
+		final URI objectURI = createObjectURI(object);
+
+		if (objectURI == null) {
+
+			BasicResource.LOG.debug("something went wrong, while minting the URL of the new {}", pojoClassName);
+			throw new DMPControllerException("something went wrong, while minting the URL of the new " + pojoClassName);
+		}
+
+		BasicResource.LOG.debug("return new {} at '{}'", pojoClassName, objectURI);
+		BasicResource.LOG.trace("with content '{}'", objectJSON);
+
+		final ResponseBuilder responseBuilder;
+		final RetrievalType type = proxyObject.getType();
+
+		switch (type) {
+
+			case CREATED:
+
+				responseBuilder = Response.created(objectURI);
+
+				break;
+			case RETRIEVED:
+
+				responseBuilder = Response.ok().contentLocation(objectURI);
+
+				break;
+			default:
+
+				BasicResource.LOG.debug("something went wrong, while evaluating the retrieval type of the {}", pojoClassName);
 				throw new DMPControllerException("something went wrong, while evaluating the retrieval type of the "
 						+ pojoClassName);
 		}

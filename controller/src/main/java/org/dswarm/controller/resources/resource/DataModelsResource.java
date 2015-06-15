@@ -213,28 +213,6 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	}
 
 	/**
-	 * This endpoint consumes a data model as JSON representation and persists this data model in the database, i.e., the data
-	 * resource of this data model will be processed re. the parameters in the configuration of the data model. Thereby, the
-	 * schema of the data will be created as well.
-	 *
-	 * @param jsonObjectString a JSON representation of one data model
-	 * @return the persisted data model as JSON representation
-	 * @throws DMPControllerException
-	 */
-	@ApiOperation(value = "create a new data model", notes = "Returns a new DataModel object. The data resource of this data model will be processed re. the parameters in the configuration of the data model. Thereby, the schema of the data will be created as well. ", response = DataModel.class)
-	@ApiResponses(value = { @ApiResponse(code = 201, message = "data model was successfully persisted"),
-			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	@Override
-	public Response createObject(@ApiParam(value = "data model (as JSON)", required = true) final String jsonObjectString)
-			throws DMPControllerException {
-
-		return super.createObject(jsonObjectString);
-	}
-
-	/**
 	 * This endpoint returns a list of all data models as JSON representation.
 	 * The format of the data model might either be a full or an abbreviated short variant.
 	 *

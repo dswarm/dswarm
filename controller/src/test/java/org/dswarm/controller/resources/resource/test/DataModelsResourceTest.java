@@ -30,7 +30,6 @@ import javax.ws.rs.core.Response;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -507,7 +506,8 @@ public class DataModelsResourceTest extends
 		// org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils.uploadResource(File, Resource)
 		// should be refactored some day
 		loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
-		final DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
+		final DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv",
+				"atMostTwoRowsCsv_Configuration.json");
 
 		testExportInternal(MediaType.TEXT_PLAIN, datamodelAtMostcsv.getUuid(), HttpStatus.SC_NOT_ACCEPTABLE, null, null, null);
 
@@ -526,7 +526,8 @@ public class DataModelsResourceTest extends
 		// org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils.uploadResource(File, Resource)
 		// should be refactored some day
 		loadCSVData("UTF-8Csv_Resource.json", "UTF-8.csv", "UTF-8Csv_Configuration.json");
-		final DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv", "atMostTwoRowsCsv_Configuration.json");
+		final DataModel datamodelAtMostcsv = loadCSVData("atMostTwoRowsCsv_Resource.json", "atMostTwoRows.csv",
+				"atMostTwoRowsCsv_Configuration.json");
 
 		testExportInternal("khlav/kalash", datamodelAtMostcsv.getUuid(), HttpStatus.SC_NOT_ACCEPTABLE, null, null, null);
 
@@ -605,7 +606,7 @@ public class DataModelsResourceTest extends
 
 		// compare models
 		// note: rdf:type statement won't be delivered right now
-		Assert.assertEquals("models should have same number of statements.", expectedModel.size() -1, actualModel.size());
+		Assert.assertEquals("models should have same number of statements.", expectedModel.size() - 1, actualModel.size());
 
 		// this check can not be done because of generated UUIDs
 		// check if statements are the "same" (isomorphic, i.e. blank nodes may have different IDs)
