@@ -19,10 +19,10 @@
     </rules>
     <maps>
         <map name="regexMap">
-	        <entry name="(A[A-Z] [0-9]+.*)" value="Allgemeines $1"/>
-			<entry name="(B[A-Z] [0-9]+.*)" value="Theologie und Religionswissenschaft $1"/>
-			<entry name="(C[A-I] [0-9]+.*)" value="Philosophie $1"/>
-			<entry name="(C[L-Z] [0-9]+.*)" value="Psychologie $1"/>
+	        <entry name="A[A-Z] [0-9]+.*" value="Allgemeines"/>
+			<entry name="B[A-Z] [0-9]+.*" value="Theologie und Religionswissenschaft"/>
+			<entry name="C[A-I] [0-9]+.*" value="Philosophie"/>
+			<entry name="C[L-Z] [0-9]+.*" value="Psychologie"/>
         </map>
     </maps>
 </metamorph>
