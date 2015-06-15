@@ -228,7 +228,7 @@ public class DataModelsResourceTest extends
 		final RxWebTarget<RxObservableInvoker> rxWebTarget = RxObservable.from(target);
 
 		// POST the request
-		final RxObservableInvoker rx = rxWebTarget.request(MediaType.TEXT_PLAIN).rx();
+		final RxObservableInvoker rx = rxWebTarget.request(MediaType.TEXT_PLAIN).accept(MediaType.APPLICATION_JSON_TYPE).rx();
 
 		final Entity<String> entity = Entity.entity("", MediaType.TEXT_PLAIN);
 
