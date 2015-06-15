@@ -1,24 +1,26 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
     <meta>
-        <name>Regex-Map-Test</name>
+        <name>mapping0053d512-b9d1-0f56-74e7-2fb1d849510c</name>
     </meta>
     <rules>
-   		<data name="newName" source="attributes">
-<!--    			<whitelist map="normalMap"/> -->
-<!--    			<lookup in="normalMap"/> -->
-<!--    		<replace  pattern="^J(.).*"  with="X$1"/> -->
-<!--    		<replace  pattern="[ony]"  with="X"/> -->
-	   		<regexlookup in="regexMap">
-<!--             	 <entry name="^J(.).*" value="1"/> -->
-<!--                 <entry name="^Ja(.).*" value="2"/> -->
-<!--                 <entry name="^J.{0,20}" value="3"/> -->
-			</regexlookup>
-   		</data>
-
+        <combine flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield" includeSubEntities="true" name="@metadata_record_datafield_subfield_value__784d1e66-5be7-0d0f-5728-63009a403833__0__" reset="true" sameEntity="true" value="${metadata_record_datafield_subfield_value__784d1e66-5be7-0d0f-5728-63009a403833__0__.filtered}">
+            <if>
+                <all flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#tag" includeSubEntities="true" name="CONDITION_ALL" reset="true">
+                    <data source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#tag">
+                        <regexp match="084|082|072|050"/>
+                    </data>
+                </all>
+            </if>
+            <data name="metadata_record_datafield_subfield_value__784d1e66-5be7-0d0f-5728-63009a403833__0__.filtered" source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#subfield&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+        </combine>
+        <data name="http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/language" source="@__TRANSFORMATION_OUTPUT_VARIABLE__4"/>
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__4" source="@metadata_record_datafield_subfield_value__784d1e66-5be7-0d0f-5728-63009a403833__0__">
+            <regexlookup default="466" map="componentff86ec88-c3ba-3075-3cfb-1ba9acdb5bf3"/>
+        </data>
     </rules>
     <maps>
-        <map name="regexMap">
+        <map name="componentff86ec88-c3ba-3075-3cfb-1ba9acdb5bf3">
             <entry name="K[A-Z] [0-9]+.*" value="Slawistik"/>
             <entry name="M[A-L] [0-9]+.*" value="Politologie"/>
             <entry name="P[A-Z] [0-9]+.*" value="Rechtswissenschaft"/>

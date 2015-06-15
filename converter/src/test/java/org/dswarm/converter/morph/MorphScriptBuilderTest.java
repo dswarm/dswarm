@@ -94,7 +94,7 @@ public class MorphScriptBuilderTest extends GuicedTest {
 	@Test
 	public void testRegexLookupMap() throws Exception {
 
-		compareTaskGeneratedMorphscript("dd-962.task.json", "dd-1005.csv.morph.result.xml");
+		compareTaskGeneratedMorphscript("dd-962.task.json", "dd-962.regexlookup.morph.result.xml");
 	}
 
 	private void compareTaskGeneratedMorphscript(final String taskJSONFileName, final String morphFileName) throws Exception {
