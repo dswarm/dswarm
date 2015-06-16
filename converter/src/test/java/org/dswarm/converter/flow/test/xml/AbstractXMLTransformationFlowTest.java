@@ -20,6 +20,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.core.Response;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -125,7 +127,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 				.getInstance(XmlResourceFlowFactory.class)
 				.fromDataModel(updatedInputDataModel);
 
-		final List<GDMModel> gdmModels = flow2.applyResource(exampleDataResourceFileName);
+		final List<GDMModel> gdmModels = flow2.applyResource(exampleDataResourceFileName).toList().toBlocking().first();
 
 		Assert.assertNotNull("GDM model list shouldn't be null", gdmModels);
 		Assert.assertFalse("GDM model list shouldn't be empty", gdmModels.isEmpty());
@@ -170,9 +172,14 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		// write model and retrieve tuples
 		final InternalGDMGraphService gdmService = GuicedTest.injector.getInstance(InternalGDMGraphService.class);
-		gdmService.createObject(updatedInputDataModel.getUuid(), gdmModel);
+		final Observable<Response> responseObservable = gdmService.createObject(updatedInputDataModel.getUuid(), Observable.just(gdmModel));
+		final Response response = responseObservable.toBlocking().firstOrDefault(null);
 
-		final Observable<Map<String, Model>> optionalModelMapObservable = gdmService.getObjects(updatedInputDataModel.getUuid(), Optional.<Integer>absent());
+		Assert.assertNotNull(response);
+
+		final Observable<Map<String, Model>> optionalModelMapObservable = gdmService
+				.getObjects(updatedInputDataModel.getUuid(), Optional.<Integer>absent())
+				.toMap(Tuple::v1, Tuple::v2);
 		final Optional<Map<String, Model>> optionalModelMap = optionalModelMapObservable.map(Optional::of).toBlocking().firstOrDefault(Optional.absent());
 
 		Assert.assertTrue("there is no map of entry models in the database", optionalModelMap.isPresent());
@@ -222,7 +229,10 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		flow.getScript();
 
-		final String actual = flow.apply(tuples, true).get();
+		final ArrayNode actual = flow.apply(tuples, true, false).reduce(
+				DMPPersistenceUtil.getJSONObjectMapper().createArrayNode(),
+				ArrayNode::add
+		).toBlocking().first();
 
 		compareResults(expected, actual);
 
@@ -239,7 +249,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		Assert.assertNotNull("the record class of the schema of the fresh data model shouldn't be null", schema.getRecordClass());
 	}
 
-	protected void compareResults(final String expectedResultJSONString, final String actualResultJSONString) throws Exception {
+	protected void compareResults(final String expectedResultJSONString, final ArrayNode actualJSONArray) throws Exception {
 
 		final ArrayNode expectedJSONArray = objectMapper.get().readValue(expectedResultJSONString, ArrayNode.class);
 		final ObjectNode expectedElementInArray = (ObjectNode) expectedJSONArray.get(0);
@@ -247,7 +257,6 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		final ObjectNode expectedJSON = (ObjectNode) expectedElementInArray.get(expectedKeyInArray).get(0);
 		final String finalExpectedJSONString = objectMapper.get().writeValueAsString(expectedJSON);
 
-		final ArrayNode actualJSONArray = objectMapper.get().readValue(actualResultJSONString, ArrayNode.class);
 		final ObjectNode actualElementInArray = (ObjectNode) actualJSONArray.get(0);
 		final String actualKeyInArray = actualElementInArray.fieldNames().next();
 		final Iterable<JsonNode> actualKeyArray = actualElementInArray.get(actualKeyInArray);

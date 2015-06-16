@@ -44,7 +44,7 @@
 		<java.target.version>1.8</java.target.version>
 		<maxallowedviolations>7000</maxallowedviolations>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<version.apache.commons>3.3.2</version.apache.commons>
+		<version.apache.commons>3.4</version.apache.commons>
 		<version.commons-csv>1.1</version.commons-csv>
 		<version.commons-io>2.4</version.commons-io>
 		<version.dswarm.common>0.0.2-SNAPSHOT</version.dswarm.common>
@@ -54,30 +54,31 @@
 		<version.guava-jdk5>14.0.1</version.guava-jdk5>
 		<version.guava>18.0</version.guava>
 		<version.guice>4.0.0.dswarm</version.guice>
-		<version.jackson>2.5.0</version.jackson>
+		<version.jackson>2.5.2</version.jackson>
 		<version.javaee>7.0</version.javaee>
-		<version.jersey>2.8</version.jersey>
+		<version.jersey>2.17</version.jersey>
+		<version.jersey-client>2.17</version.jersey-client>
 		<version.jsonassert>1.2.3</version.jsonassert>
 		<version.junit>4.12</version.junit>
-		<version.logback>1.1.2</version.logback>
+		<version.logback>1.1.3</version.logback>
 		<version.maven.core>2.2.1</version.maven.core>
 		<version.maven.plugin.antrun>1.8</version.maven.plugin.antrun>
 		<version.maven.plugin.assembly>2.5.3</version.maven.plugin.assembly>
 		<version.maven.plugin.checkstyle>2.12.1</version.maven.plugin.checkstyle>
 		<version.maven.plugin.clean>2.6.1</version.maven.plugin.clean>
-		<version.maven.plugin.cobertura>2.6</version.maven.plugin.cobertura>
+		<version.maven.plugin.cobertura>2.7</version.maven.plugin.cobertura>
 		<version.maven.plugin.compiler>3.2</version.maven.plugin.compiler>
-		<version.maven.plugin.dependency>2.9</version.maven.plugin.dependency>
+		<version.maven.plugin.dependency>2.10</version.maven.plugin.dependency>
 		<version.maven.plugin.deploy>2.8.2</version.maven.plugin.deploy>
-		<version.maven.plugin.exec>1.3.2</version.maven.plugin.exec>
+		<version.maven.plugin.exec>1.4.0</version.maven.plugin.exec>
 		<version.maven.plugin.failsafe>2.18.1</version.maven.plugin.failsafe>
 		<version.maven.plugin.install>2.5.2</version.maven.plugin.install>
-		<version.maven.plugin.jar>2.5</version.maven.plugin.jar>
+		<version.maven.plugin.jar>2.6</version.maven.plugin.jar>
 		<!-- before changing the javadoc plugin version, checkout http://stackoverflow.com/a/25986409/2996265 -->
 		<version.maven.plugin.javadoc>2.9.1</version.maven.plugin.javadoc>
 		<version.maven.plugin.jxr>2.5</version.maven.plugin.jxr>
 		<version.maven.plugin.license>2.7</version.maven.plugin.license>
-		<version.maven.plugin.pmd>3.3</version.maven.plugin.pmd>
+		<version.maven.plugin.pmd>3.4</version.maven.plugin.pmd>
 		<version.maven.plugin.project-info-reports>2.8</version.maven.plugin.project-info-reports>
 		<version.maven.plugin.release>2.5.1</version.maven.plugin.release>
 		<version.maven.plugin.resources>2.7</version.maven.plugin.resources>
@@ -86,13 +87,13 @@
 		<version.maven.plugin.surefire>2.18.1</version.maven.plugin.surefire>
 		<version.maven.plugin.version>2.1</version.maven.plugin.version>
 		<version.maven.plugin.war>2.6</version.maven.plugin.war>
-		<version.metafacture-core>2.0.3-SNAPSHOT</version.metafacture-core>
-		<version.metrics>3.1.0</version.metrics>
-		<version.rxjava>1.0.9</version.rxjava>
-		<version.slf4j.api>1.7.10</version.slf4j.api>
+		<version.metafacture-core>3.1.2-dswarm-SNAPSHOT</version.metafacture-core>
+		<version.metrics>3.1.2</version.metrics>
+		<version.rxjava>1.0.11</version.rxjava>
+		<version.slf4j.api>1.7.12</version.slf4j.api>
 		<version.swagger>1.3.12</version.swagger>
-		<version.tika>1.6</version.tika>
-		<version.typesafe-config>1.2.1</version.typesafe-config>
+		<version.tika>1.8</version.tika>
+		<version.typesafe-config>1.3.0</version.typesafe-config>
 		<version.umlgraph-doclet>5.1</version.umlgraph-doclet>
 		<version.xmlunit>2.0.0-SNAPSHOT</version.xmlunit>
 	</properties>

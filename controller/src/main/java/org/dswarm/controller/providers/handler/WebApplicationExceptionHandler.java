@@ -23,18 +23,19 @@ import org.dswarm.controller.providers.BaseExceptionHandler;
 
 /**
  * An exception handler for providing web application exceptions at client side of the backend API.
- * 
+ *
  * @author phorn
  */
 @Provider
 public class WebApplicationExceptionHandler extends BaseExceptionHandler<WebApplicationException> {
 
 	@Override
-	public Response toResponse(final WebApplicationException exception) {
+	protected Response.Status getStatusFrom(final WebApplicationException exception) {
+		return Response.Status.fromStatusCode(exception.getResponse().getStatus());
+	}
 
-		final String message = errorMessage(exception);
-		final int status = exception.getResponse().getStatus();
-
-		return createResponse(message, status);
+	@Override
+	protected String getErrorMessageFrom(final WebApplicationException exception) {
+		return exception.getMessage();
 	}
 }

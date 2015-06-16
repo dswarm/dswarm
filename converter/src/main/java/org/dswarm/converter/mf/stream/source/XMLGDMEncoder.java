@@ -63,7 +63,7 @@ import org.dswarm.persistence.util.GDMUtil;
 public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>> {
 
 	private       String                        currentId;
-	private final Model                         model;
+	private       Model                         model;
 	private       Resource                      recordResource;
 	private       ResourceNode                  recordNode;
 	private       Node                          entityNode;
@@ -113,7 +113,7 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 
 		// init
 		elementURIStack = new Stack<>();
-		model = new Model();
+		//model = new Model();
 	}
 
 	public XMLGDMEncoder(final String recordTagName, final Optional<DataModel> dataModel) {
@@ -125,7 +125,7 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 
 		// init
 		elementURIStack = new Stack<>();
-		model = new Model();
+		//model = new Model();
 	}
 
 	@Override
@@ -209,6 +209,7 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 
 		currentId = SchemaUtils.isValidUri(identifier) ? identifier : SchemaUtils.mintRecordUri(identifier, currentId, dataModel);
 
+		model = new Model();
 		recordResource = new Resource(currentId);
 		recordNode = new ResourceNode(currentId);
 

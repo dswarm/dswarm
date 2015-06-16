@@ -72,10 +72,12 @@ public class DataModelService extends ExtendedMediumBasicDMPJPAService<ProxyData
 		final Schema schema = object.getSchema();
 		final Resource resource = object.getDataResource();
 		final Configuration configuration = object.getConfiguration();
+		final boolean deprecated = object.isDeprecated();
 
 		updateObject.setSchema(schema);
 		updateObject.setDataResource(resource);
 		updateObject.setConfiguration(configuration);
+		updateObject.setDeprecated(deprecated);
 	}
 
 	@Override

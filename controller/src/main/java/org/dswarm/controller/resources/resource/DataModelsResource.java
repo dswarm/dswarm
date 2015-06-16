@@ -15,6 +15,10 @@
  */
 package org.dswarm.controller.resources.resource;
 
+import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
@@ -38,6 +42,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.codahale.metrics.annotation.Timed;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -237,53 +242,8 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	public Response updateObject(@ApiParam(value = "data model (as JSON)", required = true) final String jsonObjectString,
 			@ApiParam(value = "data model identifier", required = true) @PathParam("id") final String uuid) throws DMPControllerException {
 
-		//if (updateContent == null || updateContent.equals(Boolean.FALSE)) {
-
 		// only the data model metadata would be updated
 		return super.updateObject(jsonObjectString, uuid);
-		//}
-
-		//		DataModelsResource.LOG.debug("try to update {} '{}'", pojoClassName, uuid);
-		//
-		//		final DataModel objectFromDB = retrieveObject(uuid, jsonObjectString);
-		//
-		//		if (objectFromDB == null) {
-		//
-		//			return Response.status(Status.NOT_FOUND).build();
-		//		}
-		//
-		//		// update data model metadata
-		//		final Tuple<ProxyDataModel, DataModel> updateResult = updateObjectInternal2(jsonObjectString, uuid, objectFromDB);
-		//
-		//		// update data model content (especially)
-		//		final ProxyDataModel updatedProxyDataModel = updateDataModel(updateResult.v1(), updateResult.v2());
-		//
-		//		if (updatedProxyDataModel == null) {
-		//
-		//			DataModelsResource.LOG.debug("couldn't update content for data model '{}'", uuid);
-		//
-		//			throw new DMPControllerException("couldn't update content for data model '" + uuid + "'");
-		//		}
-		//
-		//		final DataModel object = updatedProxyDataModel.getObject();
-		//
-		//		if (object == null) {
-		//
-		//			DataModelsResource.LOG.debug("couldn't update content for data model '{}'", uuid);
-		//
-		//			throw new DMPControllerException("couldn't update content for data model '" + uuid + "'");
-		//		}
-		//
-		//		DataModelsResource.LOG.debug("updated content for data model '{}'", uuid);
-		//
-		//		if (DataModelsResource.LOG.isTraceEnabled()) {
-		//
-		//			DataModelsResource.LOG.trace(" = '{}'", ToStringBuilder.reflectionToString(object));
-		//		}
-		//
-		//		final String newJsonObjectString = serializeObject(updatedProxyDataModel.getObject());
-		//
-		//		return createUpdateResponse(updatedProxyDataModel, object, newJsonObjectString);
 	}
 
 	/**
@@ -630,7 +590,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	 * This endpoint deletes a data model that matches the given id.
 	 *
 	 * @param id a data model identifier
-	 * @return status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
+	 * @return 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else
 	 * went wrong
 	 * @throws DMPControllerException
 	 */
@@ -646,6 +606,81 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			throws DMPControllerException {
 
 		return super.deleteObject(id);
+	}
+
+	/**
+	 * This endpoint deprecates a data model that matches the given id.
+	 *
+	 * @param id a data model identifier
+	 * went wrong
+	 * @throws DMPControllerException
+	 */
+	@ApiOperation(value = "deprecates data model that matches the given id", notes = "Returns status 200 if deprecation was successful, 404 if id not found, or 500 if something else went wrong.")
+	@ApiResponses(value = { @ApiResponse(code = 204, message = "data model was successfully deprecated"),
+			@ApiResponse(code = 404, message = "could not find a data model for the given id"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@POST
+	@Path("/{id}/deprecate")
+	@Produces(MediaType.APPLICATION_JSON)
+	public void deprecateObject(@ApiParam(value = "data model identifier", required = true) @PathParam("id") final String id,
+			@Suspended final AsyncResponse asyncResponse)
+			throws DMPControllerException {
+
+		final Observable<Response> responseObservable = dataModelUtil.deprecateDataModel(id);
+
+		responseObservable.subscribe(new ResponseObserver(id, asyncResponse));
+	}
+
+	/**
+	 * This endpoint deprecates a data model that matches the given id.
+	 *
+	 * @param id a data model identifier
+	 * went wrong
+	 * @throws DMPControllerException
+	 */
+	@ApiOperation(value = "deprecates data model that matches the given id", notes = "Returns status 200 if deprecation was successful, 404 if id not found, or 500 if something else went wrong.")
+	@ApiResponses(value = { @ApiResponse(code = 204, message = "data model was successfully deprecated"),
+			@ApiResponse(code = 404, message = "could not find a data model for the given id"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@POST
+	@Path("/{id}/deprecate/records")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public void deprecateRecords(@ApiParam(value = "data model identifier", required = true) @PathParam("id") final String id,
+			@ApiParam(value = "record URIs (as JSON array)", required = true) final String recordURIsJSONString,
+			@Suspended final AsyncResponse asyncResponse)
+			throws DMPControllerException {
+
+		if (recordURIsJSONString == null) {
+
+			final String message = "couldn't deprecate records, because the request JSON string is null";
+
+			DataModelsResource.LOG.error(message);
+
+			throw new DMPControllerException(message);
+		}
+
+		Collection<String> recordURIs = parseRecordURIs(recordURIsJSONString);
+
+		final Observable<Response> responseObservable = dataModelUtil.deprecateRecords(recordURIs, id);
+
+		responseObservable.subscribe(new ResponseObserver(id, asyncResponse));
+	}
+
+	private Collection<String> parseRecordURIs(final String recordURIsJSONString) throws DMPControllerException {
+
+		try {
+			return objectMapperProvider.get().readValue(recordURIsJSONString, new TypeReference<List<String>>() {
+
+			});
+		} catch (final IOException e) {
+
+			final String message = "couldn't parse record URIs JSON array";
+
+			LOG.error(message, e);
+
+			throw new DMPControllerException(message, e);
+		}
 	}
 
 	/**
@@ -686,6 +721,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 		object.setDataResource(objectFromJSON.getDataResource());
 		object.setConfiguration(objectFromJSON.getConfiguration());
 		object.setSchema(objectFromJSON.getSchema());
+		object.setDeprecated(objectFromJSON.isDeprecated());
 
 		return object;
 	}
@@ -912,15 +948,17 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	}
 
 	private static final class StreamingDataObserver implements Observer<Tuple<String, JsonNode>> {
-		private final ObjectMapper objectMapper;
-		private final String pojoClassName;
+
+		private final ObjectMapper  objectMapper;
+		private final String        pojoClassName;
 		private final AsyncResponse asyncResponse;
-		private final String uuid;
-		private final ObjectNode json;
+		private final String        uuid;
+		private final ObjectNode    json;
 
 		private boolean hasData;
 
-		public StreamingDataObserver(final String uuid, final ObjectMapper objectMapper, final String pojoClassName, final AsyncResponse asyncResponse) {
+		public StreamingDataObserver(final String uuid, final ObjectMapper objectMapper, final String pojoClassName,
+				final AsyncResponse asyncResponse) {
 			this.uuid = uuid;
 			this.objectMapper = objectMapper;
 			this.pojoClassName = pojoClassName;
@@ -963,6 +1001,48 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 		public void onNext(final Tuple<String, JsonNode> tuple) {
 			hasData = true;
 			json.set(tuple.v1(), tuple.v2());
+		}
+	}
+
+	private static final class ResponseObserver implements Observer<Response> {
+
+		private final String        uuid;
+		private final AsyncResponse asyncResponse;
+
+		private Response response;
+
+		public ResponseObserver(final String uuidArg, final AsyncResponse asyncResponse) {
+
+			uuid = uuidArg;
+			this.asyncResponse = asyncResponse;
+		}
+
+		@Override
+		public void onCompleted() {
+
+			if (response == null) {
+
+				DataModelsResource.LOG.debug("couldn't find data model with uuid '{}'", uuid);
+
+				asyncResponse.resume(Response.status(Status.NOT_FOUND).build());
+			} else {
+
+				final String body = response.readEntity(String.class);
+
+				asyncResponse.resume(buildResponse(body));
+			}
+		}
+
+		@Override
+		public void onError(final Throwable e) {
+
+			asyncResponse.resume(e);
+		}
+
+		@Override
+		public void onNext(final Response response) {
+
+			this.response = response;
 		}
 	}
 }

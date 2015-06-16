@@ -16,16 +16,16 @@
 package org.dswarm.controller.utils;
 
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.Collection;
 import java.util.Set;
+
+import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Optional;
-import com.google.common.collect.AbstractIterator;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import rx.Observable;
 
 import org.dswarm.common.types.Tuple;
+import org.dswarm.controller.DMPControllerException;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.resource.Configuration;
@@ -93,7 +94,7 @@ public class DataModelUtil {
 
 		final InternalModelService internalService = internalServiceFactoryProvider.get().getInternalGDMGraphService();
 
-		final Observable<Map<String, Model>> modelObservable;
+		final Observable<Tuple<String, Model>> modelObservable;
 
 		try {
 
@@ -104,7 +105,7 @@ public class DataModelUtil {
 			return Observable.empty();
 		}
 
-		return modelObservable.flatMapIterable(m -> dataIterable(m.entrySet()));
+		return modelObservable.map(this::transformDataNode);
 	}
 
 	/**
@@ -120,7 +121,7 @@ public class DataModelUtil {
 
 		final InternalModelService internalService = internalServiceFactoryProvider.get().getInternalGDMGraphService();
 
-		final Observable<Map<String, Model>> maybeTriples;
+		final Observable<Tuple<String, Model>> maybeTriples;
 
 		try {
 
@@ -131,7 +132,7 @@ public class DataModelUtil {
 			return Observable.empty();
 		}
 
-		return maybeTriples.flatMapIterable(m -> dataIterable(m.entrySet()));
+		return maybeTriples.map(this::transformDataNode);
 	}
 
 	/**
@@ -150,7 +151,7 @@ public class DataModelUtil {
 
 		final InternalModelService internalService = internalServiceFactoryProvider.get().getInternalGDMGraphService();
 
-		final Observable<Map<String, Model>> maybeTriples;
+		final Observable<Tuple<String, Model>> maybeTriples;
 
 		try {
 
@@ -162,7 +163,45 @@ public class DataModelUtil {
 			return Observable.empty();
 		}
 
-		return maybeTriples.flatMapIterable(m -> dataIterable(m.entrySet()));
+		return maybeTriples.map(this::transformDataNode);
+	}
+
+	public Observable<Response> deprecateDataModel(final String dataModelUuid) throws DMPControllerException {
+
+		DataModelUtil.LOG.debug(String.format("try to deprecated data model with id [%s]", dataModelUuid));
+
+		final InternalModelService internalService = internalServiceFactoryProvider.get().getInternalGDMGraphService();
+
+		try {
+
+			return internalService.deprecateDataModel(dataModelUuid);
+		} catch (final DMPPersistenceException e1) {
+
+			final String message = String.format("couldn't deprecate data model '%s'", dataModelUuid);
+
+			DataModelUtil.LOG.error(message, dataModelUuid, e1);
+
+			throw new DMPControllerException(message, e1);
+		}
+	}
+
+	public Observable<Response> deprecateRecords(final Collection<String> recordURIs, final String dataModelUuid) throws DMPControllerException {
+
+		DataModelUtil.LOG.debug(String.format("try to deprecated '%d' records data model with id [%s]", recordURIs.size(), dataModelUuid));
+
+		final InternalModelService internalService = internalServiceFactoryProvider.get().getInternalGDMGraphService();
+
+		try {
+
+			return internalService.deprecateRecords(recordURIs, dataModelUuid);
+		} catch (final DMPPersistenceException e1) {
+
+			final String message = String.format("couldn't deprecate some records in data model '%s'", dataModelUuid);
+
+			DataModelUtil.LOG.error(message, dataModelUuid, e1);
+
+			throw new DMPControllerException(message, e1);
+		}
 	}
 
 	public Optional<ObjectNode> getSchema(final String dataModelUuid) {
@@ -291,53 +330,9 @@ public class DataModelUtil {
 
 	}
 
-	private Iterable<Tuple<String, JsonNode>> dataIterable(final Iterable<Map.Entry<String, Model>> triples) {
-		return () -> dataIterator(triples.iterator());
-	}
-
-	private Iterator<Tuple<String, JsonNode>> dataIterator(final Iterator<Map.Entry<String, Model>> triples) {
-		return new AbstractIterator<Tuple<String, JsonNode>>() {
-
-			// TODO: where to to this? => [@tgaengler]: In my opinion, this needs to be done, when the input data model will
-			// created, i.e., that you will only have valid data models here
-			// private JsonNode injectDataType(final JsonNode jsonNode) {
-			// final UnmodifiableIterator<String> typeKeys = Iterators.filter(jsonNode.fieldNames(), new Predicate<String>() {
-			// @Override
-			// public boolean apply(@Nullable final String input) {
-			// return input != null && input.endsWith("#type");
-			// }
-			// });
-			// final String typeKey;
-			// try {
-			// typeKey = Iterators.getOnlyElement(typeKeys);
-			// } catch (final IllegalArgumentException | NoSuchElementException e) {
-			// return jsonNode;
-			// }
-			//
-			// final JsonNode typeNode = jsonNode.get(typeKey);
-			// final String longTypeName = typeNode.textValue();
-			// final String typeName = longTypeName.substring(longTypeName.lastIndexOf('#') + 1,
-			// longTypeName.lastIndexOf("Type"));
-			//
-			// final ObjectNode objectNode = objectMapper.createObjectNode();
-			// objectNode.put(typeName, jsonNode);
-			//
-			// return objectNode;
-			// }
-
-			@Override
-			protected Tuple<String, JsonNode> computeNext() {
-
-				if (triples.hasNext()) {
-
-					final Map.Entry<String, Model> nextTriple = triples.next();
-					final String recordId = nextTriple.getKey();
-					final JsonNode jsonNode = nextTriple.getValue().toRawJSON();
-					// return Tuple.tuple(recordId, injectDataType(jsonNode));
-					return Tuple.tuple(recordId, jsonNode);
-				}
-				return endOfData();
-			}
-		};
+	private Tuple<String, JsonNode> transformDataNode(final Tuple<String, Model> input) {
+		final String recordId = input.v1();
+		final JsonNode jsonNode = input.v2().toRawJSON();
+		return Tuple.tuple(recordId, jsonNode);
 	}
 }

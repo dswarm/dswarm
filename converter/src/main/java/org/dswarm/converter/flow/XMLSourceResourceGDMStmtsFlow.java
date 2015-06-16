@@ -32,6 +32,8 @@ import org.culturegraph.mf.stream.converter.xml.XmlDecoder;
 import org.culturegraph.mf.stream.source.StringReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rx.Observable;
+import rx.Subscriber;
 
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.mf.stream.GDMModelReceiver;
@@ -94,21 +96,21 @@ public class XMLSourceResourceGDMStmtsFlow {
 		morphTimer = registry.timer(MonitoringFlowStatics.METAMORPH);
 	}
 
-	public List<GDMModel> applyRecord(final String record) {
+	public Observable<GDMModel> applyRecord(final String record) {
 
 		final StringReader opener = new StringReader();
 
 		return apply(record, opener);
 	}
 
-	public List<GDMModel> applyResource(final String resourcePath) {
+	public Observable<GDMModel> applyResource(final String resourcePath) {
 
 		final BOMResourceOpener opener = new BOMResourceOpener();
 
 		return apply(resourcePath, opener);
 	}
 
-	List<GDMModel> apply(final String object, final DefaultObjectPipe<String, ObjectReceiver<Reader>> opener) {
+	Observable<GDMModel> apply(final String object, final DefaultObjectPipe<String, ObjectReceiver<Reader>> opener) {
 
 		final XmlDecoder decoder = new XmlDecoder();
 
@@ -137,12 +139,18 @@ public class XMLSourceResourceGDMStmtsFlow {
 				.setReceiver(gdmModelsTimer)
 				.setReceiver(writer);
 
-		opener.process(object);
-		opener.closeStream();
+		return Observable.create(new Observable.OnSubscribe<GDMModel>() {
 
-		morphContext.stop();
+			@Override public void call(final Subscriber<? super GDMModel> subscriber) {
 
-		return writer.getObservable().toList().toBlocking().firstOrDefault(Collections.emptyList());
+				writer.getObservable().subscribe(subscriber);
+
+				opener.process(object);
+				opener.closeStream();
+
+				morphContext.stop();
+			}
+		});
 	}
 
 	private static Optional<String> getStringParameter(final Configuration configuration, final String key) throws DMPConverterException {

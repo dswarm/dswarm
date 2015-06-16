@@ -97,7 +97,7 @@ public class TasksResourceTest extends ResourceTest {
 		final PrepareConfiguration prepareConfiguration = new PrepareConfiguration(prepareResource).invoke();
 		DataModel inputDataModel = prepareDataModel(prepareResource, prepareConfiguration);
 
-		final ObjectNode requestJSON = prepareTeask(inputDataModel);
+		final ObjectNode requestJSON = prepareTask(inputDataModel);
 
 		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE)
 				.accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(requestJSON));
@@ -180,8 +180,8 @@ public class TasksResourceTest extends ResourceTest {
 		final PrepareConfiguration prepareConfiguration = new PrepareConfiguration(prepareResource).invoke();
 		final DataModel inputDataModel = prepareDataModel(prepareResource, prepareConfiguration);
 
-		final ObjectNode requestJSON = prepareTeask(inputDataModel);
-		requestJSON.put(TasksResource.RETURN_IDENTIFIER, false);
+		final ObjectNode requestJSON = prepareTask(inputDataModel);
+		requestJSON.put(TasksResource.RETURN_IDENTIFIER, true);
 
 		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE)
 				.accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(requestJSON));
@@ -191,7 +191,7 @@ public class TasksResourceTest extends ResourceTest {
 		TasksResourceTest.LOG.debug("end task execution with no return test");
 	}
 
-	private ObjectNode prepareTeask(final DataModel inputDataModel) throws Exception {
+	private ObjectNode prepareTask(final DataModel inputDataModel) throws Exception {
 		// check processed data
 		final String data = dataModelsResourceTestUtils.getData(inputDataModel.getUuid(), 1);
 

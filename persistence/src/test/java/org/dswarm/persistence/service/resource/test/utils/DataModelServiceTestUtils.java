@@ -132,6 +132,8 @@ public class DataModelServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 		} else {
 			schemasResourceTestUtils.compareObjects(expectedDataModel.getSchema(), actualDataModel.getSchema());
 		}
+
+		Assert.assertEquals(expectedDataModel.isDeprecated(), actualDataModel.isDeprecated());
 	}
 
 	/**
@@ -146,6 +148,7 @@ public class DataModelServiceTestUtils extends ExtendedBasicDMPJPAServiceTestUti
 		object.setDataResource(objectWithUpdates.getDataResource());
 		object.setConfiguration(objectWithUpdates.getConfiguration());
 		object.setSchema(objectWithUpdates.getSchema());
+		object.setDeprecated(objectWithUpdates.isDeprecated());
 
 		return object;
 	}
