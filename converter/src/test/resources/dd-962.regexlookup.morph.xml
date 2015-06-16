@@ -9,7 +9,7 @@
 <!--    			<lookup in="normalMap"/> -->
 <!--    		<replace  pattern="^J(.).*"  with="X$1"/> -->
 <!--    		<replace  pattern="[ony]"  with="X"/> -->
-	   		<regexlookup in="regexMap">
+	   		<regexlookup map="regexMap">
 <!--             	 <entry name="^J(.).*" value="1"/> -->
 <!--                 <entry name="^Ja(.).*" value="2"/> -->
 <!--                 <entry name="^J.{0,20}" value="3"/> -->
