@@ -15,11 +15,11 @@
  */
 package org.dswarm.controller.resources.job;
 
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -33,7 +33,9 @@ import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
+import javax.xml.stream.XMLStreamException;
 
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -57,17 +59,18 @@ import org.dswarm.common.types.Tuple;
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.utils.DataModelUtil;
 import org.dswarm.converter.DMPConverterException;
+import org.dswarm.converter.export.XMLExporter;
 import org.dswarm.converter.flow.TransformationFlow;
 import org.dswarm.converter.flow.TransformationFlowFactory;
 import org.dswarm.converter.morph.MorphScriptBuilder;
-import org.dswarm.persistence.monitoring.MonitoringLogger;
-import org.dswarm.persistence.monitoring.MonitoringHelper;
 import org.dswarm.persistence.model.job.Job;
 import org.dswarm.persistence.model.job.Task;
 import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
+import org.dswarm.persistence.monitoring.MonitoringHelper;
+import org.dswarm.persistence.monitoring.MonitoringLogger;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -82,12 +85,13 @@ public class TasksResource {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TasksResource.class);
 
-	public static final String TASK_IDENTIFIER                 = "task";
-	public static final String AT_MOST_IDENTIFIER              = "at_most";
-	public static final String PERSIST_IDENTIFIER              = "persist";
-	public static final String RETURN_IDENTIFIER               = "do_not_return_data";
-	public static final String SELECTED_RECORDS_IDENTIFIER     = "selected_records";
-	public static final String DO_INGEST_ON_THE_FLY_IDENTIFIER = "do_ingest_on_the_fly";
+	public static final String TASK_IDENTIFIER                    = "task";
+	public static final String AT_MOST_IDENTIFIER                 = "at_most";
+	public static final String PERSIST_IDENTIFIER                 = "persist";
+	public static final String RETURN_IDENTIFIER                  = "do_not_return_data";
+	public static final String SELECTED_RECORDS_IDENTIFIER        = "selected_records";
+	public static final String DO_INGEST_ON_THE_FLY_IDENTIFIER    = "do_ingest_on_the_fly";
+	public static final String DO_EXPORT_ON_THE_FLY_IDENTIFIER    = "do_export_on_the_fly";
 	public static final String DO_VERSIONING_ON_RESULT_IDENTIFIER = "do_versioning_on_result";
 
 	/**
@@ -136,9 +140,16 @@ public class TasksResource {
 	 * @param responseContent a response message
 	 * @return the response
 	 */
-	private static Response buildResponse(final String responseContent) {
+	private static Response buildResponse(final String responseContent, final MediaType mediaType) {
 
-		return Response.ok(responseContent).build();
+		final Response.ResponseBuilder responseBuilder = Response.ok(responseContent);
+
+		if (mediaType != null) {
+
+			responseBuilder.type(mediaType);
+		}
+
+		return responseBuilder.build();
 	}
 
 	/**
@@ -159,7 +170,7 @@ public class TasksResource {
 	@Timed
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public void executeTask(@ApiParam(value = "task execution request (as JSON)", required = true) final String jsonObjectString,
 			@Suspended final AsyncResponse asyncResponse)
 			throws IOException,
@@ -305,7 +316,7 @@ public class TasksResource {
 
 		final boolean doVersioningOnResult = getBooleanValue(TasksResource.DO_VERSIONING_ON_RESULT_IDENTIFIER, requestJSON, true);
 
-		if(!doVersioningOnResult) {
+		if (!doVersioningOnResult) {
 
 			TasksResource.LOG.debug("skip result versioning");
 		}
@@ -327,69 +338,202 @@ public class TasksResource {
 			return;
 		}
 
-		if (doNotReturnJsonToCaller) {
+		final boolean doExportOnTheFly = getBooleanValue(TasksResource.DO_EXPORT_ON_THE_FLY_IDENTIFIER, requestJSON, false);
+
+		// note: you can only do one of this, i.e., export result as xml or as json
+		if (doExportOnTheFly) {
+
+			LOG.debug("do export on-the-fly for task execution of task '{}'", task.getUuid());
+
+			final StreamingOutput stream = os -> {
+
+				try {
+
+					//final BufferedOutputStream bos = new BufferedOutputStream(os, 1024);
+
+					// collect input parameter for exporter
+
+					final DataModel outputDataModel = task.getOutputDataModel();
+
+					if (outputDataModel == null) {
+
+						final String message = "there is no output data model for this task";
+
+						TasksResource.LOG.error(message);
+
+						throw new DMPConverterException(message);
+					}
+
+					// record tag
+					final Optional<Configuration> optionalConfiguration = Optional.fromNullable(outputDataModel.getConfiguration());
+					final Optional<String> optionalRecordTag = DataModelUtil.determineRecordTag(optionalConfiguration);
+					final java.util.Optional<String> java8OptionalRecordTag = guavaOptionalToJava8Optional(optionalRecordTag);
+
+					// record class uri
+					final Optional<String> optionalRecordClassURI = DataModelUtil.determineRecordClassURI(outputDataModel);
+
+					// original data model type
+					final Optional<String> optionalOriginalDataModelType = DataModelUtil.determineOriginalDataModelType(outputDataModel,
+							optionalConfiguration);
+					final java.util.Optional<String> java8OptionalOriginalDataModelType = guavaOptionalToJava8Optional(optionalOriginalDataModelType);
+
+					final XMLExporter xmlExporter = new XMLExporter(java8OptionalRecordTag, optionalRecordClassURI.get(),
+							java.util.Optional.<String>empty(), java8OptionalOriginalDataModelType);
+
+					final Observable<Boolean> resultObservable = xmlExporter.generate(result, os);
+
+					resultObservable.subscribe(new Observer<Boolean>() {
+
+						@Override public void onCompleted() {
+
+							try {
+
+								//bos.flush();
+								os.flush();
+								//bos.close();
+								os.close();
+
+								//asyncResponse.resume(Response.ok(os, MediaType.APPLICATION_XML_TYPE).build());
+							} catch (final IOException e) {
+
+								asyncResponse.resume(e);
+							}
+
+							LOG.info("finished transforming GDM to XML");
+						}
+
+						@Override public void onError(final Throwable throwable) {
+
+							final String message = "couldn't process task (maybe XML export) successfully";
+
+							TasksResource.LOG.error(message, throwable);
+
+							try {
+
+								//bos.close();
+								os.close();
+
+								asyncResponse.resume(new DMPControllerException(message, throwable));
+							} catch (IOException e) {
+
+								final String message2 = "couldn't process task (maybe XML export) successfully";
+
+								TasksResource.LOG.error(message2, e);
+
+								asyncResponse.resume(new DMPControllerException(message, throwable));
+							}
+						}
+
+						@Override public void onNext(final Boolean result) {
+
+							// nothing to do
+
+							System.out.println("result = " + result);
+						}
+					});
+				} catch (final XMLStreamException | DMPConverterException e) {
+
+					final String message = "couldn't process task (maybe XML export) successfully";
+
+					TasksResource.LOG.error(message, e);
+
+					asyncResponse.resume(new DMPControllerException(message, e));
+				}
+			};
+
+			//asyncResponse.resume(Response.ok(stream, MediaType.APPLICATION_XML_TYPE).build());
 
 			result.subscribe(new Observer<JsonNode>() {
 
 				@Override public void onCompleted() {
 
-					TasksResource.LOG.debug("processed task successfully, don't return data to caller");
+					TasksResource.LOG.debug("processed task successfully, return data to caller");
 
-					asyncResponse.resume(Response.noContent().build());
+					asyncResponse.resume(Response.ok(stream, MediaType.APPLICATION_XML_TYPE).build());
 				}
 
 				@Override public void onError(final Throwable e) {
 
-					final String message = "couldn't process task successfully";
+					final String message = "couldn't process task (maybe XML export) successfully";
 
-					TasksResource.LOG.error(message);
+					TasksResource.LOG.error(message, e);
+
+					asyncResponse.resume(new DMPControllerException(message, e));
+				}
+
+				@Override public void onNext(JsonNode jsonNode) {
+
+					// nothing to do here
+
+					System.out.println("result = " + jsonNode);
+				}
+			});
+		} else {
+
+			if (doNotReturnJsonToCaller) {
+
+				result.subscribe(new Observer<JsonNode>() {
+
+					@Override public void onCompleted() {
+
+						TasksResource.LOG.debug("processed task successfully, don't return data to caller");
+
+						asyncResponse.resume(Response.noContent().build());
+					}
+
+					@Override public void onError(final Throwable e) {
+
+						final String message = "couldn't process task successfully";
+
+						TasksResource.LOG.error(message, e);
+
+						asyncResponse.resume(new DMPControllerException(message, e));
+					}
+
+					@Override public void onNext(final JsonNode jsonNode) {
+
+						// nothing to do here
+					}
+				});
+
+				return;
+			}
+
+			// transform model json to fe friendly json
+			final ArrayNode feFriendlyJSON = objectMapper.createArrayNode();
+
+			result.subscribe(new Observer<JsonNode>() {
+
+				@Override public void onCompleted() {
+
+					final String resultString;
+					try {
+						resultString = objectMapper.writeValueAsString(feFriendlyJSON);
+
+						TasksResource.LOG.debug("processed task successfully, return data to caller");
+
+						asyncResponse.resume(buildResponse(resultString, MediaType.APPLICATION_JSON_TYPE));
+					} catch (JsonProcessingException e) {
+
+						asyncResponse.resume(e);
+					}
+				}
+
+				@Override public void onError(final Throwable e) {
+
+					final String message = "couldn't deserialize result JSON from string";
+
+					TasksResource.LOG.error(message, e);
 
 					asyncResponse.resume(new DMPControllerException(message, e));
 				}
 
 				@Override public void onNext(final JsonNode jsonNode) {
 
-					// nothing to do here
+					feFriendlyJSON.add(transformModelJSONtoFEFriendlyJSON(jsonNode));
 				}
 			});
-
-			return;
 		}
-
-		// transform model json to fe friendly json
-		final ArrayNode feFriendlyJSON = objectMapper.createArrayNode();
-
-		result.subscribe(new Observer<JsonNode>() {
-
-			@Override public void onCompleted() {
-
-				final String resultString;
-				try {
-					resultString = objectMapper.writeValueAsString(feFriendlyJSON);
-
-					TasksResource.LOG.debug("processed task successfully, return data to caller");
-
-					asyncResponse.resume(buildResponse(resultString));
-				} catch (JsonProcessingException e) {
-
-					asyncResponse.resume(e);
-				}
-			}
-
-			@Override public void onError(final Throwable e) {
-
-				final String message = "couldn't deserialize result JSON from string";
-
-				TasksResource.LOG.error(message);
-
-				asyncResponse.resume(new DMPControllerException(message, e));
-			}
-
-			@Override public void onNext(final JsonNode jsonNode) {
-
-				feFriendlyJSON.add(transformModelJSONtoFEFriendlyJSON(jsonNode));
-			}
-		});
 	}
 
 	/**
@@ -524,6 +668,16 @@ public class TasksResource {
 		}
 
 		return optionalValue;
+	}
+
+	private java.util.Optional<String> guavaOptionalToJava8Optional(final Optional<String> optionalString) {
+
+		if (optionalString.isPresent()) {
+
+			return java.util.Optional.of(optionalString.get());
+		}
+
+		return java.util.Optional.empty();
 	}
 
 }

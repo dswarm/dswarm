@@ -1,0 +1,528 @@
+package org.dswarm.converter.export;
+
+import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.base.Charsets;
+import com.hp.hpl.jena.vocabulary.RDF;
+import org.codehaus.stax2.XMLOutputFactory2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import rx.Observable;
+import rx.Observer;
+import rx.Subscriber;
+
+import org.dswarm.common.DMPStatics;
+import org.dswarm.common.model.Attribute;
+import org.dswarm.common.model.AttributePath;
+import org.dswarm.common.model.util.AttributePathUtil;
+import org.dswarm.common.web.URI;
+import org.dswarm.common.xml.utils.XMLStreamWriterUtils;
+import org.dswarm.converter.DMPConverterError;
+import org.dswarm.converter.DMPConverterException;
+
+/**
+ * @author tgaengler
+ */
+public class XMLExporter {
+
+	private static final Logger LOG = LoggerFactory.getLogger(XMLExporter.class);
+
+	/**
+	 * TODO: shall we produce XML 1.0 or XML 1.1?
+	 */
+	private static final String XML_VERSION = "1.0";
+	private static final XMLOutputFactory2 xmlOutputFactory;
+
+	static {
+
+		System.setProperty("javax.xml.stream.XMLOutputFactory", "com.fasterxml.aalto.stax.OutputFactoryImpl");
+
+		xmlOutputFactory = (XMLOutputFactory2) XMLOutputFactory.newFactory();
+		xmlOutputFactory.configureForSpeed();
+	}
+
+	private final Map<String, URI>    predicates            = new HashMap<>();
+	private final Map<String, String> namespacesPrefixesMap = new HashMap<>();
+	private final Map<String, String> nameMap               = new HashMap<>();
+
+	private boolean isElementOpen = false;
+
+	private final URI                     recordClassURI;
+	private final URI                     recordTagURI;
+	private final Optional<AttributePath> optionalRootAttributePath;
+	private final boolean                 originalDataTypeIsXML;
+
+	public XMLExporter(final Optional<String> optionalRecordTagArg, final String recordClassUriArg,
+			final Optional<String> optionalRootAttributePathArg, final Optional<String> optionalOriginalDataType) {
+
+		recordClassURI = new URI(recordClassUriArg);
+
+		if (optionalRecordTagArg.isPresent()) {
+
+			recordTagURI = new URI(optionalRecordTagArg.get());
+		} else {
+
+			// record class URI as fall back
+
+			recordTagURI = new URI(recordClassUriArg);
+		}
+
+		if (optionalRootAttributePathArg.isPresent()) {
+
+			final String rootAttributePathString = optionalRootAttributePathArg.get();
+			final AttributePath rootAttributePath = AttributePathUtil.parseAttributePathString(rootAttributePathString);
+
+			optionalRootAttributePath = Optional.ofNullable(rootAttributePath);
+		} else {
+
+			optionalRootAttributePath = Optional.empty();
+		}
+
+		originalDataTypeIsXML = optionalOriginalDataType.isPresent() && DMPStatics.XML_DATA_TYPE.equals(optionalOriginalDataType.get());
+	}
+
+	public Observable<Boolean> generate(final Observable<JsonNode> recordGDM, final OutputStream outputStream) throws XMLStreamException {
+
+		final XMLStreamWriter writer = xmlOutputFactory.createXMLStreamWriter(outputStream);
+
+		writer.writeStartDocument(Charsets.UTF_8.toString(), XML_VERSION);
+
+		// TODO: how to determine, whether the result has more than one record via stream processing? - ReplaySubject?
+		final Observable<Boolean> isEmptyObservable = recordGDM.skip(1).isEmpty();
+
+		// process records to XML
+
+		final XMLRelationshipHandler relationshipHandler;
+
+		if (originalDataTypeIsXML) {
+
+			relationshipHandler = new CBDRelationshipXMLDataModelHandler(writer);
+		} else {
+
+			relationshipHandler = new CBDRelationshipHandler(writer);
+		}
+
+		final CBDNodeHandler connectRelsAndNodeHandler = new CBDNodeHandler(relationshipHandler);
+		final XMLNodeHandler startNodeHandler = new CBDStartNodeHandler(connectRelsAndNodeHandler);
+
+		final XMLExportStarterOperator operator = new XMLExportStarterOperator(writer, recordGDM, startNodeHandler);
+
+		return isEmptyObservable.lift(operator);
+	}
+
+	/**
+	 * same method as in PropertyGraphXMLReader
+	 *
+	 * @param writer
+	 * @throws XMLStreamException
+	 */
+	private void setDefaultNamespace(final XMLStreamWriter writer) throws XMLStreamException {
+
+		// TODO: shall we cut the last character?
+
+		final String defaultNameSpace;
+
+		if (recordTagURI.hasNamespaceURI()) {
+
+			defaultNameSpace = XMLStreamWriterUtils.determineBaseURI(recordTagURI);
+		} else {
+
+			defaultNameSpace = XMLStreamWriterUtils.determineBaseURI(recordClassURI);
+		}
+
+		writer.setDefaultNamespace(defaultNameSpace);
+	}
+
+	/**
+	 * same method as in PropertyGraphXMLReader
+	 *
+	 * @param uri
+	 * @param writer
+	 * @return
+	 * @throws XMLStreamException
+	 */
+	private URI determineAndWriteXMLElementAndNamespace(final URI uri, final XMLStreamWriter writer) throws XMLStreamException {
+
+		final String prefix;
+		final String namespace;
+		final String finalURIString;
+		final boolean namespaceAlreadySet;
+
+		if (uri.hasNamespaceURI()) {
+
+			namespace = XMLStreamWriterUtils.determineBaseURI(uri);
+			namespaceAlreadySet = namespacesPrefixesMap.containsKey(namespace);
+			prefix = XMLStreamWriterUtils.getPrefix(namespace, namespacesPrefixesMap);
+
+			finalURIString = uri.getNamespaceURI() + uri.getLocalName();
+		} else {
+
+			namespace = XMLStreamWriterUtils.determineBaseURI(recordClassURI);
+			namespaceAlreadySet = namespacesPrefixesMap.containsKey(namespace);
+			prefix = XMLStreamWriterUtils.getPrefix(namespace, namespacesPrefixesMap);
+
+			finalURIString = recordClassURI.getNamespaceURI() + uri.getLocalName();
+		}
+
+		final URI finalURI = new URI(finalURIString);
+
+		// open record XML tag
+		XMLStreamWriterUtils.writeXMLElementTag(writer, finalURI, namespacesPrefixesMap, nameMap, isElementOpen);
+		isElementOpen = true;
+
+		if (!namespaceAlreadySet) {
+
+			writer.writeNamespace(prefix, namespace);
+		}
+
+		return finalURI;
+	}
+
+	private class XMLExportStarterOperator implements Observable.Operator<Boolean, Boolean> {
+
+		private final XMLStreamWriter      writer;
+		private final Observable<JsonNode> recordGDM;
+		private       boolean              hasAtLeastTwoRecords;
+		private final XMLNodeHandler       startNodeHandler;
+
+		private XMLExportStarterOperator(final XMLStreamWriter writerArg, final Observable<JsonNode> recordGDMArg,
+				final XMLNodeHandler startNodeHandlerArg) {
+
+			writer = writerArg;
+			recordGDM = recordGDMArg;
+			startNodeHandler = startNodeHandlerArg;
+		}
+
+		@Override public Subscriber<? super Boolean> call(final Subscriber<? super Boolean> subscriber) {
+
+			return new Subscriber<Boolean>() {
+
+				@Override public void onCompleted() {
+
+					subscriber.onCompleted();
+				}
+
+				@Override public void onError(final Throwable throwable) {
+
+					subscriber.onError(throwable);
+				}
+
+				@Override public void onNext(final Boolean hasLessThenTwoRecordsArg) {
+
+					hasAtLeastTwoRecords = !hasLessThenTwoRecordsArg;
+
+					try {
+
+						boolean defaultNamespaceWritten = false;
+
+						if (optionalRootAttributePath.isPresent()) {
+
+							// open root attribute path tags
+
+							final AttributePath rootAttributePath = optionalRootAttributePath.get();
+
+							for (final Attribute attribute : rootAttributePath.getAttributes()) {
+
+								final URI attributeURI = new URI(attribute.getUri());
+
+								if (!defaultNamespaceWritten && attributeURI.hasNamespaceURI()) {
+
+									// set default namespace
+
+									writer.setDefaultNamespace(attributeURI.getNamespaceURI());
+
+									defaultNamespaceWritten = true;
+								}
+
+								XMLStreamWriterUtils.writeXMLElementTag(writer, attributeURI, namespacesPrefixesMap, nameMap, isElementOpen);
+								isElementOpen = true;
+							}
+						} else if (hasAtLeastTwoRecords) {
+
+							// write default root
+							final URI defaultRootURI = new URI(recordTagURI + "s");
+
+							determineAndWriteXMLElementAndNamespace(defaultRootURI, writer);
+						}
+
+						if (!defaultNamespaceWritten && recordTagURI.hasNamespaceURI()) {
+
+							// set default namespace
+							setDefaultNamespace(writer);
+						}
+
+						// or do we need to wrap this in a ReplaySubject?
+						recordGDM.subscribe(new Observer<JsonNode>() {
+
+							@Override public void onCompleted() {
+
+								try {
+
+									// close root nodes
+
+									LOG.debug("finished record to XML transformation");
+
+									if (optionalRootAttributePath.isPresent()) {
+
+										// close root attribute path tags
+
+										for (int i = 0; i < optionalRootAttributePath.get().getAttributes().size(); i++) {
+
+											writer.writeEndElement();
+										}
+									} else if (hasAtLeastTwoRecords) {
+
+										// close default root
+										writer.writeEndElement();
+									}
+
+									// close document
+									writer.writeEndDocument();
+
+									subscriber.onNext(Boolean.TRUE);
+								} catch (final XMLStreamException e) {
+
+									final String message = "couldn't finish xml export successfully";
+
+									final DMPConverterException converterException = new DMPConverterException(message, e);
+
+									subscriber.onNext(Boolean.FALSE);
+
+									throw DMPConverterError.wrap(converterException);
+								}
+							}
+
+							@Override public void onError(final Throwable e) {
+
+								final String message = "couldn't finish xml export successfully";
+
+								final DMPConverterException converterException = new DMPConverterException(message, e);
+
+								throw DMPConverterError.wrap(converterException);
+							}
+
+							@Override public void onNext(final JsonNode jsonNode) {
+
+								try {
+
+									startNodeHandler.handleNode(jsonNode);
+								} catch (final DMPConverterException e) {
+
+									throw DMPConverterError.wrap(e);
+								} catch (final XMLStreamException e) {
+
+									final String message = "couldn't finish xml export successfully";
+
+									final DMPConverterException converterException = new DMPConverterException(message, e);
+
+									throw DMPConverterError.wrap(converterException);
+								}
+							}
+						});
+					} catch (final XMLStreamException e) {
+
+						final String message = "couldn't finish xml export successfully";
+
+						final DMPConverterException converterException = new DMPConverterException(message, e);
+
+						subscriber.onNext(Boolean.FALSE);
+
+						throw DMPConverterError.wrap(converterException);
+					}
+				}
+			};
+		}
+	}
+
+	private class CBDNodeHandler implements XMLNodeHandler {
+
+		private final XMLRelationshipHandler relationshipHandler;
+
+		protected CBDNodeHandler(final XMLRelationshipHandler relationshipHandlerArg) {
+
+			relationshipHandler = relationshipHandlerArg;
+			((CBDRelationshipHandler) relationshipHandler).setNodeHandler(this);
+		}
+
+		@Override
+		public void handleNode(final JsonNode node) throws DMPConverterException, XMLStreamException {
+
+			// record body is a JSON array, where each attribute has its own JSON object, i.e., each key/value pair is a single JSON object
+			if (node.isArray()) {
+
+				final Iterator<JsonNode> values = node.elements();
+
+				while (values.hasNext()) {
+
+					final JsonNode value = values.next();
+
+					if (value.isObject()) {
+
+						final Iterator<Map.Entry<String, JsonNode>> fields = value.fields();
+
+						while (fields.hasNext()) {
+
+							final Map.Entry<String, JsonNode> field = fields.next();
+							final String predicateString = field.getKey();
+							final JsonNode objectNode = field.getValue();
+
+							final URI predicateURI = getPredicate(predicateString);
+
+							relationshipHandler.handleRelationship(predicateURI, objectNode);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private class CBDStartNodeHandler implements XMLNodeHandler {
+
+		private final XMLNodeHandler recordHandler;
+
+		protected CBDStartNodeHandler(final XMLNodeHandler recordHandlerArg) {
+
+			recordHandler = recordHandlerArg;
+		}
+
+		@Override
+		public void handleNode(final JsonNode node) throws DMPConverterException, XMLStreamException {
+
+			// GDMModel overall node is a JSON array
+			if (node.isArray()) {
+
+				final Iterator<JsonNode> records = node.elements();
+
+				while (records.hasNext()) {
+
+					final JsonNode record = records.next();
+
+					if (record.isObject()) {
+
+						final Map.Entry<String, JsonNode> recordEntry = record.fields().next();
+						// TODO: where shall we write the record URI (?) -> xml:id ?
+						final String recordURIString = recordEntry.getKey();
+						final JsonNode recordBody = recordEntry.getValue();
+
+						// call usual NodeHandler with body
+						recordHandler.handleNode(recordBody);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Default handling: don't export RDF types and write literal objects as XML elements.
+	 */
+	protected class CBDRelationshipHandler implements XMLRelationshipHandler {
+
+		protected final XMLStreamWriter writer;
+		private         XMLNodeHandler  nodeHandler;
+
+		protected CBDRelationshipHandler(final XMLStreamWriter writerArg) {
+
+			writer = writerArg;
+		}
+
+		protected void setNodeHandler(final XMLNodeHandler nodeHandlerArg) {
+
+			nodeHandler = nodeHandlerArg;
+		}
+
+		@Override
+		public void handleRelationship(final URI predicateURI, final JsonNode node) throws DMPConverterException, XMLStreamException {
+
+			// object => XML Element value or XML attribute value or further recursion
+
+			if (!node.isContainerNode()) {
+
+				// optionally, write literal value
+				writeKeyValue(predicateURI, node);
+			} else {
+
+				// open tag
+				XMLStreamWriterUtils.writeXMLElementTag(writer, predicateURI, namespacesPrefixesMap, nameMap, isElementOpen);
+				isElementOpen = true;
+
+				// continue traversal with object node
+				nodeHandler.handleNode(node);
+
+				// close
+				writer.writeEndElement();
+				isElementOpen = false;
+			}
+		}
+
+		protected void writeKeyValue(final URI predicateURI, final JsonNode objectGDMNode) throws XMLStreamException {
+
+			// default handling: don't export RDF types and write literal objects as XML elements
+			if (!RDF.type.getURI().equals(predicateURI.toString())) {
+
+				// open tag
+				XMLStreamWriterUtils.writeXMLElementTag(writer, predicateURI, namespacesPrefixesMap, nameMap, isElementOpen);
+
+				writer.writeCData(objectGDMNode.asText());
+
+				// close
+				writer.writeEndElement();
+				isElementOpen = false;
+			} else {
+
+				// TODO: ???
+			}
+		}
+	}
+
+	/**
+	 * Treat non-rdf:value/non-rdf:type statements with literal objects as XML attributes and rdf:value statements with literal
+	 * objects as XML elements.
+	 */
+	private class CBDRelationshipXMLDataModelHandler extends CBDRelationshipHandler {
+
+		protected CBDRelationshipXMLDataModelHandler(final XMLStreamWriter writerArg) {
+
+			super(writerArg);
+		}
+
+		@Override
+		protected void writeKeyValue(final URI predicateURI, final JsonNode objectGDMNode) throws XMLStreamException {
+
+			if (!(RDF.type.getURI().equals(predicateURI.toString()) || RDF.value.getURI().equals(predicateURI.toString()))) {
+
+				// predicate is an XML Attribute => write XML Attribute to this XML Element
+
+				XMLStreamWriterUtils
+						.writeXMLAttribute(writer, predicateURI, objectGDMNode.asText(), namespacesPrefixesMap, nameMap);
+			} else if (RDF.value.getURI().equals(predicateURI.toString())) {
+
+				// predicate is an XML Element
+
+				// TODO: what should we do with objects that are resources?
+				writer.writeCData(objectGDMNode.asText());
+			} else {
+
+				// ??? - log these occurrences?
+			}
+		}
+	}
+
+	private URI getPredicate(final String predicateString) {
+
+		if (!predicates.containsKey(predicateString)) {
+
+			predicates.put(predicateString, new URI(predicateString));
+		}
+
+		return predicates.get(predicateString);
+	}
+}

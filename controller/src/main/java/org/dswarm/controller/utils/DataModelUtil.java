@@ -33,24 +33,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
 
+import org.dswarm.common.DMPStatics;
 import org.dswarm.common.types.Tuple;
 import org.dswarm.controller.DMPControllerException;
-import org.dswarm.controller.eventbus.CSVConverterEvent;
 import org.dswarm.controller.eventbus.CSVConverterEventRecorder;
 import org.dswarm.controller.eventbus.SchemaEvent;
 import org.dswarm.controller.eventbus.SchemaEventRecorder;
-import org.dswarm.controller.eventbus.XMLConverterEvent;
 import org.dswarm.controller.eventbus.XMLConverterEventRecorder;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.Model;
-import org.dswarm.persistence.model.proxy.RetrievalType;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
-import org.dswarm.persistence.model.resource.UpdateFormat;
-import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
+import org.dswarm.persistence.model.resource.utils.DataModelUtils;
+import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.model.schema.utils.ClaszUtils;
 import org.dswarm.persistence.service.InternalModelService;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.service.resource.DataModelService;
@@ -420,6 +419,119 @@ public class DataModelUtil {
 		return modelObservable.cast(org.dswarm.persistence.model.internal.gdm.GDMModel.class)
 				.map(gdm -> Tuple.tuple(gdm.getRecordURIs().iterator().next(), (Model) gdm))
 				.map(this::transformDataNode);
+	}
+
+	public static Optional<String> determineOriginalDataModelType(final DataModel dataModel, final Optional<Configuration> optionalConfiguration) {
+
+		// original data model type
+		final Optional<String> optionalOriginalDataModelType;
+
+		switch (dataModel.getUuid()) {
+
+			case DataModelUtils.MABXML_DATA_MODEL_UUID:
+			case DataModelUtils.MARC21_DATA_MODEL_UUID:
+			case DataModelUtils.PNX_DATA_MODEL_UUID:
+			case DataModelUtils.OAI_PMH_DC_ELEMENTS_DATA_MODEL_UUID:
+			case DataModelUtils.OAI_PMH_DC_TERMS_DATA_MODEL_UUID:
+			case DataModelUtils.OAI_PMH_MARCXML_DATA_MODEL_UUID:
+
+				optionalOriginalDataModelType = Optional.of(DMPStatics.XML_DATA_TYPE);
+
+				break;
+			default:
+
+				if (optionalConfiguration.isPresent()) {
+
+					final Configuration configuration = optionalConfiguration.get();
+
+					final Optional<JsonNode> optionalStorageTypeNode = Optional
+							.fromNullable(configuration.getParameter(ConfigurationStatics.STORAGE_TYPE));
+
+					if (optionalStorageTypeNode.isPresent()) {
+
+						final JsonNode storageTypeNode = optionalStorageTypeNode.get();
+
+						final Optional<String> optionalStorageType = Optional.fromNullable(storageTypeNode.asText());
+
+						if (optionalStorageType.isPresent()) {
+
+							final String storageType = optionalStorageType.get();
+
+							switch (storageType) {
+
+								case ConfigurationStatics.XML_STORAGE_TYPE:
+								case ConfigurationStatics.PNX_STORAGE_TYPE:
+								case ConfigurationStatics.MABXML_STORAGE_TYPE:
+								case ConfigurationStatics.MARCXML_STORAGE_TYPE:
+								case ConfigurationStatics.OAI_PMH_DC_ELEMENTS_STORAGE_TYPE:
+								case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:
+								case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
+
+									optionalOriginalDataModelType = Optional.of(DMPStatics.XML_DATA_TYPE);
+
+									break;
+								default:
+
+									optionalOriginalDataModelType = Optional.absent();
+							}
+						} else {
+
+							optionalOriginalDataModelType = Optional.absent();
+						}
+					} else {
+
+						optionalOriginalDataModelType = Optional.absent();
+					}
+				} else {
+
+					optionalOriginalDataModelType = Optional.absent();
+				}
+		}
+
+		return optionalOriginalDataModelType;
+	}
+
+	public static Optional<String> determineRecordTag(final Optional<Configuration> optionalConfiguration) {
+
+		if (!optionalConfiguration.isPresent()) {
+
+			return Optional.absent();
+		}
+
+		final Optional<JsonNode> optionalRecordTagNode = Optional.fromNullable(
+				optionalConfiguration.get().getParameter(ConfigurationStatics.RECORD_TAG));
+
+		if (!optionalRecordTagNode.isPresent()) {
+
+			return Optional.absent();
+		}
+
+		return Optional.of(optionalRecordTagNode.get().asText());
+	}
+
+	public static Optional<String> determineRecordClassURI(final DataModel dataModel) {
+
+		final Optional<Schema> optionalSchema = Optional.fromNullable(dataModel.getSchema());
+
+		if (!optionalSchema.isPresent()) {
+
+			Optional.absent();
+		}
+
+		final Optional<Clasz> optionalRecordClass = Optional.fromNullable(optionalSchema.get().getRecordClass());
+
+		final String recordClassURI;
+
+		if (optionalRecordClass.isPresent()) {
+
+			recordClassURI = optionalRecordClass.get().getUri();
+		} else {
+
+			// fallback: bibo:Document as default record class
+			recordClassURI = ClaszUtils.BIBO_DOCUMENT_URI;
+		}
+
+		return Optional.of(recordClassURI);
 	}
 
 	private Tuple<String, JsonNode> transformDataNode(final Tuple<String, Model> input) {
