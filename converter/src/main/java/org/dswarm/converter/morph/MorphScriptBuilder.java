@@ -57,6 +57,8 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 	private static final String METAMORPH_FUNCTION_BLACKLIST = "blacklist";
 
 	private static final String METAMORPH_FUNCTION_LOOKUP = "lookup";
+	
+	private static final String METAMORPH_FUNCTION_REGEXLOOKUP = "regexlookup";
 
 	private static final String METAMORPH_FUNCTION_SETREPLACE = "setreplace";
 
@@ -81,7 +83,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 	private static final String OCCURRENCE_VARIABLE_POSTFIX = ".occurrence";
 
 	private static final Set<String> LOOKUP_FUNCTIONS = new HashSet<>(Arrays.asList(
-			new String[] { METAMORPH_FUNCTION_LOOKUP, METAMORPH_FUNCTION_SETREPLACE, METAMORPH_FUNCTION_BLACKLIST, METAMORPH_FUNCTION_WHITELIST }));
+			new String[] { METAMORPH_FUNCTION_LOOKUP, METAMORPH_FUNCTION_SETREPLACE, METAMORPH_FUNCTION_BLACKLIST, METAMORPH_FUNCTION_WHITELIST, METAMORPH_FUNCTION_REGEXLOOKUP }));
 
 	private static final String LOOKUP_MAP_DEFINITION = "lookupString";
 
@@ -240,6 +242,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 									break;
 
 								case METAMORPH_FUNCTION_LOOKUP:
+								case METAMORPH_FUNCTION_REGEXLOOKUP:
 								case METAMORPH_FUNCTION_SETREPLACE:
 
 									try {
