@@ -382,6 +382,9 @@ public class TasksResource {
 							java.util.Optional.<String>empty(), java8OptionalOriginalDataModelType);
 
 					final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+					LOG.debug("trigger XML export");
+
 					final Observable<JsonNode> resultObservable = xmlExporter.generate(result, bos);
 
 					resultObservable.subscribe(new Observer<JsonNode>() {

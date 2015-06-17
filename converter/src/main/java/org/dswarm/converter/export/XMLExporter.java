@@ -111,6 +111,8 @@ public class XMLExporter {
 
 	public Observable<JsonNode> generate(final Observable<JsonNode> recordGDM, final OutputStream outputStream) throws XMLStreamException {
 
+		LOG.debug("start generating XML out of GDM");
+
 		final XMLStreamWriter writer = xmlOutputFactory.createXMLStreamWriter(outputStream);
 
 		writer.writeStartDocument(Charsets.UTF_8.toString(), XML_VERSION);
@@ -273,6 +275,8 @@ public class XMLExporter {
 					try {
 
 						if (seenFirstRecord.compareAndSet(false, true)) {
+
+							LOG.debug("received first record for XML export");
 
 							optionalFirstSingleRecordGDM = Optional.of(singleRecordGDM);
 
