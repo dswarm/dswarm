@@ -16,6 +16,7 @@
 package org.dswarm.controller.eventbus;
 
 import java.util.Collection;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.ws.rs.core.Response;
 
@@ -119,7 +120,7 @@ public class CSVConverterEventRecorder {
 			final String recordClassURI = dataResourceBaseSchemaURI + RECORD_TYPE_POSTFIX;
 			final ResourceNode recordClassNode = new ResourceNode(recordClassURI);
 
-			//final AtomicInteger counter = new AtomicInteger(0);
+			final AtomicInteger counter = new AtomicInteger(0);
 
 			//LOG.debug("CSV triples = '{}'", result.size());
 
@@ -155,6 +156,8 @@ public class CSVConverterEventRecorder {
 						final Model model = new Model();
 						model.addResource(finalResource);
 
+						counter.incrementAndGet();
+
 						//final int current2 = counter.get();
 						//LOG.debug("CSV resource number '{}' with '{}' and '{}' statement", current2, finalResource.getUri(),
 						//		finalResource.size());
@@ -162,7 +165,8 @@ public class CSVConverterEventRecorder {
 						return new GDMModel(model, null, recordClassURI);
 					});
 
-			models.doOnCompleted(() -> LOG.debug("transformed CSV data resource to GDM for data model '{}'", dataModel.getUuid()));
+			models.doOnCompleted(() -> LOG
+					.debug("transformed CSV data resource to GDM for data model '{}' - transformed '' records", dataModel.getUuid(), counter.get()));
 
 			return models;
 		}
