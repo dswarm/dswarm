@@ -200,6 +200,8 @@ public class TransformationFlow {
 
 		final Context morphContext = morphTimer.time();
 
+		LOG.debug("start processing some records in transformation engine");
+
 		// final String recordDummy = "record";
 
 		final StreamTimer inputTimer = timerBasedFactory.forStream("stream-input");
@@ -244,6 +246,11 @@ public class TransformationFlow {
 		final Observable<org.dswarm.persistence.model.internal.Model> model = writer.getObservable().filter(gdmModel -> {
 
 			counter.incrementAndGet();
+
+			if(counter.get() == 1) {
+
+				LOG.debug("process first record in transformation engine");
+			}
 
 			//final int current = counter.incrementAndGet();
 
