@@ -242,12 +242,13 @@ public class TransformationFlow {
 				optionalDataModelSchemaRecordClassURI.orElse(ClaszUtils.BIBO_DOCUMENT_URI);
 
 		final AtomicInteger counter = new AtomicInteger(0);
+		final AtomicInteger counter2 = new AtomicInteger(0);
 
 		final Observable<org.dswarm.persistence.model.internal.Model> model = writer.getObservable().filter(gdmModel -> {
 
 			if (counter.incrementAndGet() == 1) {
 
-				LOG.debug("process first record in transformation engine");
+				LOG.debug("start processing first record in transformation engine");
 			}
 
 			//final int current = counter.incrementAndGet();
@@ -302,9 +303,14 @@ public class TransformationFlow {
 				finalGDMModel = gdmModel;
 			}
 
+			if (counter2.incrementAndGet() == 1) {
+
+				LOG.debug("processed first record in transformation engine");
+			}
+
 			return finalGDMModel;
 		}).cast(org.dswarm.persistence.model.internal.Model.class).doOnCompleted(
-				() -> LOG.debug("processed '{}' records in transformation engine", counter.get()));
+				() -> LOG.debug("processed '{}' records (from '{}') in transformation engine", counter2.get(), counter.get()));
 
 		final Observable<JsonNode> resultObservable;
 
@@ -365,7 +371,18 @@ public class TransformationFlow {
 						.doOnCompleted(morphContext::stop)
 						.subscribe(subscriber);
 
-				tuples.subscribeOn(Schedulers.newThread()).subscribe(opener::process, writer::propagateError, opener::closeStream);
+				final AtomicInteger counter = new AtomicInteger(0);
+
+				final Observable<Tuple<String, JsonNode>> tupleObservable = tuples.subscribeOn(Schedulers.newThread());
+
+				tupleObservable.doOnNext(tuple -> {
+
+					if (counter.incrementAndGet() == 1) {
+
+						LOG.debug("received first record in transformation engine");
+					}
+				}).doOnCompleted(() -> LOG.debug("received '{}' records in transformation engine", counter.get()))
+						.subscribe(opener::process, writer::propagateError, opener::closeStream);
 			}
 		});
 	}
