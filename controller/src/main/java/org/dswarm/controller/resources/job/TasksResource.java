@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -349,7 +350,7 @@ public class TasksResource {
 
 				try {
 
-					//final BufferedOutputStream bos = new BufferedOutputStream(os, 1024);
+					final BufferedOutputStream bos = new BufferedOutputStream(os, 1024);
 
 					// collect input parameter for exporter
 
@@ -380,23 +381,25 @@ public class TasksResource {
 					final XMLExporter xmlExporter = new XMLExporter(java8OptionalRecordTag, optionalRecordClassURI.get(),
 							java.util.Optional.<String>empty(), java8OptionalOriginalDataModelType);
 
-					final Observable<Boolean> resultObservable = xmlExporter.generate(result, os);
+					final CountDownLatch countDownLatch = new CountDownLatch(1);
+					final Observable<JsonNode> resultObservable = xmlExporter.generate(result, bos);
 
-					resultObservable.subscribe(new Observer<Boolean>() {
+					resultObservable.subscribe(new Observer<JsonNode>() {
 
 						@Override public void onCompleted() {
 
 							try {
 
-								//bos.flush();
+								bos.flush();
 								os.flush();
-								//bos.close();
+								bos.close();
 								os.close();
-
-								//asyncResponse.resume(Response.ok(os, MediaType.APPLICATION_XML_TYPE).build());
 							} catch (final IOException e) {
 
 								asyncResponse.resume(e);
+							} finally {
+
+								countDownLatch.countDown();
 							}
 
 							LOG.info("finished transforming GDM to XML");
@@ -410,7 +413,7 @@ public class TasksResource {
 
 							try {
 
-								//bos.close();
+								bos.close();
 								os.close();
 
 								asyncResponse.resume(new DMPControllerException(message, throwable));
@@ -424,13 +427,22 @@ public class TasksResource {
 							}
 						}
 
-						@Override public void onNext(final Boolean result) {
+						@Override public void onNext(final JsonNode result) {
 
 							// nothing to do
-
-							System.out.println("result = " + result);
 						}
 					});
+
+					// just for count down latch, taken from http://christopher-batey.blogspot.de/2014/12/streaming-large-payloads-over-http-from.html
+					try {
+
+						countDownLatch.await();
+					} catch (InterruptedException e) {
+
+						LOG.warn("Current thread interrupted, resetting flag");
+
+						Thread.currentThread().interrupt();
+					}
 				} catch (final XMLStreamException | DMPConverterException e) {
 
 					final String message = "couldn't process task (maybe XML export) successfully";
@@ -441,33 +453,7 @@ public class TasksResource {
 				}
 			};
 
-			//asyncResponse.resume(Response.ok(stream, MediaType.APPLICATION_XML_TYPE).build());
-
-			result.subscribe(new Observer<JsonNode>() {
-
-				@Override public void onCompleted() {
-
-					TasksResource.LOG.debug("processed task successfully, return data to caller");
-
-					asyncResponse.resume(Response.ok(stream, MediaType.APPLICATION_XML_TYPE).build());
-				}
-
-				@Override public void onError(final Throwable e) {
-
-					final String message = "couldn't process task (maybe XML export) successfully";
-
-					TasksResource.LOG.error(message, e);
-
-					asyncResponse.resume(new DMPControllerException(message, e));
-				}
-
-				@Override public void onNext(JsonNode jsonNode) {
-
-					// nothing to do here
-
-					System.out.println("result = " + jsonNode);
-				}
-			});
+			asyncResponse.resume(Response.ok(stream, MediaType.APPLICATION_XML_TYPE).build());
 		} else {
 
 			if (doNotReturnJsonToCaller) {
@@ -585,10 +571,6 @@ public class TasksResource {
 	}
 
 	private JsonNode transformModelJSONtoFEFriendlyJSON(final JsonNode resultJSON) {
-		//
-		//		final ArrayNode feFriendlyJSON = objectMapper.createArrayNode();
-		//
-		//		for (final JsonNode entry : resultJSON) {
 
 		final Iterator<String> fieldNamesIter = resultJSON.fieldNames();
 
@@ -608,10 +590,6 @@ public class TasksResource {
 		final ObjectNode recordNode = objectMapper.createObjectNode();
 		recordNode.put(DMPPersistenceUtil.RECORD_ID, recordURI);
 		recordNode.set(DMPPersistenceUtil.RECORD_DATA, recordContentNode);
-
-		//			feFriendlyJSON.add(recordNode);
-		//		}
-		//		return feFriendlyJSON;
 
 		return recordNode;
 	}

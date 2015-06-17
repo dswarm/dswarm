@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Stack;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -17,7 +19,6 @@ import org.codehaus.stax2.XMLOutputFactory2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
-import rx.Observer;
 import rx.Subscriber;
 
 import org.dswarm.common.DMPStatics;
@@ -30,6 +31,8 @@ import org.dswarm.converter.DMPConverterError;
 import org.dswarm.converter.DMPConverterException;
 
 /**
+ * TODO: implement namespace resetting at level change, see DD-1041
+ *
  * @author tgaengler
  */
 public class XMLExporter {
@@ -53,6 +56,7 @@ public class XMLExporter {
 	private final Map<String, URI>    predicates            = new HashMap<>();
 	private final Map<String, String> namespacesPrefixesMap = new HashMap<>();
 	private final Map<String, String> nameMap               = new HashMap<>();
+	private final Stack<Map<String, String>> namespacesPrefixesMapStack = new Stack<>();
 
 	private boolean isElementOpen = false;
 
@@ -90,14 +94,14 @@ public class XMLExporter {
 		originalDataTypeIsXML = optionalOriginalDataType.isPresent() && DMPStatics.XML_DATA_TYPE.equals(optionalOriginalDataType.get());
 	}
 
-	public Observable<Boolean> generate(final Observable<JsonNode> recordGDM, final OutputStream outputStream) throws XMLStreamException {
+	public Observable<JsonNode> generate(final Observable<JsonNode> recordGDM, final OutputStream outputStream) throws XMLStreamException {
 
 		final XMLStreamWriter writer = xmlOutputFactory.createXMLStreamWriter(outputStream);
 
 		writer.writeStartDocument(Charsets.UTF_8.toString(), XML_VERSION);
 
 		// TODO: how to determine, whether the result has more than one record via stream processing? - ReplaySubject?
-		final Observable<Boolean> isEmptyObservable = recordGDM.skip(1).isEmpty();
+		//final Observable<Boolean> isEmptyObservable = recordGDM.skip(1).isEmpty();
 
 		// process records to XML
 
@@ -112,11 +116,11 @@ public class XMLExporter {
 		}
 
 		final CBDNodeHandler connectRelsAndNodeHandler = new CBDNodeHandler(relationshipHandler);
-		final XMLNodeHandler startNodeHandler = new CBDStartNodeHandler(connectRelsAndNodeHandler);
+		final XMLNodeHandler startNodeHandler = new CBDStartNodeHandler(connectRelsAndNodeHandler, writer);
 
-		final XMLExportStarterOperator operator = new XMLExportStarterOperator(writer, recordGDM, startNodeHandler);
+		final XMLExportOperator operator = new XMLExportOperator(writer, startNodeHandler);
 
-		return isEmptyObservable.lift(operator);
+		return recordGDM.lift(operator);
 	}
 
 	/**
@@ -187,28 +191,59 @@ public class XMLExporter {
 		return finalURI;
 	}
 
-	private class XMLExportStarterOperator implements Observable.Operator<Boolean, Boolean> {
+	private class XMLExportOperator implements Observable.Operator<JsonNode, JsonNode> {
 
-		private final XMLStreamWriter      writer;
-		private final Observable<JsonNode> recordGDM;
-		private       boolean              hasAtLeastTwoRecords;
-		private final XMLNodeHandler       startNodeHandler;
+		private final XMLStreamWriter writer;
+		private AtomicBoolean hasAtLeastTwoRecords = new AtomicBoolean();
+		private AtomicBoolean wroteFirstRecord     = new AtomicBoolean();
+		private final XMLNodeHandler     startNodeHandler;
+		private       Optional<JsonNode> optionalFirstSingleRecordGDM;
 
-		private XMLExportStarterOperator(final XMLStreamWriter writerArg, final Observable<JsonNode> recordGDMArg,
-				final XMLNodeHandler startNodeHandlerArg) {
+		private XMLExportOperator(final XMLStreamWriter writerArg, final XMLNodeHandler startNodeHandlerArg) {
 
 			writer = writerArg;
-			recordGDM = recordGDMArg;
 			startNodeHandler = startNodeHandlerArg;
 		}
 
-		@Override public Subscriber<? super Boolean> call(final Subscriber<? super Boolean> subscriber) {
+		@Override public Subscriber<? super JsonNode> call(final Subscriber<? super JsonNode> subscriber) {
 
-			return new Subscriber<Boolean>() {
+			final AtomicBoolean seenFirstRecord = new AtomicBoolean();
+
+			return new Subscriber<JsonNode>() {
 
 				@Override public void onCompleted() {
 
-					subscriber.onCompleted();
+					try {
+
+						if (!hasAtLeastTwoRecords.get() && seenFirstRecord.get() && !wroteFirstRecord.get()) {
+
+							// write first (and only) record, if no record was written before, i.e., the model consists only of one record
+
+							startXML();
+
+							startNodeHandler.handleNode(optionalFirstSingleRecordGDM.get());
+
+							wroteFirstRecord.compareAndSet(false, true);
+						}
+
+						if (wroteFirstRecord.get()) {
+
+							// write end only, if at least one record was written
+							endXML();
+						}
+
+						subscriber.onCompleted();
+					} catch (final DMPConverterException e) {
+
+						throw DMPConverterError.wrap(e);
+					} catch (final XMLStreamException e) {
+
+						final String message = "couldn't finish xml export successfully";
+
+						final DMPConverterException converterException = new DMPConverterException(message, e);
+
+						throw DMPConverterError.wrap(converterException);
+					}
 				}
 
 				@Override public void onError(final Throwable throwable) {
@@ -216,130 +251,133 @@ public class XMLExporter {
 					subscriber.onError(throwable);
 				}
 
-				@Override public void onNext(final Boolean hasLessThenTwoRecordsArg) {
-
-					hasAtLeastTwoRecords = !hasLessThenTwoRecordsArg;
+				@Override public void onNext(final JsonNode singleRecordGDM) {
 
 					try {
 
-						boolean defaultNamespaceWritten = false;
+						if (seenFirstRecord.compareAndSet(false, true)) {
 
-						if (optionalRootAttributePath.isPresent()) {
+							optionalFirstSingleRecordGDM = Optional.of(singleRecordGDM);
 
-							// open root attribute path tags
-
-							final AttributePath rootAttributePath = optionalRootAttributePath.get();
-
-							for (final Attribute attribute : rootAttributePath.getAttributes()) {
-
-								final URI attributeURI = new URI(attribute.getUri());
-
-								if (!defaultNamespaceWritten && attributeURI.hasNamespaceURI()) {
-
-									// set default namespace
-
-									writer.setDefaultNamespace(attributeURI.getNamespaceURI());
-
-									defaultNamespaceWritten = true;
-								}
-
-								XMLStreamWriterUtils.writeXMLElementTag(writer, attributeURI, namespacesPrefixesMap, nameMap, isElementOpen);
-								isElementOpen = true;
-							}
-						} else if (hasAtLeastTwoRecords) {
-
-							// write default root
-							final URI defaultRootURI = new URI(recordTagURI + "s");
-
-							determineAndWriteXMLElementAndNamespace(defaultRootURI, writer);
+							return;
 						}
 
-						if (!defaultNamespaceWritten && recordTagURI.hasNamespaceURI()) {
+						if (seenFirstRecord.get() && !wroteFirstRecord.get()) {
 
-							// set default namespace
-							setDefaultNamespace(writer);
+							hasAtLeastTwoRecords.compareAndSet(false, true);
+
+							startXML();
+
+							// write first record
+							startNodeHandler.handleNode(optionalFirstSingleRecordGDM.get());
+
+							wroteFirstRecord.compareAndSet(false, true);
 						}
 
-						// or do we need to wrap this in a ReplaySubject?
-						recordGDM.subscribe(new Observer<JsonNode>() {
+						startNodeHandler.handleNode(singleRecordGDM);
+					} catch (final DMPConverterException e) {
 
-							@Override public void onCompleted() {
-
-								try {
-
-									// close root nodes
-
-									LOG.debug("finished record to XML transformation");
-
-									if (optionalRootAttributePath.isPresent()) {
-
-										// close root attribute path tags
-
-										for (int i = 0; i < optionalRootAttributePath.get().getAttributes().size(); i++) {
-
-											writer.writeEndElement();
-										}
-									} else if (hasAtLeastTwoRecords) {
-
-										// close default root
-										writer.writeEndElement();
-									}
-
-									// close document
-									writer.writeEndDocument();
-
-									subscriber.onNext(Boolean.TRUE);
-								} catch (final XMLStreamException e) {
-
-									final String message = "couldn't finish xml export successfully";
-
-									final DMPConverterException converterException = new DMPConverterException(message, e);
-
-									subscriber.onNext(Boolean.FALSE);
-
-									throw DMPConverterError.wrap(converterException);
-								}
-							}
-
-							@Override public void onError(final Throwable e) {
-
-								final String message = "couldn't finish xml export successfully";
-
-								final DMPConverterException converterException = new DMPConverterException(message, e);
-
-								throw DMPConverterError.wrap(converterException);
-							}
-
-							@Override public void onNext(final JsonNode jsonNode) {
-
-								try {
-
-									startNodeHandler.handleNode(jsonNode);
-								} catch (final DMPConverterException e) {
-
-									throw DMPConverterError.wrap(e);
-								} catch (final XMLStreamException e) {
-
-									final String message = "couldn't finish xml export successfully";
-
-									final DMPConverterException converterException = new DMPConverterException(message, e);
-
-									throw DMPConverterError.wrap(converterException);
-								}
-							}
-						});
+						throw DMPConverterError.wrap(e);
 					} catch (final XMLStreamException e) {
 
 						final String message = "couldn't finish xml export successfully";
 
 						final DMPConverterException converterException = new DMPConverterException(message, e);
 
-						subscriber.onNext(Boolean.FALSE);
-
 						throw DMPConverterError.wrap(converterException);
 					}
+
 				}
 			};
+		}
+
+		private void startXML() {
+
+			try {
+
+				boolean defaultNamespaceWritten = false;
+
+				if (optionalRootAttributePath.isPresent()) {
+
+					// open root attribute path tags
+
+					final AttributePath rootAttributePath = optionalRootAttributePath.get();
+
+					for (final Attribute attribute : rootAttributePath.getAttributes()) {
+
+						final URI attributeURI = new URI(attribute.getUri());
+
+						if (!defaultNamespaceWritten && attributeURI.hasNamespaceURI()) {
+
+							// set default namespace
+
+							writer.setDefaultNamespace(attributeURI.getNamespaceURI());
+
+							defaultNamespaceWritten = true;
+						}
+
+						XMLStreamWriterUtils.writeXMLElementTag(writer, attributeURI, namespacesPrefixesMap, nameMap, isElementOpen);
+						isElementOpen = true;
+					}
+				} else if (hasAtLeastTwoRecords.get()) {
+
+					// write default root
+					final URI defaultRootURI = new URI(recordTagURI + "s");
+
+					determineAndWriteXMLElementAndNamespace(defaultRootURI, writer);
+				}
+
+				if (!defaultNamespaceWritten && recordTagURI.hasNamespaceURI()) {
+
+					// set default namespace
+					setDefaultNamespace(writer);
+				}
+
+				// add all namespace from the root to the first level
+				namespacesPrefixesMapStack.push(new HashMap<>());
+				namespacesPrefixesMapStack.peek().putAll(namespacesPrefixesMap);
+			} catch (final XMLStreamException e) {
+
+				final String message = "couldn't finish xml export successfully";
+
+				final DMPConverterException converterException = new DMPConverterException(message, e);
+
+				throw DMPConverterError.wrap(converterException);
+			}
+		}
+
+		private void endXML() {
+
+			try {
+
+				// close root nodes
+
+				LOG.debug("finished record to XML transformation");
+
+				if (optionalRootAttributePath.isPresent()) {
+
+					// close root attribute path tags
+
+					for (int i = 0; i < optionalRootAttributePath.get().getAttributes().size(); i++) {
+
+						writer.writeEndElement();
+					}
+				} else if (hasAtLeastTwoRecords.get()) {
+
+					// close default root
+					writer.writeEndElement();
+				}
+
+				// close document
+				writer.writeEndDocument();
+			} catch (final XMLStreamException e) {
+
+				final String message = "couldn't finish xml export successfully";
+
+				final DMPConverterException converterException = new DMPConverterException(message, e);
+
+				throw DMPConverterError.wrap(converterException);
+			}
 		}
 	}
 
@@ -387,36 +425,37 @@ public class XMLExporter {
 
 	private class CBDStartNodeHandler implements XMLNodeHandler {
 
+		private final XMLStreamWriter writer;
 		private final XMLNodeHandler recordHandler;
 
-		protected CBDStartNodeHandler(final XMLNodeHandler recordHandlerArg) {
+		protected CBDStartNodeHandler(final XMLNodeHandler recordHandlerArg, final XMLStreamWriter writerArg) {
 
 			recordHandler = recordHandlerArg;
+			writer = writerArg;
 		}
 
 		@Override
-		public void handleNode(final JsonNode node) throws DMPConverterException, XMLStreamException {
+		public void handleNode(final JsonNode record) throws DMPConverterException, XMLStreamException {
 
-			// GDMModel overall node is a JSON array
-			if (node.isArray()) {
+			// GDMModel overall node is a JSON object
+			if (record.isObject()) {
 
-				final Iterator<JsonNode> records = node.elements();
+				final Map.Entry<String, JsonNode> recordEntry = record.fields().next();
+				// TODO: where shall we write the record URI (?) -> xml:id ?
+				final String recordURIString = recordEntry.getKey();
+				final JsonNode recordBody = recordEntry.getValue();
 
-				while (records.hasNext()) {
+				determineAndWriteXMLElementAndNamespace(recordTagURI, writer);
 
-					final JsonNode record = records.next();
+				// call usual NodeHandler with body
+				recordHandler.handleNode(recordBody);
+				// close record
+				writer.writeEndElement();
+				isElementOpen = false;
 
-					if (record.isObject()) {
-
-						final Map.Entry<String, JsonNode> recordEntry = record.fields().next();
-						// TODO: where shall we write the record URI (?) -> xml:id ?
-						final String recordURIString = recordEntry.getKey();
-						final JsonNode recordBody = recordEntry.getValue();
-
-						// call usual NodeHandler with body
-						recordHandler.handleNode(recordBody);
-					}
-				}
+				// simply reset the namespaces prefixes map to that one from one level above
+				namespacesPrefixesMap.clear();
+				namespacesPrefixesMap.putAll(namespacesPrefixesMapStack.peek());
 			}
 		}
 	}
@@ -424,10 +463,10 @@ public class XMLExporter {
 	/**
 	 * Default handling: don't export RDF types and write literal objects as XML elements.
 	 */
-	protected class CBDRelationshipHandler implements XMLRelationshipHandler {
+	private class CBDRelationshipHandler implements XMLRelationshipHandler {
 
 		protected final XMLStreamWriter writer;
-		private         XMLNodeHandler  nodeHandler;
+		private       XMLNodeHandler  nodeHandler;
 
 		protected CBDRelationshipHandler(final XMLStreamWriter writerArg) {
 
@@ -514,6 +553,7 @@ public class XMLExporter {
 				// ??? - log these occurrences?
 			}
 		}
+
 	}
 
 	private URI getPredicate(final String predicateString) {
