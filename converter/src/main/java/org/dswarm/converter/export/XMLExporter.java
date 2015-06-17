@@ -224,6 +224,8 @@ public class XMLExporter {
 
 		@Override public Subscriber<? super JsonNode> call(final Subscriber<? super JsonNode> subscriber) {
 
+			LOG.debug("received subscriber at XML export operator");
+
 			final AtomicBoolean seenFirstRecord = new AtomicBoolean();
 
 			return new Subscriber<JsonNode>() {
@@ -250,6 +252,8 @@ public class XMLExporter {
 							// write end only, if at least one record was written
 							endXML();
 						}
+
+						LOG.debug("finished writing for XML export");
 
 						subscriber.onCompleted();
 					} catch (final DMPConverterException e) {
