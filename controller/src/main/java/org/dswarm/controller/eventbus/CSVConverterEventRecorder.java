@@ -163,10 +163,9 @@ public class CSVConverterEventRecorder {
 						//		finalResource.size());
 
 						return new GDMModel(model, null, recordClassURI);
-					});
-
-			models.doOnCompleted(() -> LOG
-					.debug("transformed CSV data resource to GDM for data model '{}' - transformed '' records", dataModel.getUuid(), counter.get()));
+					}).cast(org.dswarm.persistence.model.internal.Model.class).doOnCompleted(() -> LOG
+							.debug("transformed CSV data resource to GDM for data model '{}' - transformed '{}' records", dataModel.getUuid(),
+									counter.get()));
 
 			return models;
 		}
