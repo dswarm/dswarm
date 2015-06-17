@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -68,9 +69,9 @@ public class XMLExporter {
 		xmlOutputFactory.configureForSpeed();
 	}
 
-	private final Map<String, URI>    predicates            = new HashMap<>();
-	private final Map<String, String> namespacesPrefixesMap = new HashMap<>();
-	private final Map<String, String> nameMap               = new HashMap<>();
+	private final Map<String, URI>           predicates                 = new HashMap<>();
+	private final Map<String, String>        namespacesPrefixesMap      = new HashMap<>();
+	private final Map<String, String>        nameMap                    = new HashMap<>();
 	private final Stack<Map<String, String>> namespacesPrefixesMapStack = new Stack<>();
 
 	private boolean isElementOpen = false;
@@ -227,6 +228,7 @@ public class XMLExporter {
 			LOG.debug("received subscriber at XML export operator");
 
 			final AtomicBoolean seenFirstRecord = new AtomicBoolean();
+			final AtomicInteger counter = new AtomicInteger();
 
 			return new Subscriber<JsonNode>() {
 
@@ -244,6 +246,8 @@ public class XMLExporter {
 
 							startNodeHandler.handleNode(optionalFirstSingleRecordGDM.get());
 
+							counter.incrementAndGet();
+
 							wroteFirstRecord.compareAndSet(false, true);
 						}
 
@@ -253,7 +257,7 @@ public class XMLExporter {
 							endXML();
 						}
 
-						LOG.debug("finished writing for XML export");
+						LOG.debug("finished writing '{}' records for XML export", counter.get());
 
 						subscriber.onCompleted();
 					} catch (final DMPConverterException e) {
@@ -298,10 +302,14 @@ public class XMLExporter {
 							// write first record
 							startNodeHandler.handleNode(optionalFirstSingleRecordGDM.get());
 
+							counter.incrementAndGet();
+
 							wroteFirstRecord.compareAndSet(false, true);
 						}
 
 						startNodeHandler.handleNode(singleRecordGDM);
+
+						counter.incrementAndGet();
 					} catch (final DMPConverterException e) {
 
 						throw DMPConverterError.wrap(e);
@@ -455,7 +463,7 @@ public class XMLExporter {
 	private class CBDStartNodeHandler implements XMLNodeHandler {
 
 		private final XMLStreamWriter writer;
-		private final XMLNodeHandler recordHandler;
+		private final XMLNodeHandler  recordHandler;
 
 		protected CBDStartNodeHandler(final XMLNodeHandler recordHandlerArg, final XMLStreamWriter writerArg) {
 
@@ -495,7 +503,7 @@ public class XMLExporter {
 	private class CBDRelationshipHandler implements XMLRelationshipHandler {
 
 		protected final XMLStreamWriter writer;
-		private       XMLNodeHandler  nodeHandler;
+		private         XMLNodeHandler  nodeHandler;
 
 		protected CBDRelationshipHandler(final XMLStreamWriter writerArg) {
 

@@ -16,6 +16,7 @@
 package org.dswarm.controller.eventbus;
 
 import java.util.Collection;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.ws.rs.core.Response;
 
@@ -133,7 +134,7 @@ public class XMLConverterEventRecorder {
 
 			final Observable<GDMModel> gdmModels = flow.applyResource(path);
 
-			//final AtomicInteger counter = new AtomicInteger(0);
+			final AtomicInteger counter = new AtomicInteger(0);
 
 			//LOG.debug("XML records = '{}'", gdmModels.size());
 
@@ -157,6 +158,8 @@ public class XMLConverterEventRecorder {
 					return false;
 				}
 
+				counter.incrementAndGet();
+
 				//final int current = counter.incrementAndGet();
 
 				//LOG.debug("XML resource number '{}' with '{}' and resources size = '{}'", current, resources.iterator().next().getUri(), resources.size());
@@ -164,7 +167,8 @@ public class XMLConverterEventRecorder {
 				return true;
 
 			}).cast(org.dswarm.persistence.model.internal.Model.class).doOnCompleted(
-					() -> LOG.debug("transformed xml data resource at '{}' to GDM for data model '{}'", path, dataModel.getUuid()));
+					() -> LOG.debug("transformed xml data resource at '{}' to GDM for data model '{}' - transformed '{}' records", path,
+							dataModel.getUuid(), counter.get()));
 		} catch (final NullPointerException e) {
 
 			final String message = String.format("couldn't convert the XML data of data model '%s'", dataModel.getUuid());
