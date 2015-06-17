@@ -19,6 +19,7 @@ import javax.xml.stream.XMLStreamException;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import org.dswarm.common.web.URI;
 import org.dswarm.converter.DMPConverterException;
 
 /**
@@ -28,5 +29,5 @@ import org.dswarm.converter.DMPConverterException;
  */
 public interface XMLNodeHandler {
 
-	void handleNode(final JsonNode node) throws DMPConverterException, XMLStreamException;
+	void handleNode(final URI previousPredicateURI, final JsonNode node) throws DMPConverterException, XMLStreamException;
 }

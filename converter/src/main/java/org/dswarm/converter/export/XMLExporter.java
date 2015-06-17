@@ -29,6 +29,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.google.common.base.Charsets;
 import com.hp.hpl.jena.vocabulary.RDF;
 import org.codehaus.stax2.XMLOutputFactory2;
@@ -244,7 +245,7 @@ public class XMLExporter {
 
 							LOG.debug("start writing first record for XML export");
 
-							startNodeHandler.handleNode(optionalFirstSingleRecordGDM.get());
+							startNodeHandler.handleNode(null, optionalFirstSingleRecordGDM.get());
 
 							counter.incrementAndGet();
 
@@ -300,14 +301,14 @@ public class XMLExporter {
 							LOG.debug("start writing first record for XML export");
 
 							// write first record
-							startNodeHandler.handleNode(optionalFirstSingleRecordGDM.get());
+							startNodeHandler.handleNode(null, optionalFirstSingleRecordGDM.get());
 
 							counter.incrementAndGet();
 
 							wroteFirstRecord.compareAndSet(false, true);
 						}
 
-						startNodeHandler.handleNode(singleRecordGDM);
+						startNodeHandler.handleNode(null, singleRecordGDM);
 
 						counter.incrementAndGet();
 
@@ -431,7 +432,7 @@ public class XMLExporter {
 		}
 
 		@Override
-		public void handleNode(final JsonNode node) throws DMPConverterException, XMLStreamException {
+		public void handleNode(final URI previousPredicateURI, final JsonNode node) throws DMPConverterException, XMLStreamException {
 
 			// record body is a JSON array, where each attribute has its own JSON object, i.e., each key/value pair is a single JSON object
 			if (node.isArray()) {
@@ -442,20 +443,35 @@ public class XMLExporter {
 
 					final JsonNode value = values.next();
 
-					if (value.isObject()) {
+					final JsonNodeType nodeType = value.getNodeType();
 
-						final Iterator<Map.Entry<String, JsonNode>> fields = value.fields();
+					switch (nodeType) {
 
-						while (fields.hasNext()) {
+						case OBJECT:
 
-							final Map.Entry<String, JsonNode> field = fields.next();
-							final String predicateString = field.getKey();
-							final JsonNode objectNode = field.getValue();
+							final Iterator<Map.Entry<String, JsonNode>> fields = value.fields();
 
-							final URI predicateURI = getPredicate(predicateString);
+							while (fields.hasNext()) {
 
-							relationshipHandler.handleRelationship(predicateURI, objectNode);
-						}
+								final Map.Entry<String, JsonNode> field = fields.next();
+								final String predicateString = field.getKey();
+								final JsonNode objectNode = field.getValue();
+
+								final URI predicateURI = getPredicate(predicateString);
+
+								relationshipHandler.handleRelationship(predicateURI, objectNode);
+							}
+
+							break;
+						case STRING:
+
+							relationshipHandler.handleRelationship(previousPredicateURI, value);
+
+							break;
+						default:
+
+							LOG.debug("didn't expect node type '{}' here", nodeType);
+
 					}
 				}
 			}
@@ -474,7 +490,7 @@ public class XMLExporter {
 		}
 
 		@Override
-		public void handleNode(final JsonNode record) throws DMPConverterException, XMLStreamException {
+		public void handleNode(final URI previousPredicateURI, final JsonNode record) throws DMPConverterException, XMLStreamException {
 
 			// GDMModel overall node is a JSON object
 			if (record.isObject()) {
@@ -487,7 +503,7 @@ public class XMLExporter {
 				determineAndWriteXMLElementAndNamespace(recordTagURI, writer);
 
 				// call usual NodeHandler with body
-				recordHandler.handleNode(recordBody);
+				recordHandler.handleNode(null, recordBody);
 				// close record
 				writer.writeEndElement();
 				isElementOpen = false;
@@ -533,7 +549,7 @@ public class XMLExporter {
 				isElementOpen = true;
 
 				// continue traversal with object node
-				nodeHandler.handleNode(node);
+				nodeHandler.handleNode(predicateURI, node);
 
 				// close
 				writer.writeEndElement();
