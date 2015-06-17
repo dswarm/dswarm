@@ -221,6 +221,8 @@ public class XMLExporter {
 
 							startXML();
 
+							LOG.debug("start writing first record for XML export");
+
 							startNodeHandler.handleNode(optionalFirstSingleRecordGDM.get());
 
 							wroteFirstRecord.compareAndSet(false, true);
@@ -268,6 +270,8 @@ public class XMLExporter {
 
 							startXML();
 
+							LOG.debug("start writing first record for XML export");
+
 							// write first record
 							startNodeHandler.handleNode(optionalFirstSingleRecordGDM.get());
 
@@ -294,6 +298,8 @@ public class XMLExporter {
 		private void startXML() {
 
 			try {
+
+				LOG.debug("start writing XML for export");
 
 				boolean defaultNamespaceWritten = false;
 
