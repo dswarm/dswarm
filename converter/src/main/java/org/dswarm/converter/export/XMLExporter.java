@@ -228,7 +228,7 @@ public class XMLExporter {
 			LOG.debug("received subscriber at XML export operator");
 
 			final AtomicBoolean seenFirstRecord = new AtomicBoolean();
-			final AtomicInteger counter = new AtomicInteger();
+			final AtomicInteger counter = new AtomicInteger(0);
 
 			return new Subscriber<JsonNode>() {
 

@@ -243,9 +243,11 @@ public class TransformationFlow {
 
 		final Observable<org.dswarm.persistence.model.internal.Model> model = writer.getObservable().filter(gdmModel -> {
 
-			final int current = counter.incrementAndGet();
+			counter.incrementAndGet();
 
-			LOG.debug("processed resource model number '{}'", current);
+			//final int current = counter.incrementAndGet();
+
+			//LOG.debug("processed resource model number '{}'", current);
 
 			final Model model1 = gdmModel.getModel();
 
@@ -265,8 +267,7 @@ public class TransformationFlow {
 				return false;
 			}
 
-			LOG.debug("processed resource model number '{}' with '{}' and resource site '{}'", current, resources.iterator().next().getUri(),
-					resources.size());
+			//LOG.debug("processed resource model number '{}' with '{}' and resource size '{}'", current, resources.iterator().next().getUri(), resources.size());
 
 			final Set<String> recordURIsFromGDMModel = gdmModel.getRecordURIs();
 
@@ -297,7 +298,8 @@ public class TransformationFlow {
 			}
 
 			return finalGDMModel;
-		});
+		}).cast(org.dswarm.persistence.model.internal.Model.class).doOnCompleted(
+				() -> LOG.debug("processed '{}' records in transformation engine", counter.get()));
 
 		final Observable<JsonNode> resultObservable;
 
@@ -430,8 +432,9 @@ public class TransformationFlow {
 	}
 
 	private static class AndThenWaitFor<T, U> implements Observable.Transformer<T, T> {
+
 		private final Observable<U> other;
-		private final Supplier<T> emptyResultValue;
+		private final Supplier<T>   emptyResultValue;
 
 		public AndThenWaitFor(final Observable<U> other, final Supplier<T> emptyResultValue) {
 			this.other = other;
