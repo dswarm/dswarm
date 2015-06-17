@@ -245,9 +245,7 @@ public class TransformationFlow {
 
 		final Observable<org.dswarm.persistence.model.internal.Model> model = writer.getObservable().filter(gdmModel -> {
 
-			counter.incrementAndGet();
-
-			if(counter.get() == 1) {
+			if (counter.incrementAndGet() == 1) {
 
 				LOG.debug("process first record in transformation engine");
 			}

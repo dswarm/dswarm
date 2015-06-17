@@ -156,7 +156,10 @@ public class CSVConverterEventRecorder {
 						final Model model = new Model();
 						model.addResource(finalResource);
 
-						counter.incrementAndGet();
+						if (counter.incrementAndGet() == 1) {
+
+							LOG.debug("transformed first record of CSV data resource to GDM for data model '{}'", dataModel.getUuid());
+						}
 
 						//final int current2 = counter.get();
 						//LOG.debug("CSV resource number '{}' with '{}' and '{}' statement", current2, finalResource.getUri(),

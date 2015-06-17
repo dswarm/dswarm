@@ -158,7 +158,10 @@ public class XMLConverterEventRecorder {
 					return false;
 				}
 
-				counter.incrementAndGet();
+				if (counter.incrementAndGet() == 1) {
+
+					LOG.debug("transformed first record of xml data resource at '{}' to GDM for data model '{}'", path, dataModel.getUuid());
+				}
 
 				//final int current = counter.incrementAndGet();
 
