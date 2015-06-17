@@ -310,6 +310,8 @@ public class XMLExporter {
 						startNodeHandler.handleNode(singleRecordGDM);
 
 						counter.incrementAndGet();
+
+						subscriber.onNext(singleRecordGDM);
 					} catch (final DMPConverterException e) {
 
 						throw DMPConverterError.wrap(e);
