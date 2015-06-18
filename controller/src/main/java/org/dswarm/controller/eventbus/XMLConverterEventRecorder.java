@@ -32,6 +32,7 @@ import org.dswarm.converter.flow.XMLSourceResourceGDMStmtsFlow;
 import org.dswarm.converter.flow.XmlResourceFlowFactory;
 import org.dswarm.graph.json.Model;
 import org.dswarm.graph.json.Resource;
+import org.dswarm.persistence.DMPPersistenceError;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.DataModel;
@@ -40,6 +41,7 @@ import org.dswarm.persistence.model.resource.utils.ResourceStatics;
 import org.dswarm.persistence.monitoring.MonitoringHelper;
 import org.dswarm.persistence.monitoring.MonitoringLogger;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
+import org.dswarm.persistence.service.internal.graph.util.SchemaDeterminator;
 
 /**
  * An event recorder for converting XML documents.
@@ -58,6 +60,7 @@ public class XMLConverterEventRecorder {
 	private final InternalModelServiceFactory      internalServiceFactory;
 	private final Provider<XmlResourceFlowFactory> xmlFlowFactory;
 	private final Provider<MonitoringLogger>       loggerProvider;
+	private final Provider<SchemaDeterminator> schemaDeterminatorProvider;
 
 	/**
 	 * Creates a new event recorder for converting XML documents with the given internal model service factory and event bus.
@@ -68,10 +71,12 @@ public class XMLConverterEventRecorder {
 	public XMLConverterEventRecorder(
 			final InternalModelServiceFactory internalModelServiceFactory,
 			final Provider<XmlResourceFlowFactory> xmlFlowFactory,
-			final Provider<MonitoringLogger> loggerProvider) {
+			final Provider<MonitoringLogger> loggerProvider,
+			final Provider<SchemaDeterminator> schemaDeterminatorProvider) {
 		internalServiceFactory = internalModelServiceFactory;
 		this.xmlFlowFactory = xmlFlowFactory;
 		this.loggerProvider = loggerProvider;
+		this.schemaDeterminatorProvider = schemaDeterminatorProvider;
 	}
 
 	/**
@@ -134,41 +139,56 @@ public class XMLConverterEventRecorder {
 
 			final Observable<GDMModel> gdmModels = flow.applyResource(path);
 
+			final SchemaDeterminator schemaDeterminator = schemaDeterminatorProvider.get();
+			final DataModel freshDataModel = schemaDeterminator.getSchemaInternal(dataModel.getUuid());
+			final boolean isSchemaAnInbuiltSchema = schemaDeterminator.isSchemaAnInbuiltSchema(freshDataModel);
+
 			final AtomicInteger counter = new AtomicInteger(0);
 
 			//LOG.debug("XML records = '{}'", gdmModels.size());
 
 			return gdmModels.filter(gdmModel -> {
 
-				final Model model = gdmModel.getModel();
+				try {
 
-				if (model == null) {
+					final Model model = gdmModel.getModel();
 
-					LOG.debug("model is not available");
+					if (model == null) {
 
-					return false;
+						LOG.debug("model is not available");
+
+						return false;
+					}
+
+					final Collection<Resource> resources = model.getResources();
+
+					if (resources == null || resources.isEmpty()) {
+
+						LOG.debug("resources from model are not available");
+
+						return false;
+					}
+
+					if (counter.incrementAndGet() == 1) {
+
+						LOG.debug("transformed first record of xml data resource at '{}' to GDM for data model '{}'", path, dataModel.getUuid());
+					}
+
+					schemaDeterminator.optionallyEnhancedDataModel(freshDataModel, gdmModel, model, isSchemaAnInbuiltSchema);
+
+					//final int current = counter.incrementAndGet();
+
+					//LOG.debug("XML resource number '{}' with '{}' and resources size = '{}'", current, resources.iterator().next().getUri(), resources.size());
+
+					return true;
+				} catch (DMPPersistenceException e) {
+
+					final String message = String.format("something went wrong, while data model enhancement for data model '%s'", freshDataModel.getUuid());
+
+					LOG.error(message, e);
+
+					throw DMPPersistenceError.wrap(e);
 				}
-
-				final Collection<Resource> resources = model.getResources();
-
-				if (resources == null || resources.isEmpty()) {
-
-					LOG.debug("resources from model are not available");
-
-					return false;
-				}
-
-				if (counter.incrementAndGet() == 1) {
-
-					LOG.debug("transformed first record of xml data resource at '{}' to GDM for data model '{}'", path, dataModel.getUuid());
-				}
-
-				//final int current = counter.incrementAndGet();
-
-				//LOG.debug("XML resource number '{}' with '{}' and resources size = '{}'", current, resources.iterator().next().getUri(), resources.size());
-
-				return true;
-
 			}).cast(org.dswarm.persistence.model.internal.Model.class).doOnCompleted(
 					() -> LOG.debug("transformed xml data resource at '{}' to GDM for data model '{}' - transformed '{}' records", path,
 							dataModel.getUuid(), counter.get()));
