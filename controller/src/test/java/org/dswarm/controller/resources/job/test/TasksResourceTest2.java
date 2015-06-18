@@ -98,8 +98,7 @@ public class TasksResourceTest2 extends ResourceTest {
 
 		final ObjectNode requestJSON = prepareTask(inputDataModel);
 
-		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE)
-				.accept(MediaType.APPLICATION_XML_TYPE).post(Entity.json(requestJSON));
+		final Response response = target().request(MediaType.APPLICATION_XML_TYPE).post(Entity.json(requestJSON));
 
 		Assert.assertEquals("200 Created was expected", 200, response.getStatus());
 

@@ -200,8 +200,7 @@ public class TasksCsvResourceTest4 extends ResourceTest {
 		requestJSON.put(TasksResource.DO_EXPORT_ON_THE_FLY_IDENTIFIER, Boolean.TRUE);
 		requestJSON.put(TasksResource.DO_VERSIONING_ON_RESULT_IDENTIFIER, Boolean.FALSE);
 
-		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE)
-				.accept(MediaType.APPLICATION_XML_TYPE).post(Entity.json(requestJSON));
+		final Response response = target().request(MediaType.APPLICATION_XML_TYPE).post(Entity.json(requestJSON));
 
 		// SR Start checking response
 
