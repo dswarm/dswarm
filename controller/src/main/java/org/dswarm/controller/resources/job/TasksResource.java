@@ -32,6 +32,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
@@ -59,6 +60,7 @@ import rx.Observer;
 import org.dswarm.common.types.Tuple;
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.utils.DataModelUtil;
+import org.dswarm.controller.utils.ResourceUtils;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.export.XMLExporter;
 import org.dswarm.converter.flow.TransformationFlow;
@@ -173,9 +175,13 @@ public class TasksResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public void executeTask(@ApiParam(value = "task execution request (as JSON)", required = true) final String jsonObjectString,
-			@Suspended final AsyncResponse asyncResponse)
+			@Context final HttpHeaders requestHeaders, @Suspended final AsyncResponse asyncResponse)
 			throws IOException,
 			DMPConverterException, DMPControllerException {
+
+		final String headers = ResourceUtils.readHeaders(requestHeaders);
+
+		TasksResource.LOG.debug("try to process task with\n{}", headers);
 
 		if (jsonObjectString == null) {
 
@@ -371,7 +377,7 @@ public class TasksResource {
 
 					final DataModel finalOutputDataModel;
 
-					if(optionalFreshOutputDataModel.isPresent()) {
+					if (optionalFreshOutputDataModel.isPresent()) {
 
 						finalOutputDataModel = optionalFreshOutputDataModel.get();
 					} else {
