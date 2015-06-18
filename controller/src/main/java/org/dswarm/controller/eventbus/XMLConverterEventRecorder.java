@@ -17,6 +17,7 @@ package org.dswarm.controller.eventbus;
 
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.ws.rs.core.Response;
 
@@ -60,7 +61,7 @@ public class XMLConverterEventRecorder {
 	private final InternalModelServiceFactory      internalServiceFactory;
 	private final Provider<XmlResourceFlowFactory> xmlFlowFactory;
 	private final Provider<MonitoringLogger>       loggerProvider;
-	private final Provider<SchemaDeterminator> schemaDeterminatorProvider;
+	private final Provider<SchemaDeterminator>     schemaDeterminatorProvider;
 
 	/**
 	 * Creates a new event recorder for converting XML documents with the given internal model service factory and event bus.
@@ -144,6 +145,7 @@ public class XMLConverterEventRecorder {
 			final boolean isSchemaAnInbuiltSchema = schemaDeterminator.isSchemaAnInbuiltSchema(freshDataModel);
 
 			final AtomicInteger counter = new AtomicInteger(0);
+			final AtomicLong statementCounter = new AtomicLong(0);
 
 			//LOG.debug("XML records = '{}'", gdmModels.size());
 
@@ -169,9 +171,12 @@ public class XMLConverterEventRecorder {
 						return false;
 					}
 
+					statementCounter.addAndGet(model.size());
+
 					if (counter.incrementAndGet() == 1) {
 
-						LOG.debug("transformed first record of xml data resource at '{}' to GDM for data model '{}'", path, dataModel.getUuid());
+						LOG.debug("transformed first record of xml data resource at '{}' to GDM for data model '{}' with '{}' statements", path,
+								dataModel.getUuid(), statementCounter.get());
 					}
 
 					schemaDeterminator.optionallyEnhancedDataModel(freshDataModel, gdmModel, model, isSchemaAnInbuiltSchema);
@@ -183,15 +188,18 @@ public class XMLConverterEventRecorder {
 					return true;
 				} catch (DMPPersistenceException e) {
 
-					final String message = String.format("something went wrong, while data model enhancement for data model '%s'", freshDataModel.getUuid());
+					final String message = String
+							.format("something went wrong, while data model enhancement for data model '%s'", freshDataModel.getUuid());
 
 					LOG.error(message, e);
 
 					throw DMPPersistenceError.wrap(e);
 				}
 			}).cast(org.dswarm.persistence.model.internal.Model.class).doOnCompleted(
-					() -> LOG.debug("transformed xml data resource at '{}' to GDM for data model '{}' - transformed '{}' records", path,
-							dataModel.getUuid(), counter.get()));
+					() -> LOG
+							.debug("transformed xml data resource at '{}' to GDM for data model '{}' - transformed '{}' records with '{}' statements",
+									path,
+									dataModel.getUuid(), counter.get(), statementCounter.get()));
 		} catch (final NullPointerException e) {
 
 			final String message = String.format("couldn't convert the XML data of data model '%s'", dataModel.getUuid());
