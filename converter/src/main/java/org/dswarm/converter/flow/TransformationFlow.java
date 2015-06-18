@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -243,6 +244,7 @@ public class TransformationFlow {
 
 		final AtomicInteger counter = new AtomicInteger(0);
 		final AtomicInteger counter2 = new AtomicInteger(0);
+		final AtomicLong statementCounter = new AtomicLong(0);
 
 		final Observable<org.dswarm.persistence.model.internal.Model> model = writer.getObservable().filter(gdmModel -> {
 
@@ -303,14 +305,16 @@ public class TransformationFlow {
 				finalGDMModel = gdmModel;
 			}
 
+			statementCounter.addAndGet(gdmModel.getModel().size());
+
 			if (counter2.incrementAndGet() == 1) {
 
-				LOG.debug("processed first record in transformation engine");
+				LOG.debug("processed first record with '{}' statements in transformation engine", statementCounter.get());
 			}
 
 			return finalGDMModel;
 		}).cast(org.dswarm.persistence.model.internal.Model.class).doOnCompleted(
-				() -> LOG.debug("processed '{}' records (from '{}') in transformation engine", counter2.get(), counter.get()));
+				() -> LOG.debug("processed '{}' records (from '{}') with '{}' statements in transformation engine", counter2.get(), counter.get(), statementCounter.get()));
 
 		final Observable<JsonNode> resultObservable;
 
