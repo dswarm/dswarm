@@ -350,6 +350,8 @@ public class TasksResource {
 
 				try {
 
+					LOG.debug("start preparing XML export");
+
 					final BufferedOutputStream bos = new BufferedOutputStream(os, 1024);
 
 					// collect input parameter for exporter
@@ -365,16 +367,28 @@ public class TasksResource {
 						throw new DMPConverterException(message);
 					}
 
+					final Optional<DataModel> optionalFreshOutputDataModel = dataModelUtil.fetchDataModel(outputDataModel.getUuid());
+
+					final DataModel finalOutputDataModel;
+
+					if(optionalFreshOutputDataModel.isPresent()) {
+
+						finalOutputDataModel = optionalFreshOutputDataModel.get();
+					} else {
+
+						finalOutputDataModel = outputDataModel;
+					}
+
 					// record tag
-					final Optional<Configuration> optionalConfiguration = Optional.fromNullable(outputDataModel.getConfiguration());
+					final Optional<Configuration> optionalConfiguration = Optional.fromNullable(finalOutputDataModel.getConfiguration());
 					final Optional<String> optionalRecordTag = DataModelUtil.determineRecordTag(optionalConfiguration);
 					final java.util.Optional<String> java8OptionalRecordTag = guavaOptionalToJava8Optional(optionalRecordTag);
 
 					// record class uri
-					final Optional<String> optionalRecordClassURI = DataModelUtil.determineRecordClassURI(outputDataModel);
+					final Optional<String> optionalRecordClassURI = DataModelUtil.determineRecordClassURI(finalOutputDataModel);
 
 					// original data model type
-					final Optional<String> optionalOriginalDataModelType = DataModelUtil.determineOriginalDataModelType(outputDataModel,
+					final Optional<String> optionalOriginalDataModelType = DataModelUtil.determineOriginalDataModelType(finalOutputDataModel,
 							optionalConfiguration);
 					final java.util.Optional<String> java8OptionalOriginalDataModelType = guavaOptionalToJava8Optional(optionalOriginalDataModelType);
 
