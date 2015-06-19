@@ -85,7 +85,7 @@ import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.UpdateFormat;
 import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
-import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.service.internal.graph.util.SchemaDeterminator;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.dswarm.persistence.util.GDMUtil;
@@ -113,6 +113,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	private final Provider<XMLSchemaEventRecorder>    xmlSchemaEventRecorderProvider;
 	private final Provider<CSVConverterEventRecorder> csvConverterEventRecorderProvider;
 	private final Provider<XMLConverterEventRecorder> xmlConvertEventRecorderProvider;
+	private final Provider<SchemaDeterminator>        schemaDeterminatorProvider;
 
 	// this is likely to be http://localhost:7474/graph
 	private final String graphEndpoint;
@@ -128,6 +129,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	 * @param xmlSchemaEventRecorderProviderArg
 	 * @param csvConverterEventRecorderProviderArg
 	 * @param xmlConverterEventRecorderProviderArg
+	 * @param schemaDeterminatorProviderArg
 	 * @param graphEndpointArg
 	 * @throws DMPControllerException
 	 */
@@ -140,6 +142,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			final Provider<XMLSchemaEventRecorder> xmlSchemaEventRecorderProviderArg,
 			final Provider<CSVConverterEventRecorder> csvConverterEventRecorderProviderArg,
 			final Provider<XMLConverterEventRecorder> xmlConverterEventRecorderProviderArg,
+			final Provider<SchemaDeterminator> schemaDeterminatorProviderArg,
 			@Named("dswarm.db.graph.endpoint") final String graphEndpointArg) throws DMPControllerException {
 
 		super(DataModel.class, persistenceServiceProviderArg, objectMapperProviderArg);
@@ -149,6 +152,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 		xmlSchemaEventRecorderProvider = xmlSchemaEventRecorderProviderArg;
 		csvConverterEventRecorderProvider = csvConverterEventRecorderProviderArg;
 		xmlConvertEventRecorderProvider = xmlConverterEventRecorderProviderArg;
+		schemaDeterminatorProvider = schemaDeterminatorProviderArg;
 		graphEndpoint = graphEndpointArg;
 	}
 
@@ -623,48 +627,64 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	@Override
 	protected ProxyDataModel addObject(final String objectJSONString, final JsonNode contextJSON) throws DMPControllerException {
 
-		final ProxyDataModel proxyDataModel = super.addObject(objectJSONString, contextJSON);
+		try {
 
-		if (proxyDataModel == null) {
+			final ProxyDataModel proxyDataModel = super.addObject(objectJSONString, contextJSON);
 
-			return null;
+			if (proxyDataModel == null) {
+
+				return null;
+			}
+
+			final DataModel dataModel = proxyDataModel.getObject();
+
+			if (dataModel == null) {
+
+				return proxyDataModel;
+			}
+
+			// do schema determination, i.e., append inbuilt schema, if it can be derived from the config
+			final SchemaDeterminator schemaDeterminator = schemaDeterminatorProvider.get();
+			final DataModel freshDataModel = schemaDeterminator.getSchemaInternal(dataModel.getUuid());
+
+			final ProxyDataModel freshProxyDataModel = new ProxyDataModel(freshDataModel, proxyDataModel.getType());
+
+			if (contextJSON == null) {
+
+				// versioning is disabled at data model creation, since there should be any data for this data model in the data hub
+				return updateDataModel(freshProxyDataModel, freshDataModel, false);
+			}
+
+			final JsonNode doIngestNode = contextJSON.get(DO_INGEST_IDENTIFIER);
+
+			if (doIngestNode == null) {
+
+				// versioning is disabled at data model creation, since there should be any data for this data model in the data hub
+				return updateDataModel(freshProxyDataModel, freshDataModel, false);
+			}
+
+			final boolean doIngest = doIngestNode.asBoolean();
+
+			if (doIngest) {
+
+				// versioning is disabled at data model creation, since there should be any data for this data model in the data hub
+				return updateDataModel(freshProxyDataModel, freshDataModel, false);
+			} else {
+
+				DataModelsResource.LOG.debug("skip ingest for data model '{}'", dataModel.getUuid());
+
+				// skip ingest
+				return freshProxyDataModel;
+			}
+
+		} catch (final DMPPersistenceException e) {
+
+			final String message = "couldn't determine schema successfully for data model";
+
+			LOG.error(message, e);
+
+			throw new DMPControllerException(message, e);
 		}
-
-		final DataModel dataModel = proxyDataModel.getObject();
-
-		if (dataModel == null) {
-
-			return proxyDataModel;
-		}
-
-		if (contextJSON == null) {
-
-			// versioning is disabled at data model creation, since there should be any data for this data model in the data hub
-			return updateDataModel(proxyDataModel, dataModel, false);
-		}
-
-		final JsonNode doIngestNode = contextJSON.get(DO_INGEST_IDENTIFIER);
-
-		if (doIngestNode == null) {
-
-			// versioning is disabled at data model creation, since there should be any data for this data model in the data hub
-			return updateDataModel(proxyDataModel, dataModel, false);
-		}
-
-		final boolean doIngest = doIngestNode.asBoolean();
-
-		if (doIngest) {
-
-			// versioning is disabled at data model creation, since there should be any data for this data model in the data hub
-			return updateDataModel(proxyDataModel, dataModel, false);
-		} else {
-
-			DataModelsResource.LOG.debug("skip ingest for data model '{}'", dataModel.getUuid());
-
-			// skip ingest
-			return proxyDataModel;
-		}
-
 	}
 
 	/**
