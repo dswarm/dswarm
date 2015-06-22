@@ -28,6 +28,7 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.google.common.base.Charsets;
@@ -46,6 +47,7 @@ import org.dswarm.common.web.URI;
 import org.dswarm.common.xml.utils.XMLStreamWriterUtils;
 import org.dswarm.converter.DMPConverterError;
 import org.dswarm.converter.DMPConverterException;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * TODO: implement namespace resetting at level change, see DD-1041
@@ -118,9 +120,6 @@ public class XMLExporter {
 		final XMLStreamWriter writer = xmlOutputFactory.createXMLStreamWriter(outputStream);
 
 		writer.writeStartDocument(Charsets.UTF_8.toString(), XML_VERSION);
-
-		// TODO: how to determine, whether the result has more than one record via stream processing? - ReplaySubject?
-		//final Observable<Boolean> isEmptyObservable = recordGDM.skip(1).isEmpty();
 
 		// process records to XML
 
@@ -595,8 +594,10 @@ public class XMLExporter {
 
 				// predicate is an XML Attribute => write XML Attribute to this XML Element
 
+				final String value = objectGDMNode.asText();
+
 				XMLStreamWriterUtils
-						.writeXMLAttribute(writer, predicateURI, objectGDMNode.asText(), namespacesPrefixesMap, nameMap);
+						.writeXMLAttribute(writer, predicateURI, value, namespacesPrefixesMap, nameMap);
 			} else if (RDF.value.getURI().equals(predicateURI.toString())) {
 
 				// predicate is an XML Element

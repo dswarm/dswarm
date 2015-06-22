@@ -22,7 +22,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.google.inject.name.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,8 +71,6 @@ public class SchemaDeterminator {
 	 */
 	private final Provider<DataModelService> dataModelService;
 
-	private final Provider<ObjectMapper> objectMapperProvider;
-
 	/**
 	 * Creates a new internal triple service with the given persistence services and the endpoint to access the graph database.
 	 *
@@ -90,8 +87,7 @@ public class SchemaDeterminator {
 			final Provider<ClaszService> classService,
 			final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceService,
 			final Provider<AttributePathService> attributePathService,
-			final Provider<AttributeService> attributeService,
-			final Provider<ObjectMapper> objectMapperProviderArg) {
+			final Provider<AttributeService> attributeService) {
 
 		this.dataModelService = dataModelService;
 		this.schemaService = schemaService;
@@ -99,8 +95,6 @@ public class SchemaDeterminator {
 		this.attributePathService = attributePathService;
 		this.schemaAttributePathInstanceService = schemaAttributePathInstanceService;
 		this.attributeService = attributeService;
-
-		objectMapperProvider = objectMapperProviderArg;
 	}
 
 	public DataModel optionallyEnhancedDataModel(final DataModel dataModel, final GDMModel gdmModel, final org.dswarm.graph.json.Model realModel,

@@ -16,6 +16,7 @@
 package org.dswarm.controller.eventbus;
 
 import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -35,7 +36,6 @@ import org.dswarm.graph.json.Model;
 import org.dswarm.graph.json.Resource;
 import org.dswarm.persistence.DMPPersistenceError;
 import org.dswarm.persistence.DMPPersistenceException;
-import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.UpdateFormat;
 import org.dswarm.persistence.model.resource.utils.ResourceStatics;
@@ -132,14 +132,6 @@ public class XMLConverterEventRecorder {
 
 		try {
 
-			final XMLSourceResourceGDMStmtsFlow flow = xmlFlowFactory.get().fromDataModel(dataModel);
-
-			final String path = dataModel.getDataResource().getAttribute(ResourceStatics.PATH).asText();
-
-			LOG.debug("process xml data resource at '{}' into data model '{}'", path, dataModel.getUuid());
-
-			final Observable<GDMModel> gdmModels = flow.applyResource(path);
-
 			final SchemaDeterminator schemaDeterminator = schemaDeterminatorProvider.get();
 			final DataModel freshDataModel = schemaDeterminator.getSchemaInternal(dataModel.getUuid());
 			final boolean isSchemaAnInbuiltSchema = schemaDeterminator.isSchemaAnInbuiltSchema(freshDataModel);
@@ -149,7 +141,18 @@ public class XMLConverterEventRecorder {
 
 			//LOG.debug("XML records = '{}'", gdmModels.size());
 
-			return gdmModels.filter(gdmModel -> {
+			final String path = dataModel.getDataResource().getAttribute(ResourceStatics.PATH).asText();
+
+			final CompletableFuture<XMLSourceResourceGDMStmtsFlow> futureFlow = CompletableFuture
+					.supplyAsync(() -> xmlFlowFactory.get().fromDataModel(dataModel));
+			final Observable<XMLSourceResourceGDMStmtsFlow> obserableFlow = Observable.from(futureFlow);
+
+			return obserableFlow.flatMap(flow -> {
+
+				LOG.debug("process xml data resource at '{}' into data model '{}'", path, dataModel.getUuid());
+
+				return flow.applyResource(path);
+			}).filter(gdmModel -> {
 
 				try {
 
@@ -199,7 +202,8 @@ public class XMLConverterEventRecorder {
 					() -> LOG
 							.debug("transformed xml data resource at '{}' to GDM for data model '{}' - transformed '{}' records with '{}' statements",
 									path,
-									dataModel.getUuid(), counter.get(), statementCounter.get()));
+									dataModel.getUuid(), counter.get(), statementCounter.get())).doOnSubscribe(
+					() -> LOG.debug("subscribed to XML ingest"));
 		} catch (final NullPointerException e) {
 
 			final String message = String.format("couldn't convert the XML data of data model '%s'", dataModel.getUuid());

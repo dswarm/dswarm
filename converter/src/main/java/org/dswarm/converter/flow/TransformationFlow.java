@@ -314,7 +314,8 @@ public class TransformationFlow {
 
 			return finalGDMModel;
 		}).cast(org.dswarm.persistence.model.internal.Model.class).doOnCompleted(
-				() -> LOG.debug("processed '{}' records (from '{}') with '{}' statements in transformation engine", counter2.get(), counter.get(), statementCounter.get()));
+				() -> LOG.debug("processed '{}' records (from '{}') with '{}' statements in transformation engine", counter2.get(), counter.get(),
+						statementCounter.get()));
 
 		final Observable<JsonNode> resultObservable;
 
@@ -377,7 +378,7 @@ public class TransformationFlow {
 
 				final AtomicInteger counter = new AtomicInteger(0);
 
-				final Observable<Tuple<String, JsonNode>> tupleObservable = tuples.subscribeOn(Schedulers.newThread());
+				final Observable<Tuple<String, JsonNode>> tupleObservable = tuples.subscribeOn(Schedulers.immediate());
 
 				tupleObservable.doOnNext(tuple -> {
 
