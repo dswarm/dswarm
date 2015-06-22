@@ -28,7 +28,6 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.google.common.base.Charsets;
@@ -47,7 +46,6 @@ import org.dswarm.common.web.URI;
 import org.dswarm.common.xml.utils.XMLStreamWriterUtils;
 import org.dswarm.converter.DMPConverterError;
 import org.dswarm.converter.DMPConverterException;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * TODO: implement namespace resetting at level change, see DD-1041
@@ -287,13 +285,6 @@ public class XMLExporter {
 							LOG.debug("received first record for XML export");
 
 							optionalFirstSingleRecordGDM = Optional.of(singleRecordGDM);
-
-							try {
-								LOG.debug("result JSON in XML exporter = " + DMPPersistenceUtil.getJSONObjectMapper()
-										.writeValueAsString(singleRecordGDM));
-							} catch (JsonProcessingException e) {
-								e.printStackTrace();
-							}
 
 							return;
 						}

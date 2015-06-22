@@ -57,6 +57,7 @@ import org.culturegraph.mf.stream.pipe.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
+import rx.Scheduler;
 import rx.Subscriber;
 import rx.schedulers.Schedulers;
 
@@ -171,7 +172,7 @@ public class TransformationFlow {
 		final boolean doNotReturnJsonToCaller = false;
 		final boolean enableVersioning = true;
 
-		return apply(Observable.from(tuplesList), writeResultToDatahub, doNotReturnJsonToCaller, enableVersioning).reduce(
+		return apply(Observable.from(tuplesList), writeResultToDatahub, doNotReturnJsonToCaller, enableVersioning, Schedulers.newThread()).reduce(
 				DMPPersistenceUtil.getJSONObjectMapper().createArrayNode(),
 				ArrayNode::add
 		).map(arrayNode -> {
@@ -193,11 +194,11 @@ public class TransformationFlow {
 		}
 	}
 
-	// TODO: Observable String / Model / Future String
 	public Observable<JsonNode> apply(
 			final Observable<Tuple<String, JsonNode>> tuples,
 			final ObjectPipe<Tuple<String, JsonNode>, StreamReceiver> opener,
-			final boolean writeResultToDatahub, final boolean doNotReturnJsonToCaller, final boolean enableVersioning) throws DMPConverterException {
+			final boolean writeResultToDatahub, final boolean doNotReturnJsonToCaller, final boolean enableVersioning, final Scheduler scheduler)
+			throws DMPConverterException {
 
 		final Context morphContext = morphTimer.time();
 
@@ -371,14 +372,14 @@ public class TransformationFlow {
 
 			@Override public void call(final Subscriber<? super JsonNode> subscriber) {
 
-				resultObservable
+				resultObservable.subscribeOn(scheduler)
 						.compose(new AndThenWaitFor<>(writeResponse, DMPPersistenceUtil.getJSONObjectMapper()::createArrayNode))
 						.doOnCompleted(morphContext::stop)
 						.subscribe(subscriber);
 
 				final AtomicInteger counter = new AtomicInteger(0);
 
-				final Observable<Tuple<String, JsonNode>> tupleObservable = tuples.subscribeOn(Schedulers.immediate());
+				final Observable<Tuple<String, JsonNode>> tupleObservable = tuples.subscribeOn(scheduler);
 
 				tupleObservable.doOnNext(tuple -> {
 
@@ -389,15 +390,15 @@ public class TransformationFlow {
 				}).doOnCompleted(() -> LOG.debug("received '{}' records in transformation engine", counter.get()))
 						.subscribe(opener::process, writer::propagateError, opener::closeStream);
 			}
-		});
+		}).subscribeOn(scheduler);
 	}
 
 	public Observable<JsonNode> apply(final Observable<Tuple<String, JsonNode>> tuples, final boolean writeResultToDatahub,
-			final boolean doNotReturnJsonToCaller, final boolean enableVersioning) throws DMPConverterException {
+			final boolean doNotReturnJsonToCaller, final boolean enableVersioning, final Scheduler scheduler) throws DMPConverterException {
 
 		final JsonNodeReader opener = new JsonNodeReader();
 
-		return apply(tuples, opener, writeResultToDatahub, doNotReturnJsonToCaller, enableVersioning);
+		return apply(tuples, opener, writeResultToDatahub, doNotReturnJsonToCaller, enableVersioning, scheduler);
 	}
 
 	static Metamorph createMorph(final Reader morphString) throws DMPMorphDefException {

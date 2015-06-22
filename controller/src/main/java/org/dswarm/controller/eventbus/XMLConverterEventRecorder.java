@@ -28,6 +28,8 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
+import rx.Scheduler;
+import rx.schedulers.Schedulers;
 
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.converter.flow.XMLSourceResourceGDMStmtsFlow;
@@ -101,7 +103,7 @@ public class XMLConverterEventRecorder {
 	public void processDataModel(final DataModel dataModel, final UpdateFormat updateFormat, final boolean enableVersioning)
 			throws DMPControllerException {
 
-		Observable<org.dswarm.persistence.model.internal.Model> result = doIngest(dataModel);
+		Observable<org.dswarm.persistence.model.internal.Model> result = doIngest(dataModel, Schedulers.newThread());
 
 		try {
 
@@ -124,7 +126,8 @@ public class XMLConverterEventRecorder {
 		}
 	}
 
-	public Observable<org.dswarm.persistence.model.internal.Model> doIngest(final DataModel dataModel) throws DMPControllerException {
+	public Observable<org.dswarm.persistence.model.internal.Model> doIngest(final DataModel dataModel, final Scheduler scheduler)
+			throws DMPControllerException {
 
 		// TODO: enable monitoring here
 
@@ -147,7 +150,7 @@ public class XMLConverterEventRecorder {
 					.supplyAsync(() -> xmlFlowFactory.get().fromDataModel(dataModel));
 			final Observable<XMLSourceResourceGDMStmtsFlow> obserableFlow = Observable.from(futureFlow);
 
-			return obserableFlow.flatMap(flow -> {
+			return obserableFlow.subscribeOn(scheduler).flatMap(flow -> {
 
 				LOG.debug("process xml data resource at '{}' into data model '{}'", path, dataModel.getUuid());
 

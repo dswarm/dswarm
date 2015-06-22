@@ -46,6 +46,7 @@ import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 import rx.Observable;
+import rx.schedulers.Schedulers;
 
 import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.GuicedTest;
@@ -251,7 +252,7 @@ public class TransformationFlowTest extends GuicedTest {
 
 		flow.getScript();
 
-		final ArrayNode actualNodes = flow.apply(tuples, true, false, true).reduce(
+		final ArrayNode actualNodes = flow.apply(tuples, true, false, true, Schedulers.newThread()).reduce(
 				DMPPersistenceUtil.getJSONObjectMapper().createArrayNode(),
 				ArrayNode::add
 		).toBlocking().first();
