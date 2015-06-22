@@ -288,6 +288,13 @@ public class XMLExporter {
 
 							optionalFirstSingleRecordGDM = Optional.of(singleRecordGDM);
 
+							try {
+								LOG.debug("result JSON in XML exporter = " + DMPPersistenceUtil.getJSONObjectMapper()
+										.writeValueAsString(singleRecordGDM));
+							} catch (JsonProcessingException e) {
+								e.printStackTrace();
+							}
+
 							return;
 						}
 
@@ -541,6 +548,16 @@ public class XMLExporter {
 
 				// optionally, write literal value
 				writeKeyValue(predicateURI, node);
+			} else if (isTextArray(node)) {
+
+				final Iterator<JsonNode> elements = node.elements();
+
+				while (elements.hasNext()) {
+
+					final JsonNode element = elements.next();
+
+					writeKeyValue(predicateURI, element);
+				}
 			} else {
 
 				// open tag
@@ -554,6 +571,33 @@ public class XMLExporter {
 				writer.writeEndElement();
 				isElementOpen = false;
 			}
+		}
+
+		private boolean isTextArray(final JsonNode node) {
+
+			if (!JsonNodeType.ARRAY.equals(node.getNodeType())) {
+
+				return false;
+			}
+
+			final Iterator<JsonNode> elements = node.elements();
+
+			if (!elements.hasNext()) {
+
+				return false;
+			}
+
+			while (elements.hasNext()) {
+
+				final JsonNode element = elements.next();
+
+				if (!JsonNodeType.STRING.equals(element.getNodeType())) {
+
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 		protected void writeKeyValue(final URI predicateURI, final JsonNode objectGDMNode) throws XMLStreamException {

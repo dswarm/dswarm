@@ -1,13 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
 <ns1:Document xmlns:ns1="http://purl.org/ontology/bibo/" xmlns:ns2="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd">
 	<ns2:feld>
-		<ns2:nr>
-			<ns2:nr><![CDATA[<a href="http://av.gl/dmp0?foo">Lorem Ipsum</a>]]></ns2:nr>
-			<ns2:nr><![CDATA[<a href="http://av.gl/dmp2?foo">Lorem Ipsum</a>]]></ns2:nr>
-			<ns2:nr><![CDATA[<a href="http://av.gl/dmp3?foo">Lorem Ipsum</a>]]></ns2:nr>
-			<ns2:nr><![CDATA[<a href="http://av.gl/dmp5?foo">Lorem Ipsum</a>]]></ns2:nr>
-			<ns2:nr><![CDATA[<a href="http://av.gl/dmp7?foo">Lorem Ipsum</a>]]></ns2:nr>
-			<ns2:nr><![CDATA[<a href="http://av.gl/dmp1?foo">Lorem Ipsum</a>]]></ns2:nr>
-		</ns2:nr>
-		<__record_id><![CDATA[http://data.slub-dresden.de/resource/40daa146-f778-4b4d-9e49-5b9046164e71]]></__record_id>
+		<ns2:nr><![CDATA[<a href="http://av.gl/dmp0?foo">Lorem Ipsum</a>]]></ns2:nr>
+		<ns2:nr><![CDATA[<a href="http://av.gl/dmp2?foo">Lorem Ipsum</a>]]></ns2:nr>
+		<ns2:nr><![CDATA[<a href="http://av.gl/dmp3?foo">Lorem Ipsum</a>]]></ns2:nr>
+		<ns2:nr><![CDATA[<a href="http://av.gl/dmp5?foo">Lorem Ipsum</a>]]></ns2:nr>
+		<ns2:nr><![CDATA[<a href="http://av.gl/dmp7?foo">Lorem Ipsum</a>]]></ns2:nr>
+		<ns2:nr><![CDATA[<a href="http://av.gl/dmp1?foo">Lorem Ipsum</a>]]></ns2:nr>
+		<__record_id><![CDATA[http://data.slub-dresden.de/resource/095e7633-144c-4cb1-a62d-5fbbdf9f6dad]]></__record_id>
 	</ns2:feld>
 </ns1:Document>

@@ -22,6 +22,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -53,6 +54,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
@@ -98,7 +100,10 @@ public class TasksResource {
 	public static final String DO_EXPORT_ON_THE_FLY_IDENTIFIER    = "do_export_on_the_fly";
 	public static final String DO_VERSIONING_ON_RESULT_IDENTIFIER = "do_versioning_on_result";
 
-	private final ExecutorService executorService;
+	private static final String DSWARM_TASK_EXECUTOR_THREAD_NAMING_PATTERN = "dswarm-task-executor-%d";
+
+	private static final ExecutorService EXECUTOR_SERVICE = Executors
+			.newCachedThreadPool(new BasicThreadFactory.Builder().daemon(false).namingPattern(DSWARM_TASK_EXECUTOR_THREAD_NAMING_PATTERN).build());
 
 	/**
 	 * The base URI of this resource.
@@ -132,14 +137,12 @@ public class TasksResource {
 			final DataModelUtil dataModelUtilArg,
 			final ObjectMapper objectMapperArg,
 			final TransformationFlowFactory transformationFlowFactoryArg,
-			@Named("Monitoring") final Provider<MonitoringLogger> monitoringLogger,
-			final ExecutorService executorServiceArg) {
+			@Named("Monitoring") final Provider<MonitoringLogger> monitoringLogger) {
 
 		dataModelUtil = dataModelUtilArg;
 		objectMapper = objectMapperArg;
 		transformationFlowFactory = transformationFlowFactoryArg;
 		this.monitoringLogger = monitoringLogger;
-		executorService = executorServiceArg;
 	}
 
 	/**
