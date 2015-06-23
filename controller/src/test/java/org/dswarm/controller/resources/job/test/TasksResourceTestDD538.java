@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -168,8 +169,14 @@ public abstract class TasksResourceTestDD538 extends ResourceTest {
 		final String inputDataModelJSONString = objectMapper.writeValueAsString(data1);
 
 		final WebTarget resourceTarget = dataModelsResourceTestUtils.getResourceTarget();
-		final Response response = resourceTarget.queryParam(DataModelsResource.DO_INGEST_IDENTIFIER, Boolean.FALSE)
-				.request(MediaType.APPLICATION_JSON_TYPE).post(
+		final WebTarget webTarget = resourceTarget.queryParam(DataModelsResource.DO_INGEST_QUERY_PARAM_IDENTIFIER, Boolean.FALSE);
+
+		LOG.debug("data model creation request URI = '{}'", webTarget.getUri());
+
+		final Invocation.Builder request = webTarget
+				.request(MediaType.APPLICATION_JSON_TYPE);
+
+		final Response response = request.post(
 						Entity.json(inputDataModelJSONString));
 
 		Assert.assertNotNull(response);
