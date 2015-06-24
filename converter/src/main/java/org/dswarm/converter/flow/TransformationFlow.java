@@ -390,6 +390,21 @@ public class TransformationFlow {
 				}).doOnCompleted(() -> LOG.debug("received '{}' records in transformation engine", counter.get()))
 						.subscribe(opener::process, writer::propagateError, opener::closeStream);
 			}
+		}).doOnCompleted(() -> {
+
+			if (JsonNodeReader.class.isInstance(opener)) {
+
+				JsonNodeReader jsonNodeReader = (JsonNodeReader) opener;
+
+				LOG.debug("processed '{}' records with opener in transformation engine", jsonNodeReader.getCounter().get());
+			}
+
+			LOG.debug("received '{}' ('{}') records + emitted '{}' ('{}') records in converter in transformation engine",
+					converter.getInComingCounter().get(), converter.getInComingCounter2().get(), converter.getOutGoingCounter().get(),
+					converter.getOutGoingCounter2().get());
+
+			LOG.debug("received '{}' records + emitted '{}' (discarded '{}') records in writer in transformation engine",
+					writer.getInComingCounter().get(), writer.getOutGoingCounter().get(), writer.getNonOutGoingCounter().get());
 		}).subscribeOn(scheduler);
 	}
 
