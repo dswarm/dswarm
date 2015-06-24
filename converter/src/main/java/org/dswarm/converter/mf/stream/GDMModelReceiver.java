@@ -79,7 +79,10 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 
 		return modelSubject.lift(new BufferOperator()).filter(m -> {
 
-			gdmModelStack.pop();
+			if (!gdmModelStack.empty()) {
+
+				gdmModelStack.pop();
+			}
 
 			if (m != null) {
 
@@ -119,7 +122,7 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 
 				@Override public void onCompleted() {
 
-					while(!gdmModelStack.empty()) {
+					while (!gdmModelStack.empty()) {
 
 						subscriber.onNext(gdmModelStack.pop());
 					}

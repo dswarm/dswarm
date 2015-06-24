@@ -22,6 +22,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -45,6 +46,7 @@ import org.dswarm.persistence.monitoring.MonitoringHelper;
 import org.dswarm.persistence.monitoring.MonitoringLogger;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.service.internal.graph.util.SchemaDeterminator;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * An event recorder for converting XML documents.
@@ -183,6 +185,12 @@ public class XMLConverterEventRecorder {
 
 						LOG.debug("transformed first record of xml data resource at '{}' to GDM for data model '{}' with '{}' statements", path,
 								dataModel.getUuid(), statementCounter.get());
+
+						try {
+							System.out.println("result JSON in XML converter = '" + DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(gdmModel.toJSON()) + "'");
+						} catch (JsonProcessingException e) {
+							e.printStackTrace();
+						}
 					}
 
 					schemaDeterminator.optionallyEnhancedDataModel(freshDataModel, gdmModel, model, isSchemaAnInbuiltSchema);
