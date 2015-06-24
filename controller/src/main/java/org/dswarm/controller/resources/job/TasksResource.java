@@ -366,9 +366,6 @@ public class TasksResource {
 		try (final MonitoringHelper ignore = monitoringLogger.get().startExecution(task)) {
 
 			final TransformationFlow flow = transformationFlowFactory.fromTask(task);
-
-			System.out.println("task as morphscript = '" + flow.getScript() + "'");
-
 			result = flow.apply(inputData, writeResultToDatahub, doNotReturnJsonToCaller2, doVersioningOnResult, TRANSFORMATION_ENGINE_SCHEDULER).subscribeOn(TRANSFORMATION_ENGINE_SCHEDULER);
 		}
 
