@@ -15,12 +15,15 @@
  */
 package org.dswarm.converter.mf.stream;
 
+import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
+import rx.Subscriber;
 import rx.functions.Func1;
 import rx.subjects.PublishSubject;
 import rx.subjects.Subject;
@@ -42,10 +45,13 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 	private final AtomicInteger outGoingCounter    = new AtomicInteger(0);
 	private final AtomicInteger nonOutGoingCounter = new AtomicInteger(0);
 
+	final Stack<GDMModel> gdmModelStack = new Stack<>();
+
 	@Override
 	public void process(final GDMModel gdmModel) {
 
 		inComingCounter.incrementAndGet();
+		gdmModelStack.push(gdmModel);
 
 		modelSubject.onNext(gdmModel);
 	}
@@ -71,7 +77,9 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 
 	public Observable<GDMModel> getObservable() {
 
-		return modelSubject.onBackpressureBuffer().filter(m -> {
+		return modelSubject.lift(new BufferOperator()).filter(m -> {
+
+			gdmModelStack.pop();
 
 			if (m != null) {
 
@@ -101,5 +109,34 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 	public AtomicInteger getNonOutGoingCounter() {
 
 		return nonOutGoingCounter;
+	}
+
+	private class BufferOperator implements Observable.Operator<GDMModel, GDMModel> {
+
+		@Override public Subscriber<? super GDMModel> call(final Subscriber<? super GDMModel> subscriber) {
+
+			return new Subscriber<GDMModel>() {
+
+				@Override public void onCompleted() {
+
+					while(!gdmModelStack.empty()) {
+
+						subscriber.onNext(gdmModelStack.pop());
+					}
+
+					subscriber.onCompleted();
+				}
+
+				@Override public void onError(final Throwable e) {
+
+					subscriber.onError(e);
+				}
+
+				@Override public void onNext(final GDMModel gdmModel) {
+
+					subscriber.onNext(gdmModel);
+				}
+			};
+		}
 	}
 }
