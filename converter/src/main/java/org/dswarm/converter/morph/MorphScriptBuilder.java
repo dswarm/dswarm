@@ -15,25 +15,39 @@
  */
 package org.dswarm.converter.morph;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringEscapeUtils;
-
-import org.dswarm.converter.DMPConverterException;
-import org.dswarm.persistence.model.job.*;
-import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 
-import java.io.*;
-import java.util.*;
-import java.util.Map.Entry;
+import org.dswarm.common.xml.utils.XMLUtils;
+import org.dswarm.converter.DMPConverterException;
+import org.dswarm.persistence.model.job.Component;
+import org.dswarm.persistence.model.job.Function;
+import org.dswarm.persistence.model.job.FunctionType;
+import org.dswarm.persistence.model.job.Mapping;
+import org.dswarm.persistence.model.job.Task;
+import org.dswarm.persistence.model.job.Transformation;
+import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * Creates a metamorph script from a given {@link Task}.
@@ -57,7 +71,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 	private static final String METAMORPH_FUNCTION_BLACKLIST = "blacklist";
 
 	private static final String METAMORPH_FUNCTION_LOOKUP = "lookup";
-	
+
 	private static final String METAMORPH_FUNCTION_REGEXLOOKUP = "regexlookup";
 
 	private static final String METAMORPH_FUNCTION_SETREPLACE = "setreplace";
@@ -83,7 +97,8 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 	private static final String OCCURRENCE_VARIABLE_POSTFIX = ".occurrence";
 
 	private static final Set<String> LOOKUP_FUNCTIONS = new HashSet<>(Arrays.asList(
-			new String[] { METAMORPH_FUNCTION_LOOKUP, METAMORPH_FUNCTION_SETREPLACE, METAMORPH_FUNCTION_BLACKLIST, METAMORPH_FUNCTION_WHITELIST, METAMORPH_FUNCTION_REGEXLOOKUP }));
+			new String[] { METAMORPH_FUNCTION_LOOKUP, METAMORPH_FUNCTION_SETREPLACE, METAMORPH_FUNCTION_BLACKLIST, METAMORPH_FUNCTION_WHITELIST,
+					METAMORPH_FUNCTION_REGEXLOOKUP }));
 
 	private static final String LOOKUP_MAP_DEFINITION = "lookupString";
 
@@ -93,7 +108,9 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 	private static final String MF_CONCAT_FUNCTION_PREFIX_ATTRIBUTE_IDENTIFIER = "prefix";
 
-	private static final String MF_CONCAT_FUNCTION_POSTFIX_ATTRIBUTE_IDENTIFIER = "postfix";
+	private static final String                     MF_CONCAT_FUNCTION_POSTFIX_ATTRIBUTE_IDENTIFIER = "postfix";
+	private static final String                     DUMMY_VARIABLE_IDENTIFIER                       = "var1000";
+	private static final Map<String, AtomicInteger> mapiVarCounters                                 = new HashMap<>();
 
 	@Override
 	public MorphScriptBuilder apply(final Task task) throws DMPConverterException {
@@ -514,7 +531,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 		}
 	}
 
-	private void mapMappingInputToMappingOutput(final Mapping mapping, final Element rules) {
+	private void mapMappingInputToMappingOutput(final Mapping mapping, final Element rules) throws DMPConverterException {
 
 		final Set<MappingAttributePathInstance> inputMappingAttributePathInstances = mapping.getInputAttributePaths();
 
@@ -544,7 +561,9 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 		final boolean isOrdinalValid = checkOrdinal(ordinal);
 		final Map<String, String> filterExpressionMap = extractFilterExpressions(filterExpression);
 
-		String var1000 = "var1000";
+		final String mapiIdentifier = getMAPIIdentifier(inputMappingAttributePathInstance);
+		final int mapiVarCount = getMAPICount(mapiIdentifier);
+		String var1000 = DUMMY_VARIABLE_IDENTIFIER + "_" + mapiIdentifier + mapiVarCount;
 		boolean takeVariable = false;
 
 		if (isOrdinalValid) {
@@ -650,7 +669,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 	private void processComponent(final Component component, final Map<String, List<String>> mappingInputsVariablesMap,
 			final String transformationOutputVariableIdentifier, final Element rules) throws DMPConverterException {
 
-		String[] inputStrings = { };
+		String[] inputStrings = {};
 
 		final Map<String, String> componentParameterMapping = component.getParameterMappings();
 
@@ -828,5 +847,36 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 		rules.appendChild(occurrenceData);
 
 		return manipulatedVariable;
+	}
+
+	private int getMAPICount(final String mapiIdentifier) {
+
+		if (!mapiVarCounters.containsKey(mapiIdentifier)) {
+
+			final AtomicInteger mapiVarCounter = new AtomicInteger(0);
+
+			mapiVarCounters.put(mapiIdentifier, mapiVarCounter);
+		}
+
+		return mapiVarCounters.get(mapiIdentifier).getAndIncrement();
+	}
+
+	private String getMAPIIdentifier(final MappingAttributePathInstance mapi) throws DMPConverterException {
+
+		final String mapiUuid = mapi.getUuid();
+
+		if (mapiUuid != null && !mapiUuid.trim().isEmpty()) {
+
+			return mapiUuid;
+		}
+
+		final String mapiName = mapi.getName();
+
+		if (mapiName != null && !mapiName.trim().isEmpty()) {
+
+			return XMLUtils.getXMLName(mapiName);
+		}
+
+		throw new DMPConverterException("couldn't determine MAPI identifier");
 	}
 }
