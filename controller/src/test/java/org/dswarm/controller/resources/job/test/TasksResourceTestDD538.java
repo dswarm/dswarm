@@ -15,8 +15,10 @@
  */
 package org.dswarm.controller.resources.job.test;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 import javax.ws.rs.client.Entity;
@@ -35,6 +37,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.builder.Input;
+import org.xmlunit.diff.Diff;
+import org.xmlunit.diff.Difference;
 
 import org.dswarm.controller.resources.job.TasksResource;
 import org.dswarm.controller.resources.resource.DataModelsResource;
@@ -47,7 +53,6 @@ import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.ResourceType;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
-import org.dswarm.persistence.model.resource.utils.DataModelUtils;
 import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
@@ -114,19 +119,37 @@ public abstract class TasksResourceTestDD538 extends ResourceTest {
 
 		final ObjectNode requestJSON = prepareTask(inputDataModel);
 
+		System.out.println("task request JSON = '" + objectMapper.writeValueAsString(requestJSON) + "'");
+
 		final Response response = target().request(MediaType.APPLICATION_XML_TYPE).post(Entity.json(requestJSON));
 
 		Assert.assertEquals("200 Created was expected", 200, response.getStatus());
 
-		final String actualResultXML = response.readEntity(String.class);
+		final InputStream actualXMLStream = response.readEntity(InputStream.class);
+		Assert.assertNotNull(actualXMLStream);
 
-		Assert.assertNotNull("the response JSON shouldn't be null", actualResultXML);
+		final BufferedInputStream bis = new BufferedInputStream(actualXMLStream, 1024);
 
-		TasksResourceTestDD538.LOG.debug("task execution response = '{}'", actualResultXML);
+		final String expectedXML = DMPPersistenceUtil.getResourceAsString(expectedResultXMLFileName);
 
-		final String expectedResultXML = DMPPersistenceUtil.getResourceAsString(expectedResultXMLFileName);
+		// do comparison: check for XML similarity
+		final Diff xmlDiff = DiffBuilder
+				.compare(Input.fromString(expectedXML))
+				.withTest(Input.fromStream(bis))
+				.ignoreWhitespace()
+				.checkForSimilar()
+				.build();
 
-		Assert.assertEquals(expectedResultXML.length(), actualResultXML.length());
+		if (xmlDiff.hasDifferences()) {
+			final StringBuilder sb = new StringBuilder("Oi chap, there seem to ba a mishap!");
+			for (final Difference difference : xmlDiff.getDifferences()) {
+				sb.append('\n').append(difference);
+			}
+			Assert.fail(sb.toString());
+		}
+
+		actualXMLStream.close();
+		bis.close();
 
 		TasksResourceTestDD538.LOG.debug("end DD-538 {} task execution test", testPostfix);
 	}
@@ -177,7 +200,7 @@ public abstract class TasksResourceTestDD538 extends ResourceTest {
 				.request(MediaType.APPLICATION_JSON_TYPE);
 
 		final Response response = request.post(
-						Entity.json(inputDataModelJSONString));
+				Entity.json(inputDataModelJSONString));
 
 		Assert.assertNotNull(response);
 		Assert.assertEquals(201, response.getStatus());
@@ -219,7 +242,7 @@ public abstract class TasksResourceTestDD538 extends ResourceTest {
 			final String resource1Uuid = UUIDService.getUUID(Resource.class.getSimpleName());
 
 			final int lastBackslash = resourceFileName.lastIndexOf("/");
-			final String relativeResourceFileName= resourceFileName.substring(lastBackslash + 1, resourceFileName.length());
+			final String relativeResourceFileName = resourceFileName.substring(lastBackslash + 1, resourceFileName.length());
 
 			res1 = new Resource(resource1Uuid);
 			res1.setName(relativeResourceFileName);
