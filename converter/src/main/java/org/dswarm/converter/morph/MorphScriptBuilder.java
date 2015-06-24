@@ -563,7 +563,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 		final String mapiIdentifier = getMAPIIdentifier(inputMappingAttributePathInstance);
 		final int mapiVarCount = getMAPICount(mapiIdentifier);
-		String var1000 = DUMMY_VARIABLE_IDENTIFIER + "_" + mapiIdentifier + mapiVarCount;
+		String var1000 = DUMMY_VARIABLE_IDENTIFIER + "_" + mapiIdentifier + "_" + mapiVarCount;
 		boolean takeVariable = false;
 
 		if (isOrdinalValid) {
