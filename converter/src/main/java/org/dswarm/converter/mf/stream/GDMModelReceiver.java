@@ -22,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
 import rx.functions.Func1;
-import rx.subjects.BehaviorSubject;
 import rx.subjects.PublishSubject;
 import rx.subjects.Subject;
 
@@ -72,7 +71,7 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 
 	public Observable<GDMModel> getObservable() {
 
-		return modelSubject.filter(m -> {
+		return modelSubject.onBackpressureBuffer().filter(m -> {
 
 			if (m != null) {
 
