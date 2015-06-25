@@ -90,8 +90,6 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 			if (!gdmModelDeque.isEmpty()) {
 
 				gdmModelDeque.pollLast();
-
-				dequePolledCounter.incrementAndGet();
 			}
 
 			if (m != null) {
@@ -105,7 +103,7 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 
 			return false;
 		}).doOnCompleted(() -> LOG
-				.debug("complete {} writer observable; received '{}' records + emitted '{}' (left '{}'; discarded '{}'; popped '{}') records", type,
+				.debug("complete {} writer observable; received '{}' records + emitted '{}' (left '{}'; discarded '{}'; polled '{}') records", type,
 						inComingCounter.get(),
 						outGoingCounter.get(), inComingCounter.get() - outGoingCounter.get(), getNonOutGoingCounter().get(),
 						dequePolledCounter.get()));
