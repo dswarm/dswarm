@@ -24,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
 import rx.Subscriber;
-import rx.functions.Func1;
 import rx.subjects.PublishSubject;
 import rx.subjects.Subject;
 
@@ -36,8 +35,6 @@ import org.dswarm.persistence.model.internal.gdm.GDMModel;
 public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(GDMModelReceiver.class);
-
-	private static final Func1<GDMModel, Boolean> NOT_NULL = m -> m != null;
 
 	private final Subject<GDMModel, GDMModel> modelSubject = PublishSubject.create();
 
