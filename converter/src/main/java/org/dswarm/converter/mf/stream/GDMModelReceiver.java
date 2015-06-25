@@ -17,6 +17,7 @@ package org.dswarm.converter.mf.stream;
 
 import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.culturegraph.mf.framework.ObjectReceiver;
@@ -43,7 +44,8 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 	private final AtomicInteger nonOutGoingCounter = new AtomicInteger(0);
 	private final AtomicInteger dequePolledCounter = new AtomicInteger(0);
 
-	private final Deque<GDMModel> gdmModelDeque = new ConcurrentLinkedDeque<>();
+	private final Deque<GDMModel> gdmModelDeque     = new ConcurrentLinkedDeque<>();
+	private final AtomicBoolean   afterClosedStream = new AtomicBoolean();
 
 	private final String type;
 
@@ -72,6 +74,8 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 		LOG.debug("close {} writer stream; received '{}' records + emitted '{}' (left '{}'; discarded '{}') records", type, inComingCounter.get(),
 				outGoingCounter.get(), inComingCounter.get() - outGoingCounter.get(), getNonOutGoingCounter().get());
 
+		afterClosedStream.compareAndSet(false, true);
+
 		modelSubject.onCompleted();
 	}
 
@@ -84,9 +88,9 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 
 		return modelSubject.lift(new BufferOperator()).filter(m -> {
 
-			if (!gdmModelDeque.isEmpty()) {
+			if (!afterClosedStream.get() && !gdmModelDeque.isEmpty()) {
 
-				gdmModelDeque.pollLast();
+				gdmModelDeque.removeLast();
 			}
 
 			if (m != null) {
@@ -136,7 +140,7 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 
 					while (!gdmModelDeque.isEmpty()) {
 
-						subscriber.onNext(gdmModelDeque.getLast());
+						subscriber.onNext(gdmModelDeque.removeLast());
 
 						dequePolledCounter.incrementAndGet();
 					}
