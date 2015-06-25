@@ -101,6 +101,8 @@ public class TransformationFlow {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TransformationFlow.class);
 
+	private static final String TRANSFORMATION_ENGINE_IDENTIFIER = "transformation engine";
+
 	private final Metamorph transformer;
 
 	private final String script;
@@ -212,7 +214,7 @@ public class TransformationFlow {
 		//		final StreamJsonCollapser collapser = new StreamJsonCollapser();
 		final GDMEncoder converter = new GDMEncoder(outputDataModel);
 
-		final GDMModelReceiver writer = new GDMModelReceiver();
+		final GDMModelReceiver writer = new GDMModelReceiver(TRANSFORMATION_ENGINE_IDENTIFIER);
 
 		final StreamPipe<StreamReceiver> starter;
 		if (optionalSkipFilter.isPresent()) {

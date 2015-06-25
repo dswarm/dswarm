@@ -56,6 +56,8 @@ public class XMLSourceResourceGDMStmtsFlow {
 
 	private static final Logger			LOG	= LoggerFactory.getLogger(XMLSourceResourceGDMStmtsFlow.class);
 
+	private static final String XML_INGEST_IDENTIFIER = "xml ingest";
+
 	private final Optional<String>		recordTagName;
 	private final Optional<DataModel>	dataModel;
 	private final TimerBasedFactory timerBasedFactory;
@@ -123,7 +125,7 @@ public class XMLSourceResourceGDMStmtsFlow {
 
 			encoder = new XMLGDMEncoder(dataModel);
 		}
-		final GDMModelReceiver writer = new GDMModelReceiver();
+		final GDMModelReceiver writer = new GDMModelReceiver(XML_INGEST_IDENTIFIER);
 
 		final ObjectTimer<Reader> inputTimer = timerBasedFactory.forObject(MonitoringFlowStatics.INPUT_RESOURCE_FILES);
 		final XmlTimer<GDMModel> xmlTimer = timerBasedFactory.forXml(MonitoringFlowStatics.XML_EVENTS);

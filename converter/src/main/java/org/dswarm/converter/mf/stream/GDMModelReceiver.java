@@ -18,7 +18,6 @@ package org.dswarm.converter.mf.stream;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +44,14 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 	private final AtomicInteger outGoingCounter    = new AtomicInteger(0);
 	private final AtomicInteger nonOutGoingCounter = new AtomicInteger(0);
 
-	final Stack<GDMModel> gdmModelStack = new Stack<>();
+	private final Stack<GDMModel> gdmModelStack = new Stack<>();
+
+	private final String type;
+
+	public GDMModelReceiver(final String typeArg) {
+
+		type = typeArg;
+	}
 
 	@Override
 	public void process(final GDMModel gdmModel) {
@@ -64,7 +70,7 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 	@Override
 	public void closeStream() {
 
-		LOG.debug("close writer stream; received '{}' records + emitted '{}' (left '{}'; discarded '{}') records", inComingCounter.get(),
+		LOG.debug("close {} writer stream; received '{}' records + emitted '{}' (left '{}'; discarded '{}') records", type, inComingCounter.get(),
 				outGoingCounter.get(), inComingCounter.get() - outGoingCounter.get(), getNonOutGoingCounter().get());
 
 		modelSubject.onCompleted();
@@ -95,7 +101,8 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 
 			return false;
 		}).doOnCompleted(() -> LOG
-				.debug("complete writer observable; received '{}' records + emitted '{}' (left '{}'; discarded '{}') records", inComingCounter.get(),
+				.debug("complete {} writer observable; received '{}' records + emitted '{}' (left '{}'; discarded '{}') records", type,
+						inComingCounter.get(),
 						outGoingCounter.get(), inComingCounter.get() - outGoingCounter.get(), getNonOutGoingCounter().get()));
 	}
 
