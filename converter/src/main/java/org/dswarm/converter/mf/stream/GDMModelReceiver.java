@@ -15,7 +15,8 @@
  */
 package org.dswarm.converter.mf.stream;
 
-import java.util.Stack;
+import java.util.Deque;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.culturegraph.mf.framework.ObjectReceiver;
@@ -43,8 +44,9 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 	private final AtomicInteger inComingCounter    = new AtomicInteger(0);
 	private final AtomicInteger outGoingCounter    = new AtomicInteger(0);
 	private final AtomicInteger nonOutGoingCounter = new AtomicInteger(0);
+	private final AtomicInteger dequePolledCounter = new AtomicInteger(0);
 
-	private final Stack<GDMModel> gdmModelStack = new Stack<>();
+	private final Deque<GDMModel> gdmModelDeque = new ConcurrentLinkedDeque<>();
 
 	private final String type;
 
@@ -57,7 +59,7 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 	public void process(final GDMModel gdmModel) {
 
 		inComingCounter.incrementAndGet();
-		gdmModelStack.push(gdmModel);
+		gdmModelDeque.addFirst(gdmModel);
 
 		modelSubject.onNext(gdmModel);
 	}
@@ -85,9 +87,11 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 
 		return modelSubject.lift(new BufferOperator()).filter(m -> {
 
-			if (!gdmModelStack.empty()) {
+			if (!gdmModelDeque.isEmpty()) {
 
-				gdmModelStack.pop();
+				gdmModelDeque.pollLast();
+
+				dequePolledCounter.incrementAndGet();
 			}
 
 			if (m != null) {
@@ -101,9 +105,10 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 
 			return false;
 		}).doOnCompleted(() -> LOG
-				.debug("complete {} writer observable; received '{}' records + emitted '{}' (left '{}'; discarded '{}') records", type,
+				.debug("complete {} writer observable; received '{}' records + emitted '{}' (left '{}'; discarded '{}'; popped '{}') records", type,
 						inComingCounter.get(),
-						outGoingCounter.get(), inComingCounter.get() - outGoingCounter.get(), getNonOutGoingCounter().get()));
+						outGoingCounter.get(), inComingCounter.get() - outGoingCounter.get(), getNonOutGoingCounter().get(),
+						dequePolledCounter.get()));
 	}
 
 	public AtomicInteger getInComingCounter() {
@@ -121,6 +126,11 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 		return nonOutGoingCounter;
 	}
 
+	public AtomicInteger getDequePolledCounter() {
+
+		return dequePolledCounter;
+	}
+
 	private class BufferOperator implements Observable.Operator<GDMModel, GDMModel> {
 
 		@Override public Subscriber<? super GDMModel> call(final Subscriber<? super GDMModel> subscriber) {
@@ -129,9 +139,11 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 
 				@Override public void onCompleted() {
 
-					while (!gdmModelStack.empty()) {
+					while (!gdmModelDeque.isEmpty()) {
 
-						subscriber.onNext(gdmModelStack.pop());
+						subscriber.onNext(gdmModelDeque.getLast());
+
+						dequePolledCounter.incrementAndGet();
 					}
 
 					subscriber.onCompleted();
