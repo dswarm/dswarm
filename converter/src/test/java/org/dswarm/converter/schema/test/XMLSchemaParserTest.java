@@ -140,6 +140,12 @@ public class XMLSchemaParserTest extends GuicedTest {
 
 		final Map<String, AttributePathHelper> rootAttributePaths = parseAttributePaths("OAI-PMH.xsd", "record", false);
 
+		final Map<String, AttributePathHelper> newAttributePaths = buildOAIPMHPlusDCElementsAndEDMAttributePaths(rootAttributePaths);
+
+		compareAttributePaths("oai-pmh_plus_oai_dc_elements_and_edm_schema_-_attribute_paths.txt", newAttributePaths);
+	}
+
+	private static Map<String, AttributePathHelper> buildOAIPMHPlusDCElementsAndEDMAttributePaths(final Map<String, AttributePathHelper> rootAttributePaths) {
 		final String rootAttributePathIdentifier = "http://www.openarchives.org/OAI/2.0/metadata";
 		final AttributePathHelper rootAttributePath = rootAttributePaths.get(rootAttributePathIdentifier);
 
@@ -164,9 +170,7 @@ public class XMLSchemaParserTest extends GuicedTest {
 		final Map<String, AttributePathHelper> newAttributePaths2 = composeAttributePaths(rootAttributePaths3, rootAttributePath2,
 				childAttributePaths2);
 
-		final Map<String, AttributePathHelper> newAttributePaths = composeAttributePaths(newAttributePaths2, rootAttributePath, childAttributePaths);
-
-		compareAttributePaths("oai-pmh_plus_oai_dc_elements_and_edm_schema_-_attribute_paths.txt", newAttributePaths);
+		return composeAttributePaths(newAttributePaths2, rootAttributePath, childAttributePaths);
 	}
 
 	@Test
@@ -215,6 +219,32 @@ public class XMLSchemaParserTest extends GuicedTest {
 				.get("http://www.openarchives.org/OAI/2.0/header\u001Ehttp://www.openarchives.org/OAI/2.0/identifier\u001Ehttp://www.w3.org/1999/02/22-rdf-syntax-ns#value");
 
 		return fillContentSchemaAndUpdateSchema(contentSchema, id, null, schema);
+	}
+
+	public static Schema parseOAIPMHPlusDCElementsAndEDMSchema() throws DMPPersistenceException {
+
+		final String childSchemaName = "DC Elements + EDM";
+		final Tuple<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("OAI-PMH.xsd", "record",
+				SchemaUtils.OAI_PMH_DC_ELEMENTS_AND_EDM_SCHEMA_UUID, "OAI-PMH + " + childSchemaName + " schema");
+
+		final Map<String, AttributePathHelper> rootAttributePaths = result.v2();
+
+		final Map<String, AttributePathHelper> newAttributePaths = buildOAIPMHPlusDCElementsAndEDMAttributePaths(rootAttributePaths);
+
+		final Schema schema = result.v1();
+		final Schema updatedSchema = addChildSchemataAttributePathsToSchema(newAttributePaths, schema);
+
+		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(updatedSchema);
+
+		final String uuid = UUIDService.getUUID(ContentSchema.class.getSimpleName());
+
+		final ContentSchema contentSchema = new ContentSchema(uuid);
+		contentSchema.setName("OAI-PMH + DC Elements + EDM content schema");
+
+		final AttributePath id = aps
+				.get("http://www.openarchives.org/OAI/2.0/header\u001Ehttp://www.openarchives.org/OAI/2.0/identifier\u001Ehttp://www.w3.org/1999/02/22-rdf-syntax-ns#value");
+
+		return fillContentSchemaAndUpdateSchema(contentSchema, id, null, updatedSchema);
 	}
 
 	public static Schema parseOAIPMHPlusDCTermsSchema() throws DMPPersistenceException {
@@ -398,7 +428,8 @@ public class XMLSchemaParserTest extends GuicedTest {
 		return optionalResult.get();
 	}
 
-	private void testAttributePathsParsing(final String xsdFileName, final String recordIdentifier, final String resultFileName, final boolean includeRecordTag) throws IOException {
+	private void testAttributePathsParsing(final String xsdFileName, final String recordIdentifier, final String resultFileName,
+			final boolean includeRecordTag) throws IOException {
 
 		final Map<String, AttributePathHelper> attributePaths = parseAttributePaths(xsdFileName, recordIdentifier, includeRecordTag);
 
@@ -420,7 +451,8 @@ public class XMLSchemaParserTest extends GuicedTest {
 		Assert.assertEquals(expectedAttributePaths, actualAttributePaths);
 	}
 
-	private static Map<String, AttributePathHelper> parseAttributePaths(final String xsdFileName, final String recordIdentifier, final boolean includeRecordTag) {
+	private static Map<String, AttributePathHelper> parseAttributePaths(final String xsdFileName, final String recordIdentifier,
+			final boolean includeRecordTag) {
 
 		final XMLSchemaParser xmlSchemaParser = GuicedTest.injector.getInstance(XMLSchemaParser.class);
 		xmlSchemaParser.setIncludeRecordTag(includeRecordTag);
@@ -506,11 +538,19 @@ public class XMLSchemaParserTest extends GuicedTest {
 		final String rootAttributePathIdentifier = "http://www.openarchives.org/OAI/2.0/metadata";
 		final AttributePathHelper rootAttributePath = rootAttributePaths.get(rootAttributePathIdentifier);
 
-		final Map<String, AttributePathHelper> childAttributePaths = parseAttributePaths(childSchemaFileName, childRecordIdentifier, includeRecordTag);
+		final Map<String, AttributePathHelper> childAttributePaths = parseAttributePaths(childSchemaFileName, childRecordIdentifier,
+				includeRecordTag);
 
 		final Map<String, AttributePathHelper> newAttributePaths = composeAttributePaths(rootAttributePaths, rootAttributePath, childAttributePaths);
 
 		final Schema schema = result.v1();
+
+		return addChildSchemataAttributePathsToSchema(newAttributePaths, schema);
+	}
+
+	private static Schema addChildSchemataAttributePathsToSchema(final Map<String, AttributePathHelper> newAttributePaths, final Schema schema)
+			throws DMPPersistenceException {
+
 		final Set<AttributePathHelper> attributePaths = convertToSet(newAttributePaths);
 		final Provider<AttributePathService> attributePathServiceProvider = GuicedTest.injector.getProvider(AttributePathService.class);
 		final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceServiceProvider = GuicedTest.injector.getProvider(
@@ -520,8 +560,6 @@ public class XMLSchemaParserTest extends GuicedTest {
 
 		SchemaUtils.addAttributePaths(schema, attributePaths, attributePathServiceProvider, schemaAttributePathInstanceServiceProvider,
 				attributeServiceProvider);
-
-		// TODO: add content schema, when necessary
 
 		return SchemaUtils.updateSchema(schema, schemaServiceProvider);
 	}
