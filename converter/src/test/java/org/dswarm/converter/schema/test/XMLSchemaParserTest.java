@@ -109,6 +109,17 @@ public class XMLSchemaParserTest extends GuicedTest {
 		testAttributePathsParsing("OAI-PMH.xsd", "record", "oai-pmh_schema_-_attribute_paths.txt", false);
 	}
 
+	/**
+	 * note: http://europeana.eu/terms is not the original EDM namespace URI; http://www.europeana.eu/schemas/edm/ is the original namespace URI
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void testAttributePathsParsingForEDM() throws IOException {
+
+		testAttributePathsParsing("dd-1168/EDM-COMMON-MAIN.xsd", null, "dd-1168/edm_schema_-_attribute_paths.txt", false);
+	}
+
 	@Test
 	public void testAttributePathsParsingForOAIPMHPlusOAIDCElements() throws IOException {
 

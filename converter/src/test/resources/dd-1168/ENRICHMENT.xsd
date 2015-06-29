@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2007-2012 The Europeana Foundation
+ 
+   Licenced under the EUPL, Version 1.1 (the "Licence") and subsequent versions as approved
+   by the European Commission;
+   You may not use this work except in compliance with the Licence.
+  
+   You may obtain a copy of the Licence at:
+   http://joinup.ec.europa.eu/software/page/eupl
+ 
+   Unless required by applicable law or agreed to in writing, software distributed under
+   the Licence is distributed on an "AS IS" basis, without warranties or conditions of
+   any kind, either express or implied.
+   See the Licence for the specific language governing permissions and limitations under
+   the Licence.
+-->
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.europeana.eu/schemas/edm/enrichment/" xmlns:enrichment="http://www.europeana.eu/schemas/edm/enrichment/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  elementFormDefault="qualified">
+  <annotation>
+    <documentation>
+      EDM First Implementation Schema: Who-What-When-Where enrichments
+    </documentation>
+  </annotation>
+  <import namespace="http://www.w3.org/1999/02/22-rdf-syntax-ns#" schemaLocation="RDF.xsd" />
+  <element name="agent_term" type="rdf:ResourceType" />
+  <element name="agent_label" type="rdf:LiteralType" />
+  <element name="concept_term" type="rdf:ResourceType" />
+  <element name="concept_label" type="rdf:LiteralType" />
+  <element name="period_term" type="rdf:ResourceType" />
+  <element name="period_label" type="rdf:LiteralType" />
+  <element name="place_term" type="rdf:ResourceType" />
+  <element name="place_label" type="rdf:LiteralType" />
+</schema>

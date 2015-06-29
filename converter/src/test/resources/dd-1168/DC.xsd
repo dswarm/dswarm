@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2007-2012 The Europeana Foundation
+ 
+   Licenced under the EUPL, Version 1.1 (the "Licence") and subsequent versions as approved
+   by the European Commission;
+   You may not use this work except in compliance with the Licence.
+  
+   You may obtain a copy of the Licence at:
+   http://joinup.ec.europa.eu/software/page/eupl
+ 
+   Unless required by applicable law or agreed to in writing, software distributed under
+   the Licence is distributed on an "AS IS" basis, without warranties or conditions of
+   any kind, either express or implied.
+   See the Licence for the specific language governing permissions and limitations under
+   the Licence.
+-->
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:dc="http://purl.org/dc/elements/1.1/" elementFormDefault="qualified">
+  <annotation>
+    <documentation>
+      EDM First Implementation Schema: DC
+    </documentation>
+  </annotation>
+  <import namespace="http://purl.org/dc/terms/" schemaLocation="DCTERMS.xsd" />
+  <import namespace="http://www.w3.org/1999/02/22-rdf-syntax-ns#" schemaLocation="RDF.xsd" />
+  
+  <element name="rights" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        Information about copyright of the original object. Example:
+        <rights>Creative Commons Attribution 3.0 License</rights>
+        Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="contributor" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        An entity responsible for making contributions to the resource. Example:
+        <contributor>Maria Callas</contributor>
+        Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="coverage" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        The spatial or temporal topic of the resource, the spatial applicability of the resource, or the jurisdiction under which the resource is relevant. This may be a named place, a
+        location, a spatial coordinate, a period, date, date range or a named administrative entity. Example:
+        <coverage>1995-1996</coverage>
+        <coverage>Boston, MA</coverage>
+        Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="creator" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        An entity primarily responsible for making the resource. This may be a person, organisation or a service. Example:
+        <creator>Shakespeare, William</creator>
+        Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="date" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        A point or period of time associated with an event in the lifecycle of the resource. Example:
+        <date>17th century</date>
+        (For example the date when an object was repaired) Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="description" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        An account of the resource. Example:
+        <description>
+          Illustrated guide to airport markings and lighting signals, with particular reference to SMGCS (Surface Movement Guidance and Control System) for airports with low
+          visibility
+          conditions.
+        </description>
+        Type: Stringdescription
+      </documentation>
+    </annotation>
+  </element>
+  
+  
+  <element name="identifier" type="rdf:LiteralType">
+    <annotation>
+      <documentation>
+        identifier
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="format" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        The file format, physical medium or dimensions of the resource. Example:
+        <format>image/jpeg</format>
+        Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="language" type="rdf:LiteralType">
+    <annotation>
+      <documentation>
+        A language of the resource. Example:
+        <language>it</language>
+        Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="publisher" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        An entity responsible for making the resource available. Examples of a publisher include a person, an organisation and a service. Example:
+        <publisher>Oxford University Press</publisher>
+        Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="relation" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        A related resource. The recommended best practice is to identify the resource using a formal identification scheme. Example:
+        <relation>maps.crace.1/33</relation>
+        (This is the shelf mark for a map held in the British Library's Crace Collection). Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="source" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        A related resource from which the described resource is derived in whole or in part. Example:
+        <source>Security Magazine pp 3-12</source>
+        <source>BAM portal</source>
+        Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="subject" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        The topic of the resource. Example:
+        <subject>submarine</subject>
+        Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="title" type="rdf:LiteralType">
+    <annotation>
+      <documentation>
+        A name given to the resource. Typically, a Title will be a name by which the resource is formally known. Example:
+        <title>Taal vitaal</title>
+        Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="type" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        The nature or genre of the resource. Type includes terms describing general categories, functions, genres, or aggregation levels for content. Example:
+        <type>painting</type>
+        <type>photograph</type>
+        <type>coin</type>
+        Type: String
+      </documentation>
+    </annotation>
+  </element>
+</schema>
