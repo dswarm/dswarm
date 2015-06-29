@@ -136,6 +136,40 @@ public class XMLSchemaParserTest extends GuicedTest {
 	}
 
 	@Test
+	public void testAttributePathsParsingForOAIPMHPlusOAIDCElementsAndEDM() throws IOException {
+
+		final Map<String, AttributePathHelper> rootAttributePaths = parseAttributePaths("OAI-PMH.xsd", "record", false);
+
+		final String rootAttributePathIdentifier = "http://www.openarchives.org/OAI/2.0/metadata";
+		final AttributePathHelper rootAttributePath = rootAttributePaths.get(rootAttributePathIdentifier);
+
+		final Map<String, AttributePathHelper> childAttributePaths = parseAttributePaths("oai_dc.xsd", "dc", true);
+
+		final String childAttributePathIdentifier = "http://www.openarchives.org/OAI/2.0/oai_dc/dc";
+		final AttributePathHelper childAttributePath = childAttributePaths.get(childAttributePathIdentifier);
+
+		final Map<String, AttributePathHelper> childAttributePaths3 = new LinkedHashMap<>();
+		childAttributePaths3.put(childAttributePathIdentifier, childAttributePath);
+
+		// insert OAI-PMH DC attribute before EDM, because it should be the root attribute path for EDM
+		final Map<String, AttributePathHelper> rootAttributePaths3 = composeAttributePaths(rootAttributePaths, rootAttributePath,
+				childAttributePaths3);
+
+		final String rootAttributePathIdentifier2 = "http://www.openarchives.org/OAI/2.0/metadata\u001Ehttp://www.openarchives.org/OAI/2.0/oai_dc/dc";
+		final AttributePathHelper rootAttributePath2 = rootAttributePaths3.get(rootAttributePathIdentifier2);
+
+		final Map<String, AttributePathHelper> childAttributePaths2 = parseAttributePaths("dd-1168/EDM-COMMON-MAIN.xsd", null, false);
+
+		// insert EDM schema before, to guarantee the order DCE before EDM
+		final Map<String, AttributePathHelper> newAttributePaths2 = composeAttributePaths(rootAttributePaths3, rootAttributePath2,
+				childAttributePaths2);
+
+		final Map<String, AttributePathHelper> newAttributePaths = composeAttributePaths(newAttributePaths2, rootAttributePath, childAttributePaths);
+
+		compareAttributePaths("oai-pmh_plus_oai_dc_elements_and_edm_schema_-_attribute_paths.txt", newAttributePaths);
+	}
+
+	@Test
 	public void testAttributePathsParsingForOAIPMHPlusDCTerms() throws IOException {
 
 		final Map<String, AttributePathHelper> rootAttributePaths = parseAttributePaths("OAI-PMH.xsd", "record", false);
