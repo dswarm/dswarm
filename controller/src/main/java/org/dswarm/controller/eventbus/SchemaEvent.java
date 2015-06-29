@@ -39,6 +39,7 @@ public class SchemaEvent extends DataModelEvent {
 				case ConfigurationStatics.MARCXML_STORAGE_TYPE:
 				case ConfigurationStatics.PNX_STORAGE_TYPE:
 				case ConfigurationStatics.OAI_PMH_DC_ELEMENTS_STORAGE_TYPE:
+				case ConfigurationStatics.OAI_PMH_DCE_AND_EDM_ELEMENTS_STORAGE_TYPE:
 				case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:
 				case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
 
