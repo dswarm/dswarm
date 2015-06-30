@@ -103,7 +103,7 @@ public class XMLConverterEventRecorder {
 	public void processDataModel(final DataModel dataModel, final UpdateFormat updateFormat, final boolean enableVersioning)
 			throws DMPControllerException {
 
-		Observable<org.dswarm.persistence.model.internal.Model> result = doIngest(dataModel, Schedulers.newThread());
+		Observable<org.dswarm.persistence.model.internal.Model> result = doIngest(dataModel, false, Schedulers.newThread());
 
 		try {
 
@@ -126,7 +126,7 @@ public class XMLConverterEventRecorder {
 		}
 	}
 
-	public Observable<org.dswarm.persistence.model.internal.Model> doIngest(final DataModel dataModel, final Scheduler scheduler)
+	public Observable<org.dswarm.persistence.model.internal.Model> doIngest(final DataModel dataModel, final boolean utiliseExistingInputSchema, final Scheduler scheduler)
 			throws DMPControllerException {
 
 		// TODO: enable monitoring here
@@ -138,6 +138,7 @@ public class XMLConverterEventRecorder {
 			final SchemaDeterminator schemaDeterminator = schemaDeterminatorProvider.get();
 			final DataModel freshDataModel = schemaDeterminator.getSchemaInternal(dataModel.getUuid());
 			final boolean isSchemaAnInbuiltSchema = schemaDeterminator.isSchemaAnInbuiltSchema(freshDataModel);
+			final boolean hasSchema = isSchemaAnInbuiltSchema || utiliseExistingInputSchema;
 
 			final AtomicInteger counter = new AtomicInteger(0);
 			final AtomicLong statementCounter = new AtomicLong(0);
@@ -185,7 +186,7 @@ public class XMLConverterEventRecorder {
 								dataModel.getUuid(), statementCounter.get());
 					}
 
-					schemaDeterminator.optionallyEnhancedDataModel(freshDataModel, gdmModel, model, isSchemaAnInbuiltSchema);
+					schemaDeterminator.optionallyEnhancedDataModel(freshDataModel, gdmModel, model, hasSchema);
 
 					//final int current = counter.incrementAndGet();
 

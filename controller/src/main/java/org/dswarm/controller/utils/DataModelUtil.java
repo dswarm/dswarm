@@ -350,7 +350,7 @@ public class DataModelUtil {
 
 	}
 
-	public Observable<Tuple<String, JsonNode>> doIngest(final DataModel dataModel, final Scheduler scheduler)
+	public Observable<Tuple<String, JsonNode>> doIngest(final DataModel dataModel, final boolean utiliseExistingInputSchema, final Scheduler scheduler)
 			throws DMPControllerException {
 
 		DataModelUtil.LOG.debug("try to process data for data model with id '{}'", dataModel.getUuid());
@@ -406,7 +406,7 @@ public class DataModelUtil {
 			case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:
 			case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
 
-				modelObservable = xmlConvertEventRecorderProvider.get().doIngest(dataModel, scheduler);
+				modelObservable = xmlConvertEventRecorderProvider.get().doIngest(dataModel, utiliseExistingInputSchema, scheduler);
 
 				break;
 			default:
