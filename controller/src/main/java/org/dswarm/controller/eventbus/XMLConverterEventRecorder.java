@@ -126,19 +126,21 @@ public class XMLConverterEventRecorder {
 		}
 	}
 
-	public Observable<org.dswarm.persistence.model.internal.Model> doIngest(final DataModel dataModel, final boolean utiliseExistingInputSchema, final Scheduler scheduler)
+	public Observable<org.dswarm.persistence.model.internal.Model> doIngest(final DataModel dataModel, final boolean utiliseExistingSchema,
+			final Scheduler scheduler)
 			throws DMPControllerException {
 
 		// TODO: enable monitoring here
 
-		LOG.debug("try to process xml data resource into data model '{}'", dataModel.getUuid());
+		LOG.debug("try to process xml data resource into data model '{}' (utilise existing schema = '{}')", dataModel.getUuid(),
+				utiliseExistingSchema);
 
 		try {
 
 			final SchemaDeterminator schemaDeterminator = schemaDeterminatorProvider.get();
 			final DataModel freshDataModel = schemaDeterminator.getSchemaInternal(dataModel.getUuid());
 			final boolean isSchemaAnInbuiltSchema = schemaDeterminator.isSchemaAnInbuiltSchema(freshDataModel);
-			final boolean hasSchema = isSchemaAnInbuiltSchema || utiliseExistingInputSchema;
+			final boolean hasSchema = isSchemaAnInbuiltSchema || utiliseExistingSchema;
 
 			final AtomicInteger counter = new AtomicInteger(0);
 			final AtomicLong statementCounter = new AtomicLong(0);
@@ -153,7 +155,7 @@ public class XMLConverterEventRecorder {
 
 			return obserableFlow.subscribeOn(scheduler).flatMap(flow -> {
 
-				LOG.debug("process xml data resource at '{}' into data model '{}'", path, dataModel.getUuid());
+				LOG.debug("process xml data resource at '{}' into data model '{}' (has schema = '{}')", path, dataModel.getUuid(), hasSchema);
 
 				return flow.applyResource(path);
 			}).filter(gdmModel -> {
