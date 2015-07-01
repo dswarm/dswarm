@@ -22,6 +22,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -45,6 +46,7 @@ import org.dswarm.persistence.monitoring.MonitoringHelper;
 import org.dswarm.persistence.monitoring.MonitoringLogger;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.service.internal.graph.util.SchemaDeterminator;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * An event recorder for converting XML documents.
@@ -150,7 +152,7 @@ public class XMLConverterEventRecorder {
 			final String path = dataModel.getDataResource().getAttribute(ResourceStatics.PATH).asText();
 
 			final CompletableFuture<XMLSourceResourceGDMStmtsFlow> futureFlow = CompletableFuture
-					.supplyAsync(() -> xmlFlowFactory.get().fromDataModel(dataModel));
+					.supplyAsync(() -> xmlFlowFactory.get().fromDataModel(dataModel, utiliseExistingSchema));
 			final Observable<XMLSourceResourceGDMStmtsFlow> obserableFlow = Observable.from(futureFlow);
 
 			return obserableFlow.subscribeOn(scheduler).flatMap(flow -> {

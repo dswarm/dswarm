@@ -218,7 +218,7 @@ public class XMLSourceResourceGDMStmtsFlowTest extends GuicedTest {
 
 		final XMLSourceResourceGDMStmtsFlow flow = injector
 				.getInstance(XmlResourceFlowFactory.class)
-				.fromDataModel(dataModel);
+				.fromDataModel(dataModel, false);
 
 		testFlow(flow, "test-mabxml.xml", "test-mabxml_converter.gson", null);
 	}
@@ -241,7 +241,7 @@ public class XMLSourceResourceGDMStmtsFlowTest extends GuicedTest {
 
 		final XMLSourceResourceGDMStmtsFlow flow = injector
 				.getInstance(XmlResourceFlowFactory.class)
-				.fromDataModel(dataModel);
+				.fromDataModel(dataModel, false);
 
 		testFlow(flow, "test-complex-xml.xml", "test-complex-xml_converter.gson", null);
 	}
@@ -265,7 +265,7 @@ public class XMLSourceResourceGDMStmtsFlowTest extends GuicedTest {
 
 		final XMLSourceResourceGDMStmtsFlow flow = injector
 				.getInstance(XmlResourceFlowFactory.class)
-				.fromDataModel(dataModel);
+				.fromDataModel(dataModel, false);
 
 		testFlow(flow, "test-pnx.xml", "test-pnx-converter.gson", 196);
 
@@ -291,7 +291,7 @@ public class XMLSourceResourceGDMStmtsFlowTest extends GuicedTest {
 
 		final XMLSourceResourceGDMStmtsFlow flow = injector
 				.getInstance(XmlResourceFlowFactory.class)
-				.fromDataModel(dataModel);
+				.fromDataModel(dataModel, false);
 
 		testFlow(flow, "test-pnx2.xml", "test-pnx2.gson", null);
 

@@ -45,9 +45,11 @@ import org.dswarm.graph.json.Node;
 import org.dswarm.graph.json.Predicate;
 import org.dswarm.graph.json.Resource;
 import org.dswarm.graph.json.ResourceNode;
+import org.dswarm.persistence.model.AdvancedDMPJPAObject;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
+import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 import org.dswarm.persistence.util.GDMUtil;
 
@@ -90,8 +92,10 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 	private String       uri;
 	private ResourceNode recordType;
 
-	private final Optional<DataModel> dataModel;
-	private final Optional<String>    dataModelUri;
+	private final Optional<DataModel>                         dataModel;
+	private final Optional<Schema>                            optionalSchema;
+	private final Optional<Map<String, AdvancedDMPJPAObject>> optionalTermMap;
+	private final Optional<String>                            dataModelUri;
 
 	private       long                      nodeIdCounter = 1;
 	private final Predicate                 rdfType       = new Predicate(GDMUtil.RDF_type);
@@ -100,7 +104,8 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 	private final Map<String, AtomicLong>   valueCounter  = Maps.newHashMap();
 	private final Map<String, String>       uris          = Maps.newHashMap();
 
-	public XMLGDMEncoder(final Optional<DataModel> dataModel) {
+	public XMLGDMEncoder(final Optional<DataModel> dataModel, final boolean utiliseExistingSchema) {
+
 		super();
 
 		recordTagName = System.getProperty("org.culturegraph.metamorph.xml.recordtag");
@@ -114,10 +119,16 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 		// init
 		elementURIStack = new Stack<>();
 		//model = new Model();
+
+		final Tuple<Optional<Schema>, Optional<Map<String, AdvancedDMPJPAObject>>> tuple = getOptionalSchema(utiliseExistingSchema);
+		optionalSchema = tuple.v1();
+		optionalTermMap = tuple.v2();
 	}
 
-	public XMLGDMEncoder(final String recordTagName, final Optional<DataModel> dataModel) {
+	public XMLGDMEncoder(final String recordTagName, final Optional<DataModel> dataModel, final boolean utiliseExistingSchema) {
+
 		super();
+
 		this.recordTagName = Preconditions.checkNotNull(recordTagName);
 
 		this.dataModel = dataModel;
@@ -126,6 +137,10 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 		// init
 		elementURIStack = new Stack<>();
 		//model = new Model();
+
+		final Tuple<Optional<Schema>, Optional<Map<String, AdvancedDMPJPAObject>>> tuple = getOptionalSchema(utiliseExistingSchema);
+		optionalSchema = tuple.v1();
+		optionalTermMap = tuple.v2();
 	}
 
 	@Override
@@ -137,16 +152,16 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 
 		if (inRecord) {
 			writeValue();
-			startEntity(SchemaUtils.mintUri(uri, localName));
+			startEntity(getTermURI(uri, localName));
 			writeAttributes(attributes);
 		} else if (localName.equals(recordTagName)) {
 
 			if (recordTagUri == null) {
 
-				recordTagUri = SchemaUtils.mintUri(elementURIStack.peek(), localName);
+				recordTagUri = getRecordTagURI(elementURIStack.peek(), localName);
 			}
 
-			if (recordTagUri.equals(SchemaUtils.mintUri(elementURIStack.peek(), localName))) {
+			if (recordTagUri.equals(getRecordTagURI(elementURIStack.peek(), localName))) {
 
 				// TODO: how to determine the id of an record, or should we mint uris?
 				final String identifier = attributes.getValue("id");
@@ -167,7 +182,7 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 
 			final String elementUri = elementURIStack.pop();
 
-			if (recordTagUri.equals(SchemaUtils.mintUri(elementUri, localName))) {
+			if (recordTagUri.equals(getRecordTagURI(elementUri, localName))) {
 				inRecord = false;
 				endRecord();
 			} else {
@@ -195,7 +210,7 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 		final int length = attributes.getLength();
 
 		for (int i = 0; i < length; ++i) {
-			final String name = SchemaUtils.mintUri(uri, attributes.getLocalName(i));
+			final String name = getTermURI(uri, attributes.getLocalName(i));
 			final String value = attributes.getValue(i);
 			literal(name, value);
 		}
@@ -427,5 +442,65 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 		}
 
 		return uris.get(id);
+	}
+
+	private String getRecordTagURI(final String uri, final String localName) {
+
+		final String typedLocalName = localName  + SchemaUtils.TYPE_POSTFIX;
+
+		final String typeRecordTagURI = getTermURI(uri, typedLocalName);
+
+		if(!typeRecordTagURI.endsWith(SchemaUtils.TYPE_POSTFIX)) {
+
+			return recordTagUri;
+		}
+
+		return typeRecordTagURI.substring(0, typeRecordTagURI.length() - 4);
+	}
+
+	private String getTermURI(final String uri, final String localName) {
+
+		if (!optionalSchema.isPresent()) {
+
+			// do URI minting as usual
+			return SchemaUtils.mintUri(uri, localName);
+		}
+
+		if (!optionalTermMap.isPresent()) {
+
+			// do URI minting as usual
+			return SchemaUtils.mintUri(uri, localName);
+		}
+
+		final Map<String, AdvancedDMPJPAObject> termMap = optionalTermMap.get();
+
+		if (!termMap.containsKey(localName)) {
+
+			// do URI minting as usual
+			return SchemaUtils.mintUri(uri, localName);
+		}
+
+		final AdvancedDMPJPAObject term = termMap.get(localName);
+
+		// make use of existing term uri
+		return term.getUri();
+	}
+
+	private Tuple<Optional<Schema>, Optional<Map<String, AdvancedDMPJPAObject>>> getOptionalSchema(final boolean utiliseExistingSchema) {
+
+		if (!utiliseExistingSchema) {
+
+			return Tuple.tuple(Optional.empty(), Optional.<Map<String, AdvancedDMPJPAObject>>empty());
+		}
+
+		if (!dataModel.isPresent()) {
+
+			return Tuple.tuple(Optional.empty(), Optional.<Map<String, AdvancedDMPJPAObject>>empty());
+		}
+
+		final Schema schema = dataModel.get().getSchema();
+		final Optional<Map<String, AdvancedDMPJPAObject>> optionalTermMap = Optional.ofNullable(SchemaUtils.generateTermMap(schema));
+
+		return Tuple.tuple(Optional.ofNullable(schema), optionalTermMap);
 	}
 }

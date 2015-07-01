@@ -16,6 +16,7 @@
 package org.dswarm.persistence.model.schema.utils;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Optional;
@@ -33,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.dswarm.persistence.DMPPersistenceException;
+import org.dswarm.persistence.model.AdvancedDMPJPAObject;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
 import org.dswarm.persistence.model.proxy.RetrievalType;
 import org.dswarm.persistence.model.resource.DataModel;
@@ -69,16 +71,16 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 	public static final  String TYPE_POSTFIX        = "Type";
 	private static final String SCHEMA_BASE_URI     = BASE_URI + "schemas/";
 
-	public static final String MABXML_SCHEMA_UUID = "Schema-d87ba5c2-b02b-481d-a62d-2b46dd66d347";
-	public static final String BIBRM_CONTRACT_ITEM_SCHEMA_UUID = "Schema-70228b28-10fc-43fe-9d3e-ad22b038ebdf";
-	public static final String BIBO_DOCUMENT_SCHEMA_UUID = "Schema-ff62ec21-0a11-4c27-a704-d7ca53a21521";
-	public static final String FOAF_SCHEMA_UUID = "Schema-309e901c-3da9-4d82-a694-bab632eaa340";
-	public static final String PNX_SCHEMA_UUID = "Schema-dbc97499-278d-4551-a65e-8e8bb219ca6c";
-	public static final String MARC21_SCHEMA_UUID = "Schema-781d73f0-d115-462e-9b4c-ec23e4251c8d";
-	public static final String FINC_SOLR_SCHEMA_UUID = "Schema-5664ba0e-ccb3-4b71-8823-13281490de30";
-	public static final String OAI_PMH_DC_ELEMENTS_SCHEMA_UUID = "Schema-cb8f4b96-9ab2-4972-88f8-143656199518";
-	public static final String OAI_PMH_DC_TERMS_SCHEMA_UUID = "Schema-8fefbced-c2f2-478c-a22a-debb122e05de";
-	public static final String OAI_PMH_MARCXML_SCHEMA_UUID = "Schema-5ca8e59f-0f40-4f17-8237-e5d0a6e83f18";
+	public static final String MABXML_SCHEMA_UUID                      = "Schema-d87ba5c2-b02b-481d-a62d-2b46dd66d347";
+	public static final String BIBRM_CONTRACT_ITEM_SCHEMA_UUID         = "Schema-70228b28-10fc-43fe-9d3e-ad22b038ebdf";
+	public static final String BIBO_DOCUMENT_SCHEMA_UUID               = "Schema-ff62ec21-0a11-4c27-a704-d7ca53a21521";
+	public static final String FOAF_SCHEMA_UUID                        = "Schema-309e901c-3da9-4d82-a694-bab632eaa340";
+	public static final String PNX_SCHEMA_UUID                         = "Schema-dbc97499-278d-4551-a65e-8e8bb219ca6c";
+	public static final String MARC21_SCHEMA_UUID                      = "Schema-781d73f0-d115-462e-9b4c-ec23e4251c8d";
+	public static final String FINC_SOLR_SCHEMA_UUID                   = "Schema-5664ba0e-ccb3-4b71-8823-13281490de30";
+	public static final String OAI_PMH_DC_ELEMENTS_SCHEMA_UUID         = "Schema-cb8f4b96-9ab2-4972-88f8-143656199518";
+	public static final String OAI_PMH_DC_TERMS_SCHEMA_UUID            = "Schema-8fefbced-c2f2-478c-a22a-debb122e05de";
+	public static final String OAI_PMH_MARCXML_SCHEMA_UUID             = "Schema-5ca8e59f-0f40-4f17-8237-e5d0a6e83f18";
 	public static final String OAI_PMH_DC_ELEMENTS_AND_EDM_SCHEMA_UUID = "Schema-e6d4ff86-07d9-494f-9299-9d67d3a0d9e8";
 
 	public static String determineRelativeURIPart(final String uri) {
@@ -207,7 +209,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 			final String attributePathString = attributePathHelper.toString();
 
-			if(attributePathString == null || attributePathString.trim().isEmpty()) {
+			if (attributePathString == null || attributePathString.trim().isEmpty()) {
 
 				SchemaUtils.LOG.debug("attribute path is non-existent or empty for schema '{}'", schema.getUuid());
 
@@ -216,7 +218,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 			final SchemaAttributePathInstance attributePathByURIPath = schema.getAttributePathByURIPath(attributePathString);
 
-			if(attributePathByURIPath != null) {
+			if (attributePathByURIPath != null) {
 
 				// attribute path is already in schema
 
@@ -441,6 +443,43 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 		}
 
 		return aps;
+	}
+
+	/**
+	 * returns an attribute map with local attribute names as key and attribute objects as values of an entry. Incl. record class.
+	 *
+	 * note: if a local name occurs multiple times, this won't be handles right now
+	 *
+	 * @param schema
+	 * @return
+	 */
+	public static Map<String, AdvancedDMPJPAObject> generateTermMap(final Schema schema) {
+
+		if (schema == null) {
+
+			return null;
+		}
+
+		final Map<String, AdvancedDMPJPAObject> termMap = new HashMap<>();
+
+		for (final SchemaAttributePathInstance sapi : schema.getAttributePaths()) {
+
+			final AttributePath attributePath = sapi.getAttributePath();
+
+			for (final Attribute attribute : attributePath.getAttributes()) {
+
+				termMap.put(attribute.getName(), attribute);
+			}
+		}
+
+		final Clasz recordClass = schema.getRecordClass();
+
+		if(recordClass != null) {
+
+			termMap.put(recordClass.getName(), recordClass);
+		}
+
+		return termMap;
 	}
 
 	private static String mintTermUri(final String termUri, final String localTermName, final String baseUri) {

@@ -126,7 +126,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		final XMLSourceResourceGDMStmtsFlow flow2 = injector
 				.getInstance(XmlResourceFlowFactory.class)
-				.fromDataModel(updatedInputDataModel);
+				.fromDataModel(updatedInputDataModel, false);
 
 		final List<GDMModel> gdmModels = flow2.applyResource(exampleDataResourceFileName).toList().toBlocking().first();
 
