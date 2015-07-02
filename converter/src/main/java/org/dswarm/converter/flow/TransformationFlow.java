@@ -166,7 +166,11 @@ public class TransformationFlow {
 			return Observable.error(new DMPConverterException(msg));
 		}
 
-		return apply(Observable.from(tuplesList), false, false, true).reduce(
+		final boolean writeResultToDatahub = false;
+		final boolean doNotReturnJsonToCaller = false;
+		final boolean enableVersioning = true;
+
+		return apply(Observable.from(tuplesList), writeResultToDatahub, doNotReturnJsonToCaller, enableVersioning).reduce(
 				DMPPersistenceUtil.getJSONObjectMapper().createArrayNode(),
 				ArrayNode::add
 		).map(arrayNode -> {
@@ -254,14 +258,15 @@ public class TransformationFlow {
 
 			final Collection<Resource> resources = model1.getResources();
 
-			if(resources == null || resources.isEmpty()) {
+			if (resources == null || resources.isEmpty()) {
 
 				LOG.debug("no resources in model available");
 
 				return false;
 			}
 
-			LOG.debug("processed resource model number '{}' with '{}' and resource site '{}'", current, resources.iterator().next().getUri(), resources.size());
+			LOG.debug("processed resource model number '{}' with '{}' and resource site '{}'", current, resources.iterator().next().getUri(),
+					resources.size());
 
 			final Set<String> recordURIsFromGDMModel = gdmModel.getRecordURIs();
 

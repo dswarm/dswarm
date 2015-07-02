@@ -185,7 +185,8 @@ public class DataModelsResourceTest2 extends
 	 *
 	 * @throws Exception
 	 */
-	//@Test
+	@Ignore
+	@Test
 	public void testCSVDataUpdate2() throws Exception {
 
 		DataModelsResourceTest2.LOG.debug("start CSV data update test");
@@ -374,7 +375,8 @@ public class DataModelsResourceTest2 extends
 		DataModelsResourceTest2.LOG.debug("end get non-schema comform OAI-PMH+MARCXML XML data test");
 	}
 
-	//@Test
+	@Ignore
+	@Test
 	public void testExceptionAtXMLData() throws Exception {
 
 		DataModelsResourceTest2.LOG.debug("start throw Exception at XML data test");

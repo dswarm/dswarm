@@ -117,7 +117,11 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		BasicResource.LOG.debug("got {} with uuid '{}'", pojoClassName, uuid);
-		BasicResource.LOG.trace(" = '{}'", ToStringBuilder.reflectionToString(object));
+
+		if(BasicResource.LOG.isTraceEnabled()) {
+
+			BasicResource.LOG.trace(" = '{}'", ToStringBuilder.reflectionToString(object));
+		}
 
 		final String objectJSON = serializeObject(object);
 
@@ -230,7 +234,11 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 		}
 
 		BasicResource.LOG.debug("got all {}s ", pojoClassName);
-		BasicResource.LOG.trace(" = '{}'", ToStringBuilder.reflectionToString(objects));
+
+		if(BasicResource.LOG.isTraceEnabled()) {
+
+			BasicResource.LOG.trace(" = '{}'", ToStringBuilder.reflectionToString(objects));
+		}
 
 		final String objectsJSON = serializeObject(objects);
 
@@ -264,7 +272,11 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		BasicResource.LOG.debug("got {} with uuid '{}' ", pojoClassName, uuid);
-		BasicResource.LOG.trace(" = '{}'", ToStringBuilder.reflectionToString(object));
+
+		if(BasicResource.LOG.isTraceEnabled()) {
+
+			BasicResource.LOG.trace(" = '{}'", ToStringBuilder.reflectionToString(object));
+		}
 
 		persistenceService.deleteObject(uuid);
 
@@ -558,7 +570,7 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 
 		if (proxyObject == null) {
 
-			BasicResource.LOG.debug("couldn't add {}", pojoClassName);
+			BasicResource.LOG.error("couldn't add {}", pojoClassName);
 			throw new DMPControllerException("couldn't add " + pojoClassName);
 		}
 
@@ -566,12 +578,16 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 
 		if (object == null) {
 
-			BasicResource.LOG.debug("couldn't add {}", pojoClassName);
+			BasicResource.LOG.error("couldn't add {}", pojoClassName);
 			throw new DMPControllerException("couldn't add " + pojoClassName);
 		}
 
 		BasicResource.LOG.debug("added new {} with id = '{}' ", pojoClassName, object.getUuid());
-		BasicResource.LOG.trace(" = '{}'", ToStringBuilder.reflectionToString(object));
+
+		if(BasicResource.LOG.isTraceEnabled()) {
+
+			BasicResource.LOG.trace(" = '{}'", ToStringBuilder.reflectionToString(object));
+		}
 
 		final String objectJSON = serializeObject(object);
 
