@@ -85,10 +85,7 @@ import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.UpdateFormat;
 import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
-import org.dswarm.persistence.model.resource.utils.DataModelUtils;
-import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
-import org.dswarm.persistence.model.schema.utils.ClaszUtils;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.dswarm.persistence.util.GDMUtil;
@@ -104,6 +101,8 @@ import org.dswarm.persistence.util.GDMUtil;
 public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModelService, ProxyDataModel, DataModel, MediumDataModelDTO> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DataModelsResource.class);
+
+	public static final String DO_INGEST_IDENTIFIER = "do_ingest";
 
 	/**
 	 * The data model util
@@ -179,7 +178,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	}
 
 	/**
-	 * This endpoint consumes a data model as JSON representation and persists this data model in the database, i.e., the data
+	 * This endpoint consumes a data model as JSON representation and optionally persists this data model in the database, i.e., the data
 	 * resource of this data model will be processed re. the parameters in the configuration of the data model. Thereby, the
 	 * schema of the data will be created as well.
 	 *
@@ -193,11 +192,22 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	@Override
-	public Response createObject(@ApiParam(value = "data model (as JSON)", required = true) final String jsonObjectString)
+	public Response createObject2(@ApiParam(value = "data model (as JSON)", required = true) final String jsonObjectString,
+			@ApiParam("do ingest") @QueryParam("doIngest") final Boolean doIngest)
 			throws DMPControllerException {
 
-		return super.createObject(jsonObjectString);
+		final ObjectNode contextNode;
+
+		if (doIngest != null) {
+
+			contextNode = objectMapperProvider.get().createObjectNode();
+			contextNode.put(DataModelsResource.DO_INGEST_IDENTIFIER, doIngest);
+		} else {
+
+			contextNode = null;
+		}
+
+		return super.createObject2(jsonObjectString, contextNode);
 	}
 
 	/**
@@ -454,22 +464,11 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			final ObjectNode requestJson = objectMapperProvider.get().createObjectNode();
 
 			// record class uri
-			final Optional<Schema> optionalSchema = Optional.fromNullable(freshDataModel.getSchema());
+			final Optional<String> optionalRecordClassURI = DataModelUtil.determineRecordClassURI(freshDataModel);
 
-			if (optionalSchema.isPresent()) {
+			if (optionalRecordClassURI.isPresent()) {
 
-				final Optional<Clasz> optionalRecordClass = Optional.fromNullable(optionalSchema.get().getRecordClass());
-
-				final String recordClassURI;
-
-				if (optionalRecordClass.isPresent()) {
-
-					recordClassURI = optionalRecordClass.get().getUri();
-				} else {
-
-					// fallback: bibo:Document as default record class
-					recordClassURI = ClaszUtils.BIBO_DOCUMENT_URI;
-				}
+				final String recordClassURI = optionalRecordClassURI.get();
 
 				requestJson.put(DMPStatics.RECORD_CLASS_URI_IDENTIFIER, recordClassURI);
 			}
@@ -482,85 +481,19 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 			// record tag
 			final Optional<Configuration> optionalConfiguration = Optional.fromNullable(freshDataModel.getConfiguration());
+			final Optional<String> optionalRecordTag = DataModelUtil.determineRecordTag(optionalConfiguration);
 
-			if (optionalConfiguration.isPresent()) {
+			if (optionalRecordTag.isPresent()) {
 
-				final Optional<JsonNode> optionalRecordTagNode = Optional
-						.fromNullable(optionalConfiguration.get().getParameter(ConfigurationStatics.RECORD_TAG));
-
-				if (optionalRecordTagNode.isPresent()) {
-
-					requestJson.put(DMPStatics.RECORD_TAG_IDENTIFIER, optionalRecordTagNode.get().asText());
-				}
+				requestJson.put(DMPStatics.RECORD_TAG_IDENTIFIER, optionalRecordTag.get());
 			}
 
 			// version
 			// TODO
 
-			// original data model type
-			final Optional<String> optionalOriginalDataModelType;
-
-			switch (freshDataModel.getUuid()) {
-
-				case DataModelUtils.MABXML_DATA_MODEL_UUID:
-				case DataModelUtils.MARC21_DATA_MODEL_UUID:
-				case DataModelUtils.PNX_DATA_MODEL_UUID:
-				case DataModelUtils.OAI_PMH_DC_ELEMENTS_DATA_MODEL_UUID:
-				case DataModelUtils.OAI_PMH_DC_TERMS_DATA_MODEL_UUID:
-				case DataModelUtils.OAI_PMH_MARCXML_DATA_MODEL_UUID:
-
-					optionalOriginalDataModelType = Optional.of(DMPStatics.XML_DATA_TYPE);
-
-					break;
-				default:
-
-					if (optionalConfiguration.isPresent()) {
-
-						final Configuration configuration = optionalConfiguration.get();
-
-						final Optional<JsonNode> optionalStorageTypeNode = Optional
-								.fromNullable(configuration.getParameter(ConfigurationStatics.STORAGE_TYPE));
-
-						if (optionalStorageTypeNode.isPresent()) {
-
-							final JsonNode storageTypeNode = optionalStorageTypeNode.get();
-
-							final Optional<String> optionalStorageType = Optional.fromNullable(storageTypeNode.asText());
-
-							if (optionalStorageType.isPresent()) {
-
-								final String storageType = optionalStorageType.get();
-
-								switch (storageType) {
-
-									case ConfigurationStatics.XML_STORAGE_TYPE:
-									case ConfigurationStatics.PNX_STORAGE_TYPE:
-									case ConfigurationStatics.MABXML_STORAGE_TYPE:
-									case ConfigurationStatics.MARCXML_STORAGE_TYPE:
-									case ConfigurationStatics.OAI_PMH_DC_ELEMENTS_STORAGE_TYPE:
-									case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:
-									case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
-
-										optionalOriginalDataModelType = Optional.of(DMPStatics.XML_DATA_TYPE);
-
-										break;
-									default:
-
-										optionalOriginalDataModelType = Optional.absent();
-								}
-							} else {
-
-								optionalOriginalDataModelType = Optional.absent();
-							}
-						} else {
-
-							optionalOriginalDataModelType = Optional.absent();
-						}
-					} else {
-
-						optionalOriginalDataModelType = Optional.absent();
-					}
-			}
+			// original data model type, e.g. xml
+			final Optional<String> optionalOriginalDataModelType = DataModelUtil
+					.determineOriginalDataModelType(freshDataModel, optionalConfiguration);
 
 			if (optionalOriginalDataModelType.isPresent()) {
 
@@ -688,9 +621,9 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	 * The data of the data model will also be converted and persisted.
 	 */
 	@Override
-	protected ProxyDataModel addObject(final String objectJSONString) throws DMPControllerException {
+	protected ProxyDataModel addObject(final String objectJSONString, final JsonNode contextJSON) throws DMPControllerException {
 
-		final ProxyDataModel proxyDataModel = super.addObject(objectJSONString);
+		final ProxyDataModel proxyDataModel = super.addObject(objectJSONString, contextJSON);
 
 		if (proxyDataModel == null) {
 
@@ -704,8 +637,33 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			return proxyDataModel;
 		}
 
-		// versioning is disabled at data model creation, since there should be any data for this data model in the data hub
-		return updateDataModel(proxyDataModel, dataModel, false);
+		if (contextJSON == null) {
+
+			// versioning is disabled at data model creation, since there should be any data for this data model in the data hub
+			return updateDataModel(proxyDataModel, dataModel, false);
+		}
+
+		final JsonNode doIngestNode = contextJSON.get(DO_INGEST_IDENTIFIER);
+
+		if (doIngestNode == null) {
+
+			// versioning is disabled at data model creation, since there should be any data for this data model in the data hub
+			return updateDataModel(proxyDataModel, dataModel, false);
+		}
+
+		final boolean doIngest = doIngestNode.asBoolean();
+
+		if (doIngest) {
+
+			// versioning is disabled at data model creation, since there should be any data for this data model in the data hub
+			return updateDataModel(proxyDataModel, dataModel, false);
+		} else {
+
+			DataModelsResource.LOG.debug("skip ingest for data model '{}'", dataModel.getUuid());
+
+			// skip ingest
+			return proxyDataModel;
+		}
 
 	}
 

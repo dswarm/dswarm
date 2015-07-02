@@ -16,8 +16,6 @@
 package org.dswarm.controller.eventbus;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.ws.rs.core.Response;
 
@@ -27,7 +25,6 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
-import rx.functions.Action0;
 
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.converter.flow.XMLSourceResourceGDMStmtsFlow;
@@ -89,6 +86,7 @@ public class XMLConverterEventRecorder {
 		final boolean enableVersioning = event.isEnableVersioning();
 
 		try (final MonitoringHelper ignore = loggerProvider.get().startIngest(dataModel)) {
+
 			processDataModel(dataModel, updateFormat, enableVersioning);
 		}
 	}
@@ -96,9 +94,34 @@ public class XMLConverterEventRecorder {
 	public void processDataModel(final DataModel dataModel, final UpdateFormat updateFormat, final boolean enableVersioning)
 			throws DMPControllerException {
 
-		LOG.debug("try to process xml data resource into data model '{}'", dataModel.getUuid());
+		Observable<org.dswarm.persistence.model.internal.Model> result = doIngest(dataModel);
 
-		rx.Observable<org.dswarm.persistence.model.internal.Model> result = null;
+		try {
+
+			final Observable<Response> writeResponse = internalServiceFactory.getInternalGDMGraphService()
+					.updateObject(dataModel.getUuid(), result, updateFormat, enableVersioning);
+
+			//LOG.debug("before to blocking");
+
+			// TODO: delegate observable
+			writeResponse.toBlocking().firstOrDefault(null);
+
+			LOG.debug("processed xml data resource into data model '{}'", dataModel.getUuid());
+		} catch (final DMPPersistenceException e) {
+
+			final String message = String.format("couldn't persist the converted data of data model '%s'", dataModel.getUuid());
+
+			XMLConverterEventRecorder.LOG.error(message, e);
+
+			throw new DMPControllerException(String.format("%s %s", message, e.getMessage()), e);
+		}
+	}
+
+	public Observable<org.dswarm.persistence.model.internal.Model> doIngest(final DataModel dataModel) throws DMPControllerException {
+
+		// TODO: enable monitoring here
+
+		LOG.debug("try to process xml data resource into data model '{}'", dataModel.getUuid());
 
 		try {
 
@@ -114,7 +137,7 @@ public class XMLConverterEventRecorder {
 
 			//LOG.debug("XML records = '{}'", gdmModels.size());
 
-			result = gdmModels.filter(gdmModel -> {
+			return gdmModels.filter(gdmModel -> {
 
 				final Model model = gdmModel.getModel();
 
@@ -152,26 +175,6 @@ public class XMLConverterEventRecorder {
 		} catch (final Exception e) {
 
 			final String message = String.format("really couldn't convert the XML data of data model '%s'", dataModel.getUuid());
-
-			XMLConverterEventRecorder.LOG.error(message, e);
-
-			throw new DMPControllerException(String.format("%s %s", message, e.getMessage()), e);
-		}
-
-		try {
-
-			final Observable<Response> writeResponse = internalServiceFactory.getInternalGDMGraphService()
-					.updateObject(dataModel.getUuid(), result, updateFormat, enableVersioning);
-
-			//LOG.debug("before to blocking");
-
-			// TODO: delegate observable
-			writeResponse.toBlocking().firstOrDefault(null);
-
-			LOG.debug("processed xml data resource into data model '{}'", dataModel.getUuid());
-		} catch (final DMPPersistenceException e) {
-
-			final String message = String.format("couldn't persist the converted data of data model '%s'", dataModel.getUuid());
 
 			XMLConverterEventRecorder.LOG.error(message, e);
 
