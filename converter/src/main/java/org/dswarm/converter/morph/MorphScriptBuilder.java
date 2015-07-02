@@ -16,6 +16,7 @@
 package org.dswarm.converter.morph;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -368,7 +369,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 		return data;
 	}
 
-	private List<String> getParameterMappingKeys(final String attributePathInstanceName, final Component transformationComponent) {
+	private List<String> getParameterMappingKeys(final String variableName, final Component transformationComponent) {
 
 		List<String> parameterMappingKeys = null;
 
@@ -376,7 +377,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 		for (final Entry<String, String> parameterMapping : transformationParameterMapping.entrySet()) {
 
-			if (StringEscapeUtils.unescapeXml(parameterMapping.getValue()).equals(attributePathInstanceName)) {
+			if (StringEscapeUtils.unescapeXml(parameterMapping.getValue()).equals(variableName)) {
 
 				if (parameterMappingKeys == null) {
 
@@ -426,8 +427,12 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 			addFilter(inputAttributePathStringXMLEscaped, manipulatedVariable, filterExpressionMap, rules, true);
 		}
 
-		mappingInputsVariablesMap.put(inputAttributePathStringXMLEscaped, variables);
+		if(!mappingInputsVariablesMap.containsKey(inputAttributePathStringXMLEscaped)) {
 
+			mappingInputsVariablesMap.put(inputAttributePathStringXMLEscaped, new ArrayList<>());
+		}
+
+		mappingInputsVariablesMap.get(inputAttributePathStringXMLEscaped).addAll(variables);
 	}
 
 	private void addMappingOutputMapping(final List<String> variables, final MappingAttributePathInstance mappingOutput, final Element rules) {
@@ -632,11 +637,18 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 		// or input attribute path variable
 		else if (sourceAttributes.isEmpty()) {
 
-			// take input attribute path variable
+			// take input attribute path variables
 
 			if (mappingInputsVariablesMap != null && !mappingInputsVariablesMap.isEmpty()) {
 
-				sourceAttributes.add(mappingInputsVariablesMap.entrySet().iterator().next().getValue().iterator().next());
+				final Set<Entry<String, List<String>>> mappingInputVariablesEntries = mappingInputsVariablesMap.entrySet();
+
+				for(final Entry<String, List<String>> mappingInputVariablesEntry : mappingInputVariablesEntries) {
+
+					final List<String> mappingInputVariables = mappingInputVariablesEntry.getValue();
+
+					sourceAttributes.addAll(mappingInputVariables);
+				}
 			}
 		}
 

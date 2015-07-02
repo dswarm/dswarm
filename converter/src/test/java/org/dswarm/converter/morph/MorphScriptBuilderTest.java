@@ -90,6 +90,12 @@ public class MorphScriptBuilderTest extends GuicedTest {
 
 		compareTaskGeneratedMorphscript("dd-1005.csv.task.json", "dd-1005.csv.morph.result.xml");
 	}
+
+	@Test
+	public void testIfElseTask() throws Exception {
+
+		compareTaskGeneratedMorphscript("if-else.collectors.task.json", "if-else.collectors.morph.xml");
+	}
 	
 	@Test
 	public void testRegexLookupMap() throws Exception {
