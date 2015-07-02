@@ -136,6 +136,8 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 
 	protected static final String METAMORPH_FUNCTION_COMBINE = "combine";
 
+	protected static final String METAMORPH_FUNCTION_CHOOSE = "choose";
+
 	protected static final String METAMORPH_FUNCTION_ALL = "all";
 
 	protected static final String METAMORPH_FUNCTION_IF = "if";

@@ -66,7 +66,6 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 	private static final String METAMORPH_ELEMENT_MAP_ENTRY = "entry";
 
-
 	private static final String METAMORPH_FUNCTION_WHITELIST = "whitelist";
 
 	private static final String METAMORPH_FUNCTION_BLACKLIST = "blacklist";
@@ -78,6 +77,12 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 	private static final String METAMORPH_FUNCTION_SETREPLACE = "setreplace";
 
 	private static final String METAMORPH_FUNCTION_CONCAT = "concat";
+
+	private static final String DSWARM_FUNCTION_IFELSE = "ifelse";
+
+	private static final String IF_VARIABLE_IDENTIFIER = "if";
+
+	private static final String ELSE_VARIABLE_IDENTIFIER = "else";
 
 	private static final String METAMORPH_FUNCTION_OCCURRENCE = "occurrence";
 
@@ -356,71 +361,26 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 		final Element collection;
 
-		// convert concat function to combine function because concat are concatenated the
-		// values in the order they appear in the input and not in the order of the <data> sources.
-		if (multipleInputComponent.getFunction().getName().equals(METAMORPH_FUNCTION_CONCAT)) {
-
-			final Map<String, String> parameters = multipleInputComponent.getParameterMappings();
-
-			String valueString;
-
-			final String delimiterString;
-
-			if (parameters.get(MF_CONCAT_FUNCTION_DELIMITER_ATTRIBUTE_IDENTIFIER) != null) {
-
-				delimiterString = parameters.get(MF_CONCAT_FUNCTION_DELIMITER_ATTRIBUTE_IDENTIFIER);
-			} else {
-
-				// fallback default
-				delimiterString = "";
-			}
-
-			if (parameters.get(MF_CONCAT_FUNCTION_PREFIX_ATTRIBUTE_IDENTIFIER) != null) {
-
-				valueString = parameters.get(MF_CONCAT_FUNCTION_PREFIX_ATTRIBUTE_IDENTIFIER);
-			} else {
-
-				// fallback default
-				valueString = "";
-			}
-
-			final Iterator<String> iter = collectionSourceAttributes.iterator();
-
-			int i = 0;
-
-			while (iter.hasNext()) {
-
-				final String sourceAttribute = iter.next();
-
-				valueString += "${" + sourceAttribute + "}";
-
-				if ((i++ + 1) < collectionSourceAttributes.size()) {
-
-					valueString += delimiterString;
-				}
-
-			}
-
-			if (parameters.get(MF_CONCAT_FUNCTION_POSTFIX_ATTRIBUTE_IDENTIFIER) != null) {
-
-				valueString += parameters.get(MF_CONCAT_FUNCTION_POSTFIX_ATTRIBUTE_IDENTIFIER);
-			}
-
-			Map<String, String> extendedParameterMappings = new HashMap<>();
-
-			extendedParameterMappings.put(MF_ELEMENT_VALUE_ATTRIBUTE_IDENTIFIER, valueString);
-
-			extendedParameterMappings.put(MF_COLLECTOR_RESET_ATTRIBUTE_IDENTIFIER, BOOLEAN_VALUE_TRUE);
-
-			multipleInputComponent.setParameterMappings(extendedParameterMappings);
-		}
-
 		final String functionName = multipleInputComponent.getFunction().getName();
 
-		if (functionName.equals(METAMORPH_FUNCTION_CONCAT))
-			collection = doc.createElement(METAMORPH_FUNCTION_COMBINE);
-		else
-			collection = doc.createElement(multipleInputComponent.getFunction().getName());
+		switch (functionName) {
+
+			case METAMORPH_FUNCTION_CONCAT:
+
+				convertConcat(multipleInputComponent, collectionSourceAttributes);
+
+				collection = doc.createElement(METAMORPH_FUNCTION_COMBINE);
+
+				break;
+			case DSWARM_FUNCTION_IFELSE:
+
+				collection = doc.createElement(METAMORPH_FUNCTION_CHOOSE);
+
+				break;
+			default:
+
+				collection = doc.createElement(functionName);
+		}
 
 		createParameters(multipleInputComponent, collection);
 
@@ -879,5 +839,70 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 		}
 
 		throw new DMPConverterException("couldn't determine MAPI identifier");
+	}
+
+	/**
+	 *
+	 * convert concat function to combine function because concat concatenates the
+	 * values in the order they appear in the input and not in the order of the <data> sources.
+	 *
+	 * @param multipleInputComponent
+	 * @param collectionSourceAttributes
+	 */
+	private void convertConcat(final Component multipleInputComponent, final Set<String> collectionSourceAttributes) {
+
+		final Map<String, String> parameters = multipleInputComponent.getParameterMappings();
+
+		String valueString;
+
+		final String delimiterString;
+
+		if (parameters.get(MF_CONCAT_FUNCTION_DELIMITER_ATTRIBUTE_IDENTIFIER) != null) {
+
+			delimiterString = parameters.get(MF_CONCAT_FUNCTION_DELIMITER_ATTRIBUTE_IDENTIFIER);
+		} else {
+
+			// fallback default
+			delimiterString = "";
+		}
+
+		if (parameters.get(MF_CONCAT_FUNCTION_PREFIX_ATTRIBUTE_IDENTIFIER) != null) {
+
+			valueString = parameters.get(MF_CONCAT_FUNCTION_PREFIX_ATTRIBUTE_IDENTIFIER);
+		} else {
+
+			// fallback default
+			valueString = "";
+		}
+
+		final Iterator<String> iter = collectionSourceAttributes.iterator();
+
+		int i = 0;
+
+		while (iter.hasNext()) {
+
+			final String sourceAttribute = iter.next();
+
+			valueString += "${" + sourceAttribute + "}";
+
+			if ((i++ + 1) < collectionSourceAttributes.size()) {
+
+				valueString += delimiterString;
+			}
+
+		}
+
+		if (parameters.get(MF_CONCAT_FUNCTION_POSTFIX_ATTRIBUTE_IDENTIFIER) != null) {
+
+			valueString += parameters.get(MF_CONCAT_FUNCTION_POSTFIX_ATTRIBUTE_IDENTIFIER);
+		}
+
+		Map<String, String> extendedParameterMappings = new HashMap<>();
+
+		extendedParameterMappings.put(MF_ELEMENT_VALUE_ATTRIBUTE_IDENTIFIER, valueString);
+
+		extendedParameterMappings.put(MF_COLLECTOR_RESET_ATTRIBUTE_IDENTIFIER, BOOLEAN_VALUE_TRUE);
+
+		multipleInputComponent.setParameterMappings(extendedParameterMappings);
 	}
 }
