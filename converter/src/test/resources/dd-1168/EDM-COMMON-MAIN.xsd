@@ -1,0 +1,680 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2007-2012 The Europeana Foundation
+ 
+   Licenced under the EUPL, Version 1.1 (the "Licence") and subsequent versions as approved
+   by the European Commission;
+   You may not use this work except in compliance with the Licence.
+  
+   You may obtain a copy of the Licence at:
+   http://joinup.ec.europa.eu/software/page/eupl
+ 
+   Unless required by applicable law or agreed to in writing, software distributed under
+   the Licence is distributed on an "AS IS" basis, without warranties or conditions of
+   any kind, either express or implied.
+   See the Licence for the specific language governing permissions and limitations under
+   the Licence.
+-->  
+<!-- note: http://europeana.eu/terms is not the original EDM namepsace URI; http://www.europeana.eu/schemas/edm/ is the original namespace URI -->
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://europeana.eu/terms"
+    xmlns:edm="http://europeana.eu/terms"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:dcterms="http://purl.org/dc/terms/" 
+    xmlns:wgs84="http://www.w3.org/2003/01/geo/wgs84_pos#"
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:enrichment="http://www.europeana.eu/schemas/edm/enrichment/"
+    xmlns:ore="http://www.openarchives.org/ore/terms/" 
+    xmlns:rdaGr2="http://rdvocab.info/ElementsGr2/"
+    xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns:wgs84_pos="http://www.w3.org/2003/01/geo/wgs84_pos#"
+    elementFormDefault="qualified">
+    
+    <import namespace="http://purl.org/dc/elements/1.1/" schemaLocation="DC.xsd"/>
+    <import namespace="http://www.w3.org/2004/02/skos/core#" schemaLocation="SKOS.xsd"/>
+    <import namespace="http://purl.org/dc/terms/" schemaLocation="DCTERMS.xsd"/>
+    <import namespace="http://www.w3.org/2003/01/geo/wgs84_pos#" schemaLocation="WGS84.xsd"/>
+    <import namespace="http://rdvocab.info/ElementsGr2/" schemaLocation="RDAGR2.xsd" />
+    <import namespace="http://xmlns.com/foaf/0.1/" schemaLocation="FOAF.xsd" />
+    <import namespace="http://www.w3.org/1999/02/22-rdf-syntax-ns#" schemaLocation="RDF.xsd"/>
+    <import namespace="http://www.w3.org/2002/07/owl#" schemaLocation="OWL.xsd"/>
+
+    <annotation>
+        <documentation> EDM First Implementation Schema: Main schema in the EDM namespace, to be
+            wrapped up in RDF </documentation>
+    </annotation>
+
+
+    <!--  Base EDM Entities Declaration-->
+
+    <complexType name="BaseProvidedCHOType">
+        <annotation>
+            <documentation>Base class for ProvidedCHO implementations</documentation>
+        </annotation>
+        <complexContent>
+            <extension base="edm:EuropeanaType">
+                <sequence minOccurs="1" maxOccurs="1">
+                    <!-- EDM SPECIFIC ELEMENTS -->
+                    <element ref="edm:currentLocation" maxOccurs="1" minOccurs="0"/>
+                    <element ref="edm:hasMet" maxOccurs="unbounded" minOccurs="0"/>
+                    <element ref="edm:hasType" maxOccurs="unbounded" minOccurs="0"/>
+                    <element ref="edm:incorporates" maxOccurs="unbounded" minOccurs="0"/>
+                    <element ref="edm:isDerivativeOf" maxOccurs="unbounded" minOccurs="0"/>
+                    <element ref="edm:isNextInSequence" maxOccurs="unbounded" minOccurs="0"/>
+                    <element ref="edm:isRelatedTo" maxOccurs="unbounded" minOccurs="0"/>
+                    <element ref="edm:isRepresentationOf" maxOccurs="1" minOccurs="0"/>
+                    <element ref="edm:isSimilarTo" maxOccurs="unbounded" minOccurs="0"/>
+                    <element ref="edm:isSuccessorOf" maxOccurs="unbounded" minOccurs="0"/>
+                    <element ref="edm:realizes" maxOccurs="unbounded" minOccurs="0"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <complexType name="EuropeanaType">
+        <annotation>
+            <documentation> EuropeanaType contains the DC &amp; DCTERMS elements. </documentation>
+        </annotation>
+        <complexContent>
+            <extension base="rdf:AboutType">
+                <sequence minOccurs="0" maxOccurs="unbounded">
+                    <choice>
+                        <!-- DC -->
+                        <element ref="dc:contributor"/>
+                        <element ref="dc:coverage"/>
+                        <element ref="dc:creator"/>
+                        <element ref="dc:date"/>
+                        <element ref="dc:description"/>
+                        <element ref="dc:format"/>
+                        <element ref="dc:identifier"/>
+                        <element ref="dc:language"/>
+                        <element ref="dc:publisher"/>
+                        <element ref="dc:relation"/>
+                        <element ref="dc:rights"/>
+                        <element ref="dc:source"/>
+                        <element ref="dc:subject"/>
+                        <element ref="dc:title"/>
+                        <element ref="dc:type"/>
+                        
+                        <!-- DCTerms -->
+                        <element ref="dcterms:alternative"/>
+                        <element ref="dcterms:conformsTo"/>
+                        <element ref="dcterms:created"/>
+                        <element ref="dcterms:extent"/>
+                        <element ref="dcterms:hasFormat"/>
+                        <element ref="dcterms:hasPart"/>
+                        <element ref="dcterms:hasVersion"/>
+                        <element ref="dcterms:isFormatOf"/>
+                        <element ref="dcterms:isPartOf"/>
+                        <element ref="dcterms:isReferencedBy"/>
+                        <element ref="dcterms:isReplacedBy"/>
+                        <element ref="dcterms:isRequiredBy"/>
+                        <element ref="dcterms:issued"/>
+                        <element ref="dcterms:isVersionOf"/>
+                        <element ref="dcterms:medium"/>
+                        <element ref="dcterms:provenance"/>
+                        <element ref="dcterms:references"/>
+                        <element ref="dcterms:replaces"/>
+                        <element ref="dcterms:requires"/>
+                        <element ref="dcterms:spatial"/>
+                        <element ref="dcterms:tableOfContents"/>
+                        <element ref="dcterms:temporal"/>
+                    </choice>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+
+    <simpleType name="EdmType">
+        <restriction base="string">
+            <enumeration value="TEXT"/>
+            <enumeration value="VIDEO"/>
+            <enumeration value="IMAGE"/>
+            <enumeration value="SOUND"/>
+            <enumeration value="3D"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="UGCType">
+        <restriction base="string">
+            <enumeration value="true"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="CountryCodes">
+        <restriction base="string">
+            <enumeration value="Albania"/>
+            <enumeration value="Andorra"/>
+            <enumeration value="Armenia"/>
+            <enumeration value="Austria"/>
+            <enumeration value="Belarus"/>
+            <enumeration value="Belgium"/>
+            <enumeration value="Bosnia and Herzegovina"/>
+            <enumeration value="Bulgaria"/>
+            <enumeration value="Croatia"/>
+            <enumeration value="Cyprus"/>
+            <enumeration value="Czech Republic"/>
+            <enumeration value="Denmark"/>
+            <enumeration value="Estonia"/>
+            <enumeration value="Europe"/>
+            <enumeration value="Finland"/>
+            <enumeration value="France"/>
+            <enumeration value="Georgia"/>
+            <enumeration value="Germany"/>
+            <enumeration value="Greece"/>
+            <enumeration value="Hungary"/>
+            <enumeration value="Iceland"/>
+            <enumeration value="Ireland"/>
+            <enumeration value="Italy"/>
+            <enumeration value="Israel"/>
+            <enumeration value="Latvia"/>
+            <enumeration value="Liechtenstein"/>
+            <enumeration value="Lithuania"/>
+            <enumeration value="Luxembourg"/>
+            <enumeration value="Macedonia"/>
+            <enumeration value="Malta"/>
+            <enumeration value="Moldova"/>
+            <enumeration value="Monaco"/>
+            <enumeration value="Montenegro"/>
+            <enumeration value="Netherlands"/>
+            <enumeration value="Norway"/>
+            <enumeration value="Poland"/>
+            <enumeration value="Portugal"/>
+            <enumeration value="Romania"/>
+            <enumeration value="Russia"/>
+            <enumeration value="San Marino"/>
+            <enumeration value="Serbia"/>
+            <enumeration value="Slovakia"/>
+            <enumeration value="Slovenia"/>
+            <enumeration value="Spain"/>
+            <enumeration value="Sweden"/>
+            <enumeration value="Switzerland"/>
+            <enumeration value="Turkey"/>
+            <enumeration value="Ukraine"/>
+            <enumeration value="United Kingdom"/>
+        </restriction>
+    </simpleType>
+    
+    <simpleType name="LanguageCodes">
+        <restriction base="string">
+            <enumeration value="bg"/>
+            <enumeration value="ca"/>
+            <enumeration value="cs"/>
+            <enumeration value="da"/>
+            <enumeration value="de"/>
+            <enumeration value="el"/>
+            <enumeration value="en"/>
+            <enumeration value="es"/>
+            <enumeration value="et"/>
+            <enumeration value="eu"/>
+            <enumeration value="fi"/>
+            <enumeration value="fr"/>
+            <enumeration value="ga"/>
+            <enumeration value="gd"/>
+            <enumeration value="he"/>
+            <enumeration value="hr"/>
+            <enumeration value="hu"/>
+            <enumeration value="ie"/>
+            <enumeration value="is"/>
+            <enumeration value="it"/>
+            <enumeration value="ka"/>
+            <enumeration value="lt"/>
+            <enumeration value="lv"/>
+            <enumeration value="mk"/>
+            <enumeration value="mt"/>
+            <enumeration value="mul"/>
+            <enumeration value="nl"/>
+            <enumeration value="no"/>
+            <enumeration value="pl"/>
+            <enumeration value="pt"/>
+            <enumeration value="ro"/>
+            <enumeration value="ru"/>
+            <enumeration value="sk"/>
+            <enumeration value="sl"/>
+            <enumeration value="sr"/>
+            <enumeration value="sv"/>
+            <enumeration value="tr"/>
+            <enumeration value="uk"/>
+            <enumeration value="yi"/>
+            <enumeration value="cy"/>
+        </restriction>
+    </simpleType>
+
+
+
+    <element name="acronym" type="rdf:LiteralType">
+        <annotation>
+            <documentation> Acronym for an Organization
+                Example: BNF </documentation>
+        </annotation>
+    </element>
+
+    <element name="aggregatedCHO" type="rdf:ResourceType">
+        <annotation>
+            <documentation> This property associates an ORE aggregation with the cultural heritage
+                object(s) (CHO for short) it is about. In Europeana, an aggregation aggregates at
+                least one CHO. Typically in an aggregation there will be exactly one aggregated
+                object, but some aggregations, e.g. those representing archive finding aids, may
+                refer to more than one object. Conversely, a CHO may be aggregated by several
+                aggregations. Typically, in the data maintained by Europeana, a CHO would be
+                aggregated by one EuropeanaAggregation, and at least one provider Aggregation.
+                Example:The aggregation of Mona Lisa edm:aggregatedCHO Mona Lisa. </documentation>
+        </annotation>
+    </element>
+
+    <element name="begin" type="rdf:LiteralType">
+        <annotation>
+            <documentation>The beginning of a temporal period</documentation>
+        </annotation>
+    </element>
+
+    <element name="country" type="edm:CountryCodes">
+        <annotation>
+            <documentation>This is the name of the country in which the Provider is based or
+                "Europe" in the case of Europe-wide projects. Example:
+                &lt;edm:country&gt;AL&lt;/edm:country&gt; </documentation>
+        </annotation>
+    </element>
+
+    <element name="collectionName" type="rdf:LiteralType">
+        <annotation>
+            <documentation>A literal indicating the name of the collection</documentation>
+        </annotation>
+    </element>
+    
+    <element name="currentLocation" type="rdf:ResourceType">
+        <annotation>
+            <documentation>The geographic location and/or name of the repository, building, site, or
+                other entity whose boundaries presently include the resource.</documentation>
+        </annotation>
+    </element>
+
+    <element name="dataProvider" type="rdf:ResourceOrLiteralType">
+        <annotation>
+            <documentation> The name or identifier of the organisation that contributes data to
+                Europeana. This element is specifically included to allow the name of the
+                organisation who supplies data to Europeana indirectly via an aggregator to be
+                recorded and displayed in the portal. Aggregator names are recorded in edm:provider.
+                If an organisation provides data directly to Europeana (i.e. not via an aggregator)
+                the values in edm:dataProvider and edm:provider will be the same. Although the range
+                of this property is given as edm:Agent organisation names should be provided as an
+                ordinary text string until a Europeana authority file for organisations has been
+                established. At that point providers will be able to send an identifier from the
+                file instead of a text string. The name provided should be the preferred form of the
+                name in the language the provider chooses as the default language for display in the
+                portal. Countries with multiple languages may prefer to concatenate the name in more
+                than one language (See the example below.) Note: Europeana Data Provider is not
+                necessarily the institution where the physical object is located. Example: The
+                current &lt;edm:dataProvider&gt;Palais des Beaux Arts de
+                Lille&lt;/edm:dataProvider&gt; could become &lt;edm:dataProvider&gt;http://
+                www.pba-lille.fr/&lt;/edm:dataProvider&gt; </documentation>
+        </annotation>
+    </element>
+    
+    
+    <element name="datasetName" type="rdf:LiteralType">
+        <annotation>
+            <documentation> The name of a dataset provided by an Organization
+            to Europeana</documentation>
+        </annotation>
+    </element>
+    
+    
+    <element name="end" type="rdf:LiteralType">
+        <annotation>
+            <documentation>The ending of a temporal period</documentation>
+        </annotation>
+    </element>
+    
+    <element name="europeanaRole" type="rdf:ResourceOrLiteralType">
+        <annotation>
+            <documentation> Role of an Organization according to its relationship to Europeana
+                Example: Content Provider/Data Aggregator </documentation>
+        </annotation>
+    </element>
+    
+    <element name="geographicLevel" type="rdf:ResourceOrLiteralType">
+        <annotation>
+            <documentation> Geographic Level of an Organization
+                Example: Regional/National/European/Worldwide </documentation>
+        </annotation>
+    </element>
+    
+    <element name="type" type="edm:EdmType">
+        <annotation>
+            <documentation>The EDM Content Type</documentation>
+        </annotation>
+    </element>
+    
+    <element name="hasMet" type="rdf:ResourceType">
+        <annotation>
+            <documentation> edm:hasMet relates a resource with the objects or phenomena that have
+                happened to or have happened together with the resource under consideration. We can
+                abstractly think of history and the present as a series of "meetings" between people
+                and other things in space-time. Therefore we name this relationship as the things
+                the object "has met" in the course of its existence. These meetings are events in
+                the proper sense, in which other people and things participate in any role.
+                Example:The location of an object may be due to a transport, move to a place, or
+                because it has been created at that spot. </documentation>
+        </annotation>
+    </element>
+    
+    <element name="hasType" type="rdf:ResourceOrLiteralType">
+        <annotation>
+            <documentation>This property relates a resource with the concepts it belongs to in a
+                suitable type system such as MIME or any thesaurus that captures categories of
+                objects in a given field (e.g., the "Objects" facet in Getty's Art and Architecture
+                Thesaurus). It does not capture aboutness. Example:The type of Mona Lisa is (AAT)
+                Painting. The type of a digital image of Mona Lisa may be JPEG. </documentation>
+        </annotation>
+    </element>
+    
+    <element name="hasView" type="rdf:ResourceType">
+        <annotation>
+            <documentation> This property relates a ORE aggregation about a CHO with a web resource
+                providing a view of that CHO. Examples of view are: a thumbnail, a textual abstract
+                and a table of contents. The ORE aggregation may be a Europeana aggregation, in
+                which case the view is an object owned by Europeana (i.e., an instance of
+                edm:EuropeanaObject) or an aggregation contributed by a content provider. In order
+                to capture both these cases, the domain of edm:hasView is ore:Aggregation and its
+                range is edm:WebResource Example: An ore:Aggregation of Mona Lisa contributed by
+                Louvre may have as view a low resolution digital image of Mona Lisa. The issue
+                number 56 of "Le Temps" contributed by BNF may have as view a text of some parts of
+                the issue </documentation>
+        </annotation>
+    </element>
+
+    <element name="incorporates" type="rdf:ResourceType">
+        <annotation>
+            <documentation>This property captures the use of some resource to add value to another
+                resource. Such resources may be nested, such as performing a theater play text, and
+                then recording the performance, or creating an artful edition of a collection of
+                poems or just aggregating various poems in an anthology. There may be no single part
+                that contains ultimately the incorporated object, which may be dispersed in the
+                presentation. Therefore, incorporated resources do in general not form proper parts.
+                Incorporated resources are not part of the same resource, but are taken from other
+                resources, and have an independent history. Therefore edm:incorporates is not a
+                sub-property of dcterm:hasPart. Example:The movie "A Clockwork Orange" incorporates
+                Rossini's symphony from "La Gazza Ladra" in its original soundtrack. "E.A.Poe, The
+                Raven (poem)" is incorporated in "Emerson Lake &amp; Palmers Tales of Mystery
+                (music)" which is incorporated in "Concert Recording 1973 (vinyl)". </documentation>
+        </annotation>
+    </element>
+    
+    <element name="isDerivativeOf" type="rdf:ResourceType">
+        <annotation>
+            <documentation>This property captures a narrower notion of derivation than
+                edm:isSimilarTo, in the sense that it relates a resource to another one, obtained by
+                reworking, reducing, expanding, parts or the whole contents of the former, and
+                possibly adding some minor parts. Versions have an even narrower meaning, in that it
+                requires common identity between the related resources. Translations, summaries,
+                abstractions etc. do not qualify as versions, but do qualify as derivatives.
+                Example:The Italian translation of Moby Dick is a derivation of the original work.
+            </documentation>
+        </annotation>
+    </element>
+    
+    <element name="isNextInSequence" type="rdf:ResourceType">
+        <annotation>
+            <documentation> edm:isNextInSequence relates two resources S and R that are ordered
+                parts of the same resource A, and such that S comes immediately after R in the order
+                created by their being parts of A. Example: Page 34 of the Gutenberg Bible is next
+                in sequence to page 33 of the same title. </documentation>
+        </annotation>
+    </element>
+    
+    <element name="isRelatedTo" type="rdf:ResourceOrLiteralType">
+        <annotation>
+            <documentation>edm:isRelatedTo is the most general contextual property in EDM.
+                Contextual properties have typically to do either with the things that have happened
+                to or together with the object under consideration, or what the object refers to by
+                its shape, form or features in a figural or encoded form. For sake of simplicity, we
+                include in the contextual relationships also the scholarly classification, which may
+                have either to do with the role and cultural connections of the object in the past,
+                or its kind of structure, substance or contents as it can be verified at present.
+                Example:Moby Dick is related to XIX century literature. Mona Lisa is related to
+                Renaissance Art. </documentation>
+        </annotation>
+    </element>
+    
+    <element name="isRepresentationOf" type="rdf:ResourceType">
+        <annotation>
+            <documentation>This property associates an information resource to the resource (if any)
+                that it represents. Example:A high resolution image created by the Multimedia Louvre
+                Lab by digitizing Mona Lisa is a representation of Mona Lisa </documentation>
+        </annotation>
+    </element>
+    
+    <element name="isShownAt" type="rdf:ResourceType">
+        <annotation>
+            <documentation>An unambiguous URL reference to the digital object on the provider's web
+                site in its full information context. See also edm:isShownBy.This is a URL that will
+                be active in the Europeana interface. It will lead users to the digital object
+                displayed on the provider's web site in its full information context. Use
+                edm:isShownAt if you display the digital object with extra information (such as
+                header, banner etc). Example:
+                &lt;edm:isShownAt&gt;http://www.photo.rmn.fr/cf/htm/CPICZ.aspx?E=2C6NU0VFLVNY&lt;/edm:isShownAt&gt;
+            </documentation>
+        </annotation>
+    </element>
+    
+    <element name="isShownBy" type="rdf:ResourceType">
+        <annotation>
+            <documentation> An unambiguous URL reference to the digital object on the provider's web
+                site in the best available resolution/quality. See also edm:isShownAt. This is a URL
+                that will be active in the Europeana interface. It will lead users to the digital
+                object on the provider's website where they can view or play it. The digital object
+                needs to be directly accessible by the URL and reasonably independent at that
+                location. If the URL includes short copyright information with the pointer to the
+                object it can be entered in edm:isShownBy. Use edm:isShownAt for digital objects
+                embedded in HTML pages (even where the page is extremely simple). Example:
+                &lt;edm:isShownBy&gt;http://resolver.kb.nl/resolve?urn=urn:gvn:RA01:30051001524450&lt;/edm:isShownBy&gt;
+            </documentation>
+        </annotation>
+    </element>
+    
+    <element name="isSimilarTo" type="rdf:ResourceType">
+        <annotation>
+            <documentation>Definition The most generic derivation property, covering also the case
+                of questionable derivation. Is Similar To asserts that parts of the contents of one
+                resource exhibit common features with respect to ideas, shapes, structures, colors,
+                words, plots, topics with the contents of the related resource. Those common
+                features may be attributed to a common origin or influence (in particular for
+                derivation), but also to more generic cultural or psychological factors.
+            </documentation>
+        </annotation>
+    </element>
+    
+    <element name="isSuccessorOf" type="rdf:ResourceType">
+        <annotation>
+            <documentation>This property captures the relation between the continuation of a
+                resource and that resource. This applies to a story, a serial, a journal etc. No
+                content of the successor resource is identical or has a similar form with that of
+                the precursor. The similarity is only in the context, subjects and figures of a
+                plot. Successors typically form part of a common whole - such as a trilogy, a
+                journal, etc. Example: "The Two Towers" is a successor of "Fellowship of the Ring".
+                The issue 57 of "Le Temps" is a successor of issue 56 of the Le Temps.
+            </documentation>
+        </annotation>
+    </element>
+
+    <element name="landingPage" type="rdf:ResourceType">
+        <annotation>
+            <documentation>This property captures the relation between an aggregation representing a
+                cultural heritage object and the Web resource representing that object on the
+                provider's web site. Example: Mona Lisa, represented by the Europeana aggregation
+                europeana:ea-monalisa, has landing page
+                http://www.culture.gouv.fr/public/mistral/joconde_fr?ACTION=CHERCHER&amp;FIELD_1=REF&amp;VALUE_1=000PE025604</documentation>
+        </annotation>
+    </element>
+    
+    <element name="language" type="edm:LanguageCodes">
+        <annotation>
+            <documentation>A language assigned to the resource with reference to the Provider.
+                Language Codes:
+                bg:Bulgarian
+                ca:Catalan
+                cs:Czech
+                da:Danish
+                de:German
+                el:Greek
+                en:English
+                es:Spanish
+                et:Estonian
+                eu:Basque 
+                fi:Finnish
+                fr:French
+                ga:Irish
+                gd:Gaelic (Scottish)
+                he:Hebrew
+                hr:Croatian (hrvatski jezik)
+                hu:Hungarian
+                ie:Interlingue
+                is:Icelandic
+                it:Italian
+                ka:Georgian
+                lt:Lithuanian
+                lv:Latvian (Lettish)
+                mk:Macedonian
+                mt:Maltese
+                mul:Multilingual Content
+                nl:Netherlands
+                no:Norway
+                pl:Polish
+                pt:Portugese
+                ro:Romanian
+                ru:Russian
+                sk:Slovak
+                sl:Slovenian
+                sr:Serbian
+                sv:Swedish
+                tr:Turkish
+                uk:Ukrainian
+                yi:Yiddish
+                cy:Welsh
+                </documentation>
+        </annotation>
+    </element>
+    
+    <element name="object" type="rdf:ResourceType">
+        <annotation>
+            <documentation>The URL of a thumbnail representing the digital object or, if there is no
+                such thumbnail, the URL of the digital object in the best resolution available on
+                the web site of the data provider from which a thumbnail could be generated. This
+                will often be the same URL as given in edm:isShownBy.
+                Example:&lt;edm:object&gt;http://upload.wikimedia.org/wikipedia/en/f/f3/Europeana_logo.png&lt;/edm:object&gt;
+            </documentation>
+        </annotation>
+    </element>
+
+    <element name="organizationScope" type="rdf:ResourceOrLiteralType">
+        <annotation>
+            <documentation> Scope of an Organization 
+                Example: Cross/Single/Thematic/Individual </documentation>
+        </annotation>
+    </element>
+
+
+    <element name="organizationDomain" type="rdf:ResourceOrLiteralType">
+        <annotation>
+            <documentation> Domain of an Organization 
+                Example: Library/Archive/Museum </documentation>
+        </annotation>
+    </element>
+
+    <element name="organizationSector" type="rdf:ResourceOrLiteralType">
+        <annotation>
+            <documentation> Sector of an Organization 
+                Example: Private/Public/Goverment Department </documentation>
+        </annotation>
+    </element>
+
+    <element name="preview" type="rdf:ResourceType">
+        <annotation>
+            <documentation>
+                A reference to the Europeana cached thumbnail.
+            </documentation>
+        </annotation>
+    </element>
+
+    <element name="provider" type="rdf:ResourceOrLiteralType">
+        <annotation>
+            <documentation> Name of the organization that delivers data to Europeana. The
+                edm:provider is the organization that sends the data to Europeana, and this is not
+                necessarily the institution that holds or owns the original or digitised object.
+                Where data is being supplied by an aggregator or project edm:provider is the name of
+                aggregator/project. The name of the content holder can be recorded in
+                edm:dataProvider. If the content holder supplies data directly to Europeana then the
+                name should also appear in this element. Although the range of this property is
+                given as edm:Agent, organisation names should be provided as an ordinary text string
+                until a Europeana authority file for organisations has been established. At that
+                point providers will be able to send an identifier from the file instead of a text
+                string. The name should be in the original language(s). Example: The current
+                &lt;edm:provider&gt;Geheugen van Nederland&lt;/edm:provider&gt; could become
+                &lt;edm:provider&gt;http://www.geheugenvannederland.nl/&lt;/edm:provider&gt;
+            </documentation>
+        </annotation>
+    </element>
+
+    <element name="realizes" type="rdf:ResourceType">
+        <annotation>
+            <documentation>This property describes a relation between a physical thing and the
+                information resource that is contained in it, visible at it or otherwise carried by
+                it, if applicable. Example: An item of the Gutenberg's edition realizes the Bible
+            </documentation>
+        </annotation>
+    </element>
+
+    <element name="rights" type="rdf:ResourceType">
+        <annotation>
+            <documentation>Information about copyright of the digital object as specified by
+                isShownBy and isShownAt.The value in this element is a URL constructed according to
+                the specifications in the "Specifications of the controlled values for edm:rights".
+                The URLs are constructed by adding a code indicating the copyright status of an
+                object to the domain name where that status is defined. The domain will be either
+                the europeana.eu domain or the creativecommons.org domain. For users of Europeana.eu
+                this copyright information also applies to the preview specified in edm:object. In
+                order to allow organisations to manage the provision of this element, edm:rights has
+                an obligation level of "recommended" in this version of EDM. It will be changed to
+                "Mandatory" in a later version. </documentation>
+        </annotation>
+    </element>
+
+    <element name="ugc" type="edm:UGCType">
+        <annotation>
+            <documentation>This element is used to identify user generated content (also called user
+                created content). It should be applied to all digitised or born digital content
+                contributed by the general public and collected by Europeana through a crowdsourcing
+                initiative or project. The only value this element can take is "TRUE" to indicate
+                that the object is user generated. It should be entered in uppercase. If the content
+                is not user generated then the element should not be provided.
+                Example:&lt;edm:UGC&gt;TRUE&lt;edm:UGC&gt; </documentation>
+        </annotation>
+    </element>
+
+    <element name="userTag" type="rdf:LiteralType">
+        <annotation>
+            <documentation>This is a tag created by a user through the Europeana interface.
+            </documentation>
+        </annotation>
+    </element>
+
+    <element name="year" type="rdf:LiteralType">
+        <annotation>
+            <documentation>A point of time associated with an event in the life of the original
+                analog or born digital object. Example:&lt;edm:year &gt;1523&lt;/edm:year&gt;
+            </documentation>
+        </annotation>
+    </element>
+
+    <element name="europeanaProxy" type="boolean">
+        <annotation>
+            <documentation>A flag indicating that the specific Proxy can be used as a europeanaProxy
+            </documentation>
+        </annotation>
+    </element>
+       
+</schema>

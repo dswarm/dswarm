@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2007-2012 The Europeana Foundation
+ 
+   Licenced under the EUPL, Version 1.1 (the "Licence") and subsequent versions as approved
+   by the European Commission;
+   You may not use this work except in compliance with the Licence.
+  
+   You may obtain a copy of the Licence at:
+   http://joinup.ec.europa.eu/software/page/eupl
+ 
+   Unless required by applicable law or agreed to in writing, software distributed under
+   the Licence is distributed on an "AS IS" basis, without warranties or conditions of
+   any kind, either express or implied.
+   See the Licence for the specific language governing permissions and limitations under
+   the Licence.
+-->
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://purl.org/dc/terms/" 
+  xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" elementFormDefault="qualified">
+  <annotation>
+    <documentation>
+      EDM First Implementation Schema: DC Terms
+    </documentation>
+  </annotation>
+  <import namespace="http://www.w3.org/1999/02/22-rdf-syntax-ns#" schemaLocation="RDF.xsd" />
+    
+  <element name="isPartOf" type="rdf:ResourceOrLiteralType">
+  </element>
+  
+  <element name="isReferencedBy" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        A related resource that references, cites, or otherwise points to the described resource. Example:
+        <isReferencedBy> Till, Nicholas (1994) Mozart and the Enlightenment: Truth, Virtue and Beauty in Mozart's Operas, W. W. Norton &amp;
+          Company </isReferencedBy>
+        Type: String
+      </documentation>
+    </annotation>
+  </element>
+
+  <element name="temporal" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        Temporal characteristics of the resource Example:
+        <temporal>Roman</temporal>
+        Type: String
+      </documentation>
+    </annotation>
+  </element>
+
+  <element name="tableOfContents" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        A list of subunits of the resource. Example:
+        <tableOfContents> Chapter 1. Introduction, Chapter 2. History </tableOfContents>
+        Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="spatial" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        Spatial characteristics of the resource. Example:
+        <spatial>Portugal</spatial>
+        Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="requires" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        A related resource that is required by the described resource to support its function, delivery or coherence. Example:
+        <requires> http://ads.ahds.ac.uk/project/userinfo/css/oldbrowsers.css </requires>
+        where the resource described is a HTML file at http://ads.ahds.ac.uk/project/userinfo/digitalTextArchiving.html Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="replaces" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        A related resource that is supplanted, displaced, or superseded by the described resource. Example:
+        <replaces> http://dublincore.org/about/2006/01/01/bylaws/ </replaces>
+        where the resource described is a newer version (http://dublincore.org/about/2009/01/05/bylaws/) Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="references" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        A related resource that is referenced, cited, or otherwise pointed to by the described resource Example:
+        <references> Honderd jaar Noorse schilderkunst </references>
+        Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="provenance" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        A statement of any changes in ownership and custody of the resource since its creation that are significant for its authenticity,
+        integrity and interpretation. This may include a
+        description of any changes successive custodians made to the resource. Example:
+        <provenance> Donated by The National Library in 1965 </provenance>
+        Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="medium" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        The material or physical carrier of the resource. Example:
+        <medium>metal</medium>
+        Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="isVersionOf" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        A related resource of which the described resource is a version, edition, or adaptation. Changes in version imply substantive changes in
+        content rather than differences in format
+        Example:
+        <isVersionOf>ESE Version 0.5</isVersionOf>
+        Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="issued" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        Date of formal issuance (e.g., publication) of the resource. Example:
+        <issued>1993</issued>
+        Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="isRequiredBy" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        A related resource that requires the described resource to support its function, delivery or coherence. Example:
+        <isRequiredBy> http://www.myslides.com/myslideshow.ppt </isRequiredBy>
+        where the image being described is required for an online slideshow. Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="isReplacedBy" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        A related resource that supplants, displaces, or supersedes the described resource. Example:
+        <isReplacedBy> http://dublincore.org/about/2009/01/05/bylaws/ </isReplacedBy>
+        where the resource described is an older version (http://dublincore.org/about/2006/01/01/bylaws/) Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="isFormatOf" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        A related resource that is substantially the same as the described resource, but in another format. Example:
+        <isFormatOf>Europeana_logo.tiff</isFormatOf>
+        where the resource being described is a png image file. Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="hasVersion" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        A related resource that is a version, edition, or adaptation of the described resource. Changes in version imply substantive changes in
+        content rather than differences in format.
+        Example:
+        <hasVersion> The Sorcerer's Apprentice (translation by Edwin Zeydel, 1955) </hasVersion>
+        . In this example the 1955 translation is a version of the described resource. Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="hasFormat" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        A related resource that is substantially the same as the pre-existing described resource, but in another format. Example:
+        <hasFormat> http://upload.wikimedia.org/wikipedia/en/f/f3/Europeana _logo.png </hasFormat>
+        where the resource being described is a tiff image file. Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="extent" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        The size or duration of the resource. Example:
+        <extent>13 cm</extent>
+        (the width of an original object).
+        <extent>34 minutes</extent>
+        (the length of an audio file). Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="created" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        Date of creation of the resource Example:
+        <created>1564</created>
+        <created>Iron Age</created>
+        Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="conformsTo" type="rdf:ResourceOrLiteralType">
+    <annotation>
+      <documentation>
+        An established standard to which the described resource conforms. Example:
+        <conformsTo>W3C WCAG 2.0</conformsTo>
+        (for an HTML document that conforms to web content accessibility guidelines). Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="alternative" type="rdf:LiteralType">
+    <annotation>
+      <documentation>
+        An alternative name for the resource. This can be any form of the title that is used as a substitute or an alternative to the formal
+        title of the resource including abbreviations or
+        translations of the title. Example:
+        <alternative>Ocho semanas</alternative>
+        (When
+        <title>Eight weeks</title>
+        ) Type: String
+      </documentation>
+    </annotation>
+  </element>
+  
+  <element name="hasPart" type="rdf:ResourceOrLiteralType">
+  </element>
+  
+</schema>

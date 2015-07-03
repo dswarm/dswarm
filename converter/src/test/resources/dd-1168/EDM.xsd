@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2007-2012 The Europeana Foundation
+ 
+   Licenced under the EUPL, Version 1.1 (the "Licence") and subsequent versions as approved
+   by the European Commission;
+   You may not use this work except in compliance with the Licence.
+  
+   You may obtain a copy of the Licence at:
+   http://joinup.ec.europa.eu/software/page/eupl
+ 
+   Unless required by applicable law or agreed to in writing, software distributed under
+   the Licence is distributed on an "AS IS" basis, without warranties or conditions of
+   any kind, either express or implied.
+   See the Licence for the specific language governing permissions and limitations under
+   the Licence.
+-->
+
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:edm="http://www.europeana.eu/schemas/edm/" elementFormDefault="qualified"
+  attributeFormDefault="qualified" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+  xmlns:ore="http://www.openarchives.org/ore/terms/">
+
+  <annotation>
+    <documentation> EDM First Implementation Schema: wrapped up as RDF/XML </documentation>
+  </annotation>
+  
+  <import namespace="http://www.europeana.eu/schemas/edm/" schemaLocation="EDM-EXTERNAL-MAIN.xsd"/>
+
+  <element name="RDF" type="edm:RDF"/>
+</schema>

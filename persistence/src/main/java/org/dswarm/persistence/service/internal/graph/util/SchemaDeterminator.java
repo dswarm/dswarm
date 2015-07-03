@@ -127,6 +127,7 @@ public class SchemaDeterminator {
 					case SchemaUtils.PNX_SCHEMA_UUID:
 					case SchemaUtils.FINC_SOLR_SCHEMA_UUID:
 					case SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID:
+					case SchemaUtils.OAI_PMH_DC_ELEMENTS_AND_EDM_SCHEMA_UUID:
 					case SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID:
 					case SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID:
 
@@ -169,6 +170,7 @@ public class SchemaDeterminator {
 							case ConfigurationStatics.MARCXML_STORAGE_TYPE:
 							case ConfigurationStatics.PNX_STORAGE_TYPE:
 							case ConfigurationStatics.OAI_PMH_DC_ELEMENTS_STORAGE_TYPE:
+							case ConfigurationStatics.OAI_PMH_DCE_AND_EDM_ELEMENTS_STORAGE_TYPE:
 							case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:
 							case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
 
@@ -225,6 +227,13 @@ public class SchemaDeterminator {
 						// assign existing OAI-PMH + DC Elements schema to data resource
 
 						schema = schemaService.get().getObject(SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID);
+
+						break;
+					case ConfigurationStatics.OAI_PMH_DCE_AND_EDM_ELEMENTS_STORAGE_TYPE:
+
+						// assign existing OAI-PMH + DC Elements + EDM schema to data resource
+
+						schema = schemaService.get().getObject(SchemaUtils.OAI_PMH_DC_ELEMENTS_AND_EDM_SCHEMA_UUID);
 
 						break;
 					case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2007-2012 The Europeana Foundation Licenced under the EUPL, 
+	Version 1.1 (the "Licence") and subsequent versions as approved by the European 
+	Commission; You may not use this work except in compliance with the Licence. 
+	You may obtain a copy of the Licence at: http://joinup.ec.europa.eu/software/page/eupl 
+	Unless required by applicable law or agreed to in writing, software distributed 
+	under the Licence is distributed on an "AS IS" basis, without warranties 
+	or conditions of any kind, either express or implied. See the Licence for 
+	the specific language governing permissions and limitations under the Licence. -->
+
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:edm="http://www.europeana.eu/schemas/edm/" xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:foaf="http://xmlns.com/foaf/0.1/"
+	targetNamespace="http://xmlns.com/foaf/0.1/">
+
+	<annotation>
+		<documentation> Europeana representation of Foaf elements
+		</documentation>
+	</annotation>
+
+	<import namespace="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+		schemaLocation="RDF.xsd" />
+	<import namespace="http://www.europeana.eu/schemas/edm/"
+		schemaLocation="EDM-COMMON-MAIN.xsd" />
+	<import namespace="http://www.europeana.eu/schemas/edm/"
+		schemaLocation="CONTEXTS.xsd" />
+	<import namespace="http://purl.org/dc/elements/1.1/"
+		schemaLocation="DC.xsd" />
+	<import namespace="http://www.w3.org/2004/02/skos/core#"
+		schemaLocation="SKOS.xsd" />
+
+	<element name="homepage" type="rdf:ResourceType">
+	</element>
+
+	<element name="name" type="rdf:LiteralType">
+	</element>
+
+
+	<element name="Organization">
+		<complexType>
+			<annotation>
+				<documentation> The EDM representation of an Organization
+					providing data to Europeana
+				</documentation>
+			</annotation>
+			<complexContent>
+				<extension base="edm:AgentType">
+					<sequence>
+						<!-- TODO: The Organisation inherits the dc:identifier from the AgentType. 
+							This means that it gets 0 -unbounded cardinality while here it is required 
+							to get a 1-1 cardinality -->
+						<element ref="edm:acronym" maxOccurs="unbounded"
+							minOccurs="0" />
+						<element ref="edm:organizationScope" maxOccurs="1"
+							minOccurs="1" />
+						<element ref="edm:organizationDomain" maxOccurs="1"
+							minOccurs="1" />
+						<element ref="edm:organizationSector" maxOccurs="1"
+							minOccurs="1" />
+						<element ref="edm:geographicLevel" maxOccurs="1"
+							minOccurs="1" />
+						<element ref="edm:country" maxOccurs="1" minOccurs="1" />
+						<element ref="edm:europeanaRole" maxOccurs="unbounded" minOccurs="1" />
+						<element ref="foaf:homepage" maxOccurs="1" minOccurs="0" />
+					</sequence>
+				</extension>
+			</complexContent>
+		</complexType>
+	</element>
+
+
+</schema>

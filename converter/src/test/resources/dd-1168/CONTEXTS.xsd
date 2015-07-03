@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2007-2012 The Europeana Foundation
+ 
+   Licenced under the EUPL, Version 1.1 (the "Licence") and subsequent versions as approved
+   by the European Commission;
+   You may not use this work except in compliance with the Licence.
+  
+   You may obtain a copy of the Licence at:
+   http://joinup.ec.europa.eu/software/page/eupl
+ 
+   Unless required by applicable law or agreed to in writing, software distributed under
+   the Licence is distributed on an "AS IS" basis, without warranties or conditions of
+   any kind, either express or implied.
+   See the Licence for the specific language governing permissions and limitations under
+   the Licence.
+-->
+
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+  targetNamespace="http://www.europeana.eu/schemas/edm/" 
+  xmlns:edm="http://www.europeana.eu/schemas/edm/" 
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+  xmlns:dcterms="http://purl.org/dc/terms/" 
+  xmlns:wgs84_pos="http://www.w3.org/2003/01/geo/wgs84_pos#" 
+  xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+  xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xmlns:rdaGr2="http://rdvocab.info/ElementsGr2/" 
+  xmlns:foaf="http://xmlns.com/foaf/0.1/"
+  xmlns:sch="http://purl.oclc.org/dsdl/schematron"
+  elementFormDefault="qualified">
+
+  <annotation>
+    <documentation>
+      EDM First Implementation Schema: Contextual elements (vocabulary terms)
+    </documentation>
+  </annotation>
+
+  <import namespace="http://purl.org/dc/elements/1.1/" schemaLocation="DC.xsd" />
+  <import namespace="http://purl.org/dc/terms/" schemaLocation="DCTERMS.xsd" />
+  <import namespace="http://xmlns.com/foaf/0.1/" schemaLocation="FOAF.xsd"/>
+  <import namespace="http://www.w3.org/2004/02/skos/core#" schemaLocation="SKOS.xsd" />
+  <import namespace="http://www.w3.org/2002/07/owl#" schemaLocation="OWL.xsd"/>
+  <import namespace="http://www.w3.org/1999/02/22-rdf-syntax-ns#" schemaLocation="RDF.xsd" />
+  <import namespace="http://rdvocab.info/ElementsGr2/" schemaLocation="RDAGR2.xsd"/>
+  <import namespace="http://www.w3.org/2003/01/geo/wgs84_pos#" schemaLocation="WGS84.xsd" />
+  <include schemaLocation="EDM-COMMON-MAIN.xsd"/>
+  
+  <complexType name="AgentType">
+    <annotation>
+      <documentation> This class comprises people, either individually or in groups, who have
+        the potential to perform intentional actions for which they can be held responsible.
+        Example:Leonardo da Vinci, the British Museum, W3C
+      </documentation>
+    </annotation>
+    <complexContent>
+      <extension base="rdf:AboutType">
+        <sequence>
+          <element ref="skos:prefLabel" maxOccurs="unbounded" minOccurs="0" />
+          <element ref="skos:altLabel" maxOccurs="unbounded" minOccurs="0" />
+          <element ref="skos:note" maxOccurs="unbounded" minOccurs="0" />
+          <element ref="dc:date" maxOccurs="unbounded" minOccurs="0"/>
+          <element ref="dc:identifier" maxOccurs="unbounded" minOccurs="0"/>
+          <element ref="dcterms:hasPart" maxOccurs="unbounded" minOccurs="0"/>
+          <element ref="dcterms:isPartOf" maxOccurs="unbounded" minOccurs="0"/>
+          <element ref="edm:begin" maxOccurs="1" minOccurs="0" />
+          <element ref="edm:end" maxOccurs="1" minOccurs="0" />
+          <element ref="edm:hasMet" maxOccurs="unbounded" minOccurs="0"/>
+          <element ref="edm:isRelatedTo" maxOccurs="unbounded" minOccurs="0"/>
+          <element ref="foaf:name" maxOccurs="unbounded" minOccurs="0"/>
+          <element ref="rdaGr2:biographicalInformation" maxOccurs="1" minOccurs="0"/>
+          <element ref="rdaGr2:dateOfBirth" maxOccurs="1" minOccurs="0"/>
+          <element ref="rdaGr2:dateOfDeath" maxOccurs="1" minOccurs="0"/>
+          <element ref="rdaGr2:dateOfEstablishment" maxOccurs="1" minOccurs="0"/>
+          <element ref="rdaGr2:dateOfTermination" maxOccurs="1" minOccurs="0"/>
+          <element ref="rdaGr2:gender" maxOccurs="1" minOccurs="0"/>
+          <element ref="rdaGr2:placeOfBirth" maxOccurs="1" minOccurs="0"/>
+          <element ref="rdaGr2:placeOfDeath" maxOccurs="1" minOccurs="0"/>
+          <element ref="rdaGr2:professionOrOccupation" maxOccurs="1" minOccurs="0"/>
+          <element ref="owl:sameAs" maxOccurs="unbounded" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <complexType name="PlaceType">
+    <annotation>
+      <documentation>An "extent in space, in particular on the surface of the earth, in the
+        pure sense of physics: independent from temporal phenomena and matter" (CIDOC CRM)
+        Example:the region of space occupied by Rome today, the region of space occupied by
+        the United Kingdom today, the region of space occupied by the Republic of Crimea in
+        1945</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="rdf:AboutType">
+        <sequence>
+          <element ref="wgs84_pos:lat" maxOccurs="1" minOccurs="0" />
+          <element ref="wgs84_pos:long" maxOccurs="1" minOccurs="0" />
+          <element ref="wgs84_pos:alt" maxOccurs="1" minOccurs="0"/>
+          <element ref="skos:prefLabel" maxOccurs="unbounded" minOccurs="0" />
+          <element ref="skos:altLabel" maxOccurs="unbounded" minOccurs="0" />
+          <element ref="skos:note" maxOccurs="unbounded" minOccurs="0" />
+          <element ref="dcterms:hasPart" maxOccurs="unbounded" minOccurs="0"/>
+          <element ref="dcterms:isPartOf" maxOccurs="unbounded" minOccurs="0" />
+          <element ref="edm:isNextInSequence" maxOccurs="1" minOccurs="0"/>
+          <element ref="owl:sameAs" maxOccurs="unbounded" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+
+  <complexType name="TimeSpanType">
+    <annotation>
+      <documentation>The class of "abstract temporal extents, in the sense of Galilean
+        physics, having a beginning, an end and a duration" (CIDOC CRM) Example:2001-12-31,
+        01.01.01 - 02.02.02, 1503 - 1506 (the time span of the creation of Mona Lisa)</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="rdf:AboutType">
+        <sequence>
+          <element ref="skos:prefLabel" maxOccurs="unbounded" minOccurs="0" />
+          <element ref="skos:altLabel" maxOccurs="unbounded" minOccurs="0" />
+          <element ref="skos:note" maxOccurs="unbounded" minOccurs="0" />
+          <element ref="dcterms:hasPart" maxOccurs="unbounded" minOccurs="0"/>
+          <element ref="dcterms:isPartOf" maxOccurs="unbounded" minOccurs="0" />
+          <element ref="edm:begin" maxOccurs="1" minOccurs="0" />
+          <element ref="edm:end" maxOccurs="1" minOccurs="0" />
+          <element ref="edm:isNextInSequence" maxOccurs="1" minOccurs="0"/>
+          <element ref="owl:sameAs" maxOccurs="unbounded" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <complexType name="WebResourceType">
+    <annotation>
+      <documentation>Base class for WebResource implementations</documentation>      <appinfo>
+        <sch:pattern>
+          <sch:rule context="edm:WebResource">
+            <sch:assert test="not(dct:hasPart[text()])"> 
+              The element dcterms:isPartOf should not have a literal value in the edm:WebResource context
+              with id: <sch:value-of select="@rdf:about"/>. Use an rdf:resource instead. 
+            </sch:assert>
+          </sch:rule>
+        </sch:pattern>
+      </appinfo>
+    </annotation>
+    <complexContent>
+      <extension base="rdf:AboutType">
+        <sequence>
+          <element ref="dc:creator" maxOccurs="unbounded" minOccurs="0"/>
+          <element ref="dc:description" maxOccurs="unbounded" minOccurs="0"/>
+          <element ref="dc:format" maxOccurs="unbounded" minOccurs="0"/>
+          <element ref="dc:rights" maxOccurs="unbounded" minOccurs="0"/>
+          <element ref="dc:source" maxOccurs="unbounded" minOccurs="0"/>
+          <element ref="dcterms:conformsTo" maxOccurs="unbounded" minOccurs="0"/>
+          <element ref="dcterms:created" maxOccurs="unbounded" minOccurs="0"/>
+          <element ref="dcterms:extent" maxOccurs="unbounded" minOccurs="0"/>
+          <element ref="dcterms:hasPart" maxOccurs="unbounded" minOccurs="0"/>
+          <element ref="dcterms:isFormatOf" maxOccurs="unbounded" minOccurs="0"/>
+          <element ref="dcterms:isPartOf" maxOccurs="unbounded" minOccurs="0"/>
+          <element ref="dcterms:issued" maxOccurs="unbounded" minOccurs="0"/>
+          <element ref="edm:isNextInSequence" maxOccurs="1" minOccurs="0"/>
+          <element ref="edm:rights" maxOccurs="1" minOccurs="0"/>
+          <element ref="owl:sameAs" maxOccurs="unbounded" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+
+</schema>

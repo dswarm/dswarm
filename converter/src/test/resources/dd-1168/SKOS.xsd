@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2007 EDL FOUNDATION
+
+  Licensed under the EUPL, Version 1.1 or - as soon they
+  will be approved by the European Commission - subsequent
+  versions of the EUPL (the "Licence");
+  you may not use this work except in compliance with the
+  Licence.
+  You may obtain a copy of the Licence at:
+
+  http://ec.europa.eu/idabc/eupl
+
+  Unless required by applicable law or agreed to in
+  writing, software distributed under the Licence is
+  distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+  express or implied.
+  See the Licence for the specific language governing
+  permissions and limitations under the Licence.
+-->
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+  xmlns:skos="http://www.w3.org/2004/02/skos/core#" 
+  xmlns:edm="http://www.europeana.eu/schemas/edm/" 
+  xmlns:xml="http://www.w3.org/XML/1998/namespace" 
+  targetNamespace="http://www.w3.org/2004/02/skos/core#" 
+  elementFormDefault="qualified" 
+  attributeFormDefault="qualified">
+  
+  <annotation>
+    <documentation>
+      EDM First Implementation Schema: SKOS
+    </documentation>
+  </annotation>
+
+
+  <import namespace="http://www.w3.org/1999/02/22-rdf-syntax-ns#" schemaLocation="RDF.xsd" />
+
+  <element name="Concept">
+    <complexType>
+       <complexContent>
+         <extension base="rdf:AboutType">
+           <sequence minOccurs="0" maxOccurs="unbounded">
+             <choice>
+             <element ref="skos:prefLabel"/>
+             <element ref="skos:altLabel"/>
+             <element ref="skos:broader"/>
+             <element ref="skos:narrower"/>
+             <element ref="skos:related"/>
+             <element ref="skos:broadMatch"/>  
+             <element ref="skos:narrowMatch"/>  
+             <element ref="skos:relatedMatch"/>
+             <element ref="skos:exactMatch"/>
+             <element ref="skos:closeMatch"/>
+             <element ref="skos:note"/>
+             <element ref="skos:notation"/>
+             <element ref="skos:inScheme"/>
+             </choice>
+           </sequence>
+         </extension>
+       </complexContent> 
+    </complexType>   
+  </element>
+  
+  
+  <element name="broadMatch" type="rdf:ResourceType" />
+  <element name="narrowMatch" type="rdf:ResourceType" />
+  <element name="relatedMatch" type="rdf:ResourceType" />
+  <element name="exactMatch" type="rdf:ResourceType" />
+  <element name="closeMatch" type="rdf:ResourceType" />
+  <element name="notation" type="rdf:LiteralType" />
+  <element name="prefLabel" type="rdf:LiteralType" />
+  <element name="altLabel" type="rdf:LiteralType" />
+  <element name="broader" type="rdf:ResourceType" />
+  <element name="narrower" type="rdf:ResourceType" />
+  <element name="related" type="rdf:ResourceType" />
+  <element name="inScheme" type="rdf:ResourceType" />
+  <element name="note" type="rdf:LiteralType" />
+
+</schema>

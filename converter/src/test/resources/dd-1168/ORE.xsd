@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2007-2012 The Europeana Foundation Licenced under the EUPL, 
+	Version 1.1 (the "Licence") and subsequent versions as approved by the European 
+	Commission; You may not use this work except in compliance with the Licence. 
+	You may obtain a copy of the Licence at: http://joinup.ec.europa.eu/software/page/eupl 
+	Unless required by applicable law or agreed to in writing, software distributed 
+	under the Licence is distributed on an "AS IS" basis, without warranties 
+	or conditions of any kind, either express or implied. See the Licence for 
+	the specific language governing permissions and limitations under the Licence. -->
+
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.openarchives.org/ore/terms/"
+	xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:edm="http://www.europeana.eu/schemas/edm/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:dcterms="http://purl.org/dc/terms/" xmlns:enrichment="http://www.europeana.eu/schemas/edm/enrichment/"
+	xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:sch="http://purl.oclc.org/dsdl/schematron"
+	elementFormDefault="qualified">
+
+	<annotation>
+		<documentation> EDM First Implementation Schema: Aggregations
+		</documentation>
+	</annotation>
+
+	<import namespace="http://purl.org/dc/elements/1.1/"
+		schemaLocation="DC.xsd" />
+	<import namespace="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+		schemaLocation="RDF.xsd" />
+	<import namespace="http://www.europeana.eu/schemas/edm/"
+		schemaLocation="EDM-COMMON-MAIN.xsd" />
+	<import namespace="http://www.europeana.eu/schemas/edm/enrichment/"
+		schemaLocation="ENRICHMENT.xsd" />
+	<import namespace="http://www.w3.org/2002/07/owl#"
+		schemaLocation="OWL.xsd" />
+
+	<element name="Aggregation">
+		<complexType>
+			<annotation>
+				<documentation> A set of related resources (Aggregated Resources),
+					grouped together
+					such that the set can be treated as a single resource. This is the
+					entity
+					described within the ORE interoperability framework by a Resource Map.
+				</documentation>
+				<appinfo>
+					<sch:pattern name="Either Is shownby or is shownat should be present">
+						<sch:rule context="ore:Aggregation">
+							<sch:assert
+								test="(edm:isShownAt and exists(edm:isShownAt/@rdf:resource)) or (edm:isShownBy and exists(edm:isShownBy/@rdf:resource))">
+								id:
+								<sch:value-of select="@rdf:about" />
+								An ore:Aggregation must have either
+								edm:isShownAt or edm:isShownBy
+							</sch:assert>
+						</sch:rule>
+					</sch:pattern>
+					<sch:pattern>
+						<sch:rule context="ore:Aggregation">
+							<sch:assert test="edm:dataProvider">
+								id:
+								<sch:value-of select="@rdf:about" />
+								An ore:Aggregation must have at least one instance of
+								edm:dataProvider
+							</sch:assert>
+						</sch:rule>
+					</sch:pattern>
+					<sch:pattern>
+						<sch:rule context="ore:Aggregation">
+
+							<sch:assert test="edm:provider">
+								id:
+								<sch:value-of select="@rdf:about" />
+								An ore:Aggregation must have at least one instance of
+								edm:provider
+							</sch:assert>
+						</sch:rule>
+					</sch:pattern>
+					<sch:pattern>
+						<sch:rule context="ore:Aggregation">
+							<sch:assert test="edm:rights and exists(edm:rights/@rdf:resource)">
+								id:
+								<sch:value-of select="@rdf:about" />
+								An ore:Aggregation must have at least one instance of
+								edm:rights
+							</sch:assert>
+						</sch:rule>
+					</sch:pattern>
+					<sch:pattern>
+						<sch:rule context="ore:Aggregation/edm:provider">
+							<sch:assert test="exists(./@rdf:resource) or normalize-space(.)!=''">An ore:Aggregation must have a non
+								empty edm:provider</sch:assert>
+						</sch:rule>
+					</sch:pattern>
+					<sch:pattern>
+						<sch:rule context="ore:Aggregation/edm:dataProvider">
+							<sch:assert test="exists(./@rdf:resource) or normalize-space(.)!=''">An ore:Aggregation must have a non
+								empty edm:dataProvider</sch:assert>
+						</sch:rule>
+					</sch:pattern>
+
+				</appinfo>
+			</annotation>
+			<complexContent>
+				<extension base="rdf:AboutType">
+					<sequence>
+						<element ref="edm:aggregatedCHO" maxOccurs="1" minOccurs="1" />
+						<element ref="edm:dataProvider" maxOccurs="1" minOccurs="0" />
+						<element ref="edm:hasView" maxOccurs="unbounded"
+							minOccurs="0" />
+						<element ref="edm:isShownAt" maxOccurs="1" minOccurs="0" />
+						<element ref="edm:isShownBy" maxOccurs="1" minOccurs="0" />
+						<element ref="edm:object" maxOccurs="1" minOccurs="0" />
+						<element ref="edm:provider" maxOccurs="1" minOccurs="1" />
+						<element ref="dc:rights" maxOccurs="unbounded" minOccurs="0" />
+						<element ref="edm:rights" maxOccurs="1" minOccurs="0" />
+						<element ref="edm:ugc" maxOccurs="1" minOccurs="0" />
+					</sequence>
+				</extension>
+			</complexContent>
+		</complexType>
+	</element>
+
+
+	<element name="Proxy" type="ore:ProxyType" />
+
+	<complexType name="ProxyType">
+		<complexContent>
+			<annotation>
+				<documentation>A proxy is a resource that stands for an aggregated
+					resource A in
+					the context of a specific aggregation. The URI of a proxy then can be
+					used
+					in assertions specific to the aggregated resource A in the context of
+					that
+					aggregation (http://www.openarchives.org/ore/1.0/primer.html).
+				</documentation>
+				<appinfo>
+					<sch:pattern>
+						<sch:rule context="ore:Proxy">
+							<sch:assert
+								test="dc:subject or dc:type or dc:coverage or dct:temporal or dct:spatial">
+								id:
+								<sch:value-of select="@rdf:about" />
+								- A Proxy must have a
+								dc:subject or dc:type or dc:coverage or dct:temporal or
+								dct:spatial.
+							</sch:assert>
+							<sch:assert
+								test="((dc:subject and (exists(dc:subject/@rdf:resource) or normalize-space(dc:subject)!='')) or (dc:type and (exists(dc:type/@rdf:resource) or 								normalize-space(dc:type)!='')) or (dc:coverage and (exists(dc:coverage/@rdf:resource) or normalize-space(dc:coverage)!='')) or (dct:temporal and 									(exists(dct:temporal/@rdf:resource) or normalize-space(dct:temporal)!=''))  or (dct:spatial and (exists(dct:spatial/@rdf:resource) or normalize-space							(dct:spatial)!='')))">
+								A Proxy must have a non empty
+								dc:subject or dc:type or dc:coverage or dct:temporal or
+								dct:spatial.
+							</sch:assert>
+							<sch:assert test="dc:title or dc:description">
+								id:
+								<sch:value-of select="@rdf:about" />
+								- A Proxy must have a dc:title or
+								dc:description.
+							</sch:assert>
+							<sch:assert
+								test="(dc:title and normalize-space(dc:title)!='') or (dc:description and (exists(dc:description/@rdf:resource) or normalize-space(dc:decription)!=''))">A Proxy must have a non empty dc:title or a non empty
+								dc:description</sch:assert>
+							<sch:assert
+								test="not(edm:type='TEXT') or (edm:type='TEXT' and exists(dc:language))">
+								id:
+								<sch:value-of select="@rdf:about" />
+								- Within a Proxy
+								context, dc:language is mandatory when dc:language has the value
+								'TEXT'.
+							</sch:assert>
+							<sch:assert test="edm:type or (not(edm:type) and edm:europeanaProxy)">
+								id:
+								<sch:value-of select="@rdf:about" />
+								edm:type should be present in an ore:Proxy context.
+							</sch:assert>
+							<sch:assert test="not(edm:type and edm:europeanaProxy)">
+								id:
+								<sch:value-of select="@rdf:about" />
+								edm:type should not be present in an Europeana Proxy context
+								(when the edm:europeanaProxy value is present).
+							</sch:assert>
+						</sch:rule>
+					</sch:pattern>
+				</appinfo>
+			</annotation>
+			<extension base="edm:BaseProvidedCHOType">
+				<sequence>
+					<element ref="edm:europeanaProxy" maxOccurs="1" minOccurs="0" />
+					<element ref="edm:userTag" maxOccurs="unbounded" minOccurs="0" />
+					<element ref="edm:year" maxOccurs="unbounded" minOccurs="0" />
+					<element ref="ore:proxyFor" maxOccurs="1" minOccurs="0" />
+					<element ref="ore:proxyIn" maxOccurs="unbounded" minOccurs="0" />
+					<element ref="edm:type" maxOccurs="1" minOccurs="0" />
+					<element ref="owl:sameAs" maxOccurs="unbounded" minOccurs="0" />
+					<!-- The fields below are meant to be used for enrichment purposes but 
+						they are not currently being used. Probably they will be removed in a future 
+						release. <element ref="enrichment:agent_label" maxOccurs="unbounded" minOccurs="0"/> 
+						<element ref="enrichment:agent_term" maxOccurs="unbounded" minOccurs="0"/> 
+						<element ref="enrichment:concept_label" maxOccurs="unbounded" minOccurs="0"/> 
+						<element ref="enrichment:concept_term" maxOccurs="unbounded" minOccurs="0"/> 
+						<element ref="enrichment:period_label" maxOccurs="unbounded" minOccurs="0"/> 
+						<element ref="enrichment:period_term" maxOccurs="unbounded" minOccurs="0"/> 
+						<element ref="enrichment:place_label" maxOccurs="unbounded" minOccurs="0"/> 
+						<element ref="enrichment:place_term" maxOccurs="unbounded" minOccurs="0"/> -->
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+
+	<element name="proxyFor" type="rdf:ResourceType">
+	</element>
+
+	<element name="proxyIn" type="rdf:ResourceType">
+	</element>
+
+	<element name="aggregates" type="rdf:ResourceType">
+	</element>
+
+</schema>

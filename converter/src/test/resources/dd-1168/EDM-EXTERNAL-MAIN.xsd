@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2007-2012 The Europeana Foundation Licenced under the EUPL, 
+	Version 1.1 (the "Licence") and subsequent versions as approved by the European 
+	Commission; You may not use this work except in compliance with the Licence. 
+	You may obtain a copy of the Licence at: http://joinup.ec.europa.eu/software/page/eupl 
+	Unless required by applicable law or agreed to in writing, software distributed 
+	under the Licence is distributed on an "AS IS" basis, without warranties 
+	or conditions of any kind, either express or implied. See the Licence for 
+	the specific language governing permissions and limitations under the Licence. -->
+
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+	targetNamespace="http://www.europeana.eu/schemas/edm/"
+	xmlns:edm="http://www.europeana.eu/schemas/edm/" 
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:owl="http://www.w3.org/2002/07/owl#" 
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:dcterms="http://purl.org/dc/terms/" 
+	xmlns:wgs84="http://www.w3.org/2003/01/geo/wgs84_pos#"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:ore="http://www.openarchives.org/ore/terms/" 
+	xmlns:sch="http://purl.oclc.org/dsdl/schematron"
+	xmlns:cc="http://creativecommons.org/ns#"
+	elementFormDefault="qualified">
+
+	<import namespace="http://www.w3.org/1999/02/22-rdf-syntax-ns#" schemaLocation="RDF.xsd" />
+	<import namespace="http://www.w3.org/2004/02/skos/core#" schemaLocation="SKOS.xsd" />
+	<import namespace="http://www.w3.org/2002/07/owl#" schemaLocation="OWL.xsd" />
+	<import namespace="http://www.openarchives.org/ore/terms/" schemaLocation="ORE.xsd" />
+	<import namespace="http://creativecommons.org/ns#" schemaLocation="CC.xsd"/>
+	<include schemaLocation="EDM-COMMON-MAIN.xsd" />
+	<include schemaLocation="CONTEXTS.xsd"/>	
+	
+	<complexType name="RDF">
+		<annotation>
+			<documentation> The RDF root element declaration </documentation>
+			<!-- Declared namespaces for schematron validation -->
+			<appinfo>
+				<sch:title>Schematron validation</sch:title>
+				<sch:ns prefix="edm" uri="http://www.europeana.eu/schemas/edm/" />
+				<sch:ns prefix="dc" uri="http://purl.org/dc/elements/1.1/" />
+				<sch:ns prefix="dct" uri="http://purl.org/dc/terms/" />
+				<sch:ns prefix="ore" uri="http://www.openarchives.org/ore/terms/" />
+				<sch:ns prefix="owl" uri="http://www.w3.org/2002/07/owl#" />
+				<sch:ns prefix="rdf" uri="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
+				<sch:ns prefix="rdfs" uri="http://www.w3.org/2000/01/rdf-schema#" />
+				<sch:ns prefix="skos" uri="http://www.w3.org/2004/02/skos/core#" />
+			</appinfo>
+		</annotation>
+		<sequence minOccurs="0" maxOccurs="unbounded">
+			<choice>
+				<element name="ProvidedCHO" type="edm:ProvidedCHOType" />
+				<element name="WebResource" type="edm:WebResourceType" />
+				<element name="Agent" type="edm:AgentType" />
+				<element name="Place" type="edm:PlaceType" />
+				<element name="TimeSpan" type="edm:TimeSpanType" />
+				<element ref="skos:Concept" />
+				<element ref="ore:Aggregation" />
+				<element ref="cc:License" />
+			</choice>
+		</sequence>
+	</complexType>
+
+	<complexType name="ProvidedCHOType">
+		<complexContent>
+			<annotation>
+				<documentation>
+					This class comprises the Cultural Heritage objects that Europeana
+					collects descriptions about.
+				</documentation>
+				<appinfo>
+					<sch:pattern>
+						<sch:rule context="edm:ProvidedCHO">
+							<sch:assert	test="dc:subject or dc:type or dc:coverage or dct:temporal or dct:spatial">
+								id: <sch:value-of select="@rdf:about" />
+								- A ProvidedCHO must have a dc:subject or dc:type or dc:coverage or dct:temporal or dct:spatial.
+							</sch:assert>
+							<sch:assert test="dc:title or dc:description">
+								id: <sch:value-of select="@rdf:about" /> - A ProvidedCHO must have a dc:title or dc:description.
+							</sch:assert>
+							<sch:assert test="not(edm:type='TEXT') or (edm:type='TEXT' and exists(dc:language))">
+								id:	<sch:value-of select="@rdf:about" /> - dc:language is mandatory for TEXT objects.
+							</sch:assert>
+						</sch:rule>
+					</sch:pattern>
+				</appinfo>
+			</annotation>
+			<extension base="edm:BaseProvidedCHOType">
+				<sequence>
+					<element ref="edm:type" maxOccurs="1" minOccurs="1"/>
+					<element ref="owl:sameAs" maxOccurs="unbounded" minOccurs="0" />
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+</schema>
