@@ -103,6 +103,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	private static final Logger LOG = LoggerFactory.getLogger(DataModelsResource.class);
 
 	public static final String DO_INGEST_IDENTIFIER = "do_ingest";
+	public static final String DO_INGEST_QUERY_PARAM_IDENTIFIER = "doIngest";
 
 	/**
 	 * The data model util

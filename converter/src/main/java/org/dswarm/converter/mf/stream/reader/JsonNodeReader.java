@@ -18,6 +18,7 @@ package org.dswarm.converter.mf.stream.reader;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Nullable;
 
@@ -41,6 +42,7 @@ public class JsonNodeReader extends DefaultObjectPipe<Tuple<String, JsonNode>, S
 
 	private static final Logger		LOG	= LoggerFactory.getLogger(JsonNodeReader.class);
 	private final Optional<String>	recordPrefix;
+	private final AtomicInteger counter = new AtomicInteger(0);
 
 	public JsonNodeReader() {
 		this(null);
@@ -51,8 +53,16 @@ public class JsonNodeReader extends DefaultObjectPipe<Tuple<String, JsonNode>, S
 		this.recordPrefix = Optional.fromNullable(recordPrefix);
 	}
 
+	public AtomicInteger getCounter() {
+
+		return counter;
+	}
+
 	@Override
 	public void process(final Tuple<String, JsonNode> tuple) {
+
+		counter.incrementAndGet();
+
 		final StreamReceiver receiver = getReceiver();
 
 		receiver.startRecord(tuple.v1());

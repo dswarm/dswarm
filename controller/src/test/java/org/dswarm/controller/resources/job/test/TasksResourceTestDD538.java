@@ -15,11 +15,15 @@
  */
 package org.dswarm.controller.resources.job.test;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -33,8 +37,13 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.builder.Input;
+import org.xmlunit.diff.Diff;
+import org.xmlunit.diff.Difference;
 
 import org.dswarm.controller.resources.job.TasksResource;
+import org.dswarm.controller.resources.resource.DataModelsResource;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
 import org.dswarm.controller.resources.test.ResourceTest;
@@ -44,25 +53,39 @@ import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.ResourceType;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
-import org.dswarm.persistence.model.resource.utils.DataModelUtils;
 import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
-public class TasksResourceTest2 extends ResourceTest {
+public abstract class TasksResourceTestDD538 extends ResourceTest {
 
-	private static final Logger LOG = LoggerFactory.getLogger(TasksResourceTest2.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TasksResourceTestDD538.class);
 
-	private String taskJSONString = null;
+	protected String taskJSONString = null;
 
-	private ResourcesResourceTestUtils resourcesResourceTestUtils;
+	protected ResourcesResourceTestUtils resourcesResourceTestUtils;
 
-	private DataModelsResourceTestUtils dataModelsResourceTestUtils;
+	protected DataModelsResourceTestUtils dataModelsResourceTestUtils;
 
 	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	public TasksResourceTest2() {
+	private final String taskJSONFileName;
+	private final String inputDataResourceFileName;
+	private final String testPostfix;
+	private final String recordTag;
+	private final String storageType;
+	private final String expectedResultXMLFileName;
+
+	public TasksResourceTestDD538(final String taskJSONFileNameArg, final String inputDataResourceFileNameArg, final String recordTagArg,
+			final String storageTypeArg, final String expectedResultXMLFileNameArg, final String testPostfixArg) {
 
 		super("tasks");
+
+		taskJSONFileName = taskJSONFileNameArg;
+		inputDataResourceFileName = inputDataResourceFileNameArg;
+		recordTag = recordTagArg;
+		storageType = storageTypeArg;
+		expectedResultXMLFileName = expectedResultXMLFileNameArg;
+		testPostfix = testPostfixArg;
 	}
 
 	@Override protected void initObjects() {
@@ -77,7 +100,7 @@ public class TasksResourceTest2 extends ResourceTest {
 
 		super.prepare();
 
-		taskJSONString = DMPPersistenceUtil.getResourceAsString("task.json");
+		taskJSONString = DMPPersistenceUtil.getResourceAsString(taskJSONFileName);
 	}
 
 	/**
@@ -88,40 +111,50 @@ public class TasksResourceTest2 extends ResourceTest {
 	@Test
 	public void testTaskExecution() throws Exception {
 
-		TasksResourceTest2.LOG.debug("start task execution test");
+		TasksResourceTestDD538.LOG.debug("start DD-538 {} task execution test", testPostfix);
 
-		final String resourceFileName = "controller_test-mabxml.xml";
-
-		final PrepareResource prepareResource = new PrepareResource(resourceFileName).invoke();
-		final PrepareConfiguration prepareConfiguration = new PrepareConfiguration(prepareResource).invoke();
+		final PrepareResource prepareResource = new PrepareResource(inputDataResourceFileName).invoke();
+		final PrepareConfiguration prepareConfiguration = new PrepareConfiguration(prepareResource, recordTag, storageType).invoke();
 		DataModel inputDataModel = prepareDataModel(prepareResource, prepareConfiguration);
 
 		final ObjectNode requestJSON = prepareTask(inputDataModel);
+
+		System.out.println("task request JSON = '" + objectMapper.writeValueAsString(requestJSON) + "'");
 
 		final Response response = target().request(MediaType.APPLICATION_XML_TYPE).post(Entity.json(requestJSON));
 
 		Assert.assertEquals("200 Created was expected", 200, response.getStatus());
 
-		final String actualResultXML = response.readEntity(String.class);
+		final InputStream actualXMLStream = response.readEntity(InputStream.class);
+		Assert.assertNotNull(actualXMLStream);
 
-		Assert.assertNotNull("the response JSON shouldn't be null", actualResultXML);
+		final BufferedInputStream bis = new BufferedInputStream(actualXMLStream, 1024);
 
-		TasksResourceTest2.LOG.debug("task execution response = '{}'", actualResultXML);
+		final String expectedXML = DMPPersistenceUtil.getResourceAsString(expectedResultXMLFileName);
 
-		final String expectedResultXML = DMPPersistenceUtil.getResourceAsString("controller_task-result.xml");
+		// do comparison: check for XML similarity
+		final Diff xmlDiff = DiffBuilder
+				.compare(Input.fromString(expectedXML))
+				.withTest(Input.fromStream(bis))
+				.ignoreWhitespace()
+				.checkForSimilar()
+				.build();
 
-		final boolean result = expectedResultXML.length() == actualResultXML.length() || 781 == actualResultXML.length();
+		if (xmlDiff.hasDifferences()) {
+			final StringBuilder sb = new StringBuilder("Oi chap, there seem to ba a mishap!");
+			for (final Difference difference : xmlDiff.getDifferences()) {
+				sb.append('\n').append(difference);
+			}
+			Assert.fail(sb.toString());
+		}
 
-		Assert.assertTrue(result);
+		actualXMLStream.close();
+		bis.close();
 
-		TasksResourceTest2.LOG.debug("end task execution test");
+		TasksResourceTestDD538.LOG.debug("end DD-538 {} task execution test", testPostfix);
 	}
 
 	private ObjectNode prepareTask(final DataModel inputDataModel) throws Exception {
-		// check processed data
-		final String data = dataModelsResourceTestUtils.getData(inputDataModel.getUuid(), 1);
-
-		Assert.assertNotNull("the data shouldn't be null", data);
 
 		// manipulate input data model
 		final String finalInputDataModelJSONString = objectMapper.writeValueAsString(inputDataModel);
@@ -130,19 +163,13 @@ public class TasksResourceTest2 extends ResourceTest {
 		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
 		taskJSON.set("input_data_model", finalInputDataModelJSON);
 
-		// utilise internal model as output data model
-		final DataModel outputDataModel = dataModelsResourceTestUtils.getObject(DataModelUtils.BIBO_DOCUMENT_DATA_MODEL_UUID);
-		final String outputDataModelJSONString = objectMapper.writeValueAsString(outputDataModel);
-		final ObjectNode outputDataModelJSON = objectMapper.readValue(outputDataModelJSONString, ObjectNode.class);
-
-		taskJSON.set("output_data_model", outputDataModelJSON);
-
 		final ObjectNode requestJSON = objectMapper.createObjectNode();
 		requestJSON.set(TasksResource.TASK_IDENTIFIER, taskJSON);
 		requestJSON.put(TasksResource.PERSIST_IDENTIFIER, Boolean.FALSE);
 		requestJSON.put(TasksResource.DO_INGEST_ON_THE_FLY_IDENTIFIER, Boolean.TRUE);
 		requestJSON.put(TasksResource.DO_EXPORT_ON_THE_FLY_IDENTIFIER, Boolean.TRUE);
 		requestJSON.put(TasksResource.DO_VERSIONING_ON_RESULT_IDENTIFIER, Boolean.FALSE);
+		requestJSON.put(TasksResource.RETURN_IDENTIFIER, Boolean.TRUE);
 
 		return requestJSON;
 	}
@@ -162,11 +189,27 @@ public class TasksResourceTest2 extends ResourceTest {
 		data1.setDataResource(resource);
 		data1.setConfiguration(configuration);
 
-		// TODO: add schema to data1
-
 		final String inputDataModelJSONString = objectMapper.writeValueAsString(data1);
 
-		final DataModel inputDataModel = dataModelsResourceTestUtils.createObjectWithoutComparison(inputDataModelJSONString);
+		final WebTarget resourceTarget = dataModelsResourceTestUtils.getResourceTarget();
+		final WebTarget webTarget = resourceTarget.queryParam(DataModelsResource.DO_INGEST_QUERY_PARAM_IDENTIFIER, Boolean.FALSE);
+
+		LOG.debug("data model creation request URI = '{}'", webTarget.getUri());
+
+		final Invocation.Builder request = webTarget
+				.request(MediaType.APPLICATION_JSON_TYPE);
+
+		final Response response = request.post(
+				Entity.json(inputDataModelJSONString));
+
+		Assert.assertNotNull(response);
+		Assert.assertEquals(201, response.getStatus());
+
+		final String responseString = response.readEntity(String.class);
+
+		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
+
+		final DataModel inputDataModel = dataModelsResourceTestUtils.readObject(responseString);
 
 		Assert.assertNotNull("the data model shouldn't be null", inputDataModel);
 
@@ -180,22 +223,29 @@ public class TasksResourceTest2 extends ResourceTest {
 		private final String   resourceFileName;
 
 		public PrepareResource(final String resourceFileName) {
+
 			this.resourceFileName = resourceFileName;
 		}
 
 		public Resource getRes1() {
+
 			return res1;
 		}
 
 		public Resource getResource() {
+
 			return resource;
 		}
 
 		public PrepareResource invoke() throws Exception {
+
 			final String resource1Uuid = UUIDService.getUUID(Resource.class.getSimpleName());
 
+			final int lastBackslash = resourceFileName.lastIndexOf("/");
+			final String relativeResourceFileName = resourceFileName.substring(lastBackslash + 1, resourceFileName.length());
+
 			res1 = new Resource(resource1Uuid);
-			res1.setName(resourceFileName);
+			res1.setName(relativeResourceFileName);
 			res1.setDescription("this is a description");
 			res1.setType(ResourceType.FILE);
 
@@ -212,7 +262,7 @@ public class TasksResourceTest2 extends ResourceTest {
 				// fileType = Files.probeContentType(resourceFile.toPath());
 			} catch (final IOException e1) {
 
-				TasksResourceTest2.LOG.debug("couldn't determine file type from file '{}'", resourceFile.getAbsolutePath());
+				TasksResourceTestDD538.LOG.debug("couldn't determine file type from file '{}'", resourceFile.getAbsolutePath());
 			}
 
 			if (fileType != null) {
@@ -227,6 +277,7 @@ public class TasksResourceTest2 extends ResourceTest {
 
 			// upload data resource
 			resource = resourcesResourceTestUtils.uploadResource(resourceFile, res1);
+
 			return this;
 		}
 	}
@@ -236,29 +287,36 @@ public class TasksResourceTest2 extends ResourceTest {
 		private       Configuration conf1;
 		private       Configuration configuration;
 		private final Resource      resource;
+		private final String        recordTag;
+		private final String        storageType;
 
-		public PrepareConfiguration(final PrepareResource prepareResource) {
+		public PrepareConfiguration(final PrepareResource prepareResource, final String recordTagArg, final String storageTypeArg) {
+
 			this.resource = prepareResource.getResource();
+			recordTag = recordTagArg;
+			storageType = storageTypeArg;
 		}
 
 		public Configuration getConf1() {
+
 			return conf1;
 		}
 
 		public Configuration getConfiguration() {
+
 			return configuration;
 		}
 
 		public PrepareConfiguration invoke() throws Exception {
+
 			final String configuration1Uuid = UUIDService.getUUID(Configuration.class.getSimpleName());
 
 			// process input data model
 			conf1 = new Configuration(configuration1Uuid);
 
-			conf1.setName("configuration 1");
-			conf1.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("datensatz"));
-			conf1.addParameter(ConfigurationStatics.XML_NAMESPACE, new TextNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd"));
-			conf1.addParameter(ConfigurationStatics.STORAGE_TYPE, new TextNode("xml"));
+			conf1.setName("configuration " + testPostfix);
+			conf1.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode(recordTag));
+			conf1.addParameter(ConfigurationStatics.STORAGE_TYPE, new TextNode(storageType));
 
 			final String configurationJSONString = objectMapper.writeValueAsString(conf1);
 

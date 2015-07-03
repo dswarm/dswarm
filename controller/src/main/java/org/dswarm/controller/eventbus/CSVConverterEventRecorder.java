@@ -16,6 +16,7 @@
 package org.dswarm.controller.eventbus;
 
 import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -28,8 +29,11 @@ import org.culturegraph.mf.types.Triple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
+import rx.Scheduler;
+import rx.schedulers.Schedulers;
 
 import org.dswarm.controller.DMPControllerException;
+import org.dswarm.converter.DMPConverterError;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.flow.CSVResourceFlowFactory;
 import org.dswarm.converter.flow.CSVSourceResourceTriplesFlow;
@@ -84,7 +88,7 @@ public class CSVConverterEventRecorder {
 	private void convertConfiguration(final DataModel dataModel, final UpdateFormat updateFormat, final boolean enableVersioning)
 			throws DMPControllerException {
 
-		final Observable<org.dswarm.persistence.model.internal.Model> models = doIngest(dataModel);
+		final Observable<org.dswarm.persistence.model.internal.Model> models = doIngest(dataModel, Schedulers.newThread());
 
 		try {
 
@@ -107,96 +111,100 @@ public class CSVConverterEventRecorder {
 		}
 	}
 
-	public Observable<org.dswarm.persistence.model.internal.Model> doIngest(final DataModel dataModel) throws DMPControllerException {
+	public Observable<org.dswarm.persistence.model.internal.Model> doIngest(final DataModel dataModel, final Scheduler scheduler)
+			throws DMPControllerException {
 
-		final Observable<Collection<Triple>> result = doCSVIngest(dataModel);
+		final Observable<Collection<Triple>> result = doCSVIngest(dataModel, scheduler);
 
-		if (result != null) {
+		LOG.debug("transformed CSV data resource to triples for data model '{}'", dataModel.getUuid());
 
-			LOG.debug("transformed CSV data resource to triples for data model '{}'", dataModel.getUuid());
+		// convert result to GDM
 
-			// convert result to GDM
+		final String dataResourceBaseSchemaURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
+		final String recordClassURI = dataResourceBaseSchemaURI + RECORD_TYPE_POSTFIX;
+		final ResourceNode recordClassNode = new ResourceNode(recordClassURI);
 
-			final String dataResourceBaseSchemaURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
-			final String recordClassURI = dataResourceBaseSchemaURI + RECORD_TYPE_POSTFIX;
-			final ResourceNode recordClassNode = new ResourceNode(recordClassURI);
+		final AtomicInteger counter = new AtomicInteger(0);
+		final AtomicLong statementCounter = new AtomicLong(0);
 
-			final AtomicInteger counter = new AtomicInteger(0);
-			final AtomicLong statementCounter = new AtomicLong(0);
+		//LOG.debug("CSV triples = '{}'", result.size());
 
-			//LOG.debug("CSV triples = '{}'", result.size());
+		return result
+				.map(triples -> {
 
-			final Observable<org.dswarm.persistence.model.internal.Model> models = result
-					.map(triples -> {
+					// 1. create resource uri from subject (line number)
+					final Resource recordResource = DataModelUtils.mintRecordResource(dataModel);
 
-						// 1. create resource uri from subject (line number)
-						final Resource recordResource = DataModelUtils.mintRecordResource(dataModel);
+					//final int current = counter.incrementAndGet();
 
-						//final int current = counter.incrementAndGet();
+					//LOG.debug("CSV resource number '{}' with '{}'", current, recordResource.getUri());
 
-						//LOG.debug("CSV resource number '{}' with '{}'", current, recordResource.getUri());
+					// add resource type statement to model
+					recordResource.addStatement(new ResourceNode(recordResource.getUri()), new Predicate(GDMUtil.RDF_type), recordClassNode);
 
-						// add resource type statement to model
-						recordResource.addStatement(new ResourceNode(recordResource.getUri()), new Predicate(GDMUtil.RDF_type), recordClassNode);
+					triples.stream().forEach(triple -> {
 
-						triples.stream().forEach(triple -> {
+						// 2. create property object from property uri string
+						final Predicate property = new Predicate(triple.getPredicate());
 
-							// 2. create property object from property uri string
-							final Predicate property = new Predicate(triple.getPredicate());
+						final ResourceNode subject = (ResourceNode) recordResource.getStatements().iterator().next().getSubject();
 
-							final ResourceNode subject = (ResourceNode) recordResource.getStatements().iterator().next().getSubject();
+						// 3. convert objects (string literals) to string literals (?)
+						final LiteralNode object = new LiteralNode(triple.getObject());
 
-							// 3. convert objects (string literals) to string literals (?)
-							final LiteralNode object = new LiteralNode(triple.getObject());
+						recordResource.addStatement(subject, property, object);
+					});
 
-							recordResource.addStatement(subject, property, object);
-						});
+					return recordResource;
+				}).map(finalResource -> {
 
-						return recordResource;
-					}).map(finalResource -> {
+					final Model model = new Model();
+					model.addResource(finalResource);
 
-						final Model model = new Model();
-						model.addResource(finalResource);
+					statementCounter.addAndGet(model.size());
 
-						statementCounter.addAndGet(model.size());
+					if (counter.incrementAndGet() == 1) {
 
-						if (counter.incrementAndGet() == 1) {
+						LOG.debug("transformed first record of CSV data resource to GDM for data model '{}' with '{}' statements",
+								dataModel.getUuid(), statementCounter.get());
+					}
 
-							LOG.debug("transformed first record of CSV data resource to GDM for data model '{}' with '{}' statements",
-									dataModel.getUuid(), statementCounter.get());
-						}
+					//final int current2 = counter.get();
+					//LOG.debug("CSV resource number '{}' with '{}' and '{}' statement", current2, finalResource.getUri(),
+					//		finalResource.size());
 
-						//final int current2 = counter.get();
-						//LOG.debug("CSV resource number '{}' with '{}' and '{}' statement", current2, finalResource.getUri(),
-						//		finalResource.size());
-
-						return new GDMModel(model, null, recordClassURI);
-					}).cast(org.dswarm.persistence.model.internal.Model.class).doOnCompleted(() -> LOG
-							.debug("transformed CSV data resource to GDM for data model '{}' - transformed '{}' records with '{}' statements",
-									dataModel.getUuid(),
-									counter.get(), statementCounter.get()));
-
-			return models;
-		}
-
-		return Observable.empty();
+					return new GDMModel(model, null, recordClassURI);
+				}).cast(org.dswarm.persistence.model.internal.Model.class).doOnCompleted(() -> LOG
+						.debug("transformed CSV data resource to GDM for data model '{}' - transformed '{}' records with '{}' statements",
+								dataModel.getUuid(),
+								counter.get(), statementCounter.get()));
 	}
 
-	private Observable<Collection<Triple>> doCSVIngest(final DataModel dataModel) throws DMPControllerException {
+	private Observable<Collection<Triple>> doCSVIngest(final DataModel dataModel, final Scheduler scheduler) throws DMPControllerException {
 
 		LOG.debug("try to process csv data resource into data model '{}'", dataModel.getUuid());
 
 		try {
 
-			final CSVSourceResourceTriplesFlow flow = flowFactory.get().fromDataModel(dataModel);
+			final CompletableFuture<CSVSourceResourceTriplesFlow> futureFlow = CompletableFuture
+					.supplyAsync(() -> flowFactory.get().fromDataModel(dataModel));
+			final Observable<CSVSourceResourceTriplesFlow> obserableFlow = Observable.from(futureFlow);
 
-			final String path = dataModel.getDataResource().getAttribute(ResourceStatics.PATH).asText();
+			return obserableFlow.subscribeOn(scheduler).flatMap(flow -> {
 
-			LOG.debug("process csv data resource at '{}' into data model '{}'", path, dataModel.getUuid());
+				try {
 
-			return flow.applyFile(path);
+					final String path = dataModel.getDataResource().getAttribute(ResourceStatics.PATH).asText();
 
-		} catch (final DMPConverterException | NullPointerException e) {
+					LOG.debug("process csv data resource at '{}' into data model '{}'", path, dataModel.getUuid());
+
+					return flow.applyFile(path);
+				} catch (final DMPConverterException e) {
+
+					throw DMPConverterError.wrap(e);
+				}
+			});
+		} catch (final RuntimeException e) {
 
 			final String message = String.format("couldn't convert the CSV data of data model '%s'", dataModel.getUuid());
 

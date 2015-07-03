@@ -1,0 +1,1500 @@
+<?xml version="1.0" encoding="utf-8"?><OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+<ListRecords>
+<record>
+   <header>
+      <identifier>DEG-publish:235533</identifier>
+   </header>
+   <metadata>
+      <record xmlns="http://www.loc.gov/MARC21/slim">
+         <leader>02608nam  2200421 a 4500</leader>
+         <controlfield tag="LDR">02608nam  2200421 a 4500</controlfield>
+         <controlfield tag="SYS">235533</controlfield>
+         <datafield tag="001" ind1="" ind2="">
+           <subfield code="_">235533</subfield>
+         </datafield>
+         <datafield tag="003" ind1="" ind2="">
+           <subfield code="_">DE-14</subfield>
+         </datafield>
+         <datafield tag="005" ind1="" ind2="">
+           <subfield code="_">20150423085051</subfield>
+         </datafield>
+         <datafield tag="024" ind1="3" ind2="">
+           <subfield code="a">|9781400834150</subfield>
+         </datafield>
+         <datafield tag="024" ind1="7" ind2="">
+           <subfield code="2">|doi</subfield>
+           <subfield code="a">|10.1515/9781400834150</subfield>
+         </datafield>
+         <datafield tag="035" ind1="" ind2="">
+           <subfield code="a">|(DE-599)GBV818138750</subfield>
+           <subfield code="a">|(DE-601)818138750</subfield>
+           <subfield code="a">|gruy446986</subfield>
+         </datafield>
+         <datafield tag="040" ind1="" ind2="">
+           <subfield code="a">|Coll.:DEG</subfield>
+           <subfield code="a">|DEG</subfield>
+           <subfield code="a">|GBVCP</subfield>
+           <subfield code="b">|ger</subfield>
+           <subfield code="c">|GBVCP</subfield>
+           <subfield code="e">|rakwb</subfield>
+         </datafield>
+         <datafield tag="041" ind1="" ind2="">
+           <subfield code="a">|eng</subfield>
+         </datafield>
+         <datafield tag="084" ind1="" ind2="">
+           <subfield code="2">|BISAC</subfield>
+           <subfield code="a">|SOC026000</subfield>
+         </datafield>
+         <datafield tag="100" ind1="1" ind2="">
+           <subfield code="a">|Ellickson, Robert C</subfield>
+         </datafield>
+         <datafield tag="245" ind1="1" ind2="4">
+           <subfield code="a">|The Household</subfield>
+           <subfield code="b">|Informal Order around the Hearth</subfield>
+           <subfield code="h">|Elektronische Ressource</subfield>
+         </datafield>
+         <datafield tag="260" ind1="3" ind2="">
+           <subfield code="a">|Princeton, N.J</subfield>
+           <subfield code="b">|Princeton University Press</subfield>
+           <subfield code="c">|2010</subfield>
+         </datafield>
+         <datafield tag="300" ind1="" ind2="">
+           <subfield code="a">|Online-Ressource (272 S.)</subfield>
+         </datafield>
+         <datafield tag="520" ind1="" ind2="">
+           <subfield code="a">|Some people dwell alone, many in family-based households, and an adventuresome few in communes. The Household is the first book to systematically lay bare the internal dynamics of these and other home arrangements. Legal underpinnings, social considerations, and economic constraints all influence how household participants select their homemates and govern their interactions around the hearth. Robert Ellickson applies transaction cost economics, sociological theory, and legal analysis to explore issues such as the sharing of household output, the control of domestic misconduct, and the ownership of dwelling units. Drawing on a broad range of historical and statistical sources, Ellickson contrasts family-based households with the more complex arrangements in medieval English castles, Israeli kibbutzim, and contemporary cohousing communities. He shows that most individuals, when structuring their home relationships, pursue a strategy of consorting with intimates. This, he asserts, facilitates informal coordination and tends ultimately to enhance the quality of domestic interactions. He challenges utopian critics who seek to enlarge the scale of the household and legal advocates who urge household members to rely more on written contracts and lawsuits. Ellickson argues that these commentators fail to appreciate the great advantages in the home setting of informally associating with a handful of trusted intimates. The Household is a must-read for sociologists, economists, lawyers, and anyone interested in the fundamentals of domestic life</subfield>
+         </datafield>
+         <datafield tag="776" ind1="1" ind2="">
+           <subfield code="z">|9781400834150</subfield>
+         </datafield>
+         <datafield tag="856" ind1="4" ind2="">
+           <subfield code="m">|V:De Gruyter;X</subfield>
+           <subfield code="u">|http://dx.doi.org/10.1515/9781400834150</subfield>
+           <subfield code="u">|http://www.degruyter.com/search?f_0=isbnissn&amp;q_0=9781400834150&amp;searchTitles=true</subfield>
+         </datafield>
+         <datafield tag="912" ind1="" ind2="">
+           <subfield code="a">|ZDB-23-DGG</subfield>
+           <subfield code="a">|alles</subfield>
+         </datafield>
+      </record>
+   </metadata>
+</record>
+<record>
+   <header>
+      <identifier>DEG-publish:17487</identifier>
+   </header>
+   <metadata>
+      <record xmlns="http://www.loc.gov/MARC21/slim">
+         <leader>05948nam  2201297 a 4500</leader>
+         <controlfield tag="LDR">05948nam  2201297 a 4500</controlfield>
+         <controlfield tag="SYS">17487</controlfield>
+         <datafield tag="001" ind1="" ind2="">
+           <subfield code="_">17487</subfield>
+         </datafield>
+         <datafield tag="003" ind1="" ind2="">
+           <subfield code="_">DE-14</subfield>
+         </datafield>
+         <datafield tag="005" ind1="" ind2="">
+           <subfield code="_">20150423094111</subfield>
+         </datafield>
+         <datafield tag="020" ind1="" ind2="">
+           <subfield code="9">|9783110353075</subfield>
+           <subfield code="9">|9783486714296</subfield>
+           <subfield code="a">|9783110353075</subfield>
+           <subfield code="a">|9783486714296 (pdf)</subfield>
+         </datafield>
+         <datafield tag="024" ind1="3" ind2="">
+           <subfield code="a">|9783486714296</subfield>
+         </datafield>
+         <datafield tag="024" ind1="7" ind2="">
+           <subfield code="2">|doi</subfield>
+           <subfield code="a">|10.1524/9783486714296</subfield>
+         </datafield>
+         <datafield tag="024" ind1="8" ind2="">
+           <subfield code="a">|oldenbourg9783486714296</subfield>
+         </datafield>
+         <datafield tag="035" ind1="" ind2="">
+           <subfield code="a">|(DE-576)427279429</subfield>
+           <subfield code="a">|(DE-599)GBV735764816</subfield>
+           <subfield code="a">|(DE-599)GBV795262930</subfield>
+           <subfield code="a">|(DE-601)735764816</subfield>
+           <subfield code="a">|(OCoLC)874205122</subfield>
+           <subfield code="a">|(OCoLC)879550669</subfield>
+           <subfield code="a">|(OCoLC)ocn874205122</subfield>
+           <subfield code="a">|(OCoLC)ocn879550669</subfield>
+           <subfield code="a">|(SWB-PPN)427279429</subfield>
+           <subfield code="a">|EBL1348862</subfield>
+           <subfield code="a">|gruy220898</subfield>
+         </datafield>
+         <datafield tag="040" ind1="" ind2="">
+           <subfield code="a">|Coll.:DEG</subfield>
+           <subfield code="a">|DE-576</subfield>
+           <subfield code="a">|DEG</subfield>
+           <subfield code="a">|GBVCP</subfield>
+           <subfield code="a">|PPN:427279429</subfield>
+           <subfield code="b">|ger</subfield>
+           <subfield code="c">|DE-576</subfield>
+           <subfield code="c">|GBVCP</subfield>
+           <subfield code="e">|rakwb</subfield>
+         </datafield>
+         <datafield tag="041" ind1="" ind2="">
+           <subfield code="a">|ger</subfield>
+         </datafield>
+         <datafield tag="050" ind1="" ind2="">
+           <subfield code="a">|HD30.28</subfield>
+         </datafield>
+         <datafield tag="082" ind1="" ind2="">
+           <subfield code="a">|658.4</subfield>
+         </datafield>
+         <datafield tag="082" ind1="" ind2="9">
+           <subfield code="a">|650</subfield>
+         </datafield>
+         <datafield tag="084" ind1="" ind2="">
+           <subfield code="2">|BISAC</subfield>
+           <subfield code="2">|rvk</subfield>
+           <subfield code="a">|BUS041000</subfield>
+           <subfield code="a">|QP 320</subfield>
+         </datafield>
+         <datafield tag="100" ind1="1" ind2="">
+           <subfield code="_">|0_(DE-576)165650761</subfield>
+           <subfield code="a">|Wollny, Volrad</subfield>
+         </datafield>
+         <datafield tag="245" ind1="1" ind2="">
+           <subfield code="_">|c_Volrad Wollny</subfield>
+           <subfield code="a">|Instrumente des strategischen Managements</subfield>
+           <subfield code="b">|Grundlagen und Anwendung</subfield>
+           <subfield code="c">|von Herbert Paul und Volrad Wollny</subfield>
+           <subfield code="h">|Elektronische Ressource</subfield>
+         </datafield>
+         <datafield tag="250" ind1="" ind2="">
+           <subfield code="_">|a_2., aktualisierte und erweiterte Aufl</subfield>
+         </datafield>
+         <datafield tag="260" ind1="3" ind2="">
+           <subfield code="a">|München</subfield>
+           <subfield code="b">|Oldenbourg</subfield>
+           <subfield code="c">|2011</subfield>
+         </datafield>
+         <datafield tag="260" ind1="" ind2="">
+           <subfield code="_">|a_München</subfield>
+           <subfield code="_">|b_De Gruyter/Oldenbourg</subfield>
+           <subfield code="_">|c_2014</subfield>
+         </datafield>
+         <datafield tag="300" ind1="" ind2="">
+           <subfield code="_">|a_Online-Ressource (XVIII, 370 S.)</subfield>
+           <subfield code="a">|Online-Ressource</subfield>
+         </datafield>
+         <datafield tag="337" ind1="" ind2="">
+           <subfield code="a">|eBook</subfield>
+         </datafield>
+         <datafield tag="490" ind1="" ind2="">
+           <subfield code="a">|BWL 10-2012</subfield>
+         </datafield>
+         <datafield tag="500" ind1="" ind2="">
+           <subfield code="a">|Description based upon print version of record</subfield>
+         </datafield>
+         <datafield tag="505" ind1="" ind2="">
+           <subfield code="a">|4 Die SWOT-Analyse als methodischer Rahmen4.1 Überblick; 4.2 Die SWOT-Instrumente; 4.3 Literatur; 5 Analyse der Unternehmensumwelt; 5.1 Überblick; 5.2 Externe Instrumente; 5.3 Literatur; 6 Analyse des Unternehmens; 6.1 Überblick; 6.2 Interne Instrumente; 6.3 Literatur; 7 Instrumente zur Strategieentwicklung und Auswahl; 7.1 Überblick; 7.2 Unternehmensstrategien; 7.3 Geschäftsfeldfeldstrategien; 7.4 Literatur; 8 Instrumente zur Strategieumsetzung; 8.1 Überblick; 8.2 Umsetzungsinstrumente; 8.3 Literatur; Register</subfield>
+           <subfield code="a">|CONTENTS; Abbildungsverzeichnis; Abkürzungsverzeichnis; Vorwort; 1 Strategieinstrumente; 1.1 Ziele und Aufbau dieses Buchs; 1.2 Entwicklung und Kritik; 1.3 Der Nutzen von Strategieinstrumenten; 1.4 Die Anwendung von Strategieinstrumenten; 1.5 Literatur; 2 Der strategische Managementprozess; 2.1 Grundlagen des strategischen Managements; 2.2 Ansätze zur Erklärung der Strategieentwicklung; 2.3 Instrumente als Verbindung zwischen Planung und Lernen; 2.4 Literatur; 3 Allgemeine Instrumente; 3.1 Überblick; 3.2 Allgemeine Analyseinstrumente; 3.3 Richtungsgebende Instrumente; 3.4 Literatur</subfield>
+         </datafield>
+         <datafield tag="520" ind1="" ind2="">
+           <subfield code="_">|a_Prof. Dr. Herbert Paul (Fachhochschule Mainz); Prof. Dr. Vollrad Wollny (Fachhochschule Mainz)</subfield>
+           <subfield code="_">|a_This book includes detailed presentations of the most important strategic management tools and discusses their history and theoretical background. The advantages and disadvantages of each tool are extensively illustrated. The focus is on precise step-by-step instruction so the reader can immediately apply the tool and avoid typical beginner's errors in their use and interpretation</subfield>
+           <subfield code="_">|a_This book includes detailed presentations of the most important strategic management tools and discusses their history and theoretical background. The advantages and disadvantages of each tool are extensively illustrated. The focus is on precise step-by-step instruction so the reader can immediately apply the tool and avoid typical beginner’s errors in their use and interpretation</subfield>
+           <subfield code="a">|Im strategischen Management werden eine Vielzahl von Instrumenten für die strategische Analyse, die Strategieentwicklung und -umsetzung eingesetzt. Das Buch stellt die wichtigsten Instrumente einzeln vor und diskutiert deren Entwicklung und theoretischen Hintergrund. Die Vor- und Nachteile der jeweiligen Instrumente werden dabei intensiv beleuchtet. Der Schwerpunkt liegt auf einer genauen Schritt-für-Schritt-Anleitung, so dass der Leser die Methode sofort anwenden kann und typische Anwendungs- und Interpretationsfehler vermeidet</subfield>
+         </datafield>
+         <datafield tag="533" ind1="" ind2="">
+           <subfield code="a">|Online-Ausg</subfield>
+           <subfield code="d">|2012</subfield>
+         </datafield>
+         <datafield tag="655" ind1="" ind2="">
+           <subfield code="a">|Electronic books</subfield>
+         </datafield>
+         <datafield tag="700" ind1="1" ind2="">
+           <subfield code="4">|aut</subfield>
+           <subfield code="a">|Paul, Herbert</subfield>
+           <subfield code="e">|Author</subfield>
+         </datafield>
+         <datafield tag="775" ind1="" ind2="">
+           <subfield code="_">|a_Paul, Herbert</subfield>
+           <subfield code="_">|i_Druckausg</subfield>
+           <subfield code="_">|t_Instrumente des strategischen Managements</subfield>
+           <subfield code="_">|w_(DE-576)399962506</subfield>
+           <subfield code="_">|w_(DE-600)978-3-11-035307-5</subfield>
+           <subfield code="_">|w_(DE-600)978-3-11-037360-8</subfield>
+         </datafield>
+         <datafield tag="776" ind1="1" ind2="">
+           <subfield code="_">|9_9783110350593</subfield>
+           <subfield code="_">|9_9783110353075</subfield>
+           <subfield code="_">|9_9783110373608</subfield>
+           <subfield code="_">|z_9783110350593</subfield>
+           <subfield code="_">|z_9783110353075</subfield>
+           <subfield code="_">|z_9783110373608</subfield>
+         </datafield>
+         <datafield tag="787" ind1="" ind2="8">
+           <subfield code="i">|Druckausg.: </subfield>
+           <subfield code="t">|Paul, Herbert: Instrumente des strategischen Managements</subfield>
+           <subfield code="w">|(DE-601)617996504</subfield>
+         </datafield>
+         <datafield tag="856" ind1="4" ind2="">
+           <subfield code="_">|u_http://dx.doi.org/10.1524/9783110353075</subfield>
+           <subfield code="_">|u_http://www.degruyter.com/search?f_0=isbnissn&amp;q_0=9783110353075&amp;searchTitles=true</subfield>
+           <subfield code="_">|x_Verlag</subfield>
+           <subfield code="m">|V:De Gruyter;X</subfield>
+           <subfield code="u">|http://dx.doi.org/10.1524/9783486714296</subfield>
+           <subfield code="u">|http://www.degruyter.com/search?f_0=isbnissn&amp;q_0=9783486714296&amp;searchTitles=true</subfield>
+         </datafield>
+         <datafield tag="912" ind1="" ind2="">
+           <subfield code="a">|PDA1ALL</subfield>
+           <subfield code="a">|PDA2HUM</subfield>
+           <subfield code="a">|PDA3STM</subfield>
+           <subfield code="a">|PDA5EBK</subfield>
+           <subfield code="a">|ZDB-23-DGG</subfield>
+           <subfield code="a">|ZDB-4-NLEBK</subfield>
+           <subfield code="a">|ZDB-42-OBL</subfield>
+           <subfield code="a">|ZDB-42-OBW</subfield>
+           <subfield code="a">|alles</subfield>
+           <subfield code="b">|2010</subfield>
+           <subfield code="b">|2012</subfield>
+         </datafield>
+         <datafield tag="935" ind1="" ind2="">
+           <subfield code="_">|b_cofz</subfield>
+           <subfield code="_">|c_text</subfield>
+         </datafield>
+         <datafield tag="950" ind1="" ind2="">
+           <subfield code="2">|ciando</subfield>
+           <subfield code="a">|Wirtschaft Management</subfield>
+         </datafield>
+      </record>
+   </metadata>
+</record>
+<record>
+   <header>
+      <identifier>DEG-publish:25224</identifier>
+   </header>
+   <metadata>
+      <record xmlns="http://www.loc.gov/MARC21/slim">
+         <leader>01450nam  2200577 a 4500</leader>
+         <controlfield tag="LDR">01450nam  2200577 a 4500</controlfield>
+         <controlfield tag="SYS">25224</controlfield>
+         <datafield tag="001" ind1="" ind2="">
+           <subfield code="_">25224</subfield>
+         </datafield>
+         <datafield tag="003" ind1="" ind2="">
+           <subfield code="_">DE-14</subfield>
+         </datafield>
+         <datafield tag="005" ind1="" ind2="">
+           <subfield code="_">20150323133336</subfield>
+         </datafield>
+         <datafield tag="020" ind1="" ind2="">
+           <subfield code="9">|9789027934130</subfield>
+           <subfield code="a">|9789027934130 (print)</subfield>
+         </datafield>
+         <datafield tag="024" ind1="3" ind2="">
+           <subfield code="a">|9783111352176</subfield>
+         </datafield>
+         <datafield tag="024" ind1="7" ind2="">
+           <subfield code="2">|doi</subfield>
+           <subfield code="a">|10.1515/9783111352176</subfield>
+         </datafield>
+         <datafield tag="035" ind1="" ind2="">
+           <subfield code="a">|(DE-599)GBV745534880</subfield>
+           <subfield code="a">|(DE-601)745534880</subfield>
+           <subfield code="a">|gruy64145</subfield>
+         </datafield>
+         <datafield tag="040" ind1="" ind2="">
+           <subfield code="a">|Coll.:DEG</subfield>
+           <subfield code="a">|DEG</subfield>
+           <subfield code="a">|GBVCP</subfield>
+           <subfield code="b">|ger</subfield>
+           <subfield code="c">|GBVCP</subfield>
+           <subfield code="e">|rakwb</subfield>
+         </datafield>
+         <datafield tag="041" ind1="" ind2="">
+           <subfield code="a">|eng</subfield>
+         </datafield>
+         <datafield tag="100" ind1="1" ind2="">
+           <subfield code="a">|Gutwinski, Waldemar</subfield>
+         </datafield>
+         <datafield tag="245" ind1="1" ind2="">
+           <subfield code="a">|Cohesion in literary texts</subfield>
+           <subfield code="b">|a study of some grammatical and lexical features of English discourse</subfield>
+           <subfield code="h">|Elektronische Ressource</subfield>
+         </datafield>
+         <datafield tag="260" ind1="3" ind2="">
+           <subfield code="a">|Berlin</subfield>
+           <subfield code="b">|De Gruyter</subfield>
+           <subfield code="c">|1976</subfield>
+         </datafield>
+         <datafield tag="300" ind1="" ind2="">
+           <subfield code="a">|Online-Ressource (183 S.)</subfield>
+           <subfield code="b">|Ill</subfield>
+           <subfield code="c">|155 x 230 mm</subfield>
+         </datafield>
+         <datafield tag="490" ind1="" ind2="">
+           <subfield code="a">|Janua Linguarum. Series Minor</subfield>
+           <subfield code="v">|204</subfield>
+         </datafield>
+         <datafield tag="776" ind1="1" ind2="">
+           <subfield code="z">|9783111352176</subfield>
+           <subfield code="z">|9783111927190</subfield>
+         </datafield>
+         <datafield tag="856" ind1="4" ind2="">
+           <subfield code="m">|V:De Gruyter;X</subfield>
+           <subfield code="u">|http://www.degruyter.com/doi/book/10.1515/9783111352176</subfield>
+         </datafield>
+         <datafield tag="856" ind1="4" ind2="2">
+           <subfield code="3">|Cover</subfield>
+           <subfield code="m">|V:De Gruyter;X</subfield>
+           <subfield code="u">|http://www.degruyter.com/doc/cover/9783111352176.jpg</subfield>
+         </datafield>
+         <datafield tag="912" ind1="" ind2="">
+           <subfield code="a">|PDA1ALL</subfield>
+           <subfield code="a">|PDA1ALL_legacy</subfield>
+           <subfield code="a">|PDA2HUM</subfield>
+           <subfield code="a">|PDA2HUM_legacy</subfield>
+           <subfield code="a">|PDA5EBK</subfield>
+           <subfield code="a">|PDA5EBK_legacy</subfield>
+           <subfield code="a">|PDA7ENG</subfield>
+           <subfield code="a">|ZDB-23-DGG</subfield>
+           <subfield code="a">|alles</subfield>
+         </datafield>
+      </record>
+   </metadata>
+</record>
+<record>
+   <header>
+      <identifier>DEG-publish:26744</identifier>
+   </header>
+   <metadata>
+      <record xmlns="http://www.loc.gov/MARC21/slim">
+         <leader>06457nam  2201381 a 4500</leader>
+         <controlfield tag="LDR">06457nam  2201381 a 4500</controlfield>
+         <controlfield tag="SYS">26744</controlfield>
+         <datafield tag="001" ind1="" ind2="">
+           <subfield code="_">26744</subfield>
+         </datafield>
+         <datafield tag="003" ind1="" ind2="">
+           <subfield code="_">DE-14</subfield>
+         </datafield>
+         <datafield tag="005" ind1="" ind2="">
+           <subfield code="_">20150513081532</subfield>
+         </datafield>
+         <datafield tag="020" ind1="" ind2="">
+           <subfield code="a">|9783412214623</subfield>
+         </datafield>
+         <datafield tag="024" ind1="7" ind2="">
+           <subfield code="2">|doi</subfield>
+           <subfield code="a">|10.7788/boehlau.9783412214623</subfield>
+         </datafield>
+         <datafield tag="035" ind1="" ind2="">
+           <subfield code="a">|(DE-B1597)212189</subfield>
+           <subfield code="a">|(DE-B1597)9783412214623</subfield>
+           <subfield code="a">|(OCoLC)885390375</subfield>
+         </datafield>
+         <datafield tag="040" ind1="" ind2="">
+           <subfield code="a">|Coll.:DEG</subfield>
+           <subfield code="a">|DEG</subfield>
+           <subfield code="a">|IN-ChSCO</subfield>
+           <subfield code="b">|eng</subfield>
+           <subfield code="c">|IN-ChSCO</subfield>
+         </datafield>
+         <datafield tag="041" ind1="" ind2="">
+           <subfield code="a">|ger</subfield>
+         </datafield>
+         <datafield tag="072" ind1="" ind2="7">
+           <subfield code="2">|bisacsh</subfield>
+           <subfield code="a">|LAW</subfield>
+           <subfield code="x">|000000</subfield>
+         </datafield>
+         <datafield tag="082" ind1="" ind2="4">
+           <subfield code="2">|23</subfield>
+           <subfield code="a">|340</subfield>
+         </datafield>
+         <datafield tag="245" ind1="" ind2="">
+           <subfield code="a">|Öffentliches Recht</subfield>
+           <subfield code="c">|edited by Franck Roumy, Orazio Condorelli, Mathias Schmoeckel</subfield>
+         </datafield>
+         <datafield tag="264" ind1="" ind2="1">
+           <subfield code="a">|Köln/Wien : </subfield>
+           <subfield code="b">|Böhlau Verlag, </subfield>
+           <subfield code="c">|2011</subfield>
+         </datafield>
+         <datafield tag="264" ind1="" ind2="4">
+           <subfield code="c">|?2011</subfield>
+         </datafield>
+         <datafield tag="300" ind1="" ind2="">
+           <subfield code="a">|1 online resource(xiii,446p.)</subfield>
+           <subfield code="b">|illustrations</subfield>
+         </datafield>
+         <datafield tag="336" ind1="" ind2="">
+           <subfield code="2">|rdacontent</subfield>
+           <subfield code="a">|text</subfield>
+         </datafield>
+         <datafield tag="337" ind1="" ind2="">
+           <subfield code="2">|rdamedia</subfield>
+           <subfield code="a">|computer</subfield>
+         </datafield>
+         <datafield tag="338" ind1="" ind2="">
+           <subfield code="2">|rdacarrier</subfield>
+           <subfield code="a">|online resource</subfield>
+         </datafield>
+         <datafield tag="490" ind1="1" ind2="">
+           <subfield code="a">|Der Einfluss der Kanonistik auf die europäische Rechtskultur;</subfield>
+           <subfield code="v">|Band 2</subfield>
+         </datafield>
+         <datafield tag="490" ind1="" ind2="">
+           <subfield code="a">|Norm und Struktur. Studien zum sozialen Wandel in Mittelalter und Früher Neuzeit; </subfield>
+           <subfield code="v">|37</subfield>
+         </datafield>
+         <datafield tag="505" ind1="" ind2="">
+           <subfield code="r">|Ascheri, Mario -- </subfield>
+           <subfield code="r">|Basdevant-Gaudemet, Brigitte -- </subfield>
+           <subfield code="r">|Condorelli, Orazio -- </subfield>
+           <subfield code="r">|Conte, Emanuele -- </subfield>
+           <subfield code="r">|Demoulin-Auzary, Florence -- </subfield>
+           <subfield code="r">|Di Paolo, Silvia -- </subfield>
+           <subfield code="r">|Hermann, Hans-Georg -- </subfield>
+           <subfield code="r">|Landau, Peter -- </subfield>
+           <subfield code="r">|Lefebvre-Teillard, Anne -- </subfield>
+           <subfield code="r">|Mayenburg, David von -- </subfield>
+           <subfield code="r">|Miramon, Charles de -- </subfield>
+           <subfield code="r">|Padoa-Schioppa, Antonio -- </subfield>
+           <subfield code="r">|Roumy, Franck -- </subfield>
+           <subfield code="r">|Santangelo Cordani, Angela -- </subfield>
+           <subfield code="r">|Schmoeckel, Mathias -- </subfield>
+           <subfield code="r">|Siméant, Clarisse -- </subfield>
+           <subfield code="r">|Thier, Andreas -- </subfield>
+           <subfield code="t">|"Quaero quid sit visitatio et quid visitare" Alcune annotazioni sull’esperienza canonistica dell’amministrazione / </subfield>
+           <subfield code="t">|A margine del titolo De constitutionibus del Liber Extra (I, 2): dal testo a un tardo commentatore / </subfield>
+           <subfield code="t">|Avant-Propos -- </subfield>
+           <subfield code="t">|Backmatter</subfield>
+           <subfield code="t">|Der Tyrannenmord als Rechtsproblem in kanonistischer Wahrnehmung und kanonistischen Wahrnehmungsdefiziten / </subfield>
+           <subfield code="t">|Dispensatio als Ausgleich zwischen iustitia, misericordia und prudentia: Aspekte einer Theologie der Gesetzesinterpretation / </subfield>
+           <subfield code="t">|Frontmatter -- </subfield>
+           <subfield code="t">|Gelehrtes Recht und deutsche Verfassungsgeschichte: Der Prozess Heinrichs des Löwen und die Gelnhäuser Urkunde. / </subfield>
+           <subfield code="t">|I beni delle Piae causae tra beneficenza e vincolo fiduciario / </subfield>
+           <subfield code="t">|I fondamenti morali e giuridici dell’imposizione tributaria. Sondaggi nel diritto comune tardomedievale / </subfield>
+           <subfield code="t">|Il conferimento dei benefici ecclesiastici e l’amministrazione della Chiesa nel diritto canonico classico tra legislazione, giurisprudenza e scienza del diritto / </subfield>
+           <subfield code="t">|Index canonum et legum -- </subfield>
+           <subfield code="t">|Index personarum -- </subfield>
+           <subfield code="t">|Index rerum -- </subfield>
+           <subfield code="t">|Inhalt -- </subfield>
+           <subfield code="t">|Justice publique, justice privée: les origines canoniques de quelques grands traits caractéristiques de l’arbitrage moderne / </subfield>
+           <subfield code="t">|Klassische Kanonistik und kontraktualistische Tradition / </subfield>
+           <subfield code="t">|La contribution du droit canonique à la construction d’un droit féodal savant / </subfield>
+           <subfield code="t">|Le droit coutumier entre juridicisation et identité communautaire. De Sumatra à la France du Nord vers 1100 / </subfield>
+           <subfield code="t">|Les origines canoniques de la notion moderne d’acte authentique ou public / </subfield>
+           <subfield code="t">|L’influence du droit canonique sur le droit des fonctions publiques / </subfield>
+           <subfield code="t">|L’influence du droit romano-canonique médiéval sur la construction juridique du territoire / </subfield>
+           <subfield code="t">|Note sul principio maggioritario nel diritto canonico classico / </subfield>
+           <subfield code="t">|Prefazione -- </subfield>
+           <subfield code="t">|Ubi est incolumitas obedientiae, ibi sana est forma doctrinae – Aufruhr und Revolte im kanonischen Recht / </subfield>
+           <subfield code="t">|Vorwort -- </subfield>
+         </datafield>
+         <datafield tag="520" ind1="" ind2="">
+           <subfield code="a">|Das heutige Recht aller europäischen Staaten ist ganz maß?geblich durch die Kirche geprägt. Dennoch sind deren ?kanonisches Recht? und dessen Beitrag zur europäischen Rechtskultur inzwischen fast völlig in Vergessenheit geraten. Kanonistische Forschung wird an juristischen Fakultäten kaum noch betrieben, selbst manchen Rechtshistorikern ?erscheint das kanonische Recht als Buch mit sieben Siegeln. Der vorliegende Band zum Öffentlichen Recht der Kirche ist der zweite eines mehrbändiges Werkes, das die Beiträge von insgesamt drei internationalen Tagungen versammelt. Dabei wird mit Hilfe von Einzelfallstudien zu zentralen Rechtsproblemen ein Überblick über den Forschungsstand geboten und gleichzeitig der Einstieg in diese schwierige, aber auch ?fas?zinierende und anregende Forschungswelt erleichtert</subfield>
+         </datafield>
+         <datafield tag="533" ind1="" ind2="">
+           <subfield code="a">|Electronic reproduction. </subfield>
+           <subfield code="b">|Köln/Wien : </subfield>
+           <subfield code="c">|Böhlau Verlag, </subfield>
+           <subfield code="d">|2011. </subfield>
+           <subfield code="n">|Access may be restricted to users at subscribing institutions</subfield>
+           <subfield code="n">|Mode of access: World Wide Web. </subfield>
+           <subfield code="n">|System requirements: Web browser. </subfield>
+         </datafield>
+         <datafield tag="538" ind1="" ind2="">
+           <subfield code="a">|Mode of access: Internet via World Wide Web</subfield>
+         </datafield>
+         <datafield tag="545" ind1="" ind2="">
+           <subfield code="a">|Mathias Schmoeckel lehrt Rechtsgeschichte und Zivilrecht an der Universität Bonn. Franck Roumy ist Professor für Rechtsgeschichte an der Universität Paris II. Orazio Condorelli ist Professor für Rechtsgeschichte an der Universität Catania</subfield>
+         </datafield>
+         <datafield tag="546" ind1="" ind2="">
+           <subfield code="a">|In German</subfield>
+         </datafield>
+         <datafield tag="588" ind1="" ind2="">
+           <subfield code="a">|Description based on online resource; title from PDF title page (ACM, viewed April 03 2015)</subfield>
+         </datafield>
+         <datafield tag="650" ind1="" ind2="">
+           <subfield code="a">|Law</subfield>
+           <subfield code="x">|Law, other</subfield>
+         </datafield>
+         <datafield tag="650" ind1="" ind2="4">
+           <subfield code="a">|Recht</subfield>
+         </datafield>
+         <datafield tag="700" ind1="1" ind2="">
+           <subfield code="a">|Condorelli, Orazio</subfield>
+           <subfield code="a">|Roumy, Franck</subfield>
+           <subfield code="a">|Schmoeckel, Mathias</subfield>
+           <subfield code="e">|editor</subfield>
+         </datafield>
+         <datafield tag="830" ind1="" ind2="1">
+           <subfield code="a">|Der Einfluss der Kanonistik auf die europäische Rechtskultur;</subfield>
+           <subfield code="a">|Norm und Struktur. Studien zum sozialen Wandel in Mittelalter und Früher Neuzeit; </subfield>
+           <subfield code="v">|37</subfield>
+           <subfield code="v">|Band 2</subfield>
+         </datafield>
+         <datafield tag="856" ind1="4" ind2="">
+           <subfield code="u">|http://dx.doi.org/10.7788/boehlau.9783412214623</subfield>
+         </datafield>
+         <datafield tag="912" ind1="" ind2="">
+           <subfield code="a">|PDA11SSHE</subfield>
+           <subfield code="a">|PDA12STME</subfield>
+           <subfield code="a">|PDA1ALL</subfield>
+           <subfield code="a">|PDA2HUM</subfield>
+           <subfield code="a">|PDA2HUM_legacy</subfield>
+           <subfield code="a">|PDA3STM</subfield>
+           <subfield code="a">|PDA5EBK</subfield>
+           <subfield code="a">|ZDB-23-DGG</subfield>
+         </datafield>
+      </record>
+   </metadata>
+</record>
+<record>
+   <header>
+      <identifier>DEG-publish:11121</identifier>
+   </header>
+   <metadata>
+      <record xmlns="http://www.loc.gov/MARC21/slim">
+         <leader>04988nam  2201537 a 4500</leader>
+         <controlfield tag="LDR">04988nam  2201537 a 4500</controlfield>
+         <controlfield tag="SYS">11121</controlfield>
+         <datafield tag="001" ind1="" ind2="">
+           <subfield code="_">11121</subfield>
+         </datafield>
+         <datafield tag="003" ind1="" ind2="">
+           <subfield code="_">DE-14</subfield>
+         </datafield>
+         <datafield tag="005" ind1="" ind2="">
+           <subfield code="_">20150323132409</subfield>
+         </datafield>
+         <datafield tag="016" ind1="" ind2="">
+           <subfield code="a">|(OCoLC)897165457</subfield>
+         </datafield>
+         <datafield tag="020" ind1="" ind2="">
+           <subfield code="9">|9780674593244</subfield>
+           <subfield code="a">|9780674593244</subfield>
+         </datafield>
+         <datafield tag="024" ind1="7" ind2="">
+           <subfield code="2">|doi</subfield>
+           <subfield code="a">|10.1515\9780674593244</subfield>
+         </datafield>
+         <datafield tag="035" ind1="" ind2="">
+           <subfield code="a">|(DE-576)416694454</subfield>
+           <subfield code="a">|(DE-599)GBV787737127</subfield>
+           <subfield code="a">|(DE-B1597)10.4159/harvard.9780674593244</subfield>
+           <subfield code="a">|(DE-B1597)251828</subfield>
+           <subfield code="a">|(SWB-PPN)416694454</subfield>
+         </datafield>
+         <datafield tag="040" ind1="" ind2="">
+           <subfield code="a">|Coll.:DEG</subfield>
+           <subfield code="a">|DE-576</subfield>
+           <subfield code="a">|DEG</subfield>
+           <subfield code="a">|IN-ChSCO</subfield>
+           <subfield code="a">|PPN:416694454</subfield>
+           <subfield code="b">|eng</subfield>
+           <subfield code="b">|ger</subfield>
+           <subfield code="c">|DE-576</subfield>
+           <subfield code="c">|IN-ChSCO</subfield>
+           <subfield code="e">|rakwb</subfield>
+         </datafield>
+         <datafield tag="041" ind1="" ind2="">
+           <subfield code="a">|eng</subfield>
+         </datafield>
+         <datafield tag="050" ind1="" ind2="4">
+           <subfield code="a">|RA962</subfield>
+         </datafield>
+         <datafield tag="072" ind1="" ind2="7">
+           <subfield code="2">|bisacsh </subfield>
+           <subfield code="a">|MED</subfield>
+           <subfield code="x">|043000 </subfield>
+           <subfield code="x">|078000 </subfield>
+         </datafield>
+         <datafield tag="082" ind1="" ind2="4">
+           <subfield code="a">|362.11</subfield>
+         </datafield>
+         <datafield tag="245" ind1="1" ind2="">
+           <subfield code="_">|a_Hospitals, Doctors, and the Public Interest</subfield>
+           <subfield code="_">|h_Elektronische Ressource</subfield>
+         </datafield>
+         <datafield tag="245" ind1="" ind2="">
+           <subfield code="a">|Hospitals, Doctors, and the Public Interest</subfield>
+           <subfield code="c">|edited by John H. Knowles</subfield>
+         </datafield>
+         <datafield tag="260" ind1="" ind2="">
+           <subfield code="_">|a_s.l</subfield>
+           <subfield code="_">|b_Harvard University Press</subfield>
+         </datafield>
+         <datafield tag="264" ind1="" ind2="1">
+           <subfield code="a">|Cambridge, Mass.:</subfield>
+           <subfield code="b">|Harvard University Press, </subfield>
+           <subfield code="c">|1965</subfield>
+         </datafield>
+         <datafield tag="264" ind1="" ind2="4">
+           <subfield code="c">|?1965</subfield>
+         </datafield>
+         <datafield tag="300" ind1="" ind2="">
+           <subfield code="_">|a_Online-Ressource (XI, 337 S.)</subfield>
+           <subfield code="a">|1 online resource(xi,337p.)</subfield>
+           <subfield code="b">|illustrations</subfield>
+         </datafield>
+         <datafield tag="336" ind1="" ind2="">
+           <subfield code="2">|rdacontent</subfield>
+           <subfield code="a">|text</subfield>
+         </datafield>
+         <datafield tag="337" ind1="" ind2="">
+           <subfield code="2">|rdamedia</subfield>
+           <subfield code="a">|computer</subfield>
+         </datafield>
+         <datafield tag="338" ind1="" ind2="">
+           <subfield code="2">|rdacarrier</subfield>
+           <subfield code="a">|online resource</subfield>
+         </datafield>
+         <datafield tag="504" ind1="" ind2="">
+           <subfield code="a">|5 schw.-w. Abb., 17 schw.-w. Tab</subfield>
+         </datafield>
+         <datafield tag="505" ind1="" ind2="">
+           <subfield code="r">|Cherkasky, Martin -- </subfield>
+           <subfield code="r">|Churchill, Edward D. -- </subfield>
+           <subfield code="r">|Knowles, John H. -- </subfield>
+           <subfield code="r">|Lindemann, Erich -- </subfield>
+           <subfield code="r">|Masur, Jack -- </subfield>
+           <subfield code="r">|McKeown, Thomas -- </subfield>
+           <subfield code="r">|Nelson, Russell A. -- </subfield>
+           <subfield code="r">|Neumann, Ellsworth T. -- </subfield>
+           <subfield code="r">|Peterson, Osier L. -- </subfield>
+           <subfield code="r">|Pollack, Jerome -- </subfield>
+           <subfield code="r">|Reader, George G. -- </subfield>
+           <subfield code="r">|Rutstein, David D. -- </subfield>
+           <subfield code="r">|Schottland, Charles I. -- </subfield>
+           <subfield code="r">|Somers, Herman M. -- </subfield>
+           <subfield code="r">|Trussell, Ray E. -- </subfield>
+           <subfield code="t">|AT THE TURN OF THE NEXT CENTURY / </subfield>
+           <subfield code="t">|CONTENTS -- </subfield>
+           <subfield code="t">|Frontmatter -- </subfield>
+           <subfield code="t">|GOVERNMENT AND HOSPITALS / </subfield>
+           <subfield code="t">|HOSPITALS, MEDICINE, AND THE BEHAVIORAL SCIENCES / </subfield>
+           <subfield code="t">|INDEX</subfield>
+           <subfield code="t">|MEDICAL CARE RESEARCH: COUNTERBALANCE TO OPINION AND HABIT / </subfield>
+           <subfield code="t">|MEDICAL EDUCATION AND MEDICAL CARE: AN EXAMINATION OF TRADITIONAL CONCEPTS AND SUGGESTIONS FOR CHANGE / </subfield>
+           <subfield code="t">|MEDICAL EDUCATION IN THE HOSPITAL / </subfield>
+           <subfield code="t">|NOTES -- </subfield>
+           <subfield code="t">|PREFACE -- </subfield>
+           <subfield code="t">|PRIVATE HEALTH INSURANCE: PROGRESS AND PROBLEMS / </subfield>
+           <subfield code="t">|THE BALANCED BIOLOGY OF THE TEACHING HOSPITAL / </subfield>
+           <subfield code="t">|THE HEALTH NEEDS OF COMMUNITIES / </subfield>
+           <subfield code="t">|THE HOSPITAL AND THE CONTINUING EDUCATION OF THE PHYSICIAN / </subfield>
+           <subfield code="t">|THE HOSPITAL AS A SOCIAL INSTRUMENT: RECENT EXPERIENCES AT MONTEFIORE HOSPITAL / </subfield>
+           <subfield code="t">|THE PROBLEMS OF MAINTAINING QUALITY IN HOSPITALS / </subfield>
+           <subfield code="t">|THE SOCIAL SECURITY SYSTEM AND MEDICAL CARE / </subfield>
+           <subfield code="t">|THE TEACHING HOSPITAL AND THE COMMUNITY / </subfield>
+           <subfield code="t">|THE TEACHING HOSPITAL: HISTORICAL PERSPECTIVE AND A CONTEMPORARY VIEW / </subfield>
+           <subfield code="t">|THE VOICE OF THE CONSUMER: COST, QUALITY, AND ORGANIZATION OF MEDICAL SERVICES / </subfield>
+         </datafield>
+         <datafield tag="530" ind1="" ind2="">
+           <subfield code="a">|Also available in print edition</subfield>
+         </datafield>
+         <datafield tag="533" ind1="" ind2="">
+           <subfield code="a">|Electronic reproduction. : </subfield>
+           <subfield code="c">|Harvard University Press, </subfield>
+           <subfield code="d">|1965. </subfield>
+           <subfield code="n">|Access may be restricted to users at subscribing institutions</subfield>
+           <subfield code="n">|Mode of access: World Wide Web. </subfield>
+           <subfield code="n">|System requirements: Web browser. </subfield>
+         </datafield>
+         <datafield tag="538" ind1="" ind2="">
+           <subfield code="a">|Mode of access: Internet via World Wide Web</subfield>
+         </datafield>
+         <datafield tag="546" ind1="" ind2="">
+           <subfield code="a">|In English</subfield>
+         </datafield>
+         <datafield tag="588" ind1="" ind2="">
+           <subfield code="a">|Description based on online resource; title from PDF title page (publisher’s Web site, viewed May 26, 2011)</subfield>
+         </datafield>
+         <datafield tag="650" ind1="" ind2="">
+           <subfield code="a">|Hospitals</subfield>
+           <subfield code="a">|Medical care</subfield>
+           <subfield code="a">|Medical education</subfield>
+           <subfield code="a">|Soziale Probleme, Sozialdienste, Versicherungen</subfield>
+         </datafield>
+         <datafield tag="650" ind1="" ind2="4">
+           <subfield code="a">|Medical care</subfield>
+           <subfield code="a">|Medical education</subfield>
+           <subfield code="z">|United States</subfield>
+         </datafield>
+         <datafield tag="700" ind1="1" ind2="">
+           <subfield code="_">|0_(DE-576)161758428</subfield>
+           <subfield code="_">|a_Knowles, John H</subfield>
+           <subfield code="a">|Knowles, John H., </subfield>
+           <subfield code="e">|editor</subfield>
+         </datafield>
+         <datafield tag="775" ind1="" ind2="">
+           <subfield code="_">|i_Druckausg</subfield>
+           <subfield code="_">|w_(DE-600)978-0-674-59323-7</subfield>
+         </datafield>
+         <datafield tag="776" ind1="1" ind2="">
+           <subfield code="_">|9_9780674593237</subfield>
+           <subfield code="_">|z_9780674593237</subfield>
+         </datafield>
+         <datafield tag="776" ind1="" ind2="">
+           <subfield code="c">|Print</subfield>
+           <subfield code="z">|9780674593237</subfield>
+         </datafield>
+         <datafield tag="856" ind1="4" ind2="">
+           <subfield code="_">|u_http://www.degruyter.com/search?f_0=isbnissn&amp;q_0=9780674593244&amp;searchTitles=true</subfield>
+           <subfield code="_">|x_Verlag</subfield>
+           <subfield code="u">|http://dx.doi.org/10.4159/harvard.9780674593244</subfield>
+         </datafield>
+         <datafield tag="912" ind1="" ind2="">
+           <subfield code="a">|PDA1ALL</subfield>
+           <subfield code="a">|PDA1ALL_legacy</subfield>
+           <subfield code="a">|PDA3STM</subfield>
+           <subfield code="a">|PDA3STM_legacy</subfield>
+           <subfield code="a">|PDA5EBK</subfield>
+           <subfield code="a">|PDA5EBK_legacy</subfield>
+           <subfield code="a">|PDA7ENG</subfield>
+           <subfield code="a">|ZDB-23-DGG</subfield>
+         </datafield>
+         <datafield tag="935" ind1="" ind2="">
+           <subfield code="_">|b_cofz</subfield>
+           <subfield code="_">|c_text</subfield>
+         </datafield>
+      </record>
+   </metadata>
+</record>
+<record>
+   <header>
+      <identifier>DEG-publish:18645</identifier>
+   </header>
+   <metadata>
+      <record xmlns="http://www.loc.gov/MARC21/slim">
+         <leader>04160nam  2201429 a 4500</leader>
+         <controlfield tag="LDR">04160nam  2201429 a 4500</controlfield>
+         <controlfield tag="SYS">18645</controlfield>
+         <datafield tag="001" ind1="" ind2="">
+           <subfield code="_">18645</subfield>
+         </datafield>
+         <datafield tag="003" ind1="" ind2="">
+           <subfield code="_">DE-14</subfield>
+         </datafield>
+         <datafield tag="005" ind1="" ind2="">
+           <subfield code="_">20150423092515</subfield>
+         </datafield>
+         <datafield tag="016" ind1="" ind2="">
+           <subfield code="a">|(OCoLC)853267592</subfield>
+         </datafield>
+         <datafield tag="020" ind1="" ind2="">
+           <subfield code="9">|3110169789</subfield>
+           <subfield code="9">|9783110169782</subfield>
+           <subfield code="9">|9783110822823</subfield>
+           <subfield code="a">|3110169789</subfield>
+           <subfield code="a">|9783110169782</subfield>
+           <subfield code="a">|9783110822823</subfield>
+         </datafield>
+         <datafield tag="024" ind1="7" ind2="">
+           <subfield code="2">|doi</subfield>
+           <subfield code="a">|10.1515/9783110822823</subfield>
+         </datafield>
+         <datafield tag="035" ind1="" ind2="">
+           <subfield code="a">|(DE-576)405053134</subfield>
+           <subfield code="a">|(DE-599)GBV739640585</subfield>
+           <subfield code="a">|(DE-601)739640585</subfield>
+           <subfield code="a">|(OCoLC)608762230</subfield>
+           <subfield code="a">|(SWB-PPN)405053134</subfield>
+           <subfield code="a">|ebr10588220</subfield>
+           <subfield code="a">|gruy43438</subfield>
+         </datafield>
+         <datafield tag="040" ind1="" ind2="">
+           <subfield code="a">|Coll.:DEG</subfield>
+           <subfield code="a">|DE-576</subfield>
+           <subfield code="a">|DEG</subfield>
+           <subfield code="a">|GBVCP</subfield>
+           <subfield code="a">|PPN:405053134</subfield>
+           <subfield code="b">|ger</subfield>
+           <subfield code="c">|DE-576</subfield>
+           <subfield code="c">|GBVCP</subfield>
+           <subfield code="e">|rakwb</subfield>
+         </datafield>
+         <datafield tag="041" ind1="" ind2="">
+           <subfield code="a">|eng</subfield>
+           <subfield code="a">|ger</subfield>
+         </datafield>
+         <datafield tag="050" ind1="" ind2="">
+           <subfield code="a">|PD2013</subfield>
+         </datafield>
+         <datafield tag="084" ind1="" ind2="">
+           <subfield code="2">|BISAC</subfield>
+           <subfield code="a">|HIS000000</subfield>
+         </datafield>
+         <datafield tag="110" ind1="2" ind2="">
+           <subfield code="a">|Internationales Kolloquium im Wikinger Museum Haithabu</subfield>
+           <subfield code="c">|(1994 :Schleswig, Germany)</subfield>
+         </datafield>
+         <datafield tag="245" ind1="1" ind2="">
+           <subfield code="_">|a_Von Thorsberg nach Schleswig</subfield>
+           <subfield code="_">|b_Sprache und Schriftlichkeit eines Grenzgebietes im Wandel eines Jahrtausends ; Internationales Kolloquium im Wikinger Museum Haithabu vom 29. September-3. Oktober 1994</subfield>
+           <subfield code="_">|h_Elektronische Ressource</subfield>
+         </datafield>
+         <datafield tag="245" ind1="" ind2="">
+           <subfield code="a">|Von Thorsberg nach Schleswig</subfield>
+           <subfield code="b">|Sprache und Schriftlichkeit eines Grenzgebietes im Wandel eines Jahrtausends ; Internationales Kolloquium im Wikinger Museum Haithabu vom 29. September-3. Oktober 1994</subfield>
+           <subfield code="c">|unter Mitarbeit von Lars E. Worgull; herausgegeben von Klaus Düwel, Edith Marold, Christiane Zimmermann</subfield>
+           <subfield code="h">|Elektronische Ressource</subfield>
+         </datafield>
+         <datafield tag="260" ind1="3" ind2="">
+           <subfield code="a">|Berlin ;New York</subfield>
+           <subfield code="b">|de Gruyter</subfield>
+           <subfield code="c">|2001</subfield>
+         </datafield>
+         <datafield tag="260" ind1="" ind2="">
+           <subfield code="_">|a_Berlin ;New York</subfield>
+           <subfield code="_">|b_de Gruyter</subfield>
+           <subfield code="_">|c_2001</subfield>
+         </datafield>
+         <datafield tag="300" ind1="" ind2="">
+           <subfield code="a">|Online-Ressource (viii, 307 p)</subfield>
+           <subfield code="b">|ill</subfield>
+         </datafield>
+         <datafield tag="490" ind1="" ind2="">
+           <subfield code="a">|Ergänzungsbände zum Reallexikon der germanischen Altertumskunde</subfield>
+           <subfield code="v">|Bd. 25</subfield>
+         </datafield>
+         <datafield tag="500" ind1="" ind2="">
+           <subfield code="a">|Includes bibliographical references and indexes</subfield>
+         </datafield>
+         <datafield tag="533" ind1="" ind2="">
+           <subfield code="a">|Online-Ausg</subfield>
+           <subfield code="b">|Palo Alto, Calif</subfield>
+           <subfield code="c">|ebrary</subfield>
+           <subfield code="d">|2011</subfield>
+           <subfield code="n">|Electronic reproduction; Available via World Wide Web</subfield>
+         </datafield>
+         <datafield tag="650" ind1="" ind2="">
+           <subfield code="a">|Germanic languages</subfield>
+           <subfield code="a">|Inscriptions, Runic</subfield>
+           <subfield code="v">|Congresses</subfield>
+           <subfield code="z">|Denmark</subfield>
+           <subfield code="z">|Germany</subfield>
+           <subfield code="z">|Jutland</subfield>
+           <subfield code="z">|Schleswig-Holstein</subfield>
+         </datafield>
+         <datafield tag="650" ind1="" ind2="4">
+           <subfield code="_">|a_Germanic languages</subfield>
+           <subfield code="_">|a_Inscriptions, Runic</subfield>
+         </datafield>
+         <datafield tag="651" ind1="" ind2="">
+           <subfield code="a">|Jutland (Denmark)</subfield>
+           <subfield code="a">|Schleswig-Holstein (Germany)</subfield>
+           <subfield code="v">|Congresses</subfield>
+           <subfield code="x">|Antiquities</subfield>
+         </datafield>
+         <datafield tag="653" ind1="" ind2="">
+           <subfield code="a">|Antiquities</subfield>
+           <subfield code="a">|Congresses</subfield>
+           <subfield code="a">|Denmark</subfield>
+           <subfield code="a">|Germanic languages</subfield>
+           <subfield code="a">|Germany</subfield>
+           <subfield code="a">|Inscriptions, Runic</subfield>
+           <subfield code="a">|Jutland</subfield>
+           <subfield code="a">|Jutland (Denmark)</subfield>
+           <subfield code="a">|Schleswig-Holstein</subfield>
+           <subfield code="a">|Schleswig-Holstein (Germany)</subfield>
+         </datafield>
+         <datafield tag="700" ind1="1" ind2="">
+           <subfield code="_">|0_(DE-576)163768633</subfield>
+           <subfield code="_">|0_(DE-576)165343656</subfield>
+           <subfield code="_">|0_(DE-576)183762770</subfield>
+           <subfield code="_">|0_(DE-576)362393206</subfield>
+           <subfield code="a">|Düwel, Klaus</subfield>
+           <subfield code="a">|Marold, Edith</subfield>
+           <subfield code="a">|Worgull, Lars E</subfield>
+           <subfield code="a">|Zimmermann, Christiane</subfield>
+         </datafield>
+         <datafield tag="710" ind1="2" ind2="">
+           <subfield code="a">|ebrary, Inc</subfield>
+         </datafield>
+         <datafield tag="711" ind1="2" ind2="">
+           <subfield code="a">|Internationales Kolloquium im Wikinger Museum Haithabu</subfield>
+           <subfield code="c">|Schleswig, Germany)</subfield>
+           <subfield code="d">|(1994</subfield>
+         </datafield>
+         <datafield tag="775" ind1="" ind2="">
+           <subfield code="_">|i_Druckausg</subfield>
+           <subfield code="_">|w_(DE-600)3-11-016978-9</subfield>
+           <subfield code="_">|w_(DE-600)978-3-11-016978-2</subfield>
+         </datafield>
+         <datafield tag="776" ind1="1" ind2="">
+           <subfield code="_">|9_3110169789</subfield>
+           <subfield code="_">|9_9783110169782</subfield>
+           <subfield code="_">|z_3110169789</subfield>
+           <subfield code="_">|z_9783110169782</subfield>
+           <subfield code="z">|9783110822823</subfield>
+         </datafield>
+         <datafield tag="856" ind1="4" ind2="">
+           <subfield code="_">|x_Verlag</subfield>
+           <subfield code="m">|V:De Gruyter;X</subfield>
+           <subfield code="u">|http://www.degruyter.com/doi/book/10.1515/9783110822823</subfield>
+         </datafield>
+         <datafield tag="856" ind1="4" ind2="2">
+           <subfield code="3">|Cover</subfield>
+           <subfield code="m">|V:De Gruyter;X</subfield>
+           <subfield code="u">|http://www.degruyter.com/doc/cover/9783110822823.jpg</subfield>
+         </datafield>
+         <datafield tag="912" ind1="" ind2="">
+           <subfield code="a">|PDA1ALL</subfield>
+           <subfield code="a">|PDA1ALL_legacy</subfield>
+           <subfield code="a">|PDA2HUM</subfield>
+           <subfield code="a">|PDA2HUM_legacy</subfield>
+           <subfield code="a">|PDA5EBK</subfield>
+           <subfield code="a">|PDA5EBK_legacy</subfield>
+           <subfield code="a">|ZDB-23-DGG</subfield>
+           <subfield code="a">|alles</subfield>
+         </datafield>
+         <datafield tag="935" ind1="" ind2="">
+           <subfield code="_">|b_cofz</subfield>
+           <subfield code="_">|c_text</subfield>
+         </datafield>
+      </record>
+   </metadata>
+</record>
+<record>
+   <header>
+      <identifier>DEG-publish:238214</identifier>
+   </header>
+   <metadata>
+      <record xmlns="http://www.loc.gov/MARC21/slim">
+         <leader>02986nam  2200985 a 4500</leader>
+         <controlfield tag="LDR">02986nam  2200985 a 4500</controlfield>
+         <controlfield tag="SYS">238214</controlfield>
+         <datafield tag="001" ind1="" ind2="">
+           <subfield code="_">238214</subfield>
+         </datafield>
+         <datafield tag="003" ind1="" ind2="">
+           <subfield code="_">DE-14</subfield>
+         </datafield>
+         <datafield tag="005" ind1="" ind2="">
+           <subfield code="_">20150513081328</subfield>
+         </datafield>
+         <datafield tag="020" ind1="" ind2="">
+           <subfield code="a">|9783111468570</subfield>
+         </datafield>
+         <datafield tag="024" ind1="7" ind2="">
+           <subfield code="2">|doi</subfield>
+           <subfield code="a">|10.1515/9783111468570</subfield>
+         </datafield>
+         <datafield tag="035" ind1="" ind2="">
+           <subfield code="a">|(DE-B1597)73299</subfield>
+           <subfield code="a">|(DE-B1597)9783111468570</subfield>
+         </datafield>
+         <datafield tag="040" ind1="" ind2="">
+           <subfield code="a">|Coll.:DEG</subfield>
+           <subfield code="a">|DEG</subfield>
+           <subfield code="a">|IN-ChSCO</subfield>
+           <subfield code="b">|eng</subfield>
+           <subfield code="c">|IN-ChSCO</subfield>
+         </datafield>
+         <datafield tag="041" ind1="" ind2="">
+           <subfield code="a">|ger</subfield>
+         </datafield>
+         <datafield tag="072" ind1="" ind2="7">
+           <subfield code="2">|bisacsh</subfield>
+           <subfield code="a">|LIT</subfield>
+           <subfield code="x">|000000</subfield>
+         </datafield>
+         <datafield tag="082" ind1="" ind2="4">
+           <subfield code="2">|23</subfield>
+           <subfield code="a">|808.8</subfield>
+         </datafield>
+         <datafield tag="100" ind1="1" ind2="">
+           <subfield code="a">|Boiardo, Matteo Maria</subfield>
+           <subfield code="e">|author</subfield>
+         </datafield>
+         <datafield tag="245" ind1="1" ind2="">
+           <subfield code="a">|Matteo Maria Bojardo's, Grafen von Scandiana, Verliebter Roland, als erster Theil zu Ariosto's Rasendem Roland nach den bisher zugänglichen Texten der Urschrift zum erstenmale vollständig verdeutscht .</subfield>
+           <subfield code="b">|Nebst dem Portrait des Dichters</subfield>
+           <subfield code="c">|Matteo Maria Boiardo, edited by Gottlob Regis</subfield>
+         </datafield>
+         <datafield tag="264" ind1="" ind2="1">
+           <subfield code="a">|Berlin/Boston : </subfield>
+           <subfield code="b">|De Gruyter, </subfield>
+           <subfield code="c">|1840</subfield>
+         </datafield>
+         <datafield tag="264" ind1="" ind2="4">
+           <subfield code="c">|?1840</subfield>
+         </datafield>
+         <datafield tag="300" ind1="" ind2="">
+           <subfield code="a">|1 online resource(475p.)</subfield>
+           <subfield code="b">|illustrations</subfield>
+         </datafield>
+         <datafield tag="336" ind1="" ind2="">
+           <subfield code="2">|rdacontent</subfield>
+           <subfield code="a">|text</subfield>
+         </datafield>
+         <datafield tag="337" ind1="" ind2="">
+           <subfield code="2">|rdamedia</subfield>
+           <subfield code="a">|computer</subfield>
+         </datafield>
+         <datafield tag="338" ind1="" ind2="">
+           <subfield code="2">|rdacarrier</subfield>
+           <subfield code="a">|online resource</subfield>
+         </datafield>
+         <datafield tag="504" ind1="" ind2="">
+           <subfield code="a">|1 frontispiece</subfield>
+         </datafield>
+         <datafield tag="505" ind1="" ind2="">
+           <subfield code="t">|Achills - Avin -- </subfield>
+           <subfield code="t">|Anmerkungen zum dritten Buche -- </subfield>
+           <subfield code="t">|Anmerkungen zum ersten Buche -- </subfield>
+           <subfield code="t">|Anmerkungen zum zweiten Buche -- </subfield>
+           <subfield code="t">|Bajard - Bojardo -- </subfield>
+           <subfield code="t">|Berichtigungen, die man vor dem Lesen einzutragen bittet -- </subfield>
+           <subfield code="t">|Bradamante - Rodamonte -- </subfield>
+           <subfield code="t">|Drittes Buch -- </subfield>
+           <subfield code="t">|Erstes Buch -- </subfield>
+           <subfield code="t">|Frontmatter -- </subfield>
+           <subfield code="t">|Nachschrift</subfield>
+           <subfield code="t">|Register -- </subfield>
+           <subfield code="t">|Roland - Stammtafel der Könige und Paladinen -- </subfield>
+           <subfield code="t">|Tristan - Zwerge -- </subfield>
+           <subfield code="t">|Zusätze zu den Anmerkungen -- </subfield>
+           <subfield code="t">|Zweites Buch -- </subfield>
+         </datafield>
+         <datafield tag="530" ind1="" ind2="">
+           <subfield code="a">|Also available in print edition</subfield>
+         </datafield>
+         <datafield tag="533" ind1="" ind2="">
+           <subfield code="a">|Electronic reproduction. </subfield>
+           <subfield code="b">|Berlin/Boston : </subfield>
+           <subfield code="c">|De Gruyter, </subfield>
+           <subfield code="d">|1840. </subfield>
+           <subfield code="n">|Access may be restricted to users at subscribing institutions</subfield>
+           <subfield code="n">|Mode of access: World Wide Web. </subfield>
+           <subfield code="n">|System requirements: Web browser. </subfield>
+         </datafield>
+         <datafield tag="538" ind1="" ind2="">
+           <subfield code="a">|Mode of access: Internet via World Wide Web</subfield>
+         </datafield>
+         <datafield tag="546" ind1="" ind2="">
+           <subfield code="a">|In German</subfield>
+         </datafield>
+         <datafield tag="588" ind1="" ind2="">
+           <subfield code="a">|Description based on online resource; title from PDF title page (ACM, viewed April 03 2015)</subfield>
+         </datafield>
+         <datafield tag="650" ind1="" ind2="">
+           <subfield code="a">|Literary Studies</subfield>
+           <subfield code="x">|Literary Studies, general</subfield>
+         </datafield>
+         <datafield tag="650" ind1="" ind2="4">
+           <subfield code="a">|Literatur, Rhetorik, Literaturwissenschaft</subfield>
+         </datafield>
+         <datafield tag="700" ind1="1" ind2="">
+           <subfield code="a">|Regis, Gottlob</subfield>
+           <subfield code="e">|editor</subfield>
+         </datafield>
+         <datafield tag="776" ind1="" ind2="">
+           <subfield code="c">|Print</subfield>
+           <subfield code="c">|Print+Online</subfield>
+           <subfield code="z">|9783111101620</subfield>
+           <subfield code="z">|9783112122266</subfield>
+         </datafield>
+         <datafield tag="856" ind1="4" ind2="">
+           <subfield code="u">|http://dx.doi.org/10.1515/9783111468570</subfield>
+         </datafield>
+         <datafield tag="912" ind1="" ind2="">
+           <subfield code="a">|PDA11SSHE</subfield>
+           <subfield code="a">|PDA1ALL</subfield>
+           <subfield code="a">|PDA2HUM</subfield>
+           <subfield code="a">|PDA2HUM_legacy</subfield>
+           <subfield code="a">|PDA5EBK</subfield>
+           <subfield code="a">|ZDB-23-DGG</subfield>
+         </datafield>
+      </record>
+   </metadata>
+</record>
+<record>
+   <header>
+      <identifier>DEG-publish:12431</identifier>
+   </header>
+   <metadata>
+      <record xmlns="http://www.loc.gov/MARC21/slim">
+         <leader>04416nam  2200601 a 4500</leader>
+         <controlfield tag="LDR">04416nam  2200601 a 4500</controlfield>
+         <controlfield tag="SYS">12431</controlfield>
+         <datafield tag="001" ind1="" ind2="">
+           <subfield code="_">12431</subfield>
+         </datafield>
+         <datafield tag="003" ind1="" ind2="">
+           <subfield code="_">DE-14</subfield>
+         </datafield>
+         <datafield tag="005" ind1="" ind2="">
+           <subfield code="_">20150323132451</subfield>
+         </datafield>
+         <datafield tag="020" ind1="" ind2="">
+           <subfield code="9">|9783050038490</subfield>
+           <subfield code="9">|9783050050003</subfield>
+           <subfield code="a">|9783050038490</subfield>
+           <subfield code="a">|9783050050003</subfield>
+         </datafield>
+         <datafield tag="024" ind1="7" ind2="">
+           <subfield code="2">|doi</subfield>
+           <subfield code="a">|10.1524/9783050050003</subfield>
+         </datafield>
+         <datafield tag="024" ind1="8" ind2="">
+           <subfield code="a">|oldenbourg9783050050003</subfield>
+         </datafield>
+         <datafield tag="035" ind1="" ind2="">
+           <subfield code="a">|(DE-599)GBV636417719</subfield>
+           <subfield code="a">|(DE-601)636417719</subfield>
+           <subfield code="a">|(OCoLC)838449957</subfield>
+           <subfield code="a">|gruy233786</subfield>
+         </datafield>
+         <datafield tag="040" ind1="" ind2="">
+           <subfield code="a">|Coll.:DEG</subfield>
+           <subfield code="a">|DEG</subfield>
+           <subfield code="a">|GBVCP</subfield>
+           <subfield code="b">|ger</subfield>
+           <subfield code="c">|GBVCP</subfield>
+           <subfield code="e">|rakwb</subfield>
+         </datafield>
+         <datafield tag="041" ind1="" ind2="">
+           <subfield code="a">|ger</subfield>
+         </datafield>
+         <datafield tag="084" ind1="" ind2="">
+           <subfield code="2">|BISAC</subfield>
+           <subfield code="a">|ART000000</subfield>
+         </datafield>
+         <datafield tag="100" ind1="1" ind2="">
+           <subfield code="a">|Michel, Simone</subfield>
+         </datafield>
+         <datafield tag="245" ind1="1" ind2="4">
+           <subfield code="a">|Die Magischen Gemmen</subfield>
+           <subfield code="b">|Zu Bildern und Zauberformeln auf geschnittenen Steinen der Antike und Neuzeit</subfield>
+           <subfield code="h">|Elektronische Ressource</subfield>
+         </datafield>
+         <datafield tag="260" ind1="3" ind2="">
+           <subfield code="a">|München</subfield>
+           <subfield code="b">|Oldenbourg Akademieverlag</subfield>
+           <subfield code="c">|2010</subfield>
+         </datafield>
+         <datafield tag="300" ind1="" ind2="">
+           <subfield code="a">|Online-Ressource</subfield>
+         </datafield>
+         <datafield tag="490" ind1="" ind2="">
+           <subfield code="a">|Akademie Mittelalter 6-2010</subfield>
+         </datafield>
+         <datafield tag="500" ind1="" ind2="">
+           <subfield code="a">|PublicationDate: 20100601</subfield>
+         </datafield>
+         <datafield tag="520" ind1="" ind2="">
+           <subfield code="a">|Magische Gemmen, kleine kraftgeladene Edel- und Schmucksteine mit eingeschnittenen Bildern und Inschriften, dienten in der Antike als Amulette. Als Medaillon, Ringstein oder in Täschchen eingenäht wurden sie am Körper getragen und waren - ursprünglich wohl aus dem römischen Ägypten (Alexandria) stammend - besonders im 2. und 3. Jh.n.Chr. weit verbreitet, übten jedoch auch über Mittelalter und Renaissance bis heute ihre Faszination auf Betrachter, Sammler und Benutzer aus und standen als aussagekräftige Dokumente zu Glaube und Aberglaube ebenso auch im Interesse der Wissenschaft. Die Gemmen-Amulette korrespondieren inhaltlich mit den magischen Texten und Rezepten des antiken Amulett- und Zauberwesens (Magische Papyri) und sollten vorrangig in den Bereichen Jenseitsglaube, magisch-medizinische Heilmittel sowie Liebeszauber ihre Wirkung entfalten, die auf der Synthese von Farbe und Material, Bildmotiv und Zauberformel (Logos) sowie einem meist komplizierten "Weihevorgang" wie Zeichnen, Räuchern oder magischen Handlungen (Praxis) beruht.  Die Autorin nutzt als Basis für ihre umfassende Darstellung eine sammlungsübergreifende Auswahl von ca. 2.600 Stücken. Sie sind nach Motiven gruppiert und mit technischen Daten sowie Kurzbeschreibung in einer "Materialliste nach Motivgruppen" zusammengestellt. Im umfangreichen Abbildungsteil geben zunächst acht Farbtafeln mit charakteristischen Beispielen einen adäquaten Eindruck über Farbe, Steinvarietäten, Größenverhältnisse und Gesamtwirkung der Amulette. Weitere 109 Tafeln stellen thematisch gruppierte, meist bislang unpublizierte Stücke in Zeichnungen und schwarz-weiß-Photographien vor oder zeigen in früheren Publikationen nur in Gipsabdruck oder -abguß abgebildete Gemmen erstmals in Originalphotographien.  Ein Konkordanzen-Verzeichnis zu unpublizierten Stücken aus Museen und Privatsammlungen gibt Aufschluß über Standort und Inventarnummern der Gemmen, ebenso werden Verbleib und heutiger Standort der im grundlegenden Werk von C. Bonner, Magical Amulets (1950) behandelten und katalogisierten Stücke ersichtlich. Auf der Basis eines aufgrund zahlreicher Publikationen angewachsenen und mittels technischem Fortschritt zugänglich gemachten Materials sowie einer in den letzten Jahrzehnten auf "Mentalitätsgeschichte" ausgerichteten Geschichtsforschung ist mit dem Buch von Simone Michel die immer wieder geforderte interdisziplinär angelegte und umfassende Neubearbeitung dieser Gattung der Glyptik vorgelegt</subfield>
+           <subfield code="a">|Review quote. A quote from a review of the product: Eine "umfangreiche, den Forschungsgegenstand erschöpfend und mit beeindruckender Kenntnis und Souveränität behandelnde Monographie". Annika Backe-Dahmen in: Gnomon, Band 81 (2009)  [C]et ouvrage important qui marque une nouvelle étape dans la redécouverte d'un matériel trop longtemps négligé." Véronique Dasen in: Gesnerus, 64 (2007)</subfield>
+         </datafield>
+         <datafield tag="856" ind1="4" ind2="">
+           <subfield code="m">|V:De Gruyter;X</subfield>
+           <subfield code="u">|http://dx.doi.org/10.1524/9783050050003</subfield>
+           <subfield code="u">|http://www.degruyter.com/search?f_0=isbnissn&amp;q_0=9783050050003&amp;searchTitles=true</subfield>
+         </datafield>
+         <datafield tag="912" ind1="" ind2="">
+           <subfield code="a">|GBV-AV-alles</subfield>
+           <subfield code="a">|PDA1ALL</subfield>
+           <subfield code="a">|PDA2HUM</subfield>
+           <subfield code="a">|PDA3STM</subfield>
+           <subfield code="a">|PDA5EBK</subfield>
+           <subfield code="a">|ZDB-23-DGG</subfield>
+           <subfield code="a">|ZDB-74-AKM</subfield>
+           <subfield code="a">|ZDB-74-AKQ</subfield>
+           <subfield code="a">|alles</subfield>
+           <subfield code="b">|2010</subfield>
+         </datafield>
+      </record>
+   </metadata>
+</record>
+<record>
+   <header>
+      <identifier>DEG-publish:12379</identifier>
+   </header>
+   <metadata>
+      <record xmlns="http://www.loc.gov/MARC21/slim">
+         <leader>05364nam  2201129 a 4500</leader>
+         <controlfield tag="LDR">05364nam  2201129 a 4500</controlfield>
+         <controlfield tag="SYS">12379</controlfield>
+         <datafield tag="001" ind1="" ind2="">
+           <subfield code="_">12379</subfield>
+         </datafield>
+         <datafield tag="003" ind1="" ind2="">
+           <subfield code="_">DE-14</subfield>
+         </datafield>
+         <datafield tag="005" ind1="" ind2="">
+           <subfield code="_">20150423085805</subfield>
+         </datafield>
+         <datafield tag="020" ind1="" ind2="">
+           <subfield code="9">|9783050045641</subfield>
+           <subfield code="9">|9783050048659</subfield>
+           <subfield code="a">|9783050045641</subfield>
+           <subfield code="a">|9783050045641 (print; Gb.)</subfield>
+           <subfield code="a">|9783050048659</subfield>
+           <subfield code="c">|ca. EUR 49.80</subfield>
+         </datafield>
+         <datafield tag="024" ind1="7" ind2="">
+           <subfield code="2">|doi</subfield>
+           <subfield code="a">|10.1524/9783050048659</subfield>
+         </datafield>
+         <datafield tag="024" ind1="8" ind2="">
+           <subfield code="a">|oldenbourg9783050048659</subfield>
+         </datafield>
+         <datafield tag="035" ind1="" ind2="">
+           <subfield code="a">|(DE-599)GBV618030522</subfield>
+           <subfield code="a">|(DE-601)618030522</subfield>
+           <subfield code="a">|(OCoLC)863093428</subfield>
+           <subfield code="a">|(OCoLC)871856597</subfield>
+           <subfield code="a">|(OCoLC)ocn863093428</subfield>
+           <subfield code="a">|(OCoLC)ocn871856597</subfield>
+           <subfield code="a">|EBL1346088</subfield>
+           <subfield code="a">|gruy216592</subfield>
+         </datafield>
+         <datafield tag="040" ind1="" ind2="">
+           <subfield code="a">|Coll.:DEG</subfield>
+           <subfield code="a">|DEG</subfield>
+           <subfield code="a">|GBVCP</subfield>
+           <subfield code="b">|ger</subfield>
+           <subfield code="c">|GBVCP</subfield>
+           <subfield code="e">|rakwb</subfield>
+         </datafield>
+         <datafield tag="041" ind1="" ind2="">
+           <subfield code="a">|ger</subfield>
+         </datafield>
+         <datafield tag="050" ind1="" ind2="">
+           <subfield code="a">|BT620 .D384 2009</subfield>
+         </datafield>
+         <datafield tag="082" ind1="" ind2="">
+           <subfield code="a">|230</subfield>
+         </datafield>
+         <datafield tag="082" ind1="" ind2="9">
+           <subfield code="a">|230</subfield>
+         </datafield>
+         <datafield tag="084" ind1="" ind2="">
+           <subfield code="2">|BISAC</subfield>
+           <subfield code="2">|bcl</subfield>
+           <subfield code="2">|rvk</subfield>
+           <subfield code="9">|Dogmatik</subfield>
+           <subfield code="a">|11.61</subfield>
+           <subfield code="a">|BN 5720</subfield>
+           <subfield code="a">|HIS000000</subfield>
+         </datafield>
+         <datafield tag="100" ind1="1" ind2="">
+           <subfield code="a">|Horst, Ulrich</subfield>
+         </datafield>
+         <datafield tag="245" ind1="1" ind2="">
+           <subfield code="a">|Dogma und Theologie</subfield>
+           <subfield code="b">|Dominikanertheologen in den Kontroversen um die "Immaculata Conceptio"</subfield>
+           <subfield code="c">|Ulrich Horst</subfield>
+           <subfield code="h">|Elektronische Ressource</subfield>
+         </datafield>
+         <datafield tag="260" ind1="3" ind2="">
+           <subfield code="a">|Berlin</subfield>
+           <subfield code="b">|Akad.-Verl</subfield>
+           <subfield code="c">|2009</subfield>
+         </datafield>
+         <datafield tag="300" ind1="" ind2="">
+           <subfield code="a">|Online-Ressource</subfield>
+           <subfield code="a">|VII, 170 S</subfield>
+         </datafield>
+         <datafield tag="337" ind1="" ind2="">
+           <subfield code="a">|eBook</subfield>
+         </datafield>
+         <datafield tag="490" ind1="" ind2="">
+           <subfield code="a">|Akademie Geschichte 1-2010</subfield>
+           <subfield code="a">|Quellen und Forschungen zur Geschichte des Dominikanerordens</subfield>
+           <subfield code="v">|N.F., 16</subfield>
+         </datafield>
+         <datafield tag="500" ind1="" ind2="">
+           <subfield code="a">|PublicationDate: 20091216</subfield>
+         </datafield>
+         <datafield tag="505" ind1="" ind2="">
+           <subfield code="a">|3. Ambrosius Catharinus4. Francisco de Vitoria; 5. Melchior Cano; 6. Bartholomaeus Spina; II KAPITEL: Die beginnende Umorientierung; 1. Johannes a Saneto Thoma; 2. Tommaso Campanella; 3. Francisco de Araújo; Nachwort; Quellen- und Literaturverzeichnis; 1.Quellen; a. Ungedruckte Quellen; b. Gedruckte Quellen; 2. Literatur; Namensverzeichnis</subfield>
+           <subfield code="a">|CONTENTS; Vorwort; Zur Einfuhrung; Erster TeilDie Dominikanertheologen und das Problem der Immaculata Conceptio; I KAPITEL: Die Grundlegung; 1. Thomas von Aquin; 2. Die Schule des Aquinaten; II KAPITEL: Die ersten großen Kontroversen; 1. Die katalanischen Dominikaner; 2. Das Basler Konzil; III KAPITEL: Die Verteidigung der klassischen Ordenstradition: Vincenzo Bandello; 1. Der Liber recollectorius; 2. De singulari puritate; 3. Die Bulle Grave nimis; Zweiter TeilDie Auseinandersetzungen im 16.Jahrhundert; I KAPITEL: Die Protagonisten; 1. Isidoro Isolani; 2. Thomas de Vio Cajetan</subfield>
+         </datafield>
+         <datafield tag="520" ind1="" ind2="">
+           <subfield code="a">|Die Frage, ob und wie Maria das Schicksal der erbsündlich verfassten Menschheit teilte, hat die Theologie von der Hochscholastik bis weit in die Neuzeit beschäftigt. Theologen des Dominikanerordens haben, gestützt auf die Tradition der Väter und insbesondere auf die Autorität des hl. Thomas v. Aquin, die These vertreten, dass Maria erst nach der Empfängnis im Schoß ihrer Mutter von der Erbsünde befreit wurde, um so die Einzigartigkeit der Menschwerdung Jesu hervorzuheben. Die Minoriten hingegen – mit Duns Scotus an der Spitze – bekannten sich zur „frommen Meinung“, Maria sei von Anfang an vor der Erbschuld bewahrt worden. Dass sich im Laufe der Zeit die meisten Universitäten diese Ansicht zu eigen machten, förderte deren Verbreitung außerordentlich. Für sie fand sich auf dem Basler Konzil eine Mehrheit, die schließlich 1439 zur feierlichen Definition der Unbefleckten Empfängnis Mariens schritt, der freilich die allgemeine Anerkennung versagt blieb. Die von den Dominikanern verteidigte konservative Position, die auf Schrift, Tradition der Väter und Lehre der großen Theologen beharrte, war nun in ein kirchliches Abseits geraten. Gleichwohl leisteten sie – von wenigen Ausnahmen abgesehen – bis zuletzt Widerstand. Den theologischen Höhepunkt der Opposition markiert ein für Papst Leo X. verfasstes Gutachten Cajetans (1515). Vorliegende Studie analysiert die Argumente der die Diskussion bestimmenden Dominikaner. Sie möchte zeigen, dass hinter den Kontroversen um das Dogma tiefe Differenzen in der Wertung der Quellen und Autoritäten der Theologie lagen</subfield>
+         </datafield>
+         <datafield tag="533" ind1="" ind2="">
+           <subfield code="a">|Online-Ausg</subfield>
+         </datafield>
+         <datafield tag="610" ind1="1" ind2="7">
+           <subfield code="2">|gnd</subfield>
+           <subfield code="a">|Dominikaner</subfield>
+         </datafield>
+         <datafield tag="650" ind1="" ind2="7">
+           <subfield code="2">|gnd</subfield>
+           <subfield code="a">|Erbsünde</subfield>
+           <subfield code="a">|Kontroverse</subfield>
+           <subfield code="a">|Mariologie</subfield>
+           <subfield code="a">|Unbefleckte Empfängnis</subfield>
+         </datafield>
+         <datafield tag="653" ind1="" ind2="">
+           <subfield code="a">|Ordo Fratrum Praedicatorum</subfield>
+         </datafield>
+         <datafield tag="653" ind1="" ind2="7">
+           <subfield code="2">|gnd</subfield>
+           <subfield code="a">|Geschichte</subfield>
+         </datafield>
+         <datafield tag="655" ind1="" ind2="">
+           <subfield code="a">|Electronic books</subfield>
+         </datafield>
+         <datafield tag="689" ind1="1" ind2="">
+           <subfield code="5">|DE-101</subfield>
+           <subfield code="a">|Erbsünde</subfield>
+         </datafield>
+         <datafield tag="689" ind1="1" ind2="1">
+           <subfield code="a">|Mariologie</subfield>
+         </datafield>
+         <datafield tag="689" ind1="1" ind2="2">
+           <subfield code="a">|Kontroverse</subfield>
+         </datafield>
+         <datafield tag="689" ind1="1" ind2="3">
+           <subfield code="a">|Dominikaner</subfield>
+         </datafield>
+         <datafield tag="689" ind1="1" ind2="4">
+           <subfield code="a">|Geschichte</subfield>
+         </datafield>
+         <datafield tag="689" ind1="" ind2="">
+           <subfield code="5">|DE-101</subfield>
+           <subfield code="a">|Unbefleckte Empfängnis</subfield>
+         </datafield>
+         <datafield tag="689" ind1="" ind2="1">
+           <subfield code="a">|Kontroverse</subfield>
+         </datafield>
+         <datafield tag="689" ind1="" ind2="2">
+           <subfield code="a">|Dominikaner</subfield>
+         </datafield>
+         <datafield tag="689" ind1="" ind2="3">
+           <subfield code="a">|Geschichte</subfield>
+         </datafield>
+         <datafield tag="787" ind1="" ind2="8">
+           <subfield code="i">|Print version: </subfield>
+           <subfield code="t">|Dogma und Theologie : Dominikanertheologen in den Kontroversen um die Immaculata Conceptio</subfield>
+         </datafield>
+         <datafield tag="856" ind1="4" ind2="">
+           <subfield code="m">|V:De Gruyter;X</subfield>
+           <subfield code="u">|http://dx.doi.org/10.1524/9783050048659</subfield>
+           <subfield code="u">|http://www.degruyter.com/search?f_0=isbnissn&amp;q_0=9783050048659&amp;searchTitles=true</subfield>
+         </datafield>
+         <datafield tag="912" ind1="" ind2="">
+           <subfield code="a">|GBV-AV-alles</subfield>
+           <subfield code="a">|PDA1ALL</subfield>
+           <subfield code="a">|PDA2HUM</subfield>
+           <subfield code="a">|PDA5EBK</subfield>
+           <subfield code="a">|ZDB-23-DGG</subfield>
+           <subfield code="a">|ZDB-4-NLEBK</subfield>
+           <subfield code="a">|ZDB-74-AKG</subfield>
+           <subfield code="a">|alles</subfield>
+           <subfield code="b">|2010</subfield>
+         </datafield>
+      </record>
+   </metadata>
+</record>
+<record>
+   <header>
+      <identifier>DEG-publish:21681</identifier>
+   </header>
+   <metadata>
+      <record xmlns="http://www.loc.gov/MARC21/slim">
+         <leader>01666nam  2200661 a 4500</leader>
+         <controlfield tag="LDR">01666nam  2200661 a 4500</controlfield>
+         <controlfield tag="SYS">21681</controlfield>
+         <datafield tag="001" ind1="" ind2="">
+           <subfield code="_">21681</subfield>
+         </datafield>
+         <datafield tag="003" ind1="" ind2="">
+           <subfield code="_">DE-14</subfield>
+         </datafield>
+         <datafield tag="005" ind1="" ind2="">
+           <subfield code="_">20150323133017</subfield>
+         </datafield>
+         <datafield tag="020" ind1="" ind2="">
+           <subfield code="9">|9783110126228</subfield>
+           <subfield code="a">|9783110126228 (print)</subfield>
+         </datafield>
+         <datafield tag="024" ind1="3" ind2="">
+           <subfield code="a">|9783110907919</subfield>
+         </datafield>
+         <datafield tag="024" ind1="7" ind2="">
+           <subfield code="2">|doi</subfield>
+           <subfield code="a">|10.1515/9783110907919</subfield>
+         </datafield>
+         <datafield tag="035" ind1="" ind2="">
+           <subfield code="a">|(DE-599)GBV745520324</subfield>
+           <subfield code="a">|(DE-601)745520324</subfield>
+           <subfield code="a">|gruy40692</subfield>
+         </datafield>
+         <datafield tag="040" ind1="" ind2="">
+           <subfield code="a">|Coll.:DEG</subfield>
+           <subfield code="a">|DEG</subfield>
+           <subfield code="a">|GBVCP</subfield>
+           <subfield code="b">|ger</subfield>
+           <subfield code="c">|GBVCP</subfield>
+           <subfield code="e">|rakwb</subfield>
+         </datafield>
+         <datafield tag="041" ind1="" ind2="">
+           <subfield code="a">|ger</subfield>
+         </datafield>
+         <datafield tag="084" ind1="" ind2="">
+           <subfield code="2">|BISAC</subfield>
+           <subfield code="a">|LAN014000</subfield>
+         </datafield>
+         <datafield tag="245" ind1="" ind2="">
+           <subfield code="a">|Deutsches Fremdwörterbuch: Band 1: a-Präfix - Antike</subfield>
+           <subfield code="c">|Institut für deutsche Sprache</subfield>
+           <subfield code="h">|Elektronische Ressource</subfield>
+         </datafield>
+         <datafield tag="250" ind1="" ind2="">
+           <subfield code="a">|2. Aufl., 2nd rev. ed. 1995</subfield>
+         </datafield>
+         <datafield tag="260" ind1="3" ind2="">
+           <subfield code="a">|Berlin</subfield>
+           <subfield code="b">|De Gruyter</subfield>
+           <subfield code="c">|1996</subfield>
+         </datafield>
+         <datafield tag="300" ind1="" ind2="">
+           <subfield code="a">|Online-Ressource</subfield>
+           <subfield code="b">|Ill</subfield>
+           <subfield code="c">|155 x 230 mm</subfield>
+         </datafield>
+         <datafield tag="700" ind1="1" ind2="">
+           <subfield code="a">|Donalies, Elke</subfield>
+           <subfield code="a">|Kämper-Jensen, Heidrun</subfield>
+           <subfield code="a">|Nortmeyer, Isolde</subfield>
+           <subfield code="a">|Schildt, Joachim</subfield>
+           <subfield code="a">|Schnerrer, Rosemarie</subfield>
+           <subfield code="a">|Strauß, Gerhard</subfield>
+           <subfield code="a">|Vietze, Oda</subfield>
+           <subfield code="e">|Other adaption by</subfield>
+         </datafield>
+         <datafield tag="776" ind1="1" ind2="">
+           <subfield code="z">|9783110907919</subfield>
+           <subfield code="z">|9783111783451</subfield>
+         </datafield>
+         <datafield tag="856" ind1="4" ind2="">
+           <subfield code="m">|V:De Gruyter;X</subfield>
+           <subfield code="u">|http://www.degruyter.com/doi/book/10.1515/9783110907919</subfield>
+         </datafield>
+         <datafield tag="856" ind1="4" ind2="2">
+           <subfield code="3">|Cover</subfield>
+           <subfield code="m">|V:De Gruyter;X</subfield>
+           <subfield code="u">|http://www.degruyter.com/doc/cover/9783110907919.jpg</subfield>
+         </datafield>
+         <datafield tag="912" ind1="" ind2="">
+           <subfield code="a">|PDA1ALL</subfield>
+           <subfield code="a">|PDA1ALL_legacy</subfield>
+           <subfield code="a">|PDA2HUM</subfield>
+           <subfield code="a">|PDA2HUM_legacy</subfield>
+           <subfield code="a">|PDA5EBK</subfield>
+           <subfield code="a">|PDA5EBK_legacy</subfield>
+           <subfield code="a">|ZDB-23-DGG</subfield>
+           <subfield code="a">|alles</subfield>
+         </datafield>
+      </record>
+   </metadata>
+</record>
+</ListRecords>
+</OAI-PMH>

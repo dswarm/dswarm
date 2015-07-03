@@ -101,6 +101,8 @@ public class TransformationFlow {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TransformationFlow.class);
 
+	private static final String TRANSFORMATION_ENGINE_IDENTIFIER = "transformation engine";
+
 	private final Metamorph transformer;
 
 	private final String script;
@@ -212,7 +214,7 @@ public class TransformationFlow {
 		//		final StreamJsonCollapser collapser = new StreamJsonCollapser();
 		final GDMEncoder converter = new GDMEncoder(outputDataModel);
 
-		final GDMModelReceiver writer = new GDMModelReceiver();
+		final GDMModelReceiver writer = new GDMModelReceiver(TRANSFORMATION_ENGINE_IDENTIFIER);
 
 		final StreamPipe<StreamReceiver> starter;
 		if (optionalSkipFilter.isPresent()) {
@@ -387,9 +389,24 @@ public class TransformationFlow {
 
 						LOG.debug("received first record in transformation engine");
 					}
-				}).doOnCompleted(() -> LOG.debug("received '{}' records in transformation engine", counter.get()))
-						.subscribe(opener::process, writer::propagateError, opener::closeStream);
+				}).doOnTerminate(opener::closeStream).doOnCompleted(() -> LOG.debug("received '{}' records in transformation engine", counter.get()))
+						.subscribe(opener::process, writer::propagateError, () -> LOG.info("DONE"));
 			}
+		}).doOnCompleted(() -> {
+
+			if (JsonNodeReader.class.isInstance(opener)) {
+
+				JsonNodeReader jsonNodeReader = (JsonNodeReader) opener;
+
+				LOG.debug("processed '{}' records with opener in transformation engine", jsonNodeReader.getCounter().get());
+			}
+
+			LOG.debug("received '{}' ('{}') records + emitted '{}' ('{}') records in converter in transformation engine",
+					converter.getInComingCounter().get(), converter.getInComingCounter2().get(), converter.getOutGoingCounter().get(),
+					converter.getOutGoingCounter2().get());
+
+			LOG.debug("received '{}' records + emitted '{}' (discarded '{}') records in writer in transformation engine",
+					writer.getInComingCounter().get(), writer.getOutGoingCounter().get(), writer.getNonOutGoingCounter().get());
 		}).subscribeOn(scheduler);
 	}
 

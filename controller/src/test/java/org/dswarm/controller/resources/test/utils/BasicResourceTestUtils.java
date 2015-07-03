@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -146,7 +147,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 		Assert.assertNotNull("response " + pojoClassName + " JSON shouldn't be null", responseObjectJSON);
 
-		final POJOCLASS responseObject = objectMapper.readValue(responseObjectJSON, pojoClass);
+		final POJOCLASS responseObject = readObject(responseObjectJSON);
 
 		Assert.assertNotNull("response " + pojoClassName + " shouldn't be null", responseObject);
 
@@ -163,7 +164,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 	public POJOCLASS createObject(final String objectJSONFileName) throws Exception {
 
 		final String objectJSONString = DMPPersistenceUtil.getResourceAsString(objectJSONFileName);
-		final POJOCLASS expectedObject = objectMapper.readValue(objectJSONString, pojoClass);
+		final POJOCLASS expectedObject = readObject(objectJSONString);
 
 		final POJOCLASS actualObject = createObject(objectJSONString, expectedObject);
 
@@ -196,7 +197,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
 
-		return objectMapper.readValue(responseString, pojoClass);
+		return readObject(responseString);
 	}
 
 	public POJOCLASS updateObject(final POJOCLASS persistedObject, final String updateObjectJSONFileName) throws Exception {
@@ -208,9 +209,14 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 		updateObjectJSONString = objectMapper.writeValueAsString(objectJSON);
 
-		final POJOCLASS expectedObject = objectMapper.readValue(updateObjectJSONString, pojoClass);
+		final POJOCLASS expectedObject = readObject(updateObjectJSONString);
 
 		return updateObject(updateObjectJSONString, expectedObject);
+	}
+
+	public POJOCLASS readObject(final String objectJSONString) throws java.io.IOException {
+
+		return objectMapper.readValue(objectJSONString, pojoClass);
 	}
 
 	public Response executeCreateObject(final String objectJSONString) throws Exception {
@@ -220,7 +226,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 	public POJOCLASS updateObject(final String updateObjectJSONString, final POJOCLASS expectedObject) throws Exception {
 
-		final String objectUuid = objectMapper.readValue(updateObjectJSONString, pojoClass).getUuid();
+		final String objectUuid = readObject(updateObjectJSONString).getUuid();
 
 		Assert.assertEquals("the ids of the updated object should be equal", expectedObject.getUuid(), objectUuid);
 
@@ -239,6 +245,11 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 		return updateObjectWithoutComparison(updateObjectJSONString, objectUuid);
 	}
 
+	public WebTarget getResourceTarget() {
+
+		return target();
+	}
+
 	private POJOCLASS updateObjectWithoutComparison(final String updateObjectJSONString, final String objectUuid) throws Exception {
 
 		final Response response = target(String.valueOf(objectUuid)).request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
@@ -250,7 +261,7 @@ public abstract class BasicResourceTestUtils<POJOCLASSPERSISTENCESERVICETESTUTIL
 
 		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
 
-		return objectMapper.readValue(responseString, pojoClass);
+		return readObject(responseString);
 	}
 
 	public void deleteObject(final POJOCLASS object) {

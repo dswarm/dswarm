@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Stack;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.google.common.collect.Maps;
@@ -76,6 +77,12 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 	private final Map<String, ResourceNode> types        = Maps.newHashMap();
 	private final Map<String, String>       uris         = Maps.newHashMap();
 
+	private final AtomicInteger inComingCounter = new AtomicInteger(0);
+	private final AtomicInteger outGoingCounter = new AtomicInteger(0);
+
+	private final AtomicInteger inComingCounter2 = new AtomicInteger(0);
+	private final AtomicInteger outGoingCounter2 = new AtomicInteger(0);
+
 	public GDMEncoder(final Optional<DataModel> dataModel) {
 
 		super();
@@ -87,10 +94,34 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 	}
 
+	public AtomicInteger getInComingCounter() {
+
+		return inComingCounter;
+	}
+
+	public AtomicInteger getOutGoingCounter() {
+
+		return outGoingCounter;
+	}
+
+	public AtomicInteger getInComingCounter2() {
+
+		return inComingCounter2;
+	}
+
+	public AtomicInteger getOutGoingCounter2() {
+
+		return outGoingCounter2;
+	}
+
 	@Override
 	public void startRecord(final String identifier) {
 
+		inComingCounter.incrementAndGet();
+
 		assert !isClosed();
+
+		inComingCounter2.incrementAndGet();
 
 		currentId = SchemaUtils.isValidUri(identifier) ? identifier : SchemaUtils.mintRecordUri(identifier, currentId, dataModel);
 
@@ -105,13 +136,16 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		// init
 		entityStack = new Stack<>();
-
 	}
 
 	@Override
 	public void endRecord() {
 
+		outGoingCounter.incrementAndGet();
+
 		assert !isClosed();
+
+		outGoingCounter2.incrementAndGet();
 
 		resourceStack.clear();
 
