@@ -18,7 +18,6 @@ package org.dswarm.persistence.service.internal.graph.util;
 import java.util.Set;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -98,10 +97,10 @@ public class SchemaDeterminator {
 	}
 
 	public DataModel optionallyEnhancedDataModel(final DataModel dataModel, final GDMModel gdmModel, final org.dswarm.graph.json.Model realModel,
-			final boolean isSchemaAnInBuildSchema)
+			final boolean utiliseExistingSchema)
 			throws DMPPersistenceException {
 
-		if (!isSchemaAnInBuildSchema) {
+		if (!utiliseExistingSchema) {
 
 			return determineSchema(dataModel, gdmModel, realModel);
 		} else {

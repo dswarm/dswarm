@@ -66,6 +66,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 	private static final String METAMORPH_ELEMENT_MAP_ENTRY = "entry";
 
+
 	private static final String METAMORPH_FUNCTION_WHITELIST = "whitelist";
 
 	private static final String METAMORPH_FUNCTION_BLACKLIST = "blacklist";

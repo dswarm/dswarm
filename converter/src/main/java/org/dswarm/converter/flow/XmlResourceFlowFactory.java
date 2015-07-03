@@ -22,5 +22,5 @@ import org.dswarm.persistence.model.resource.DataModel;
  */
 public interface XmlResourceFlowFactory {
 
-	XMLSourceResourceGDMStmtsFlow fromDataModel(final DataModel dataModel);
+	XMLSourceResourceGDMStmtsFlow fromDataModel(final DataModel dataModel, final boolean utiliseExistingSchema);
 }

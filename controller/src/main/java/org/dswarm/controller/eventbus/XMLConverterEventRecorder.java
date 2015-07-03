@@ -22,6 +22,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -45,6 +46,7 @@ import org.dswarm.persistence.monitoring.MonitoringHelper;
 import org.dswarm.persistence.monitoring.MonitoringLogger;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.service.internal.graph.util.SchemaDeterminator;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * An event recorder for converting XML documents.
@@ -103,7 +105,7 @@ public class XMLConverterEventRecorder {
 	public void processDataModel(final DataModel dataModel, final UpdateFormat updateFormat, final boolean enableVersioning)
 			throws DMPControllerException {
 
-		Observable<org.dswarm.persistence.model.internal.Model> result = doIngest(dataModel, Schedulers.newThread());
+		Observable<org.dswarm.persistence.model.internal.Model> result = doIngest(dataModel, false, Schedulers.newThread());
 
 		try {
 
@@ -126,18 +128,21 @@ public class XMLConverterEventRecorder {
 		}
 	}
 
-	public Observable<org.dswarm.persistence.model.internal.Model> doIngest(final DataModel dataModel, final Scheduler scheduler)
+	public Observable<org.dswarm.persistence.model.internal.Model> doIngest(final DataModel dataModel, final boolean utiliseExistingSchema,
+			final Scheduler scheduler)
 			throws DMPControllerException {
 
 		// TODO: enable monitoring here
 
-		LOG.debug("try to process xml data resource into data model '{}'", dataModel.getUuid());
+		LOG.debug("try to process xml data resource into data model '{}' (utilise existing schema = '{}')", dataModel.getUuid(),
+				utiliseExistingSchema);
 
 		try {
 
 			final SchemaDeterminator schemaDeterminator = schemaDeterminatorProvider.get();
 			final DataModel freshDataModel = schemaDeterminator.getSchemaInternal(dataModel.getUuid());
 			final boolean isSchemaAnInbuiltSchema = schemaDeterminator.isSchemaAnInbuiltSchema(freshDataModel);
+			final boolean hasSchema = isSchemaAnInbuiltSchema || utiliseExistingSchema;
 
 			final AtomicInteger counter = new AtomicInteger(0);
 			final AtomicLong statementCounter = new AtomicLong(0);
@@ -147,12 +152,12 @@ public class XMLConverterEventRecorder {
 			final String path = dataModel.getDataResource().getAttribute(ResourceStatics.PATH).asText();
 
 			final CompletableFuture<XMLSourceResourceGDMStmtsFlow> futureFlow = CompletableFuture
-					.supplyAsync(() -> xmlFlowFactory.get().fromDataModel(dataModel));
+					.supplyAsync(() -> xmlFlowFactory.get().fromDataModel(dataModel, utiliseExistingSchema));
 			final Observable<XMLSourceResourceGDMStmtsFlow> obserableFlow = Observable.from(futureFlow);
 
 			return obserableFlow.subscribeOn(scheduler).flatMap(flow -> {
 
-				LOG.debug("process xml data resource at '{}' into data model '{}'", path, dataModel.getUuid());
+				LOG.debug("process xml data resource at '{}' into data model '{}' (has schema = '{}')", path, dataModel.getUuid(), hasSchema);
 
 				return flow.applyResource(path);
 			}).filter(gdmModel -> {
@@ -185,7 +190,7 @@ public class XMLConverterEventRecorder {
 								dataModel.getUuid(), statementCounter.get());
 					}
 
-					schemaDeterminator.optionallyEnhancedDataModel(freshDataModel, gdmModel, model, isSchemaAnInbuiltSchema);
+					schemaDeterminator.optionallyEnhancedDataModel(freshDataModel, gdmModel, model, hasSchema);
 
 					//final int current = counter.incrementAndGet();
 

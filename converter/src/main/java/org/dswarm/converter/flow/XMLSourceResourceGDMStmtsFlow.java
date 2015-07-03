@@ -16,8 +16,6 @@
 package org.dswarm.converter.flow;
 
 import java.io.Reader;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 import com.codahale.metrics.MetricRegistry;
@@ -54,20 +52,22 @@ import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
  */
 public class XMLSourceResourceGDMStmtsFlow {
 
-	private static final Logger			LOG	= LoggerFactory.getLogger(XMLSourceResourceGDMStmtsFlow.class);
+	private static final Logger LOG = LoggerFactory.getLogger(XMLSourceResourceGDMStmtsFlow.class);
 
 	private static final String XML_INGEST_IDENTIFIER = "xml ingest";
 
-	private final Optional<String>		recordTagName;
-	private final Optional<DataModel>	dataModel;
-	private final TimerBasedFactory timerBasedFactory;
-	private final Timer morphTimer;
+	private final Optional<String>    recordTagName;
+	private final Optional<DataModel> dataModel;
+	private final boolean             utiliseExistingSchema;
+	private final TimerBasedFactory   timerBasedFactory;
+	private final Timer               morphTimer;
 
 	@Inject
 	private XMLSourceResourceGDMStmtsFlow(
 			@Named("Monitoring") final MetricRegistry registry,
 			final TimerBasedFactory timerBasedFactory,
-			@Assisted final DataModel dataModel) throws DMPConverterException {
+			@Assisted final DataModel dataModel,
+			@Assisted final boolean utiliseExistingSchema) throws DMPConverterException {
 		if (dataModel == null) {
 
 			throw new DMPConverterException("the data model shouldn't be null");
@@ -90,6 +90,8 @@ public class XMLSourceResourceGDMStmtsFlow {
 
 			this.dataModel = Optional.empty();
 		}
+
+		this.utiliseExistingSchema = utiliseExistingSchema;
 
 		recordTagName = getStringParameter(dataModel.getConfiguration(), ConfigurationStatics.RECORD_TAG);
 
@@ -120,10 +122,10 @@ public class XMLSourceResourceGDMStmtsFlow {
 
 		if (recordTagName.isPresent()) {
 
-			encoder = new XMLGDMEncoder(recordTagName.get(), dataModel);
+			encoder = new XMLGDMEncoder(recordTagName.get(), dataModel, utiliseExistingSchema);
 		} else {
 
-			encoder = new XMLGDMEncoder(dataModel);
+			encoder = new XMLGDMEncoder(dataModel, utiliseExistingSchema);
 		}
 		final GDMModelReceiver writer = new GDMModelReceiver(XML_INGEST_IDENTIFIER);
 
