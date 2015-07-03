@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dswarm.controller.resources;
+package org.dswarm.controller.resources.job.test;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -53,7 +52,6 @@ import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTest
 import org.dswarm.controller.resources.test.ResourceTest;
 import org.dswarm.controller.test.GuicedTest;
 import org.dswarm.persistence.model.internal.Model;
-import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
@@ -66,9 +64,9 @@ import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
-public class TasksCsvResourceTest3 extends ResourceTest {
+public class TasksCsvResourceTest5 extends ResourceTest {
 
-	private static final Logger LOG = LoggerFactory.getLogger(TasksCsvResourceTest3.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TasksCsvResourceTest5.class);
 
 	private String taskJSONString;
 
@@ -78,7 +76,7 @@ public class TasksCsvResourceTest3 extends ResourceTest {
 
 	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	public TasksCsvResourceTest3() {
+	public TasksCsvResourceTest5() {
 
 		super("tasks");
 	}
@@ -101,7 +99,7 @@ public class TasksCsvResourceTest3 extends ResourceTest {
 	@Test
 	public void testTaskExecution() throws Exception {
 
-		TasksCsvResourceTest3.LOG.debug("start task execution test");
+		TasksCsvResourceTest5.LOG.debug("start task execution test");
 
 		final String resourceFileName = "test_csv-controller.csv";
 
@@ -126,7 +124,7 @@ public class TasksCsvResourceTest3 extends ResourceTest {
 			// fileType = Files.probeContentType(resourceFile.toPath());
 		} catch (final IOException e1) {
 
-			TasksCsvResourceTest3.LOG.debug("couldn't determine file type from file '" + resourceFile.getAbsolutePath() + "'");
+			TasksCsvResourceTest5.LOG.debug("couldn't determine file type from file '" + resourceFile.getAbsolutePath() + "'");
 		}
 
 		if (fileType != null) {
@@ -265,7 +263,7 @@ public class TasksCsvResourceTest3 extends ResourceTest {
 
 		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
 
-		TasksCsvResourceTest3.LOG.debug("task execution response = '" + responseString + "'");
+		TasksCsvResourceTest5.LOG.debug("task execution response = '" + responseString + "'");
 
 		final String expectedResultString = DMPPersistenceUtil.getResourceAsString("controller_task-result2.csv.json");
 
@@ -332,7 +330,7 @@ public class TasksCsvResourceTest3 extends ResourceTest {
 
 		Assert.assertNotNull("the data model schema record class shouldn't be null", schema.getRecordClass());
 
-		TasksCsvResourceTest3.LOG.debug("end task execution test");
+		TasksCsvResourceTest5.LOG.debug("end task execution test");
 	}
 
 	private JsonNode getRecordData(final String recordData, final ArrayNode jsonArray, final String key) {

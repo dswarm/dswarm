@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -56,6 +57,7 @@ import org.culturegraph.mf.stream.pipe.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
+import rx.Scheduler;
 import rx.Subscriber;
 import rx.schedulers.Schedulers;
 
@@ -170,7 +172,7 @@ public class TransformationFlow {
 		final boolean doNotReturnJsonToCaller = false;
 		final boolean enableVersioning = true;
 
-		return apply(Observable.from(tuplesList), writeResultToDatahub, doNotReturnJsonToCaller, enableVersioning).reduce(
+		return apply(Observable.from(tuplesList), writeResultToDatahub, doNotReturnJsonToCaller, enableVersioning, Schedulers.newThread()).reduce(
 				DMPPersistenceUtil.getJSONObjectMapper().createArrayNode(),
 				ArrayNode::add
 		).map(arrayNode -> {
@@ -192,13 +194,15 @@ public class TransformationFlow {
 		}
 	}
 
-	// TODO: Observable String / Model / Future String
 	public Observable<JsonNode> apply(
 			final Observable<Tuple<String, JsonNode>> tuples,
 			final ObjectPipe<Tuple<String, JsonNode>, StreamReceiver> opener,
-			final boolean writeResultToDatahub, final boolean doNotReturnJsonToCaller, final boolean enableVersioning) throws DMPConverterException {
+			final boolean writeResultToDatahub, final boolean doNotReturnJsonToCaller, final boolean enableVersioning, final Scheduler scheduler)
+			throws DMPConverterException {
 
 		final Context morphContext = morphTimer.time();
+
+		LOG.debug("start processing some records in transformation engine");
 
 		// final String recordDummy = "record";
 
@@ -240,12 +244,19 @@ public class TransformationFlow {
 				optionalDataModelSchemaRecordClassURI.orElse(ClaszUtils.BIBO_DOCUMENT_URI);
 
 		final AtomicInteger counter = new AtomicInteger(0);
+		final AtomicInteger counter2 = new AtomicInteger(0);
+		final AtomicLong statementCounter = new AtomicLong(0);
 
 		final Observable<org.dswarm.persistence.model.internal.Model> model = writer.getObservable().filter(gdmModel -> {
 
-			final int current = counter.incrementAndGet();
+			if (counter.incrementAndGet() == 1) {
 
-			LOG.debug("processed resource model number '{}'", current);
+				LOG.debug("start processing first record in transformation engine");
+			}
+
+			//final int current = counter.incrementAndGet();
+
+			//LOG.debug("processed resource model number '{}'", current);
 
 			final Model model1 = gdmModel.getModel();
 
@@ -265,8 +276,7 @@ public class TransformationFlow {
 				return false;
 			}
 
-			LOG.debug("processed resource model number '{}' with '{}' and resource site '{}'", current, resources.iterator().next().getUri(),
-					resources.size());
+			//LOG.debug("processed resource model number '{}' with '{}' and resource size '{}'", current, resources.iterator().next().getUri(), resources.size());
 
 			final Set<String> recordURIsFromGDMModel = gdmModel.getRecordURIs();
 
@@ -296,8 +306,17 @@ public class TransformationFlow {
 				finalGDMModel = gdmModel;
 			}
 
+			statementCounter.addAndGet(gdmModel.getModel().size());
+
+			if (counter2.incrementAndGet() == 1) {
+
+				LOG.debug("processed first record with '{}' statements in transformation engine", statementCounter.get());
+			}
+
 			return finalGDMModel;
-		});
+		}).cast(org.dswarm.persistence.model.internal.Model.class).doOnCompleted(
+				() -> LOG.debug("processed '{}' records (from '{}') with '{}' statements in transformation engine", counter2.get(), counter.get(),
+						statementCounter.get()));
 
 		final Observable<JsonNode> resultObservable;
 
@@ -353,22 +372,33 @@ public class TransformationFlow {
 
 			@Override public void call(final Subscriber<? super JsonNode> subscriber) {
 
-				resultObservable
+				resultObservable.subscribeOn(scheduler)
 						.compose(new AndThenWaitFor<>(writeResponse, DMPPersistenceUtil.getJSONObjectMapper()::createArrayNode))
 						.doOnCompleted(morphContext::stop)
 						.subscribe(subscriber);
 
-				tuples.subscribeOn(Schedulers.newThread()).subscribe(opener::process, writer::propagateError, opener::closeStream);
+				final AtomicInteger counter = new AtomicInteger(0);
+
+				final Observable<Tuple<String, JsonNode>> tupleObservable = tuples.subscribeOn(scheduler);
+
+				tupleObservable.doOnNext(tuple -> {
+
+					if (counter.incrementAndGet() == 1) {
+
+						LOG.debug("received first record in transformation engine");
+					}
+				}).doOnCompleted(() -> LOG.debug("received '{}' records in transformation engine", counter.get()))
+						.subscribe(opener::process, writer::propagateError, opener::closeStream);
 			}
-		});
+		}).subscribeOn(scheduler);
 	}
 
 	public Observable<JsonNode> apply(final Observable<Tuple<String, JsonNode>> tuples, final boolean writeResultToDatahub,
-			final boolean doNotReturnJsonToCaller, final boolean enableVersioning) throws DMPConverterException {
+			final boolean doNotReturnJsonToCaller, final boolean enableVersioning, final Scheduler scheduler) throws DMPConverterException {
 
 		final JsonNodeReader opener = new JsonNodeReader();
 
-		return apply(tuples, opener, writeResultToDatahub, doNotReturnJsonToCaller, enableVersioning);
+		return apply(tuples, opener, writeResultToDatahub, doNotReturnJsonToCaller, enableVersioning, scheduler);
 	}
 
 	static Metamorph createMorph(final Reader morphString) throws DMPMorphDefException {
@@ -430,8 +460,9 @@ public class TransformationFlow {
 	}
 
 	private static class AndThenWaitFor<T, U> implements Observable.Transformer<T, T> {
+
 		private final Observable<U> other;
-		private final Supplier<T> emptyResultValue;
+		private final Supplier<T>   emptyResultValue;
 
 		public AndThenWaitFor(final Observable<U> other, final Supplier<T> emptyResultValue) {
 			this.other = other;

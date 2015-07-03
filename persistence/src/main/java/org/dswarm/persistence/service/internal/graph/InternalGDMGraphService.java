@@ -93,6 +93,7 @@ import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.proxy.ProxySchema;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 import org.dswarm.persistence.service.InternalModelService;
+import org.dswarm.persistence.service.internal.graph.util.SchemaDeterminator;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.service.schema.AttributePathService;
 import org.dswarm.persistence.service.schema.AttributeService;
@@ -157,56 +158,30 @@ public class InternalGDMGraphService implements InternalModelService {
 	 */
 	private final Provider<DataModelService> dataModelService;
 
-	/**
-	 * The schema persistence service.
-	 */
-	private final Provider<SchemaService> schemaService;
-
-	/**
-	 * The class persistence service.
-	 */
-	private final Provider<ClaszService> classService;
-
-	private final Provider<AttributePathService> attributePathService;
-
-	private final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceService;
-
-	private final Provider<AttributeService> attributeService;
-
 	private final String graphEndpoint;
 
 	private final Provider<ObjectMapper> objectMapperProvider;
+
+	private final Provider<SchemaDeterminator> schemaDeterminatorProvider;
 
 	/**
 	 * Creates a new internal triple service with the given persistence services and the endpoint to access the graph database.
 	 *
 	 * @param dataModelService     the data model persistence service
-	 * @param schemaService        the schema persistence service
-	 * @param classService         the class persistence service
-	 * @param attributePathService the attribute path persistence service
-	 * @param attributeService     the attribute persistence service
 	 * @param graphEndpointArg     the endpoint to access the graph database
 	 */
 	@Inject
 	public InternalGDMGraphService(
 			final Provider<DataModelService> dataModelService,
-			final Provider<SchemaService> schemaService,
-			final Provider<ClaszService> classService,
-			final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceService,
-			final Provider<AttributePathService> attributePathService,
-			final Provider<AttributeService> attributeService,
 			@Named("dswarm.db.graph.endpoint") final String graphEndpointArg,
-			final Provider<ObjectMapper> objectMapperProviderArg) {
+			final Provider<ObjectMapper> objectMapperProviderArg,
+			final Provider<SchemaDeterminator> schemaDeterminatorProviderArg) {
 
 		this.dataModelService = dataModelService;
-		this.schemaService = schemaService;
-		this.classService = classService;
-		this.attributePathService = attributePathService;
-		this.schemaAttributePathInstanceService = schemaAttributePathInstanceService;
-		this.attributeService = attributeService;
 
 		graphEndpoint = graphEndpointArg;
 		objectMapperProvider = objectMapperProviderArg;
+		schemaDeterminatorProvider = schemaDeterminatorProviderArg;
 	}
 
 	/**
@@ -642,9 +617,11 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final Optional<Boolean> optionalDeprecateMissingRecords = determineMissingRecordsFlag(updateFormat);
 		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelUuid);
-		final DataModel dataModel = getSchemaInternal(dataModelUuid);
+		// TODO: remove, or avoid redundant schema determination
+		final DataModel dataModel = schemaDeterminatorProvider.get().getSchemaInternal(dataModelUuid);
 
-		final boolean isSchemaAnInBuiltSchema = isSchemaAnInbuiltSchema(dataModel);
+		// TODO: remove, or avoid redundant schema determination
+		final boolean isSchemaAnInBuiltSchema = schemaDeterminatorProvider.get().isSchemaAnInbuiltSchema(dataModel);
 
 		final Observable<GDMModel> modelObservable = model.cast(GDMModel.class);
 
@@ -673,7 +650,8 @@ public class InternalGDMGraphService implements InternalModelService {
 					return Collections.emptyList();
 				}
 
-				optionallyEnhancedDataModel(dataModel, gdm, model1, isSchemaAnInBuiltSchema);
+				// TODO: remove, or avoid redundant schema determination
+				schemaDeterminatorProvider.get().optionallyEnhancedDataModel(dataModel, gdm, model1, isSchemaAnInBuiltSchema);
 
 				// note the model should always consist of one resource only
 				return resources;
@@ -707,19 +685,6 @@ public class InternalGDMGraphService implements InternalModelService {
 		});
 	}
 
-	private DataModel optionallyEnhancedDataModel(final DataModel dataModel, final GDMModel gdmModel, final org.dswarm.graph.json.Model realModel,
-			final boolean isSchemaAnInBuildSchema)
-			throws DMPPersistenceException {
-
-		if (!isSchemaAnInBuildSchema) {
-
-			return determineSchema(dataModel, gdmModel, realModel);
-		} else {
-
-			return dataModel;
-		}
-	}
-
 	private org.dswarm.graph.json.Model getRealModel(final GDMModel gdmModel) throws DMPPersistenceException {
 
 		final org.dswarm.graph.json.Model realModel = gdmModel.getModel();
@@ -730,42 +695,6 @@ public class InternalGDMGraphService implements InternalModelService {
 		}
 
 		return realModel;
-	}
-
-	private DataModel determineSchema(final DataModel dataModel, final GDMModel gdmModel, final org.dswarm.graph.json.Model realModel)
-			throws DMPPersistenceException {
-
-		LOG.debug("determine schema for data model '{}'", dataModel.getUuid());
-
-		final DataModel updatedDataModel = addRecordClass(dataModel, gdmModel.getRecordClassURI());
-
-		if (updatedDataModel == null) {
-
-			throw new DMPPersistenceException("Could not get the actual data model to use");
-		}
-
-		determineRecordResources(gdmModel, realModel, updatedDataModel);
-
-		determineAttributePaths(updatedDataModel, gdmModel);
-
-		LOG.debug("determined schema for data model '{}'", dataModel.getUuid());
-
-		return updatedDataModel;
-	}
-
-	private void determineRecordResources(final GDMModel gdmModel, final org.dswarm.graph.json.Model realModel, final DataModel finalDataModel) {
-
-		LOG.debug("determine record resources for data model '{}'", finalDataModel.getUuid());
-
-		if (finalDataModel.getSchema() != null) {
-
-			if (finalDataModel.getSchema().getRecordClass() != null) {
-
-				gdmModel.setRecordURIs(realModel.getResourceURIs());
-			}
-		}
-
-		LOG.debug("determined record resources for data model '{}'", finalDataModel.getUuid());
 	}
 
 	private Optional<Boolean> determineMissingRecordsFlag(final UpdateFormat updateFormat) throws DMPPersistenceException {
@@ -782,223 +711,6 @@ public class InternalGDMGraphService implements InternalModelService {
 
 				throw new DMPPersistenceException(String.format("unkown update format '%s'", updateFormat));
 		}
-	}
-
-	private boolean isSchemaAnInbuiltSchema(final DataModel dataModel) throws DMPPersistenceException {
-
-		final Schema schema = dataModel.getSchema();
-
-		if (schema != null) {
-
-			final String schemaUUID = schema.getUuid();
-
-			if (schemaUUID != null) {
-
-				switch (schemaUUID) {
-
-					case SchemaUtils.MABXML_SCHEMA_UUID:
-					case SchemaUtils.MARC21_SCHEMA_UUID:
-					case SchemaUtils.PNX_SCHEMA_UUID:
-					case SchemaUtils.FINC_SOLR_SCHEMA_UUID:
-					case SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID:
-					case SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID:
-					case SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID:
-
-						// those schemas are already there and shouldn't be manipulated by data that differs from those schemas
-						LOG.debug("schema for data model '{}' is a preset schema, so everything is already set", dataModel.getUuid());
-
-						return true;
-				}
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * Adds the record class to the schema of the data model.
-	 *
-	 * @param dataModel the data model
-	 * @param recordClassUri the identifier of the record class
-	 * @throws DMPPersistenceException
-	 */
-	private DataModel addRecordClass(final DataModel dataModel, final String recordClassUri) throws DMPPersistenceException {
-
-		LOG.debug("add record class '{}' to schema for data model '{}'", recordClassUri, dataModel.getUuid());
-
-		// (try) add record class uri to schema
-		final Schema schema = dataModel.getSchema();
-
-		if (schema != null) {
-
-			final boolean result = SchemaUtils.addRecordClass(schema, recordClassUri, classService);
-
-			if (!result) {
-
-				return dataModel;
-			}
-
-			LOG.debug("added record class to schema for data model '{}'", dataModel.getUuid());
-
-			return updateDataModel(dataModel);
-		}
-
-		return dataModel;
-	}
-
-	private DataModel determineAttributePaths(final DataModel dataModel, final Model model)
-			throws DMPPersistenceException {
-
-		LOG.debug("determine attribute paths of schema for data model '{}'", dataModel.getUuid());
-
-		final Schema schema = dataModel.getSchema();
-
-		if (schema != null) {
-
-			// note: model.getAttributePaths is expensive atm
-			final Set<AttributePathHelper> attributePathHelpers = model.getAttributePaths();
-
-			final boolean result = SchemaUtils.addAttributePaths(schema, attributePathHelpers,
-					attributePathService, schemaAttributePathInstanceService, attributeService);
-
-			if (!result) {
-
-				return dataModel;
-			}
-
-			LOG.debug("determined attribute paths of schema for data model '{}'", dataModel.getUuid());
-
-			return updateDataModel(dataModel);
-		}
-
-		return dataModel;
-	}
-
-	private DataModel updateDataModel(final DataModel dataModel) throws DMPPersistenceException {
-		final ProxyDataModel proxyUpdatedDataModel = dataModelService.get().updateObjectTransactional(dataModel);
-
-		if (proxyUpdatedDataModel == null) {
-
-			throw new DMPPersistenceException("couldn't update data model");
-		}
-
-		return proxyUpdatedDataModel.getObject();
-	}
-
-	private DataModel getSchemaInternal(final String dataModelUuid) throws DMPPersistenceException {
-
-		final DataModel dataModel = getDataModel(dataModelUuid);
-
-		final Schema schema;
-
-		if (dataModel != null && dataModel.getSchema() == null) {
-
-			final Configuration configuration = dataModel.getConfiguration();
-
-			Optional<String> optionalPresetSchema = null;
-
-			if (configuration != null) {
-
-				final JsonNode storageTypeJsonNode = configuration.getParameter(ConfigurationStatics.STORAGE_TYPE);
-
-				if (storageTypeJsonNode != null) {
-
-					final String storageType = storageTypeJsonNode.asText();
-
-					if (storageType != null) {
-
-						switch (storageType) {
-
-							case ConfigurationStatics.MABXML_STORAGE_TYPE:
-							case ConfigurationStatics.MARCXML_STORAGE_TYPE:
-							case ConfigurationStatics.PNX_STORAGE_TYPE:
-							case ConfigurationStatics.OAI_PMH_DC_ELEMENTS_STORAGE_TYPE:
-							case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:
-							case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
-
-								optionalPresetSchema = Optional.of(storageType);
-
-								LOG.debug("found storage type '{}' for preset schema", storageType);
-
-								break;
-						}
-
-					}
-				}
-			}
-
-			if (optionalPresetSchema == null || !optionalPresetSchema.isPresent()) {
-
-				// create new schema
-				final ProxySchema proxySchema = schemaService.get().createObjectTransactional();
-
-				if (proxySchema != null) {
-
-					schema = proxySchema.getObject();
-				} else {
-
-					schema = null;
-				}
-			} else {
-
-				switch (optionalPresetSchema.get()) {
-
-					case ConfigurationStatics.MABXML_STORAGE_TYPE:
-
-						// assign existing mabxml schema to data resource
-
-						schema = schemaService.get().getObject(SchemaUtils.MABXML_SCHEMA_UUID);
-
-						break;
-					case ConfigurationStatics.MARCXML_STORAGE_TYPE:
-
-						// assign existing marc21 schema to data resource
-
-						schema = schemaService.get().getObject(SchemaUtils.MARC21_SCHEMA_UUID);
-
-						break;
-					case ConfigurationStatics.PNX_STORAGE_TYPE:
-
-						// assign existing pnx schema to data resource
-
-						schema = schemaService.get().getObject(SchemaUtils.PNX_SCHEMA_UUID);
-
-						break;
-					case ConfigurationStatics.OAI_PMH_DC_ELEMENTS_STORAGE_TYPE:
-
-						// assign existing OAI-PMH + DC Elements schema to data resource
-
-						schema = schemaService.get().getObject(SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID);
-
-						break;
-					case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:
-
-						// assign existing OAI-PMH + DC Terms schema to data resource
-
-						schema = schemaService.get().getObject(SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID);
-
-						break;
-					case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
-
-						// assign existing OAI-PMH + MARCXML schema to data resource
-
-						schema = schemaService.get().getObject(SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID);
-
-						break;
-					default:
-
-						LOG.debug("could not determine and set preset schema for identifier '{}'", optionalPresetSchema.get());
-
-						schema = null;
-				}
-			}
-
-			LOG.debug("set preset schema for data model '{}'", dataModel.getUuid());
-
-			dataModel.setSchema(schema);
-		}
-
-		return updateDataModel(dataModel);
 	}
 
 	private DataModel getDataModel(final String dataModelUuid) {
@@ -1615,7 +1327,8 @@ public class InternalGDMGraphService implements InternalModelService {
 						try {
 
 							final org.dswarm.graph.json.Model realModel = getRealModel(gdm);
-							final DataModel finalDataModel = optionallyEnhancedDataModel(dataModel, gdm, realModel, isSchemaAnInBuiltSchema);
+							// TODO: remove, or avoid redundant schema determination
+							final DataModel finalDataModel = schemaDeterminatorProvider.get().optionallyEnhancedDataModel(dataModel, gdm, realModel, isSchemaAnInBuiltSchema);
 							final Optional<ContentSchema> optionalContentSchema = Optional
 									.fromNullable(finalDataModel.getSchema().getContentSchema());
 							final Optional<String> optionalRecordClassUri = Optional

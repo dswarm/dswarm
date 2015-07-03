@@ -33,6 +33,7 @@ import com.google.inject.Provider;
 import org.junit.Assert;
 import org.junit.Test;
 import rx.Observable;
+import rx.schedulers.Schedulers;
 
 import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.GuicedTest;
@@ -229,7 +230,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		flow.getScript();
 
-		final ArrayNode actual = flow.apply(tuples, true, false, true).reduce(
+		final ArrayNode actual = flow.apply(tuples, true, false, true, Schedulers.newThread()).reduce(
 				DMPPersistenceUtil.getJSONObjectMapper().createArrayNode(),
 				ArrayNode::add
 		).toBlocking().first();

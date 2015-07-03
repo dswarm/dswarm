@@ -18,8 +18,6 @@ package org.dswarm.controller.resources.job.test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
@@ -33,8 +31,6 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.io.Resources;
 import org.apache.commons.io.FileUtils;
 import org.apache.tika.Tika;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -51,7 +47,6 @@ import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.ResourceType;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
-import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
@@ -200,26 +195,49 @@ public class TasksCsvResourceTest4 extends ResourceTest {
 
 		final ObjectNode requestJSON = objectMapper.createObjectNode();
 		requestJSON.set(TasksResource.TASK_IDENTIFIER, taskJSON);
-		requestJSON.put(TasksResource.PERSIST_IDENTIFIER, Boolean.TRUE);
+		requestJSON.put(TasksResource.PERSIST_IDENTIFIER, Boolean.FALSE);
 		requestJSON.put(TasksResource.DO_INGEST_ON_THE_FLY_IDENTIFIER, Boolean.TRUE);
 		requestJSON.put(TasksResource.DO_EXPORT_ON_THE_FLY_IDENTIFIER, Boolean.TRUE);
 		requestJSON.put(TasksResource.DO_VERSIONING_ON_RESULT_IDENTIFIER, Boolean.FALSE);
 
-		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE)
-				.accept(MediaType.APPLICATION_XML_TYPE).post(Entity.json(requestJSON));
+		final Response response = target().request(MediaType.APPLICATION_XML_TYPE).post(Entity.json(requestJSON));
 
 		// SR Start checking response
 
 		Assert.assertEquals("200 Created was expected", 200, response.getStatus());
 
-		final String responseString = response.readEntity(String.class);
+		final String actualXMLStream = response.readEntity(String.class);
 
-		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
+		// TODO: we can't do a property result comparison, because the record has always a new id
+//		final InputStream actualXMLStream = response.readEntity(InputStream.class);
+//		Assert.assertNotNull(actualXMLStream);
+//
+//		final BufferedInputStream bis = new BufferedInputStream(actualXMLStream, 1024);
+//
+//		final String expectedXML = DMPPersistenceUtil.getResourceAsString("controller_task-result.csv.xml");
+//
+//		// do comparison: check for XML similarity
+//		final Diff xmlDiff = DiffBuilder
+//				.compare(Input.fromString(expectedXML))
+//				.withTest(Input.fromStream(bis))
+//				.ignoreWhitespace()
+//				.checkForSimilar()
+//				.build();
+//
+//		if (xmlDiff.hasDifferences()) {
+//			final StringBuilder sb = new StringBuilder("Oi chap, there seem to ba a mishap!");
+//			for (final Difference difference : xmlDiff.getDifferences()) {
+//				sb.append('\n').append(difference);
+//			}
+//			Assert.fail(sb.toString());
+//		}
+//
+//		actualXMLStream.close();
+//		bis.close();
 
-		TasksCsvResourceTest4.LOG.debug("task execution response = '" + responseString + "'");
+		final String expectedXML = DMPPersistenceUtil.getResourceAsString("controller_task-result.csv.xml");
 
-		// TODO: do result comparison
-		System.out.println("result = '" + responseString + "'");
+		Assert.assertEquals(expectedXML.length(), actualXMLStream.length());
 
 		TasksCsvResourceTest4.LOG.debug("end task execution test");
 	}
