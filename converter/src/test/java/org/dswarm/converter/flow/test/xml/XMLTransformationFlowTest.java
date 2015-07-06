@@ -149,6 +149,16 @@ public class XMLTransformationFlowTest extends GuicedTest {
 	}
 
 	/**
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testNumFilterTask() throws Exception {
+
+		testXMLTaskWithTuples("numfilter.function.task.result.json", "numfilter.function.task.json", "test-mabxml.tuples.json");
+	}
+
+	/**
 	 * should emit the values of the else-branch
 	 *
 	 * @throws Exception
