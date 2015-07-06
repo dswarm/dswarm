@@ -877,7 +877,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 		final Map<String, String> parameters = multipleInputComponent.getParameterMappings();
 
-		String valueString;
+		final StringBuilder valueStringBuilder = new StringBuilder();
 
 		final String delimiterString;
 
@@ -892,11 +892,11 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 		if (parameters.get(MF_CONCAT_FUNCTION_PREFIX_ATTRIBUTE_IDENTIFIER) != null) {
 
-			valueString = parameters.get(MF_CONCAT_FUNCTION_PREFIX_ATTRIBUTE_IDENTIFIER);
+			valueStringBuilder.append(parameters.get(MF_CONCAT_FUNCTION_PREFIX_ATTRIBUTE_IDENTIFIER));
 		} else {
 
 			// fallback default
-			valueString = "";
+			valueStringBuilder.append("");
 		}
 
 		final Iterator<String> iter = collectionSourceAttributes.iterator();
@@ -907,21 +907,24 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 			final String sourceAttribute = iter.next();
 
-			valueString += "${" + sourceAttribute + "}";
+			valueStringBuilder.append("${")
+					.append(sourceAttribute)
+					.append("}");
 
 			if ((i++ + 1) < collectionSourceAttributes.size()) {
 
-				valueString += delimiterString;
+				valueStringBuilder.append(delimiterString);
 			}
 
 		}
 
 		if (parameters.get(MF_CONCAT_FUNCTION_POSTFIX_ATTRIBUTE_IDENTIFIER) != null) {
 
-			valueString += parameters.get(MF_CONCAT_FUNCTION_POSTFIX_ATTRIBUTE_IDENTIFIER);
+			valueStringBuilder.append(parameters.get(MF_CONCAT_FUNCTION_POSTFIX_ATTRIBUTE_IDENTIFIER));
 		}
 
 		final Map<String, String> extendedParameterMappings = new HashMap<>();
+		final String valueString = valueStringBuilder.toString();
 
 		extendedParameterMappings.put(MF_ELEMENT_VALUE_ATTRIBUTE_IDENTIFIER, valueString);
 
