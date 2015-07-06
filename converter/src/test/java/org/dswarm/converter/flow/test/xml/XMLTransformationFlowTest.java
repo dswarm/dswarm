@@ -137,6 +137,28 @@ public class XMLTransformationFlowTest extends GuicedTest {
 		testXMLTaskWithTuples("dd-907.collectors.task.result.json", "dd-907.collectors.task.json", "test-mabxml.tuples.json");
 	}
 
+	/**
+	 * should emit the values of the if-branch
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testIfElseTask() throws Exception {
+
+		testXMLTaskWithTuples("if-else.collectors.task.result.json", "if-else.collectors.task.json", "test-mabxml.tuples.json");
+	}
+
+	/**
+	 * should emit the values of the else-branch
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testIfElseTask2() throws Exception {
+
+		testXMLTaskWithTuples("if-else.collectors.task.result.2.json", "if-else.collectors.task.json", "if-else.test-mabxml.tuples.json");
+	}
+
 	@Test
 	public void testDd980Task() throws Exception {
 
