@@ -7,5 +7,6 @@ public enum FilterExpressionType {
 
 	NUMERIC,
 	REGEXP,
-	EQUALS;
+	EQUALS,
+	NOTEQUALS;
 }

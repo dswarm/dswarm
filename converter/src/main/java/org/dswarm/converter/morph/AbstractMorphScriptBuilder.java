@@ -153,6 +153,8 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 
 	protected static final String METAMORPH_FUNCTION_EQUALS = "equals";
 
+	protected static final String METAMORPH_FUNCTION_NOT_EQUALS = "not-equals";
+
 	protected static final String METAMORPH_DATA_SOURCE = "source";
 
 	protected static final String MF_ELEMENT_NAME_ATTRIBUTE_IDENTIFIER = "name";
@@ -369,6 +371,13 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 				case EQUALS:
 
 					combineAsFilterDataFunction = doc.createElement(METAMORPH_FUNCTION_EQUALS);
+
+					combineAsFilterDataFunction.setAttribute(MF_EQUALS_FUNCTION_STRING_ATTRIBUTE_IDENTIFIER, filterExpression.getExpression());
+
+					break;
+				case NOTEQUALS:
+
+					combineAsFilterDataFunction = doc.createElement(METAMORPH_FUNCTION_NOT_EQUALS);
 
 					combineAsFilterDataFunction.setAttribute(MF_EQUALS_FUNCTION_STRING_ATTRIBUTE_IDENTIFIER, filterExpression.getExpression());
 

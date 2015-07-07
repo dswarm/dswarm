@@ -108,6 +108,12 @@ public class MorphScriptBuilderTest extends GuicedTest {
 
 		compareTaskGeneratedMorphscript("equals.filter.function.task.json", "equals.filter.function.morph.xml");
 	}
+
+	@Test
+	public void testNotEqualsFilterTask() throws Exception {
+
+		compareTaskGeneratedMorphscript("not-equals.filter.function.task.json", "not-equals.filter.function.morph.xml");
+	}
 	
 	@Test
 	public void testRegexLookupMap() throws Exception {
