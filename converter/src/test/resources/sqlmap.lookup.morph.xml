@@ -1,0 +1,28 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+    <meta>
+        <name>mapping-1402051926041</name>
+    </meta>
+    <rules>
+        <combine flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld" includeSubEntities="true" name="@feld_value__0__" reset="true" sameEntity="true" value="${feld_value__0__.filtered}">
+            <if>
+                <all flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" includeSubEntities="true" name="CONDITION_ALL" reset="true">
+                    <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
+                        <regexp match="029"/>
+                    </data>
+                    <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind">
+                        <regexp match="m"/>
+                    </data>
+                </all>
+            </if>
+            <data name="feld_value__0__.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+        </combine>
+        <data name="http://purl.org/dc/elements/1.1/medium" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__1" source="@feld_value__0__">
+            <lookup in="component1402409200787"/>
+        </data>
+    </rules>
+    <maps>
+        <sqlmap database="dmp" databaseType="mysql" driver="com.mysql.jdbc.Driver" host="localhost" login="dmp" name="component1402409200787" password="dmp" port="3306" query="SELECT name FROM DATA_SCHEMA WHERE uuid = ?"/>
+    </maps>
+</metamorph>

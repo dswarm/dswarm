@@ -178,6 +178,12 @@ public class XMLTransformationFlowTest extends GuicedTest {
 		testXMLTaskWithTuples("not-equals.filter.function.task.result.json", "not-equals.filter.function.task.json", "test-mabxml.tuples.json");
 	}
 
+	@Test
+	public void testSqlMapTask() throws Exception {
+
+		testXMLTaskWithTuples("sqlmap.lookup.task.result.json", "sqlmap.lookup.task.json", "sqlmap.mabxml.tuples.json");
+	}
+
 	/**
 	 * should emit the values of the else-branch
 	 *
