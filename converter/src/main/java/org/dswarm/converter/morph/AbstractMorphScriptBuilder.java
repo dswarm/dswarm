@@ -46,6 +46,7 @@ import javax.xml.validation.SchemaFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
 import com.google.common.io.CharSource;
@@ -60,6 +61,8 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 import org.dswarm.converter.DMPConverterException;
+import org.dswarm.converter.morph.model.FilterExpression;
+import org.dswarm.converter.morph.model.FilterExpressionType;
 import org.dswarm.init.util.DMPStatics;
 import org.dswarm.persistence.model.job.Filter;
 import org.dswarm.persistence.model.job.Task;
@@ -77,7 +80,9 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 
 	private static final String TRANSFORMER_FACTORY_CLASS = "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl";
 
-	private static final String SCHEMA_PATH                                   = "schemata/metamorph.xsd";
+	private static final String SCHEMA_PATH                       = "schemata/metamorph.xsd";
+	public static final  String FILTER_EXPRESSION_TYPE_IDENTIFIER = "type";
+	public static final String FILTER_EXPRESSION_EXPRESSION_IDENTIFIER = "expression";
 
 	protected Document doc;
 
@@ -144,11 +149,13 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 
 	protected static final String METAMORPH_FUNCTION_REGEXP = "regexp";
 
+	protected static final String METAMORPH_FUNCTION_NUMFILTER = "numfilter";
+
 	protected static final String METAMORPH_DATA_SOURCE = "source";
 
-	protected static final    String MF_ELEMENT_NAME_ATTRIBUTE_IDENTIFIER = "name";
+	protected static final String MF_ELEMENT_NAME_ATTRIBUTE_IDENTIFIER = "name";
 
-	protected static final String METAMORPH_DATA_TARGET                = MF_ELEMENT_NAME_ATTRIBUTE_IDENTIFIER;
+	protected static final String METAMORPH_DATA_TARGET = MF_ELEMENT_NAME_ATTRIBUTE_IDENTIFIER;
 
 	protected static final String FILTER_VARIABLE_POSTFIX = ".filtered";
 
@@ -167,6 +174,8 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 	protected static final String BOOLEAN_VALUE_TRUE = "true";
 
 	protected static final String MF_REGEXP_FUNCTION_MATCH_ATTRIBUTE_IDENTIFIER = "match";
+
+	protected static final String MF_NUMFILTER_FUNCTION_EXPRESSION_ATTRIBUTE_IDENTIFIER = "expression";
 
 	protected static final String FILTER_ALL_COLLECTOR_NAME = "CONDITION_ALL";
 
@@ -293,8 +302,9 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 		return (MORPHSCRIPTBUILDERIMPL) this;
 	}
 
-	protected void addFilter(final String inputAttributePathStringXMLEscaped, final String variable, final Map<String, String> filterExpressionMap,
-			final Element rules, final boolean resultNameAsVariable) {
+	protected void addFilter(final String inputAttributePathStringXMLEscaped, final String variable,
+			final Map<String, FilterExpression> filterExpressionMap,
+			final Element rules, final boolean resultNameAsVariable) throws DMPConverterException {
 
 		final String combineValueVariable = variable + MorphScriptBuilder.FILTER_VARIABLE_POSTFIX;
 
@@ -305,7 +315,7 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 
 		final String resultName;
 
-		if(resultNameAsVariable) {
+		if (resultNameAsVariable) {
 
 			resultName = "@" + variable;
 		} else {
@@ -328,13 +338,34 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 		filterAll.setAttribute(MF_FLUSH_WITH_ATTRIBUTE_IDENTIFIER,
 				StringEscapeUtils.unescapeXml(Iterators.getLast(filterExpressionMap.keySet().iterator())));
 
-		for (final Map.Entry<String, String> filter : filterExpressionMap.entrySet()) {
+		for (final Map.Entry<String, FilterExpression> filter : filterExpressionMap.entrySet()) {
 
 			final Element combineAsFilterData = doc.createElement(METAMORPH_ELEMENT_DATA);
 			combineAsFilterData.setAttribute(METAMORPH_DATA_SOURCE, StringEscapeUtils.unescapeXml(filter.getKey()));
 
-			final Element combineAsFilterDataFunction = doc.createElement(METAMORPH_FUNCTION_REGEXP);
-			combineAsFilterDataFunction.setAttribute(MF_REGEXP_FUNCTION_MATCH_ATTRIBUTE_IDENTIFIER, filter.getValue());
+			final FilterExpression filterExpression = filter.getValue();
+			final Element combineAsFilterDataFunction;
+
+			switch (filterExpression.getType()) {
+
+				case REGEXP:
+
+					combineAsFilterDataFunction = doc.createElement(METAMORPH_FUNCTION_REGEXP);
+
+					combineAsFilterDataFunction.setAttribute(MF_REGEXP_FUNCTION_MATCH_ATTRIBUTE_IDENTIFIER, filterExpression.getExpression());
+
+					break;
+				case NUMERIC:
+
+					combineAsFilterDataFunction = doc.createElement(METAMORPH_FUNCTION_NUMFILTER);
+
+					combineAsFilterDataFunction.setAttribute(MF_NUMFILTER_FUNCTION_EXPRESSION_ATTRIBUTE_IDENTIFIER, filterExpression.getExpression());
+
+					break;
+				default:
+
+					throw new DMPConverterException("unknown filter expression type");
+			}
 
 			combineAsFilterData.appendChild(combineAsFilterDataFunction);
 			filterAll.appendChild(combineAsFilterData);
@@ -367,39 +398,72 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 		return null;
 	}
 
-	protected Map<String, String> extractFilterExpressions(final String filterExpressionString) {
+	protected Map<String, FilterExpression> extractFilterExpressions(final String filterExpressionString) throws DMPConverterException {
 
-		final Map<String, String> filterExpressionMap = Maps.newLinkedHashMap();
+		if (filterExpressionString == null || filterExpressionString.trim().isEmpty()) {
 
-		if (filterExpressionString != null && !filterExpressionString.isEmpty()) {
-
-			ArrayNode filterExpressionArray = null;
-
-			try {
-
-				filterExpressionArray = objectMapper.readValue(filterExpressionString, ArrayNode.class);
-
-			} catch (final IOException e) {
-
-				AbstractMorphScriptBuilder.LOG.debug("something went wrong while deserializing filter expression", e);
-			}
-
-			if (filterExpressionArray != null) {
-
-				for (final JsonNode filterExpressionNode : filterExpressionArray) {
-
-					final Iterator<Map.Entry<String, JsonNode>> filterExpressionIter = filterExpressionNode.fields();
-
-					while (filterExpressionIter.hasNext()) {
-
-						final Map.Entry<String, JsonNode> filterExpressionEntry = filterExpressionIter.next();
-						filterExpressionMap.put(filterExpressionEntry.getKey(), filterExpressionEntry.getValue().asText());
-					}
-				}
-			}
+			return null;
 		}
 
-		return filterExpressionMap;
+		final Map<String, FilterExpression> filterExpressionMap = Maps.newLinkedHashMap();
+
+		try {
+
+			final ArrayNode filterExpressionArray = objectMapper.readValue(filterExpressionString, ArrayNode.class);
+
+			for (final JsonNode filterExpressionNode : filterExpressionArray) {
+
+				final Iterator<Map.Entry<String, JsonNode>> filterExpressionIter = filterExpressionNode.fields();
+
+				while (filterExpressionIter.hasNext()) {
+
+					final Map.Entry<String, JsonNode> filterExpressionEntry = filterExpressionIter.next();
+					final String filterExpressionKey = filterExpressionEntry.getKey();
+					final JsonNode filterExpressionValue = filterExpressionEntry.getValue();
+
+					final JsonNodeType nodeType = filterExpressionValue.getNodeType();
+
+					final FilterExpression filterExpression;
+
+					switch(nodeType) {
+
+						case STRING:
+
+							// for legacy purpose
+
+							final String filterExpressionRegexp = filterExpressionValue.asText();
+
+							filterExpression = new FilterExpression(filterExpressionRegexp, FilterExpressionType.REGEXP);
+
+							break;
+						case OBJECT:
+
+							final String filterExpressionTypeString = filterExpressionValue.get(FILTER_EXPRESSION_TYPE_IDENTIFIER).asText();
+							final FilterExpressionType filterExpressionType = FilterExpressionType.valueOf(filterExpressionTypeString);
+
+							final String filterExpressionText = filterExpressionValue.get(FILTER_EXPRESSION_EXPRESSION_IDENTIFIER).asText();
+
+							filterExpression = new FilterExpression(filterExpressionText, filterExpressionType);
+
+							break;
+						default:
+
+							throw new DMPConverterException(String.format("unknown filter expression value type for filter key '%s'", filterExpressionKey));
+					}
+
+					filterExpressionMap.put(filterExpressionKey, filterExpression);
+				}
+			}
+
+			return filterExpressionMap;
+		} catch (final IOException e) {
+
+			final String message = "something went wrong while deserializing filter expression";
+
+			AbstractMorphScriptBuilder.LOG.error(message, e);
+
+			throw new DMPConverterException(message, e);
+		}
 	}
 
 	protected String validateCommonAttributePath(final String valueAttributePath, final Set<String> filterAttributePaths) {

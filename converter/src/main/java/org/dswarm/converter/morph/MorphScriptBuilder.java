@@ -41,6 +41,7 @@ import org.w3c.dom.Element;
 
 import org.dswarm.common.xml.utils.XMLUtils;
 import org.dswarm.converter.DMPConverterException;
+import org.dswarm.converter.morph.model.FilterExpression;
 import org.dswarm.persistence.model.job.Component;
 import org.dswarm.persistence.model.job.Function;
 import org.dswarm.persistence.model.job.FunctionType;
@@ -393,7 +394,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 	private void addMappingInputsVars(final List<String> variables, final MappingAttributePathInstance mappingInput, final Element rules,
 			final Map<String, List<String>> mappingInputsVariablesMap, final String filterExpressionString,
-			final Integer ordinal) {
+			final Integer ordinal) throws DMPConverterException {
 
 		if (variables == null || variables.isEmpty()) {
 
@@ -412,7 +413,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 			manipulatedVariable = mappingInput.getName();
 		}
 
-		final Map<String, String> filterExpressionMap = extractFilterExpressions(filterExpressionString);
+		final Map<String, FilterExpression> filterExpressionMap = extractFilterExpressions(filterExpressionString);
 
 		if (filterExpressionMap == null || filterExpressionMap.isEmpty()) {
 
@@ -427,7 +428,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 			addFilter(inputAttributePathStringXMLEscaped, manipulatedVariable, filterExpressionMap, rules, true);
 		}
 
-		if(!mappingInputsVariablesMap.containsKey(inputAttributePathStringXMLEscaped)) {
+		if (!mappingInputsVariablesMap.containsKey(inputAttributePathStringXMLEscaped)) {
 
 			mappingInputsVariablesMap.put(inputAttributePathStringXMLEscaped, new ArrayList<>());
 		}
@@ -493,7 +494,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 		final String inputVariable;
 		final boolean isOrdinalValid = checkOrdinal(ordinal);
-		final Map<String, String> filterExpressionMap = extractFilterExpressions(filterExpression);
+		final Map<String, FilterExpression> filterExpressionMap = extractFilterExpressions(filterExpression);
 
 		final String mapiIdentifier = getMAPIIdentifier(inputMappingAttributePathInstance);
 		final int mapiVarCount = getMAPICount(mapiIdentifier);
@@ -643,7 +644,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 				final Set<Entry<String, List<String>>> mappingInputVariablesEntries = mappingInputsVariablesMap.entrySet();
 
-				for(final Entry<String, List<String>> mappingInputVariablesEntry : mappingInputVariablesEntries) {
+				for (final Entry<String, List<String>> mappingInputVariablesEntry : mappingInputVariablesEntries) {
 
 					final List<String> mappingInputVariables = mappingInputVariablesEntry.getValue();
 

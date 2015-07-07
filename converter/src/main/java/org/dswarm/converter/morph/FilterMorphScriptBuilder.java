@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import org.dswarm.converter.DMPConverterException;
+import org.dswarm.converter.morph.model.FilterExpression;
 import org.dswarm.persistence.model.job.Filter;
 import org.dswarm.persistence.model.job.Task;
 
@@ -64,7 +65,7 @@ public class FilterMorphScriptBuilder extends AbstractMorphScriptBuilder<FilterM
 
 		final String filterExpressionString = optionalSkipFilterExpression.get();
 
-		final Map<String, String> filterExpressionMap = extractFilterExpressions(filterExpressionString);
+		final Map<String, FilterExpression> filterExpressionMap = extractFilterExpressions(filterExpressionString);
 
 		if (filterExpressionMap == null || filterExpressionMap.isEmpty()) {
 
