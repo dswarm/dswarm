@@ -6,5 +6,7 @@ package org.dswarm.converter.morph.model;
 public enum FilterExpressionType {
 
 	NUMERIC,
-	REGEXP;
+	REGEXP,
+	EQUALS,
+	NOTEQUALS;
 }
