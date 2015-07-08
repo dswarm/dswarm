@@ -99,8 +99,13 @@ import org.dswarm.persistence.service.resource.ResourceService;
 @Path("/resources")
 public class ResourcesResource extends AbstractBaseResource {
 
-	private static final Logger LOG                         = LoggerFactory.getLogger(ResourcesResource.class);
-	public static final  String RESOURCES_DIRECTORY_POSTFIX = "resources";
+	private static final Logger LOG = LoggerFactory.getLogger(ResourcesResource.class);
+
+	private static final String RESOURCES_DIRECTORY_POSTFIX = "resources";
+	private static final String LINES_IDENTIFIER            = "lines";
+	private static final String NAME_IDENTIFIER             = "name";
+	private static final String DESCRIPTION_IDENTIFIER      = "description";
+	private static final int    DEFAULT_PREVIEW_LIMIT       = 50;
 
 	@Context
 	UriInfo uri;
@@ -169,9 +174,9 @@ public class ResourcesResource extends AbstractBaseResource {
 				break;
 			default:
 
-				ResourcesResource.LOG.debug("something went wrong, while evaluating the retrieval type of the {}", objectType);
+				ResourcesResource.LOG.error("something went wrong, while evaluating the retrieval type of the {}", objectType);
 
-				throw new DMPControllerException("something went wrong, while evaluating the retrieval type of the " + objectType);
+				throw new DMPControllerException(String.format("something went wrong, while evaluating the retrieval type of the %s", objectType));
 		}
 
 		return responseBuilder.entity(responseContent).build();
@@ -190,7 +195,7 @@ public class ResourcesResource extends AbstractBaseResource {
 	 * @throws DMPControllerException
 	 */
 	@POST
-	@ApiOperation(value = "upload new data resource", notes = "Returns a new Resource object, when upload was successfull.", response = Resource.class)
+	@ApiOperation(value = "upload new data resource", notes = "Returns a new Resource object, when upload was successful.", response = Resource.class)
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "data resource was successfully uploaded and stored"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@Timed
@@ -218,7 +223,11 @@ public class ResourcesResource extends AbstractBaseResource {
 		}
 
 		ResourcesResource.LOG.debug("created new resource '{}' for file '{}' ", name, fileDetail.getFileName());
-		ResourcesResource.LOG.trace("= '{}'", ToStringBuilder.reflectionToString(resource));
+
+		if (ResourcesResource.LOG.isTraceEnabled()) {
+
+			ResourcesResource.LOG.trace("= '{}'", ToStringBuilder.reflectionToString(resource));
+		}
 
 		final String resourceJSON;
 
@@ -232,7 +241,11 @@ public class ResourcesResource extends AbstractBaseResource {
 		final URI resourceURI = createObjectURI(resource.getUuid());
 
 		ResourcesResource.LOG.debug("created new resource at '{}' with content ", resourceURI);
-		ResourcesResource.LOG.trace("'{}'", resourceJSON);
+
+		if (ResourcesResource.LOG.isTraceEnabled()) {
+
+			ResourcesResource.LOG.trace("'{}'", resourceJSON);
+		}
 
 		return buildResponseCreated(resourceJSON, resourceURI, proxyResource.getType(), "resource");
 	}
@@ -272,7 +285,9 @@ public class ResourcesResource extends AbstractBaseResource {
 		}
 
 		ResourcesResource.LOG.debug("got all resources ");
+
 		if (ResourcesResource.LOG.isTraceEnabled()) {
+
 			ResourcesResource.LOG.trace("= '{}'", ToStringBuilder.reflectionToString(resources));
 		}
 
@@ -288,7 +303,9 @@ public class ResourcesResource extends AbstractBaseResource {
 		}
 
 		ResourcesResource.LOG.debug("return all resources ");
+
 		if (ResourcesResource.LOG.isTraceEnabled()) {
+
 			ResourcesResource.LOG.trace("'{}'", resourcesJSON);
 		}
 
@@ -345,7 +362,9 @@ public class ResourcesResource extends AbstractBaseResource {
 		}
 
 		ResourcesResource.LOG.debug("return resource with uuid '{}' and content ", uuid);
+
 		if (ResourcesResource.LOG.isTraceEnabled()) {
+
 			ResourcesResource.LOG.trace("'{}'", resourceJSON);
 		}
 
@@ -355,17 +374,22 @@ public class ResourcesResource extends AbstractBaseResource {
 	private String serializeShortResource(final Resource resource) throws DMPControllerException {
 		final ShortExtendendBasicDMPDTO shortVersion =
 				ShortExtendendBasicDMPDTO.of(resource, createObjectURI(resource.getUuid()));
+
 		return serialiseObject(shortVersion);
 	}
 
 	private String serializeFullResource(final Resource resource) throws DMPControllerException {
+
 		return serialiseObject(resource);
 	}
 
 	private String serialiseObject(final Object object) throws DMPControllerException {
+
 		try {
+
 			return objectMapper.writeValueAsString(object);
 		} catch (final JsonProcessingException e) {
+
 			throw new DMPControllerException("couldn't transform resource object to JSON string.", e);
 		}
 	}
@@ -423,7 +447,11 @@ public class ResourcesResource extends AbstractBaseResource {
 		}
 
 		ResourcesResource.LOG.debug("updated resource with uuid '{}' ", uuid);
-		ResourcesResource.LOG.trace("and JSON content '{}'", resourceJSON);
+
+		if (ResourcesResource.LOG.isTraceEnabled()) {
+
+			ResourcesResource.LOG.trace("and JSON content '{}'", resourceJSON);
+		}
 
 		return buildResponse(resourceJSON);
 	}
@@ -452,7 +480,8 @@ public class ResourcesResource extends AbstractBaseResource {
 
 		if (!resourceOptional.isPresent()) {
 
-			ResourcesResource.LOG.debug("couldn't find resource '{}'", uuid);
+			ResourcesResource.LOG.error("couldn't find resource '{}'", uuid);
+
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
@@ -462,7 +491,8 @@ public class ResourcesResource extends AbstractBaseResource {
 
 		if (resourceOptional.isPresent()) {
 
-			ResourcesResource.LOG.debug("couldn't delete resource '{}'", uuid);
+			ResourcesResource.LOG.error("couldn't delete resource '{}'", uuid);
+
 			return Response.status(Status.CONFLICT).build();
 		}
 
@@ -495,21 +525,25 @@ public class ResourcesResource extends AbstractBaseResource {
 		final Optional<Resource> resourceOptional = dataModelUtil.fetchResource(uuid);
 
 		if (!resourceOptional.isPresent()) {
+
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
 		final Resource resource = resourceOptional.get();
 
-		final JsonNode path = resource.getAttributes().get("path");
+		final JsonNode path = resource.getAttributes().get(ResourceStatics.PATH);
 
 		if (path == null) {
+
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
 		final String filePath = path.asText();
 
 		final List<String> lines;
+
 		try {
+
 			lines = Files.readLines(new File(filePath), Charset.forName(encoding), new LineProcessor<List<String>>() {
 
 				private final ImmutableList.Builder<String> lines = ImmutableList.builder();
@@ -535,20 +569,20 @@ public class ResourcesResource extends AbstractBaseResource {
 			throw new DMPControllerException("couldn't read file contents", e);
 		}
 
-		final Map<String, Object> jsonMap = new HashMap<>(1);
-		jsonMap.put("lines", lines);
-		jsonMap.put("name", resource.getName());
-		jsonMap.put("description", resource.getDescription());
+		final Map<String, Object> jsonMap = new HashMap<>(3);
+		jsonMap.put(LINES_IDENTIFIER, lines);
+		jsonMap.put(NAME_IDENTIFIER, resource.getName());
+		jsonMap.put(DESCRIPTION_IDENTIFIER, resource.getDescription());
 
-		final String plainJson;
 		try {
 
-			plainJson = objectMapper.writeValueAsString(jsonMap);
-		} catch (final JsonProcessingException e) {
-			throw new DMPControllerException("couldn't transform resource contents to JSON array.\n" + e.getMessage());
-		}
+			final String plainJson = objectMapper.writeValueAsString(jsonMap);
 
-		return buildResponse(plainJson);
+			return buildResponse(plainJson);
+		} catch (final JsonProcessingException e) {
+
+			throw new DMPControllerException(String.format("couldn't transform resource contents to JSON array.\n%s", e.getMessage()));
+		}
 	}
 
 	/**
@@ -579,7 +613,11 @@ public class ResourcesResource extends AbstractBaseResource {
 		final Resource resource = resourceOptional.get();
 
 		ResourcesResource.LOG.debug("got resource with uuid '{}' for resource configurations retrieval ", uuid);
-		ResourcesResource.LOG.trace("= '{}'", ToStringBuilder.reflectionToString(resource));
+
+		if (ResourcesResource.LOG.isTraceEnabled()) {
+
+			ResourcesResource.LOG.trace("= '{}'", ToStringBuilder.reflectionToString(resource));
+		}
 
 		final Set<Configuration> configurations = resource.getConfigurations();
 
@@ -590,7 +628,11 @@ public class ResourcesResource extends AbstractBaseResource {
 		}
 
 		ResourcesResource.LOG.debug("got resource configurations for resource with uuid '{}' ", uuid);
-		ResourcesResource.LOG.trace("= '{}'", ToStringBuilder.reflectionToString(configurations));
+
+		if (ResourcesResource.LOG.isTraceEnabled()) {
+
+			ResourcesResource.LOG.trace("= '{}'", ToStringBuilder.reflectionToString(configurations));
+		}
 
 		final String configurationsJSON;
 
@@ -598,11 +640,16 @@ public class ResourcesResource extends AbstractBaseResource {
 
 			configurationsJSON = objectMapper.writeValueAsString(resource.getConfigurations());
 		} catch (final JsonProcessingException e) {
-			throw new DMPControllerException("couldn't transform resource configurations set to JSON string.\n" + e.getMessage());
+			throw new DMPControllerException(String.format("couldn't transform resource configurations set to JSON string.\n%s", e.getMessage()));
 		}
 
 		ResourcesResource.LOG.debug("return resource configurations for resource with uuid '{}' ", uuid);
-		ResourcesResource.LOG.trace("and content '{}'", configurationsJSON);
+
+		if (ResourcesResource.LOG.isTraceEnabled()) {
+
+			ResourcesResource.LOG.trace("and content '{}'", configurationsJSON);
+		}
+
 		return buildResponse(configurationsJSON);
 	}
 
@@ -649,7 +696,7 @@ public class ResourcesResource extends AbstractBaseResource {
 		if (proxyConfiguration == null) {
 
 			ResourcesResource.LOG.debug("couldn't add configuration to resource with uuid '{}'", uuid);
-			throw new DMPControllerException("couldn't add configuration to resource with uuid '" + uuid + "'");
+			throw new DMPControllerException(String.format("couldn't add configuration to resource with uuid '%s'", uuid));
 		}
 
 		final Configuration configuration = proxyConfiguration.getObject();
@@ -657,11 +704,15 @@ public class ResourcesResource extends AbstractBaseResource {
 		if (configuration == null) {
 
 			ResourcesResource.LOG.debug("couldn't add configuration to resource with uuid '{}'", uuid);
-			throw new DMPControllerException("couldn't add configuration to resource with uuid '" + uuid + "'");
+			throw new DMPControllerException(String.format("couldn't add configuration to resource with uuid '%s'", uuid));
 		}
 
 		ResourcesResource.LOG.debug("added new configuration to resource with uuid '{}' ", uuid);
-		ResourcesResource.LOG.trace("= '{}'", ToStringBuilder.reflectionToString(configuration));
+
+		if (ResourcesResource.LOG.isTraceEnabled()) {
+
+			ResourcesResource.LOG.trace("= '{}'", ToStringBuilder.reflectionToString(configuration));
+		}
 
 		final String configurationJSON;
 
@@ -669,14 +720,19 @@ public class ResourcesResource extends AbstractBaseResource {
 
 			configurationJSON = objectMapper.writeValueAsString(configuration);
 		} catch (final JsonProcessingException e) {
-			throw new DMPControllerException("couldn't transform resource configuration to JSON string.\n" + e.getMessage());
+			throw new DMPControllerException(String.format("couldn't transform resource configuration to JSON string.\n%s", e.getMessage()));
 		}
 
 		final URI baseURI = uri.getRequestUri();
 		final URI configurationURI = URI.create(baseURI + "/" + configuration.getUuid());
 
 		ResourcesResource.LOG.debug("return new configuration at '{}' ", configurationURI);
-		ResourcesResource.LOG.trace("with content '{}'", configurationJSON);
+
+		if (ResourcesResource.LOG.isTraceEnabled()) {
+
+			ResourcesResource.LOG.trace("with content '{}'", configurationJSON);
+		}
+
 		return buildResponseCreated(configurationJSON, configurationURI, proxyConfiguration.getType(), "configuration");
 	}
 
@@ -716,7 +772,12 @@ public class ResourcesResource extends AbstractBaseResource {
 		}
 
 		ResourcesResource.LOG.debug("return configuration with uuid '{}' for resource with uuid '{}' ", configurationUuid, uuid);
-		ResourcesResource.LOG.trace("and content '{}'", configurationJSON);
+
+		if (ResourcesResource.LOG.isTraceEnabled()) {
+
+			ResourcesResource.LOG.trace("and content '{}'", configurationJSON);
+		}
+
 		return buildResponse(configurationJSON);
 	}
 
@@ -753,18 +814,25 @@ public class ResourcesResource extends AbstractBaseResource {
 		final Resource resource = resourceOptional.get();
 
 		ResourcesResource.LOG.debug("found resource with uuid '{}' for csv configuration preview ", uuid);
-		ResourcesResource.LOG.trace("= '{}'", ToStringBuilder.reflectionToString(resource));
+
+		if (ResourcesResource.LOG.isTraceEnabled()) {
+
+			ResourcesResource.LOG.trace("= '{}'", ToStringBuilder.reflectionToString(resource));
+		}
+
 		ResourcesResource.LOG.debug("try to apply configuration to resource with uuid '{}'", uuid);
 
 		final String result = applyConfigurationForCSVPreview(resource, jsonObjectString);
 
 		if (result == null) {
 
-			ResourcesResource.LOG.debug("couldn't apply configuration to resource with uuid '{}'", uuid);
-			throw new DMPControllerException("couldn't apply configuration to resource with uuid '" + uuid + "'");
+			ResourcesResource.LOG.error("couldn't apply configuration to resource with uuid '{}'", uuid);
+
+			throw new DMPControllerException(String.format("couldn't apply configuration to resource with uuid '%s'", uuid));
 		}
 
 		ResourcesResource.LOG.debug("applied configuration to resource with uuid '{}'", uuid);
+
 		return buildResponse(result);
 	}
 
@@ -801,18 +869,25 @@ public class ResourcesResource extends AbstractBaseResource {
 		final Resource resource = resourceOptional.get();
 
 		ResourcesResource.LOG.debug("found resource with uuid '{}' for csv json configuration preview ", uuid);
-		ResourcesResource.LOG.trace("= '{}'", ToStringBuilder.reflectionToString(resource));
+
+		if (ResourcesResource.LOG.isTraceEnabled()) {
+
+			ResourcesResource.LOG.trace("= '{}'", ToStringBuilder.reflectionToString(resource));
+		}
+
 		ResourcesResource.LOG.debug("try to apply configuration to resource with uuid '{}'", uuid);
 
 		final String result = applyConfigurationForCSVJSONPreview(resource, jsonObjectString);
 
 		if (result == null) {
 
-			ResourcesResource.LOG.debug("couldn't apply configuration to resource with uuid '{}'", uuid);
-			throw new DMPControllerException("couldn't apply configuration to resource with uuid '" + uuid + "'");
+			ResourcesResource.LOG.error("couldn't apply configuration to resource with uuid '{}'", uuid);
+
+			throw new DMPControllerException(String.format("couldn't apply configuration to resource with uuid '%s'", uuid));
 		}
 
 		ResourcesResource.LOG.debug("applied configuration to resource with uuid '{}'", uuid);
+
 		return buildResponse(result);
 	}
 
@@ -844,7 +919,7 @@ public class ResourcesResource extends AbstractBaseResource {
 
 			ResourcesResource.LOG.debug("something went wrong while resource creation");
 
-			throw new DMPControllerException("something went wrong while resource creation\n" + e.getMessage());
+			throw new DMPControllerException(String.format("something went wrong while resource creation\n%s", e.getMessage()));
 		}
 
 		if (proxyResource == null) {
@@ -908,7 +983,9 @@ public class ResourcesResource extends AbstractBaseResource {
 			final Tika tika = new Tika();
 
 			final String fileType = tika.detect(file);
-			// fileType = Files.probeContentType(file.toPath());
+
+			// TODO: check whether we can switch back to this approach (to eleminate Tika dependency)
+			// fileType = java.nio.file.Files.probeContentType(file.toPath());
 
 			if (fileType != null) {
 
@@ -936,9 +1013,9 @@ public class ResourcesResource extends AbstractBaseResource {
 			proxyResource = new ProxyResource(updatedResource.getObject(), updatedResource.getType());
 		} catch (final DMPPersistenceException e) {
 
-			ResourcesResource.LOG.debug("something went wrong while resource updating");
+			ResourcesResource.LOG.error("something went wrong while resource updating");
 
-			throw new DMPControllerException("something went wrong while resource updating\n" + e.getMessage());
+			throw new DMPControllerException(String.format("something went wrong while resource updating\n%s", e.getMessage()));
 		}
 
 		return proxyResource;
@@ -1053,9 +1130,9 @@ public class ResourcesResource extends AbstractBaseResource {
 			proxyConfiguration = new ProxyConfiguration(proxyUpdatedConfiguration.getObject(), type);
 		} catch (final DMPPersistenceException e) {
 
-			ResourcesResource.LOG.debug("something went wrong while configuration updating");
+			ResourcesResource.LOG.error("something went wrong while configuration updating");
 
-			throw new DMPControllerException("something went wrong while configuration updating\n" + e.getMessage());
+			throw new DMPControllerException(String.format("something went wrong while configuration updating\n%s", e.getMessage()));
 		}
 
 		final ResourceService resourceService = resourceServiceProvider.get();
@@ -1065,9 +1142,9 @@ public class ResourcesResource extends AbstractBaseResource {
 			resourceService.updateObjectTransactional(resource);
 		} catch (final DMPPersistenceException e) {
 
-			ResourcesResource.LOG.debug("something went wrong while resource updating for configuration");
+			ResourcesResource.LOG.error("something went wrong while resource updating for configuration");
 
-			throw new DMPControllerException("something went wrong while resource updating for configuration\n" + e.getMessage());
+			throw new DMPControllerException(String.format("something went wrong while resource updating for configuration\n%s", e.getMessage()));
 		}
 
 		return proxyConfiguration;
@@ -1089,9 +1166,9 @@ public class ResourcesResource extends AbstractBaseResource {
 			proxyConfiguration = configurationService.createObjectTransactional();
 		} catch (final DMPPersistenceException e) {
 
-			ResourcesResource.LOG.debug("something went wrong while configuration creation");
+			ResourcesResource.LOG.error("something went wrong while configuration creation");
 
-			throw new DMPControllerException("something went wrong while configuration creation\n" + e.getMessage());
+			throw new DMPControllerException(String.format("something went wrong while configuration creation\n%s", e.getMessage()));
 		}
 
 		if (proxyConfiguration == null) {
@@ -1115,10 +1192,10 @@ public class ResourcesResource extends AbstractBaseResource {
 
 		if (resource.getAttributes() == null) {
 
-			throw new DMPControllerException("there are no attributes available at resource '" + resource.getUuid() + "'");
+			throw new DMPControllerException(String.format("there are no attributes available at resource '%s'", resource.getUuid()));
 		}
 
-		final JsonNode filePathNode = resource.getAttribute("path");
+		final JsonNode filePathNode = resource.getAttribute(ResourceStatics.PATH);
 
 		if (filePathNode == null) {
 
@@ -1140,10 +1217,10 @@ public class ResourcesResource extends AbstractBaseResource {
 
 		if (resource.getAttributes() == null) {
 
-			throw new DMPControllerException("there are no attributes available at resource '" + resource.getUuid() + "'");
+			throw new DMPControllerException(String.format("there are no attributes available at resource '%s'", resource.getUuid()));
 		}
 
-		final JsonNode filePathNode = resource.getAttribute("path");
+		final JsonNode filePathNode = resource.getAttribute(ResourceStatics.PATH);
 
 		if (filePathNode == null) {
 
@@ -1152,7 +1229,7 @@ public class ResourcesResource extends AbstractBaseResource {
 
 		final CSVSourceResourceCSVJSONPreviewFlow flow = flowFactory2.get()
 				.jsonPreview(configurationFromJSON)
-				.withLimit(50);
+				.withLimit(DEFAULT_PREVIEW_LIMIT);
 
 		try {
 			return flow.applyFile(filePathNode.asText());
@@ -1178,9 +1255,10 @@ public class ResourcesResource extends AbstractBaseResource {
 			configurationFromJSON = objectMapper.readValue(configurationJSONString, Configuration.class);
 		} catch (final IOException e) {
 
-			ResourcesResource.LOG.debug("something went wrong while deserializing the configuration JSON string");
+			ResourcesResource.LOG.error("something went wrong while deserializing the configuration JSON string");
 
-			throw new DMPControllerException("something went wrong while deserializing the configuration JSON string.\n" + e.getMessage());
+			throw new DMPControllerException(
+					String.format("something went wrong while deserializing the configuration JSON string.\n%s", e.getMessage()));
 		}
 
 		if (configurationFromJSON == null) {
