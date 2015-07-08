@@ -670,14 +670,7 @@ public class ResourcesResourceTest extends ResourceTest {
 
 	private String resourceUploadInteral(final File resourceFile, final Resource expectedResource) throws Exception {
 
-		final FormDataMultiPart form = new FormDataMultiPart();
-		form.field("name", resourceFile.getName());
-		form.field("filename", resourceFile.getName());
-		form.field("description", "this is a description");
-		form.bodyPart(new FileDataBodyPart("file", resourceFile, MediaType.MULTIPART_FORM_DATA_TYPE));
-
-		final Response response = target().request(MediaType.MULTIPART_FORM_DATA_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
-				.post(Entity.entity(form, MediaType.MULTIPART_FORM_DATA));
+		final Response response = resourceUploadInternal(resourceFile);
 
 		Assert.assertEquals("201 CREATED was expected", 201, response.getStatus());
 
@@ -690,6 +683,18 @@ public class ResourcesResourceTest extends ResourceTest {
 		resourcesResourceTestUtils.getPersistenceServiceTestUtils().compareObjects(expectedResource, responseResource);
 
 		return responseResourceString;
+	}
+
+	private Response resourceUploadInternal(final File resourceFile) {
+
+		final FormDataMultiPart form = new FormDataMultiPart();
+		form.field("name", resourceFile.getName());
+		form.field("filename", resourceFile.getName());
+		form.field("description", "this is a description");
+		form.bodyPart(new FileDataBodyPart("file", resourceFile, MediaType.MULTIPART_FORM_DATA_TYPE));
+
+		return target().request(MediaType.MULTIPART_FORM_DATA_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+				.post(Entity.entity(form, MediaType.MULTIPART_FORM_DATA));
 	}
 
 	private Resource addResourceConfigurationInternal(final File resourceFile, final String configurationFileName, final Resource expectedResource)
