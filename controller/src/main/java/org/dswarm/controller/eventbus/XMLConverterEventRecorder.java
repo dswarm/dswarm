@@ -103,7 +103,7 @@ public class XMLConverterEventRecorder {
 	public void processDataModel(final DataModel dataModel, final UpdateFormat updateFormat, final boolean enableVersioning)
 			throws DMPControllerException {
 
-		Observable<org.dswarm.persistence.model.internal.Model> result = doIngest(dataModel, false, Schedulers.newThread());
+		final Observable<org.dswarm.persistence.model.internal.Model> result = doIngest(dataModel, false, Schedulers.newThread());
 
 		try {
 

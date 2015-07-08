@@ -375,7 +375,6 @@ public class DataModelsResourceTest2 extends
 		DataModelsResourceTest2.LOG.debug("end get non-schema comform OAI-PMH+MARCXML XML data test");
 	}
 
-	@Ignore
 	@Test
 	public void testExceptionAtXMLData() throws Exception {
 

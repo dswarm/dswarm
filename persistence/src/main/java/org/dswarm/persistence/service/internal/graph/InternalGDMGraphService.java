@@ -80,26 +80,15 @@ import org.dswarm.persistence.DMPPersistenceError;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
-import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
-import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.UpdateFormat;
-import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
-import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.ContentSchema;
 import org.dswarm.persistence.model.schema.Schema;
-import org.dswarm.persistence.model.schema.proxy.ProxySchema;
-import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 import org.dswarm.persistence.service.InternalModelService;
 import org.dswarm.persistence.service.internal.graph.util.SchemaDeterminator;
 import org.dswarm.persistence.service.resource.DataModelService;
-import org.dswarm.persistence.service.schema.AttributePathService;
-import org.dswarm.persistence.service.schema.AttributeService;
-import org.dswarm.persistence.service.schema.ClaszService;
-import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
-import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.dswarm.persistence.util.GDMUtil;
 
@@ -138,7 +127,7 @@ public class InternalGDMGraphService implements InternalModelService {
 			.property(ClientProperties.READ_TIMEOUT, REQUEST_TIMEOUT);
 	public static final  String        METADATA_TYPE             = "metadata";
 	public static final  String        DEPRECATE_DATA_MODEL_TYPE = "deprecate data model";
-	public static final  String        DEPRECATE_RECORDS_TYPE = "deprecate records";
+	public static final  String        DEPRECATE_RECORDS_TYPE    = "deprecate records";
 
 	static {
 
@@ -148,7 +137,7 @@ public class InternalGDMGraphService implements InternalModelService {
 	private static final String READ_GDM_ENDPOINT             = "/get";
 	private static final String WRITE_GDM_ENDPOINT            = "/put";
 	private static final String DEPRECATE_DATA_MODEL_ENDPOINT = "/deprecate/datamodel";
-	private static final String DEPRECATE_RECORDS_ENDPOINT = "/deprecate/records";
+	private static final String DEPRECATE_RECORDS_ENDPOINT    = "/deprecate/records";
 	private static final String SEARCH_GDM_RECORDS_ENDPOINT   = "/searchrecords";
 	private static final String GET_GDM_RECORD_ENDPOINT       = "/getrecord";
 	public static final  String CHUNKED_TRANSFER_ENCODING     = "chunked";
@@ -238,7 +227,7 @@ public class InternalGDMGraphService implements InternalModelService {
 			throw new DMPPersistenceException(String.format("couldn't find data model '%s' to retrieve record class from", dataModelUuid));
 		}
 
-		if(dataModel.isDeprecated()) {
+		if (dataModel.isDeprecated()) {
 
 			InternalGDMGraphService.LOG.debug("cannot retrieve data from data model '{}', because the data model is deprecated", dataModelUuid);
 
@@ -628,6 +617,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		final GDMWriteRequestOperator operator = new GDMWriteRequestOperator(dataModel, isSchemaAnInBuiltSchema, dataModelURI,
 				optionalDeprecateMissingRecords,
 				enableVersioning);
+
 		final Observable<Resource> resourceObservable = modelObservable.lift(operator).flatMapIterable(gdm -> {
 
 			try {
@@ -667,7 +657,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		return responseObservable.doOnCompleted(() -> {
 
-			if(dataModel.isDeprecated()) {
+			if (dataModel.isDeprecated()) {
 
 				// reincarnate data model
 				dataModel.setDeprecated(false);
@@ -766,7 +756,8 @@ public class InternalGDMGraphService implements InternalModelService {
 		return asyncPost;
 	}
 
-	private Observable<Response> deprecateRecordsInternal(final Collection<String> recordURIs, final String dataModelURI) throws DMPPersistenceException {
+	private Observable<Response> deprecateRecordsInternal(final Collection<String> recordURIs, final String dataModelURI)
+			throws DMPPersistenceException {
 
 		LOG.debug("try to deprecate '{}' records in data model '{}' in data hub", recordURIs.size(), dataModelURI);
 
@@ -798,7 +789,8 @@ public class InternalGDMGraphService implements InternalModelService {
 		}, throwable -> {
 
 			throw DMPPersistenceError.wrap(new DMPPersistenceException(
-					String.format("Couldn't deprecate some records in data model '%s' in database. Received status code '%s' from database endpoint.", dataModelURI,
+					String.format("Couldn't deprecate some records in data model '%s' in database. Received status code '%s' from database endpoint.",
+							dataModelURI,
 							throwable.getMessage())));
 
 		}, () -> LOG.debug("completely deprecated data model '{}' in data hub", dataModelURI));
@@ -812,7 +804,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final ArrayNode recordURIsArray = objectMapperProvider.get().createArrayNode();
 
-		for(final String recordURI : recordURIs) {
+		for (final String recordURI : recordURIs) {
 
 			recordURIsArray.add(recordURI);
 		}
@@ -1298,6 +1290,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		}
 
 		Observer<Resource> resourceObserver() {
+
 			return resourcePublishSubject;
 		}
 
@@ -1312,12 +1305,24 @@ public class InternalGDMGraphService implements InternalModelService {
 			return new Subscriber<GDMModel>() {
 
 				@Override public void onCompleted() {
+
+					if (!seenFirstModel.get()) {
+
+						responseAsyncSubject.onCompleted();
+					}
+
 					subscriber.onCompleted();
 				}
 
 				@Override public void onError(final Throwable e) {
 
+					if (!seenFirstModel.get()) {
+
+						responseAsyncSubject.onError(e);
+					}
+
 					subscriber.onError(e);
+
 				}
 
 				@Override public void onNext(final GDMModel gdm) {
@@ -1328,7 +1333,8 @@ public class InternalGDMGraphService implements InternalModelService {
 
 							final org.dswarm.graph.json.Model realModel = getRealModel(gdm);
 							// TODO: remove, or avoid redundant schema determination
-							final DataModel finalDataModel = schemaDeterminatorProvider.get().optionallyEnhancedDataModel(dataModel, gdm, realModel, isSchemaAnInBuiltSchema);
+							final DataModel finalDataModel = schemaDeterminatorProvider.get()
+									.optionallyEnhancedDataModel(dataModel, gdm, realModel, isSchemaAnInBuiltSchema);
 							final Optional<ContentSchema> optionalContentSchema = Optional
 									.fromNullable(finalDataModel.getSchema().getContentSchema());
 							final Optional<String> optionalRecordClassUri = Optional
@@ -1346,7 +1352,7 @@ public class InternalGDMGraphService implements InternalModelService {
 							responseObservable.subscribe(responseAsyncSubject);
 						} catch (final DMPPersistenceException e) {
 
-							throw DMPPersistenceError.wrap(e);
+							onError(e);
 						}
 					}
 					subscriber.onNext(gdm);
