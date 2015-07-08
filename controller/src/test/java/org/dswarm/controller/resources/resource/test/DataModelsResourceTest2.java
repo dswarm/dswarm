@@ -466,6 +466,51 @@ public class DataModelsResourceTest2 extends
 	}
 
 	@Test
+	public void testEmptyFile() throws Exception {
+
+		DataModelsResourceTest2.LOG.debug("start wrong data test");
+
+		// prepare resource
+		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString("test-mabxml-resource2.csv.empty.json");
+
+		final Resource expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
+
+		final URL fileURL = Resources.getResource("test_csv-controller.empty.csv");
+		final File resourceFile = FileUtils.toFile(fileURL);
+
+		final String configurationJSONString = DMPPersistenceUtil.getResourceAsString("xml-configuration.json");
+
+		// add resource and config
+		final Resource resource = resourcesResourceTestUtils.uploadResource(resourceFile, expectedResource);
+
+		final Configuration configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
+
+		final String dataModel1Uuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+
+		final DataModel dataModel1 = new DataModel(dataModel1Uuid);
+		final String dataModelName = UUID.randomUUID().toString();
+		dataModel1.setName(dataModelName);
+		dataModel1.setDescription("my data model description");
+		dataModel1.setDataResource(resource);
+		dataModel1.setConfiguration(configuration);
+
+		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
+
+		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+				.post(Entity.json(dataModelJSONString));
+
+		Assert.assertEquals("500 was expected", 500, response.getStatus());
+
+		final String body = response.readEntity(String.class);
+
+		Assert.assertEquals(
+				"{\"status\":\"nok\",\"status_code\":500,\"error\":\"org.xml.sax.SAXParseException; Premature end of file.\"}",
+				body);
+
+		DataModelsResourceTest2.LOG.debug("end wrong data test");
+	}
+
+	@Test
 	public void testNotExistingDataResource() throws Exception {
 
 		DataModelsResourceTest2.LOG.debug("start not-existing data resource test");
