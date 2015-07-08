@@ -1,0 +1,10 @@
+{
+  "name" : "foo xml",
+  "description" : "bar xml",
+  "parameters" : {
+    "storage_type" : "xml",
+    "record_tag" : "record",
+    "xml_namespace" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd"
+  },
+  "uuid" : "1"
+}

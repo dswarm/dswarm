@@ -468,7 +468,7 @@ public class DataModelsResourceTest2 extends
 	@Test
 	public void testEmptyFile() throws Exception {
 
-		DataModelsResourceTest2.LOG.debug("start wrong data test");
+		DataModelsResourceTest2.LOG.debug("start empty file test");
 
 		// prepare resource
 		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString("test-mabxml-resource2.csv.empty.json");
@@ -507,7 +507,7 @@ public class DataModelsResourceTest2 extends
 				"{\"status\":\"nok\",\"status_code\":500,\"error\":\"org.xml.sax.SAXParseException; Premature end of file.\"}",
 				body);
 
-		DataModelsResourceTest2.LOG.debug("end wrong data test");
+		DataModelsResourceTest2.LOG.debug("end empty file test");
 	}
 
 	@Test
@@ -546,6 +546,51 @@ public class DataModelsResourceTest2 extends
 				body);
 
 		DataModelsResourceTest2.LOG.debug("end not-existing data resource test");
+	}
+
+	@Test
+	public void testWrongRecordTagAtXMLData() throws Exception {
+
+		DataModelsResourceTest2.LOG.debug("start wrong record tag at XML data test");
+
+		// prepare resource
+		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString("test-mabxml-resource.json");
+
+		final Resource expectedResource = objectMapper.readValue(resourceJSONString, Resource.class);
+
+		final URL fileURL = Resources.getResource("controller_test-mabxml.xml");
+		final File resourceFile = FileUtils.toFile(fileURL);
+
+		final String configurationJSONString = DMPPersistenceUtil.getResourceAsString("xml-configuration.2.json");
+
+		// add resource and config
+		final Resource resource = resourcesResourceTestUtils.uploadResource(resourceFile, expectedResource);
+
+		final Configuration configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
+
+		final String dataModel1Uuid = "DataModel-e1677fea-9b35-46d0-acb0-8c6c0ff7c0c4";
+
+		final DataModel dataModel1 = new DataModel(dataModel1Uuid);
+		final String dataModelName = UUID.randomUUID().toString();
+		dataModel1.setName(dataModelName);
+		dataModel1.setDescription("my data model description");
+		dataModel1.setDataResource(resource);
+		dataModel1.setConfiguration(configuration);
+
+		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
+
+		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+				.post(Entity.json(dataModelJSONString));
+
+		Assert.assertEquals("500 was expected", 500, response.getStatus());
+
+		final String body = response.readEntity(String.class);
+
+		Assert.assertEquals(
+				"{\"status\":\"nok\",\"status_code\":500,\"error\":\"couldn't transform any record from xml data resource at '/home/tgaengler/git/tgaengler/dswarm/tmp/resources/controller_test-mabxml.xml' to GDM for data model 'DataModel-e1677fea-9b35-46d0-acb0-8c6c0ff7c0c4'; maybe you set a wrong record tag (current one = 'record')\"}",
+				body);
+
+		DataModelsResourceTest2.LOG.debug("end wrong record tag at XML data test");
 	}
 
 	@Test
