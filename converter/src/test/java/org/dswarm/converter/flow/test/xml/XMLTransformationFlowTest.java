@@ -15,19 +15,30 @@
  */
 package org.dswarm.converter.flow.test.xml;
 
+import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import org.json.JSONException;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
+import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.flow.TransformationFlow;
 import org.dswarm.converter.flow.TransformationFlowFactory;
 import org.dswarm.converter.flow.utils.DMPConverterUtils;
+import org.dswarm.persistence.model.job.Component;
+import org.dswarm.persistence.model.job.Function;
+import org.dswarm.persistence.model.job.Job;
+import org.dswarm.persistence.model.job.Mapping;
 import org.dswarm.persistence.model.job.Task;
+import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -178,6 +189,30 @@ public class XMLTransformationFlowTest extends GuicedTest {
 		testXMLTaskWithTuples("not-equals.filter.function.task.result.json", "not-equals.filter.function.task.json", "test-mabxml.tuples.json");
 	}
 
+	@Test
+	public void testSqlMapTask() throws Exception {
+
+		final Task task = getTask("sqlmap.lookup.task.json");
+		final Job job = task.getJob();
+		final Set<Mapping> mappings = job.getMappings();
+		final Mapping mapping = mappings.iterator().next();
+		final Component mappingTransformationComponent = mapping.getTransformation();
+		final Transformation mappingTransformationComponentFunction = (Transformation) mappingTransformationComponent.getFunction();
+		final Set<Component> mappingTransformationComponentFunctionComponents = mappingTransformationComponentFunction.getComponents();
+		final Component sqlMapLookup = mappingTransformationComponentFunctionComponents.iterator().next();
+		final Map<String, String> sqlMapLookupParameterMappings = sqlMapLookup.getParameterMappings();
+
+		final String user = readManuallyFromTypeSafeConfig("dswarm.db.metadata.username");
+		final String pass = readManuallyFromTypeSafeConfig("dswarm.db.metadata.password");
+		final String db = readManuallyFromTypeSafeConfig("dswarm.db.metadata.schema");
+
+		sqlMapLookupParameterMappings.put("login", user);
+		sqlMapLookupParameterMappings.put("password", pass);
+		sqlMapLookupParameterMappings.put("database", db);
+
+		testXMLTaskWithTuples("sqlmap.lookup.task.result.json", "sqlmap.mabxml.tuples.json", task);
+	}
+
 	/**
 	 * should emit the values of the else-branch
 	 *
@@ -216,20 +251,32 @@ public class XMLTransformationFlowTest extends GuicedTest {
 	private void testXMLTaskWithTuples(final String taskResultJSONFileName, final String taskJSONFileName, final String tuplesJSONFileName)
 			throws Exception {
 
-		final String expected = DMPPersistenceUtil.getResourceAsString(taskResultJSONFileName);
+		final Task task = getTask(taskJSONFileName);
 
-		final TransformationFlowFactory flowFactory = GuicedTest.injector
-				.getInstance(TransformationFlowFactory.class);
+		testXMLTaskWithTuples(taskResultJSONFileName, tuplesJSONFileName, task);
+
+	}
+
+	private Task getTask(final String taskJSONFileName) throws IOException {
 
 		final String finalTaskJSONString = DMPPersistenceUtil.getResourceAsString(taskJSONFileName);
 		final ObjectMapper objectMapper = DMPPersistenceUtil.getJSONObjectMapper();
+
+		return objectMapper.readValue(finalTaskJSONString, Task.class);
+	}
+
+	private void testXMLTaskWithTuples(final String taskResultJSONFileName, final String tuplesJSONFileName, final Task task)
+			throws IOException, DMPConverterException, JSONException {
 
 		// looks like that the utilised ObjectMappers getting a bit mixed, i.e., actual sometimes delivers a result that is not in
 		// pretty print and sometimes it is in pretty print ... (that's why the reformatting of both - expected and actual)
 		final ObjectMapper objectMapper2 = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL).configure(
 				SerializationFeature.INDENT_OUTPUT, true);
 
-		final Task task = objectMapper.readValue(finalTaskJSONString, Task.class);
+		final String expected = DMPPersistenceUtil.getResourceAsString(taskResultJSONFileName);
+
+		final TransformationFlowFactory flowFactory = GuicedTest.injector
+				.getInstance(TransformationFlowFactory.class);
 
 		final TransformationFlow flow = flowFactory.fromTask(task);
 

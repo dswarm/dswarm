@@ -134,10 +134,6 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		CmdUtil.runCommand(sb.toString(), output);
 	}
 
-	private String readManuallyFromTypeSafeConfig(final String key) {
-		return GuicedTest.injector.getInstance(Key.get(String.class, Names.named(key)));
-	}
-
 	private void createSchemaDataModel(final String uuid, final String name, final String description, final Schema schema)
 			throws DMPPersistenceException {
 

@@ -15,6 +15,8 @@
  */
 package org.dswarm.converter;
 
+import com.google.inject.Key;
+import com.google.inject.name.Names;
 import org.junit.After;
 import org.junit.Before;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -98,6 +100,11 @@ public abstract class GuicedTest {
 		maintainDBService.initDB();
 		//		maintainDBService.truncateTables();
 		InternalGDMGraphServiceTestUtils.cleanGraphDB();
+	}
+
+	protected String readManuallyFromTypeSafeConfig(final String key) {
+
+		return GuicedTest.injector.getInstance(Key.get(String.class, Names.named(key)));
 	}
 
 	protected void initObjects() {
