@@ -492,6 +492,9 @@ public class TasksResource {
 											TasksResource.LOG.error(message2, e);
 
 											asyncResponse.resume(new DMPControllerException(message, throwable));
+										} finally {
+
+											countDownLatch.countDown();
 										}
 									}
 

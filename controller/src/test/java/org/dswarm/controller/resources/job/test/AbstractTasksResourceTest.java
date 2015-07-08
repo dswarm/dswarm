@@ -67,10 +67,9 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 	protected final String testPostfix;
 	protected final String recordTag;
 	protected final String storageType;
-	protected final String expectedResultXMLFileName;
 
 	public AbstractTasksResourceTest(final String taskJSONFileNameArg, final String inputDataResourceFileNameArg, final String recordTagArg,
-			final String storageTypeArg, final String expectedResultXMLFileNameArg, final String testPostfixArg) {
+			final String storageTypeArg, final String testPostfixArg) {
 
 		super("tasks");
 
@@ -78,7 +77,6 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 		inputDataResourceFileName = inputDataResourceFileNameArg;
 		recordTag = recordTagArg;
 		storageType = storageTypeArg;
-		expectedResultXMLFileName = expectedResultXMLFileNameArg;
 		testPostfix = testPostfixArg;
 	}
 

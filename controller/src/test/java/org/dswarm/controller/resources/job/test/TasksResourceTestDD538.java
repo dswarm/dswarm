@@ -16,25 +16,14 @@
 package org.dswarm.controller.resources.job.test;
 
 import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
-import com.google.common.io.Resources;
-import org.apache.commons.io.FileUtils;
-import org.apache.tika.Tika;
 import org.junit.Assert;
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmlunit.builder.DiffBuilder;
@@ -42,28 +31,21 @@ import org.xmlunit.builder.Input;
 import org.xmlunit.diff.Diff;
 import org.xmlunit.diff.Difference;
 
-import org.dswarm.controller.resources.job.TasksResource;
-import org.dswarm.controller.resources.resource.DataModelsResource;
-import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
-import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
-import org.dswarm.controller.resources.test.ResourceTest;
-import org.dswarm.controller.test.GuicedTest;
-import org.dswarm.persistence.model.resource.Configuration;
-import org.dswarm.persistence.model.resource.DataModel;
-import org.dswarm.persistence.model.resource.Resource;
-import org.dswarm.persistence.model.resource.ResourceType;
-import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
-import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public abstract class TasksResourceTestDD538 extends AbstractTasksResourceTest {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TasksResourceTestDD538.class);
 
+
+	protected final String expectedResultXMLFileName;
+
 	public TasksResourceTestDD538(final String taskJSONFileNameArg, final String inputDataResourceFileNameArg, final String recordTagArg,
 			final String storageTypeArg, final String expectedResultXMLFileNameArg, final String testPostfixArg) {
 
-		super(taskJSONFileNameArg, inputDataResourceFileNameArg, recordTagArg, storageTypeArg, expectedResultXMLFileNameArg, testPostfixArg);
+		super(taskJSONFileNameArg, inputDataResourceFileNameArg, recordTagArg, storageTypeArg, testPostfixArg);
+
+		expectedResultXMLFileName = expectedResultXMLFileNameArg;
 	}
 
 	/**
