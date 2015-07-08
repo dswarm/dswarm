@@ -18,10 +18,11 @@ package org.dswarm.controller.utils;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,9 +75,10 @@ public final class DMPControllerUtils {
 
 			final BufferedInputStream bis = new BufferedInputStream(source, BUFFER_SIZE);
 
-			FileUtils.copyInputStreamToFile(bis, file);
+			Files.copy(bis, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
 			bis.close();
+			source.close();
 
 			return file;
 		} catch (final Exception e) {

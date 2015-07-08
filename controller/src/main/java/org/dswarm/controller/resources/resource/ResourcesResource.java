@@ -106,6 +106,7 @@ public class ResourcesResource extends AbstractBaseResource {
 	private static final String NAME_IDENTIFIER             = "name";
 	private static final String DESCRIPTION_IDENTIFIER      = "description";
 	private static final int    DEFAULT_PREVIEW_LIMIT       = 50;
+	public static final String RESOURCE_OBJECT_TYPE = "resource";
 
 	@Context
 	UriInfo uri;
@@ -213,12 +214,14 @@ public class ResourcesResource extends AbstractBaseResource {
 		final ProxyResource proxyResource = createResource(fileDetail, name, description, uuid, uploadedInputStream);
 
 		if (proxyResource == null) {
+
 			throw new DMPControllerException("couldn't create new resource");
 		}
 
 		final Resource resource = proxyResource.getObject();
 
 		if (resource == null) {
+
 			throw new DMPControllerException("couldn't create new resource");
 		}
 
@@ -229,15 +232,7 @@ public class ResourcesResource extends AbstractBaseResource {
 			ResourcesResource.LOG.trace("= '{}'", ToStringBuilder.reflectionToString(resource));
 		}
 
-		final String resourceJSON;
-
-		try {
-
-			resourceJSON = objectMapper.writeValueAsString(resource);
-		} catch (final JsonProcessingException e) {
-			throw new DMPControllerException("couldn't transform resource object to JSON string");
-		}
-
+		final String resourceJSON = serialiseObject(resource);
 		final URI resourceURI = createObjectURI(resource.getUuid());
 
 		ResourcesResource.LOG.debug("created new resource at '{}' with content ", resourceURI);
@@ -247,7 +242,7 @@ public class ResourcesResource extends AbstractBaseResource {
 			ResourcesResource.LOG.trace("'{}'", resourceJSON);
 		}
 
-		return buildResponseCreated(resourceJSON, resourceURI, proxyResource.getType(), "resource");
+		return buildResponseCreated(resourceJSON, resourceURI, proxyResource.getType(), RESOURCE_OBJECT_TYPE);
 	}
 
 	/**
@@ -971,11 +966,15 @@ public class ResourcesResource extends AbstractBaseResource {
 
 		// update attributes
 		ObjectNode attributes = resource.getAttributes();
+
 		if (attributes == null) {
+
 			attributes = new ObjectNode(objectMapper.getNodeFactory());
 		}
 
-		attributes.put(ResourceStatics.PATH, file.getAbsolutePath());
+		final String fileAbsolutePath = file.getAbsolutePath();
+
+		attributes.put(ResourceStatics.PATH, fileAbsolutePath);
 		attributes.put(ResourceStatics.FILE_SIZE, fileDetail.getSize());
 
 		try {
@@ -993,7 +992,7 @@ public class ResourcesResource extends AbstractBaseResource {
 			}
 		} catch (final IOException e1) {
 
-			ResourcesResource.LOG.debug("couldn't determine file type from file '{}'", file.getAbsolutePath());
+			ResourcesResource.LOG.debug("couldn't determine file type from file '{}'", fileAbsolutePath);
 		}
 
 		resource.setAttributes(attributes);
