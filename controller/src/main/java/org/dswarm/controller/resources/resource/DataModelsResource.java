@@ -16,6 +16,8 @@
 package org.dswarm.controller.resources.resource;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
 
@@ -76,15 +78,18 @@ import org.dswarm.controller.resources.ExtendedMediumBasicDMPResource;
 import org.dswarm.controller.resources.POJOFormat;
 import org.dswarm.controller.resources.resource.utils.ExportUtils;
 import org.dswarm.controller.utils.DataModelUtil;
+import org.dswarm.controller.utils.ResourceUtils;
 import org.dswarm.init.DMPException;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.dto.resource.MediumDataModelDTO;
 import org.dswarm.persistence.model.proxy.RetrievalType;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
+import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.UpdateFormat;
 import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
+import org.dswarm.persistence.model.resource.utils.ResourceStatics;
 import org.dswarm.persistence.service.internal.graph.util.SchemaDeterminator;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
@@ -102,7 +107,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 	private static final Logger LOG = LoggerFactory.getLogger(DataModelsResource.class);
 
-	public static final String DO_INGEST_IDENTIFIER = "do_ingest";
+	public static final String DO_INGEST_IDENTIFIER             = "do_ingest";
 	public static final String DO_INGEST_QUERY_PARAM_IDENTIFIER = "doIngest";
 
 	/**
@@ -650,26 +655,26 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 			final ProxyDataModel freshProxyDataModel = new ProxyDataModel(freshDataModel, proxyDataModel.getType());
 
+			// versioning is disabled at data model creation, since there should be any data for this data model in the data hub
+			final boolean enableVersioning = false;
+
 			if (contextJSON == null) {
 
-				// versioning is disabled at data model creation, since there should be any data for this data model in the data hub
-				return updateDataModel(freshProxyDataModel, freshDataModel, false);
+				return updateDataModel(freshProxyDataModel, freshDataModel, enableVersioning);
 			}
 
 			final JsonNode doIngestNode = contextJSON.get(DO_INGEST_IDENTIFIER);
 
 			if (doIngestNode == null) {
 
-				// versioning is disabled at data model creation, since there should be any data for this data model in the data hub
-				return updateDataModel(freshProxyDataModel, freshDataModel, false);
+				return updateDataModel(freshProxyDataModel, freshDataModel, enableVersioning);
 			}
 
 			final boolean doIngest = doIngestNode.asBoolean();
 
 			if (doIngest) {
 
-				// versioning is disabled at data model creation, since there should be any data for this data model in the data hub
-				return updateDataModel(freshProxyDataModel, freshDataModel, false);
+				return updateDataModel(freshProxyDataModel, freshDataModel, enableVersioning);
 			} else {
 
 				DataModelsResource.LOG.debug("skip ingest for data model '{}'", dataModel.getUuid());
@@ -799,60 +804,82 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 			// dmpStatus.stop(context);
 
-			DataModelsResource.LOG.debug("The data model has no configuration. Hence, the data of the data model cannot be processed.");
+			final String message = String
+					.format("The data model '%s' has no configuration. Hence, the data of the data model cannot be processed.", dataModel.getUuid());
 
-			return proxyDataModel;
+			DataModelsResource.LOG.error(message);
+
+			throw new DMPControllerException(message);
 		}
+
+		final Resource dataResource = checkDataResource(dataModel);
 
 		final JsonNode jsStorageType = configuration.getParameters().get(ConfigurationStatics.STORAGE_TYPE);
 
-		if (jsStorageType != null) {
+		if (jsStorageType == null) {
 
-			final String storageType = jsStorageType.asText();
+			final String message = String
+					.format("the configuration '%s' of the data model '%s' has no 'storage_type' parameter. Hence, the data of the data model cannot be processed.",
+							configuration.getUuid(), dataModel.getUuid());
 
-			try {
+			DataModelsResource.LOG.error(message);
 
-				final SchemaEvent.SchemaType type = SchemaEvent.SchemaType.fromString(storageType);
-				final SchemaEvent schemaEvent = new SchemaEvent(dataModel, type, updateFormat, enableVersioning);
-				schemaEventRecorderProvider.get().convertSchema(schemaEvent);
-			} catch (final IllegalArgumentException e) {
+			throw new DMPControllerException(message);
+		}
 
-				DataModelsResource.LOG.warn("could not determine schema type", e);
-			}
+		final String storageType = jsStorageType.asText();
 
-			switch (storageType) {
-				case ConfigurationStatics.SCHEMA_STORAGE_TYPE:
+		try {
 
-					// eventBusProvider.get().post(new XMLSchemaEvent(configuration, dataModel.getDataResource()));
+			final SchemaEvent.SchemaType type = SchemaEvent.SchemaType.fromString(storageType);
+			final SchemaEvent schemaEvent = new SchemaEvent(dataModel, type, updateFormat, enableVersioning);
+			schemaEventRecorderProvider.get().convertSchema(schemaEvent);
+		} catch (final IllegalArgumentException e) {
 
-					final XMLSchemaEvent xmlSchemaEvent = new XMLSchemaEvent(configuration, dataModel.getDataResource());
-					xmlSchemaEventRecorderProvider.get().convertConfiguration(xmlSchemaEvent);
+			DataModelsResource.LOG.warn("could not determine schema type", e);
+		}
 
-					break;
-				case ConfigurationStatics.CSV_STORAGE_TYPE:
+		switch (storageType) {
+			case ConfigurationStatics.SCHEMA_STORAGE_TYPE:
 
-					// eventBusProvider.get().post(new CSVConverterEvent(dataModel));
+				// eventBusProvider.get().post(new XMLSchemaEvent(configuration, dataModel.getDataResource()));
 
-					final CSVConverterEvent csvConverterEvent = new CSVConverterEvent(dataModel, updateFormat, enableVersioning);
-					csvConverterEventRecorderProvider.get().convertConfiguration(csvConverterEvent);
+				final XMLSchemaEvent xmlSchemaEvent = new XMLSchemaEvent(configuration, dataResource);
+				xmlSchemaEventRecorderProvider.get().convertConfiguration(xmlSchemaEvent);
 
-					break;
-				case ConfigurationStatics.XML_STORAGE_TYPE:
-				case ConfigurationStatics.MABXML_STORAGE_TYPE:
-				case ConfigurationStatics.MARCXML_STORAGE_TYPE:
-				case ConfigurationStatics.PNX_STORAGE_TYPE:
-				case ConfigurationStatics.OAI_PMH_DC_ELEMENTS_STORAGE_TYPE:
-				case ConfigurationStatics.OAI_PMH_DCE_AND_EDM_ELEMENTS_STORAGE_TYPE:
-				case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:
-				case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
+				break;
+			case ConfigurationStatics.CSV_STORAGE_TYPE:
 
-					// eventBusProvider.get().post(new XMLConverterEvent(dataModel));
+				// eventBusProvider.get().post(new CSVConverterEvent(dataModel));
 
-					final XMLConverterEvent xmlConverterEvent = new XMLConverterEvent(dataModel, updateFormat, enableVersioning);
-					xmlConvertEventRecorderProvider.get().processDataModel(xmlConverterEvent);
+				final CSVConverterEvent csvConverterEvent = new CSVConverterEvent(dataModel, updateFormat, enableVersioning);
+				csvConverterEventRecorderProvider.get().convertConfiguration(csvConverterEvent);
 
-					break;
-			}
+				break;
+			case ConfigurationStatics.XML_STORAGE_TYPE:
+			case ConfigurationStatics.MABXML_STORAGE_TYPE:
+			case ConfigurationStatics.MARCXML_STORAGE_TYPE:
+			case ConfigurationStatics.PNX_STORAGE_TYPE:
+			case ConfigurationStatics.OAI_PMH_DC_ELEMENTS_STORAGE_TYPE:
+			case ConfigurationStatics.OAI_PMH_DCE_AND_EDM_ELEMENTS_STORAGE_TYPE:
+			case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:
+			case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
+
+				// eventBusProvider.get().post(new XMLConverterEvent(dataModel));
+
+				final XMLConverterEvent xmlConverterEvent = new XMLConverterEvent(dataModel, updateFormat, enableVersioning);
+				xmlConvertEventRecorderProvider.get().processDataModel(xmlConverterEvent);
+
+				break;
+			default:
+
+				final String message = String
+						.format("couldn't process data for data model '%s', because of unknown storage type '%s' in configuration '%s'",
+								dataModel.getUuid(), storageType, configuration.getUuid());
+
+				DataModelsResource.LOG.error(message);
+
+				throw new DMPControllerException(message);
 		}
 
 		// refresh data model
@@ -861,6 +888,39 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 		final RetrievalType type = proxyDataModel.getType();
 
 		return new ProxyDataModel(freshDataModel, type);
+	}
+
+	private Resource checkDataResource(final DataModel dataModel) throws DMPControllerException {
+
+		final Resource dataResource = dataModel.getDataResource();
+		final JsonNode resourcePathJSONNode = dataResource.getAttribute(ResourceStatics.PATH);
+
+		if (resourcePathJSONNode == null) {
+
+			final String message = String
+					.format("The data resource '%s' of data model '%s' contains not path attribute. Hence, the data of the data model cannot be processed.",
+							dataResource.getUuid(), dataModel.getUuid());
+
+			DataModelsResource.LOG.error(message);
+
+			throw new DMPControllerException(message);
+		}
+
+		final String resourcePathString = resourcePathJSONNode.asText();
+		final java.nio.file.Path resourcePath = Paths.get(resourcePathString);
+		final boolean exists = Files.exists(resourcePath);
+
+		if(!exists) {
+
+			final String message = String
+					.format("The data resource '%s' at path '%s' of data model '%s' does not exist. Hence, the data of the data model cannot be processed.",
+							dataResource.getUuid(), resourcePathString, dataModel.getUuid());
+
+			DataModelsResource.LOG.error(message);
+
+			throw new DMPControllerException(message);
+		}
+		return dataResource;
 	}
 
 	private void getDataInternal(final String uuid, final Integer atMost, final AsyncResponse asyncResponse) throws DMPControllerException {

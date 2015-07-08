@@ -422,6 +422,44 @@ public class DataModelsResourceTest2 extends
 	}
 
 	@Test
+	public void testNotExistingDataResource() throws Exception {
+
+		DataModelsResourceTest2.LOG.debug("start not-existing data resource test");
+
+		// prepare resource
+		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString("test-mabxml-resource2.json");
+
+		final Resource resource = objectMapper.readValue(resourceJSONString, Resource.class);
+
+		final String configurationJSONString = DMPPersistenceUtil.getResourceAsString("xml-configuration.json");
+		final Configuration configuration = objectMapper.readValue(configurationJSONString, Configuration.class);
+
+		final String dataModel1Uuid = "DataModel-c5140a43-cb29-4e57-8ff8-2c590252318d";
+
+		final DataModel dataModel1 = new DataModel(dataModel1Uuid);
+		final String dataModelName = UUID.randomUUID().toString();
+		dataModel1.setName(dataModelName);
+		dataModel1.setDescription("my data model description");
+		dataModel1.setDataResource(resource);
+		dataModel1.setConfiguration(configuration);
+
+		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
+
+		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+				.post(Entity.json(dataModelJSONString));
+
+		Assert.assertEquals("500 was expected", 500, response.getStatus());
+
+		final String body = response.readEntity(String.class);
+
+		Assert.assertEquals(
+				"{\"status\":\"nok\",\"status_code\":500,\"error\":\"The data resource '1' at path 'dummy/path/to/test-mabxml2.xml' of data model 'DataModel-c5140a43-cb29-4e57-8ff8-2c590252318d' does not exist. Hence, the data of the data model cannot be processed.\"}",
+				body);
+
+		DataModelsResourceTest2.LOG.debug("end not-existing data resource test");
+	}
+
+	@Test
 	public void testSearchRecordsCSVData() throws Exception {
 
 		DataModelsResourceTest2.LOG.debug("start search records in CSV data test");
