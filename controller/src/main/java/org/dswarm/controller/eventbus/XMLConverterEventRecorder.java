@@ -188,8 +188,9 @@ public class XMLConverterEventRecorder {
 
 					if (counter.incrementAndGet() == 1) {
 
-						LOG.debug("transformed first record of xml data resource at '{}' to GDM for data model '{}' with '{}' statements", path,
-								dataModel.getUuid(), statementCounter.get());
+						LOG.debug(
+								"transformed first record of xml data resource at to GDM for data model '{}' with '{}' statements (data resource at '{}')",
+								dataModel.getUuid(), statementCounter.get(), path);
 					}
 
 					schemaDeterminator.optionallyEnhancedDataModel(freshDataModel, gdmModel, model, hasSchema);
@@ -247,9 +248,9 @@ public class XMLConverterEventRecorder {
 							throw new RuntimeException(messageSB.toString());
 						}
 
-						LOG.debug("transformed xml data resource at '{}' to GDM for data model '{}' - transformed '{}' records with '{}' statements",
-								path, dataModel.getUuid(),
-								recordCount, statementCounter.get());
+						LOG.debug(
+								"transformed xml data resource at to GDM for data model '{}' - transformed '{}' records with '{}' statements (data resource at '{}')",
+								dataModel.getUuid(), recordCount, statementCounter.get(), path);
 					}).doOnSubscribe(
 					() -> LOG.debug("subscribed to XML ingest"));
 		} catch (final NullPointerException e) {
