@@ -38,10 +38,12 @@ import org.slf4j.LoggerFactory;
 
 import org.dswarm.controller.resources.job.TasksResource;
 import org.dswarm.controller.resources.resource.DataModelsResource;
+import org.dswarm.controller.resources.resource.test.utils.ConfigurationsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
 import org.dswarm.controller.resources.test.ResourceTest;
 import org.dswarm.controller.test.GuicedTest;
+import org.dswarm.persistence.model.job.Task;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
@@ -57,19 +59,20 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 	protected String taskJSONString = null;
 
 	protected ResourcesResourceTestUtils resourcesResourceTestUtils;
-
-	protected DataModelsResourceTestUtils dataModelsResourceTestUtils;
+	protected ConfigurationsResourceTestUtils configurationsResourceTestUtils;
+	protected DataModelsResourceTestUtils     dataModelsResourceTestUtils;
 
 	protected final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
 
-	protected final String taskJSONFileName;
-	protected final String inputDataResourceFileName;
-	protected final String testPostfix;
-	protected final String recordTag;
-	protected final String storageType;
+	protected final String  taskJSONFileName;
+	protected final String  inputDataResourceFileName;
+	protected final String  testPostfix;
+	protected final String  recordTag;
+	protected final String  storageType;
+	protected final boolean prepareInputDataResource;
 
 	public AbstractTasksResourceTest(final String taskJSONFileNameArg, final String inputDataResourceFileNameArg, final String recordTagArg,
-			final String storageTypeArg, final String testPostfixArg) {
+			final String storageTypeArg, final String testPostfixArg, final boolean prepareInputDataResourceArg) {
 
 		super("tasks");
 
@@ -78,12 +81,14 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 		recordTag = recordTagArg;
 		storageType = storageTypeArg;
 		testPostfix = testPostfixArg;
+		prepareInputDataResource = prepareInputDataResourceArg;
 	}
 
 	@Override protected void initObjects() {
 		super.initObjects();
 
 		resourcesResourceTestUtils = new ResourcesResourceTestUtils();
+		configurationsResourceTestUtils = new ConfigurationsResourceTestUtils();
 		dataModelsResourceTestUtils = new DataModelsResourceTestUtils();
 	}
 
@@ -95,13 +100,25 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 		taskJSONString = DMPPersistenceUtil.getResourceAsString(taskJSONFileName);
 	}
 
-
 	@Test
 	public abstract void testTaskExecution() throws Exception;
 
 	protected ObjectNode prepareTask() throws Exception {
 
-		final PrepareResource prepareResource = new PrepareResource(inputDataResourceFileName).invoke();
+		final PrepareResource prepareResource;
+
+		if (prepareInputDataResource) {
+
+			prepareResource = new PrepareResource(inputDataResourceFileName).invoke();
+		} else {
+
+			final Task task = objectMapper.readValue(taskJSONString, Task.class);
+			final DataModel inputDataModel = task.getInputDataModel();
+			final Resource inputDataResource = inputDataModel.getDataResource();
+
+			prepareResource = new PrepareResource(inputDataResource);
+		}
+
 		final PrepareConfiguration prepareConfiguration = new PrepareConfiguration(prepareResource, recordTag, storageType).invoke();
 		DataModel inputDataModel = prepareDataModel(prepareResource, prepareConfiguration);
 
@@ -139,7 +156,7 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 		final Configuration conf1 = prepareConfiguration.getConf1();
 		final Configuration configuration = prepareConfiguration.getConfiguration();
 
-		final String dataModel1Uuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+		final String dataModel1Uuid = "DataModel-2e0c9850-6def-4942-abed-b513d3f56eba";
 
 		final DataModel data1 = new DataModel(dataModel1Uuid);
 		data1.setName("'" + res1.getName() + "' + '" + conf1.getName() + "' data model");
@@ -179,6 +196,13 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 		private       Resource res1;
 		private       Resource resource;
 		private final String   resourceFileName;
+
+		public PrepareResource(final Resource resourceArg) {
+
+			resourceFileName = null;
+			resource = resourceArg;
+			res1 = resource;
+		}
 
 		public PrepareResource(final String resourceFileName) {
 
@@ -278,8 +302,15 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 
 			final String configurationJSONString = objectMapper.writeValueAsString(conf1);
 
-			// create configuration
-			configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
+			if(prepareInputDataResource) {
+
+				// create configuration
+				configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
+			} else {
+
+				configuration = configurationsResourceTestUtils.createObjectWithoutComparison(configurationJSONString);
+			}
+
 			return this;
 		}
 	}

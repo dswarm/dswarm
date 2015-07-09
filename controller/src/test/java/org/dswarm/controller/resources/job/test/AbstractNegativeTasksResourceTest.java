@@ -17,13 +17,15 @@ public abstract class AbstractNegativeTasksResourceTest extends AbstractTasksRes
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractNegativeTasksResourceTest.class);
 
 	private final String expectedResponseMessage;
+	private final int expectedResponseCode;
 
 	public AbstractNegativeTasksResourceTest(final String taskJSONFileNameArg, final String inputDataResourceFileNameArg, final String recordTagArg,
-			final String storageTypeArg, final String testPostfixArg, final String expectedResponseMessageArg) {
+			final String storageTypeArg, final String testPostfixArg, final String expectedResponseMessageArg, final boolean prepareInputDataResourceArg, final int expectedResponseCodeArg) {
 
-		super(taskJSONFileNameArg, inputDataResourceFileNameArg, recordTagArg, storageTypeArg, testPostfixArg);
+		super(taskJSONFileNameArg, inputDataResourceFileNameArg, recordTagArg, storageTypeArg, testPostfixArg, prepareInputDataResourceArg);
 
 		expectedResponseMessage = expectedResponseMessageArg;
+		expectedResponseCode = expectedResponseCodeArg;
 	}
 
 	@Override
@@ -36,13 +38,13 @@ public abstract class AbstractNegativeTasksResourceTest extends AbstractTasksRes
 		final Response response = target().request(MediaType.APPLICATION_XML_TYPE).post(Entity.json(requestJSON));
 
 		// note: we cannot change the response code, when an error occurs, because the async response, will be opened only once
-		Assert.assertEquals("200 was expected", 200, response.getStatus());
+		Assert.assertEquals(expectedResponseCode + " was expected", expectedResponseCode, response.getStatus());
 
 		final String actualResponseMessage = response.readEntity(String.class);
 
 		Assert.assertNotNull(actualResponseMessage);
 
-		Assert.assertEquals(expectedResponseMessage, actualResponseMessage);
+		Assert.assertTrue(actualResponseMessage.startsWith(expectedResponseMessage));
 
 		AbstractNegativeTasksResourceTest.LOG.debug("end '{}' negative task execution test", testPostfix);
 	}

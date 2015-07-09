@@ -334,6 +334,8 @@ public class TasksResource {
 
 			LOG.debug("do ingest on-the-fly for task execution of task '{}'", task.getUuid());
 
+			DataModelUtil.checkDataResource(inputDataModel);
+
 			final boolean utiliseExistingInputSchema = getBooleanValue(TasksResource.UTILISE_EXISTING_INPUT_IDENTIFIER, requestJSON, false);
 
 			inputData = dataModelUtil.doIngest(inputDataModel, utiliseExistingInputSchema, INGEST_SCHEDULER);

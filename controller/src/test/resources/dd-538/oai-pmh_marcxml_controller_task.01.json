@@ -165,11 +165,7 @@
       "uuid": "e69a70e1-461f-ba60-688a-da92f37e5045",
       "name": null,
       "description": null,
-      "resources": [
-        {
-          "uuid": "Resource-f3a537b6-0c96-449b-906f-241b82075190"
-        }
-      ],
+      "resources": null,
       "parameters": {
         "storage_type": "oai-pmh+marcxml",
         "record_tag": "record"
@@ -1444,22 +1440,7 @@
       "name": "31927-0.out.xml",
       "description": "Replacement-Example-Datamodel-Marc-DEG",
       "type": "FILE",
-      "configurations": [
-        {
-          "uuid": "e69a70e1-461f-ba60-688a-da92f37e5045",
-          "name": null,
-          "description": null,
-          "resources": [
-            {
-              "uuid": "Resource-f3a537b6-0c96-449b-906f-241b82075190"
-            }
-          ],
-          "parameters": {
-            "storage_type": "oai-pmh+marcxml",
-            "record_tag": "record"
-          }
-        }
-      ],
+      "configurations": null,
       "resource_attributes": {
         "path": "/home/dmp/tmp/tmp/resources/31927-2.out.xml",
         "filesize": -1,

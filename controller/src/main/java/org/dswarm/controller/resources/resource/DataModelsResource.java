@@ -812,7 +812,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			throw new DMPControllerException(message);
 		}
 
-		final Resource dataResource = checkDataResource(dataModel);
+		final Resource dataResource = DataModelUtil.checkDataResource(dataModel);
 
 		final JsonNode jsStorageType = configuration.getParameters().get(ConfigurationStatics.STORAGE_TYPE);
 
@@ -888,39 +888,6 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 		final RetrievalType type = proxyDataModel.getType();
 
 		return new ProxyDataModel(freshDataModel, type);
-	}
-
-	private Resource checkDataResource(final DataModel dataModel) throws DMPControllerException {
-
-		final Resource dataResource = dataModel.getDataResource();
-		final JsonNode resourcePathJSONNode = dataResource.getAttribute(ResourceStatics.PATH);
-
-		if (resourcePathJSONNode == null) {
-
-			final String message = String
-					.format("The data resource '%s' of data model '%s' contains not path attribute. Hence, the data of the data model cannot be processed.",
-							dataResource.getUuid(), dataModel.getUuid());
-
-			DataModelsResource.LOG.error(message);
-
-			throw new DMPControllerException(message);
-		}
-
-		final String resourcePathString = resourcePathJSONNode.asText();
-		final java.nio.file.Path resourcePath = Paths.get(resourcePathString);
-		final boolean exists = Files.exists(resourcePath);
-
-		if(!exists) {
-
-			final String message = String
-					.format("The data resource '%s' at path '%s' of data model '%s' does not exist. Hence, the data of the data model cannot be processed.",
-							dataResource.getUuid(), resourcePathString, dataModel.getUuid());
-
-			DataModelsResource.LOG.error(message);
-
-			throw new DMPControllerException(message);
-		}
-		return dataResource;
 	}
 
 	private void getDataInternal(final String uuid, final Integer atMost, final AsyncResponse asyncResponse) throws DMPControllerException {
