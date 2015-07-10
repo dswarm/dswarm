@@ -15,11 +15,18 @@
  */
 package org.dswarm.controller.resources.resource.test.utils;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.junit.Assert;
 
+import org.dswarm.controller.resources.resource.DataModelsResource;
 import org.dswarm.controller.resources.test.utils.ExtendedBasicDMPResourceTestUtils;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.proxy.ProxyDataModel;
@@ -42,5 +49,63 @@ public class DataModelsResourceTestUtils extends
 		Assert.assertEquals("200 OK was expected", 200, response1.getStatus());
 
 		return response1.readEntity(String.class);
+	}
+
+	public DataModel createObject(final String objectJSONString, final DataModel expectedObject, final boolean doIngest) throws Exception {
+
+		final DataModel actualObject = createObjectWithoutComparison(objectJSONString, doIngest);
+		compareObjects(expectedObject, actualObject);
+
+		return actualObject;
+	}
+
+	/**
+	 * Creates the object in db and asserts the response status is '201 created' but does not compare the response with the JSON
+	 * string.
+	 *
+	 * @param objectJSONString the JSON string of the object to be created
+	 * @return the actual object as created in db, never null.
+	 * @throws Exception
+	 */
+	public DataModel createObjectWithoutComparison(final String objectJSONString, final boolean doIngest) throws Exception {
+
+		final Response response;
+
+		if (!doIngest) {
+
+			final Map<String, String> queryParams = new LinkedHashMap<>();
+			queryParams.put(DataModelsResource.DO_INGEST_QUERY_PARAM_IDENTIFIER, Boolean.FALSE.toString());
+
+			response = executeCreateObject(objectJSONString, Optional.of(queryParams));
+		} else {
+
+			response = executeCreateObject(objectJSONString);
+		}
+
+		Assert.assertEquals("201 Created was expected", 201, response.getStatus());
+
+		final String responseString = response.readEntity(String.class);
+
+		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
+
+		return readObject(responseString);
+	}
+
+	public Response executeCreateObject(final String objectJSONString, Optional<Map<String, String>> optionalQueryParams) throws Exception {
+
+		WebTarget target = target();
+
+		if (optionalQueryParams.isPresent()) {
+
+			for (final Map.Entry<String, String> queryParamEntry : optionalQueryParams.get().entrySet()) {
+
+				final String key = queryParamEntry.getKey();
+				final String value = queryParamEntry.getValue();
+
+				target = target.queryParam(key, value);
+			}
+		}
+
+		return target.request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(objectJSONString));
 	}
 }

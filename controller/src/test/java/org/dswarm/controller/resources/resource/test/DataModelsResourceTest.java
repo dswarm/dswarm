@@ -799,7 +799,7 @@ public class DataModelsResourceTest extends
 		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel);
 
 		// create (persist) data model
-		pojoClassResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
+		pojoClassResourceTestUtils.createObjectWithoutComparison(dataModelJSONString, false);
 
 		final Response response = target(dataModelUuid)
 				.queryParam("format", POJOFormat.SHORT.toString())
@@ -866,6 +866,12 @@ public class DataModelsResourceTest extends
 		final String actualJson = response.readEntity(String.class);
 
 		JSONAssert.assertEquals(expectedJson, actualJson, true);
+	}
+
+	@Override
+	protected DataModel createObjectInternal() throws Exception {
+
+		return pojoClassResourceTestUtils.createObject(objectJSONString, expectedObject, false);
 	}
 
 	private String testMABXMLDataInternal() throws Exception {

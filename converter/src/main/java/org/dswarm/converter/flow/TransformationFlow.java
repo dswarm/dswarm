@@ -389,7 +389,8 @@ public class TransformationFlow {
 
 						LOG.debug("received first record in transformation engine");
 					}
-				}).doOnTerminate(opener::closeStream).doOnCompleted(() -> LOG.debug("received '{}' records in transformation engine", counter.get()))
+				}).doOnCompleted(opener::closeStream)
+						.doOnCompleted(() -> LOG.debug("received '{}' records in transformation engine", counter.get()))
 						.subscribe(opener::process, writer::propagateError, () -> LOG.info("DONE"));
 			}
 		}).doOnCompleted(() -> {

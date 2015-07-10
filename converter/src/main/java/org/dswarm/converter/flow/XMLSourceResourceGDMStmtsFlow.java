@@ -147,12 +147,18 @@ public class XMLSourceResourceGDMStmtsFlow {
 
 			@Override public void call(final Subscriber<? super GDMModel> subscriber) {
 
-				writer.getObservable().subscribe(subscriber);
+				try {
 
-				opener.process(object);
-				opener.closeStream();
+					writer.getObservable().subscribe(subscriber);
 
-				morphContext.stop();
+					opener.process(object);
+					opener.closeStream();
+
+					morphContext.stop();
+				} catch (final Exception e) {
+
+					writer.propagateError(e);
+				}
 			}
 		});
 	}

@@ -17,6 +17,8 @@ package org.dswarm.controller.resources.job;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -126,6 +128,9 @@ public class TasksResource {
 			.newCachedThreadPool(
 					new BasicThreadFactory.Builder().daemon(false).namingPattern(DSWARM_EXPORT_THREAD_NAMING_PATTERN).build());
 	private static final Scheduler       EXPORT_SCHEDULER        = Schedulers.from(EXPORT_EXECUTOR_SERVICE);
+	public static final  String          ERROR_IDENTIFIER        = "error";
+	public static final  String          MESSAGE_IDENTIFIER      = "message";
+	public static final  String          STACKTRACE_IDENTIFIER   = "stacktrace";
 
 	/**
 	 * The base URI of this resource.
@@ -329,6 +334,8 @@ public class TasksResource {
 
 			LOG.debug("do ingest on-the-fly for task execution of task '{}'", task.getUuid());
 
+			DataModelUtil.checkDataResource(inputDataModel);
+
 			final boolean utiliseExistingInputSchema = getBooleanValue(TasksResource.UTILISE_EXISTING_INPUT_IDENTIFIER, requestJSON, false);
 
 			inputData = dataModelUtil.doIngest(inputDataModel, utiliseExistingInputSchema, INGEST_SCHEDULER);
@@ -481,10 +488,26 @@ public class TasksResource {
 
 										try {
 
+											// write error to output stream
+
+											final StringWriter stringWriter = new StringWriter();
+											final PrintWriter printWriter = new PrintWriter(stringWriter);
+											throwable.printStackTrace(printWriter);
+
+											final ObjectNode errorJSON = objectMapper.createObjectNode();
+											final ObjectNode innerErrorJSON = objectMapper.createObjectNode();
+
+											errorJSON.set(ERROR_IDENTIFIER, innerErrorJSON);
+											innerErrorJSON.put(MESSAGE_IDENTIFIER, message);
+											innerErrorJSON.put(STACKTRACE_IDENTIFIER, stringWriter.toString());
+
+											stringWriter.close();
+											printWriter.close();
+
+											bos.write(objectMapper.writeValueAsBytes(errorJSON));
+
 											bos.close();
 											os.close();
-
-											asyncResponse.resume(new DMPControllerException(message, throwable));
 										} catch (IOException e) {
 
 											final String message2 = "couldn't process task (maybe XML export) successfully";
@@ -492,6 +515,9 @@ public class TasksResource {
 											TasksResource.LOG.error(message2, e);
 
 											asyncResponse.resume(new DMPControllerException(message, throwable));
+										} finally {
+
+											countDownLatch.countDown();
 										}
 									}
 

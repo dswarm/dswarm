@@ -16,6 +16,8 @@
 package org.dswarm.controller.utils;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Set;
 
@@ -48,6 +50,7 @@ import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
+import org.dswarm.persistence.model.resource.utils.ResourceStatics;
 import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.utils.ClaszUtils;
@@ -350,7 +353,8 @@ public class DataModelUtil {
 
 	}
 
-	public Observable<Tuple<String, JsonNode>> doIngest(final DataModel dataModel, final boolean utiliseExistingInputSchema, final Scheduler scheduler)
+	public Observable<Tuple<String, JsonNode>> doIngest(final DataModel dataModel, final boolean utiliseExistingInputSchema,
+			final Scheduler scheduler)
 			throws DMPControllerException {
 
 		DataModelUtil.LOG.debug("try to process data for data model with id '{}'", dataModel.getUuid());
@@ -536,6 +540,39 @@ public class DataModelUtil {
 		}
 
 		return Optional.of(recordClassURI);
+	}
+
+	public static Resource checkDataResource(final DataModel dataModel) throws DMPControllerException {
+
+		final Resource dataResource = dataModel.getDataResource();
+		final JsonNode resourcePathJSONNode = dataResource.getAttribute(ResourceStatics.PATH);
+
+		if (resourcePathJSONNode == null) {
+
+			final String message = String
+					.format("The data resource '%s' of data model '%s' contains not path attribute. Hence, the data of the data model cannot be processed.",
+							dataResource.getUuid(), dataModel.getUuid());
+
+			DataModelUtil.LOG.error(message);
+
+			throw new DMPControllerException(message);
+		}
+
+		final String resourcePathString = resourcePathJSONNode.asText();
+		final java.nio.file.Path resourcePath = Paths.get(resourcePathString);
+		final boolean exists = Files.exists(resourcePath);
+
+		if (!exists) {
+
+			final String message = String
+					.format("The data resource '%s' at path '%s' of data model '%s' does not exist. Hence, the data of the data model cannot be processed.",
+							dataResource.getUuid(), resourcePathString, dataModel.getUuid());
+
+			DataModelUtil.LOG.error(message);
+
+			throw new DMPControllerException(message);
+		}
+		return dataResource;
 	}
 
 	private Tuple<String, JsonNode> transformDataNode(final Tuple<String, Model> input) {

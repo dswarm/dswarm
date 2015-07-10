@@ -16,12 +16,14 @@
 package org.dswarm.controller.eventbus;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -38,8 +40,10 @@ import org.dswarm.graph.json.Model;
 import org.dswarm.graph.json.Resource;
 import org.dswarm.persistence.DMPPersistenceError;
 import org.dswarm.persistence.DMPPersistenceException;
+import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.UpdateFormat;
+import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.resource.utils.ResourceStatics;
 import org.dswarm.persistence.monitoring.MonitoringHelper;
 import org.dswarm.persistence.monitoring.MonitoringLogger;
@@ -103,7 +107,7 @@ public class XMLConverterEventRecorder {
 	public void processDataModel(final DataModel dataModel, final UpdateFormat updateFormat, final boolean enableVersioning)
 			throws DMPControllerException {
 
-		Observable<org.dswarm.persistence.model.internal.Model> result = doIngest(dataModel, false, Schedulers.newThread());
+		final Observable<org.dswarm.persistence.model.internal.Model> result = doIngest(dataModel, false, Schedulers.newThread());
 
 		try {
 
@@ -184,8 +188,9 @@ public class XMLConverterEventRecorder {
 
 					if (counter.incrementAndGet() == 1) {
 
-						LOG.debug("transformed first record of xml data resource at '{}' to GDM for data model '{}' with '{}' statements", path,
-								dataModel.getUuid(), statementCounter.get());
+						LOG.debug(
+								"transformed first record of xml data resource at to GDM for data model '{}' with '{}' statements (data resource at '{}')",
+								dataModel.getUuid(), statementCounter.get(), path);
 					}
 
 					schemaDeterminator.optionallyEnhancedDataModel(freshDataModel, gdmModel, model, hasSchema);
@@ -205,10 +210,48 @@ public class XMLConverterEventRecorder {
 					throw DMPPersistenceError.wrap(e);
 				}
 			}).cast(org.dswarm.persistence.model.internal.Model.class).doOnCompleted(
-					() -> LOG
-							.debug("transformed xml data resource at '{}' to GDM for data model '{}' - transformed '{}' records with '{}' statements",
-									path,
-									dataModel.getUuid(), counter.get(), statementCounter.get())).doOnSubscribe(
+					() -> {
+
+						final int recordCount = counter.get();
+
+						if (recordCount == 0) {
+
+							final Configuration configuration = dataModel.getConfiguration();
+							final Optional<JsonNode> optionalRecordTagNode = Optional.ofNullable(
+									configuration.getParameter(ConfigurationStatics.RECORD_TAG));
+
+							final Optional<String> optionalRecordTag;
+
+							if (optionalRecordTagNode.isPresent()) {
+
+								optionalRecordTag = Optional.ofNullable(optionalRecordTagNode.get().asText(null));
+							} else {
+
+								optionalRecordTag = Optional.empty();
+							}
+
+							final String messageStart = String.format(
+									"couldn't transform any record from xml data resource at '%s' to GDM for data model '%s'; ", path,
+									dataModel.getUuid());
+
+							final StringBuilder messageSB = new StringBuilder();
+							messageSB.append(messageStart);
+
+							if (optionalRecordTag.isPresent()) {
+
+								messageSB.append("maybe you set a wrong record tag (current one = '").append(optionalRecordTag.get()).append("')");
+							} else {
+
+								messageSB.append("maybe because you set no record tag");
+							}
+
+							throw new RuntimeException(messageSB.toString());
+						}
+
+						LOG.debug(
+								"transformed xml data resource at to GDM for data model '{}' - transformed '{}' records with '{}' statements (data resource at '{}')",
+								dataModel.getUuid(), recordCount, statementCounter.get(), path);
+					}).doOnSubscribe(
 					() -> LOG.debug("subscribed to XML ingest"));
 		} catch (final NullPointerException e) {
 

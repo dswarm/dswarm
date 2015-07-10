@@ -267,7 +267,7 @@ public class XMLExporter {
 
 						final DMPConverterException converterException = new DMPConverterException(message, e);
 
-						throw DMPConverterError.wrap(converterException);
+						onError(converterException);
 					}
 				}
 
@@ -319,7 +319,7 @@ public class XMLExporter {
 
 						final DMPConverterException converterException = new DMPConverterException(message, e);
 
-						throw DMPConverterError.wrap(converterException);
+						onError(converterException);
 					}
 
 				}
