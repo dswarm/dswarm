@@ -1,0 +1,260 @@
+[ {
+    "v1" : "http://data.slub-dresden.de/datamodels/2/records/68f327aa-652e-4b60-8fd1-8dee40118933",
+    "v2" : [ {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datensatzType"
+    }, {
+        "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id" : "ID946451494"
+    }, {
+        "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ" : "h"
+    }, {
+        "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status" : "n"
+    }, {
+        "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion" : "M2.0"
+    }, {
+        "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld" : [ [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "001"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "946451494"
+        } ], [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "004"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "19980605"
+        } ], [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "030"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "a|1iar|z|||37"
+        } ], [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "036"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "a"
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "DE"
+        } ], [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "050"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "a|a|||||||||||"
+        } ], [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "051"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "3.456"
+        } ], [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "070"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "a"
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "292"
+        } ], [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "100"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "b"
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "Ginsbach, Julia"
+        } ], [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "102"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "a"
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "11547577X"
+        } ], [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "104"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "b"
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "Liebers, Andrea"
+        } ], [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "106"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "a"
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "111570204"
+        } ], [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "331"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns" : [ {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nsType"
+            }, {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "Die"
+            } ]
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : " schÃ¶ne Lau"
+        } ], [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "335"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "nach dem Stuttgarter HutzelmÃ¤nnlein von Eduart MÃ¶rike"
+        } ], [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "359"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "Julia Ginsbach (Bilder) ; Andrea Liebers (Text)"
+        } ], [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "410"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "Leinfelden-Echterdingen"
+        } ], [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "412"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "DRW-Verl. Weinbrenner"
+        } ], [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "425"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "1995"
+        } ], [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "425"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "a"
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "1995"
+        } ], [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "433"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "[28] S."
+        } ], [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "434"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "Ã¼berw. Ill."
+        } ], [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "435"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "27 cm"
+        } ], [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "540"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "a"
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "ISBN 3-87181-371-0 Pp. : DM 24.80"
+        } ], [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "544"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "a"
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : [ "DBL", "1996 B 2108" ]
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf" : [ {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tfType"
+            } ]
+        } ], [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "544"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "a"
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : [ "DBF", "1996 B 2108" ]
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf" : [ {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tfType"
+            } ]
+        } ], [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "574"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "96,A07,0146"
+        } ], [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "700"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "|07"
+        } ], [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "800"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : " "
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "118583107           MÃ¶rike, Eduard"
+        } ], [ {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" : "805"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "b"
+        }, {
+            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns" : [ {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nsType"
+            }, {
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "Das"
+            } ]
+        }, {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : " Stuttgarter HutzelmÃ¤nnchen"
+        } ] ]
+    } ]
+} ]
