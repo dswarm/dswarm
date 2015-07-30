@@ -50,7 +50,7 @@ public class SolrXMLDataSourceConfigGeneratorTest extends GuicedTest {
 	@Test
 	public void testSolrXMLDataSourceConfigGenerator() throws IOException, XMLStreamException {
 
-		internalTestSolrXMLDataSourceConfigGenerator("data-config.xml", Optional.of("http://purl.org/ontology/bibo/Document"),
+		internalTestSolrXMLDataSourceConfigGenerator("data-config.xml", Optional.of("http://purl.org/ontology/bibo/Document"), Optional.empty(),
 				"expected-data-config.xml");
 	}
 
@@ -58,10 +58,12 @@ public class SolrXMLDataSourceConfigGeneratorTest extends GuicedTest {
 	public void testSolrXMLDataSourceConfigGenerator2() throws IOException, XMLStreamException {
 
 		internalTestSolrXMLDataSourceConfigGenerator("data-config2.xml", Optional.empty(),
+				Optional.of("http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/RecordTypes"),
 				"expected-data-config2.xml");
 	}
 
 	private void internalTestSolrXMLDataSourceConfigGenerator(final String tempDataConfigFileName, final Optional<String> optionalRecordTag,
+			final Optional<String> optionalRootAttributePath,
 			final String exectedDataConfigFileName) throws IOException, XMLStreamException {
 
 		final SchemaService schemaService = GuicedTest.injector.getInstance(SchemaService.class);
@@ -73,7 +75,7 @@ public class SolrXMLDataSourceConfigGeneratorTest extends GuicedTest {
 		final OutputStream fop = new FileOutputStream(file);
 
 		SolrXMLDataSourceConfigGenerator
-				.generateSolrXMLDataSourceConfig(fincSolrSchema, optionalRecordTag, Optional.<String>empty(),
+				.generateSolrXMLDataSourceConfig(fincSolrSchema, optionalRecordTag, optionalRootAttributePath,
 						fop);
 
 		final String expectedDataConfig = DMPPersistenceUtil.getResourceAsString(exectedDataConfigFileName);
