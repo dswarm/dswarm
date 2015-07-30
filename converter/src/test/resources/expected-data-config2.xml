@@ -6,8 +6,7 @@
 			<field column="_version_" xpath="/RecordType/_version_"/>
 			<field column="recordtype" xpath="/RecordType/recordtype"/>
 			<field column="id" xpath="/RecordType/id"/>
-			<field column="mrc0007" xpath="/RecordType/mrc0007"/>
-			<field column="mrc0070" xpath="/RecordType/mrc0070"/>
+			<field column="fullrecord" xpath="/RecordType/fullrecord"/>
 			<field column="itemdata" xpath="/RecordType/itemdata"/>
 			<field column="marc_error" xpath="/RecordType/marc_error"/>
 			<field column="allfields" xpath="/RecordType/allfields"/>
@@ -37,6 +36,7 @@
 			<field column="timecode" xpath="/RecordType/timecode"/>
 			<field column="misc_dech1" xpath="/RecordType/misc_dech1"/>
 			<field column="misc_del152" xpath="/RecordType/misc_del152"/>
+			<field column="misc_de105" xpath="/RecordType/misc_de105"/>
 			<field column="branch_de15" xpath="/RecordType/branch_de15"/>
 			<field column="branch_dech1" xpath="/RecordType/branch_dech1"/>
 			<field column="branch_de105" xpath="/RecordType/branch_de105"/>
@@ -49,6 +49,7 @@
 			<field column="collcode_de520" xpath="/RecordType/collcode_de520"/>
 			<field column="collcode_dezwi2" xpath="/RecordType/collcode_dezwi2"/>
 			<field column="collcode_dezi4" xpath="/RecordType/collcode_dezi4"/>
+			<field column="format_de14" xpath="/RecordType/format_de14"/>
 			<field column="format_de15" xpath="/RecordType/format_de15"/>
 			<field column="format_del152" xpath="/RecordType/format_del152"/>
 			<field column="format_dech1" xpath="/RecordType/format_dech1"/>
@@ -59,6 +60,7 @@
 			<field column="format_dezi4" xpath="/RecordType/format_dezi4"/>
 			<field column="format_de540" xpath="/RecordType/format_de540"/>
 			<field column="format_ded117" xpath="/RecordType/format_ded117"/>
+			<field column="format_degla1" xpath="/RecordType/format_degla1"/>
 			<field column="local_heading_facet_del152" xpath="/RecordType/local_heading_facet_del152"/>
 			<field column="local_heading_dezwi2" xpath="/RecordType/local_heading_dezwi2"/>
 			<field column="local_heading_facet_dezwi2" xpath="/RecordType/local_heading_facet_dezwi2"/>
@@ -81,9 +83,9 @@
 			<field column="author_corp2" xpath="/RecordType/author_corp2"/>
 			<field column="author_corp2_orig" xpath="/RecordType/author_corp2_orig"/>
 			<field column="author2-role" xpath="/RecordType/author2-role"/>
-			<field column="author_letter" xpath="/RecordType/author_letter"/>
 			<field column="author_facet" xpath="/RecordType/author_facet"/>
 			<field column="author_browse" xpath="/RecordType/author_browse"/>
+			<field column="author_sort" xpath="/RecordType/author_sort"/>
 			<field column="title" xpath="/RecordType/title"/>
 			<field column="title_part" xpath="/RecordType/title_part"/>
 			<field column="title_sub" xpath="/RecordType/title_sub"/>
@@ -138,17 +140,6 @@
 			<field column="rvk_facet" xpath="/RecordType/rvk_facet"/>
 			<field column="rvk_label" xpath="/RecordType/rvk_label"/>
 			<field column="rvk_path" xpath="/RecordType/rvk_path"/>
-			<field column="date_dech1" xpath="/RecordType/date_dech1"/>
-			<field column="date_de540" xpath="/RecordType/date_de540"/>
-			<field column="date_ded117" xpath="/RecordType/date_ded117"/>
-			<field column="date_del242" xpath="/RecordType/date_del242"/>
-			<field column="date_del152" xpath="/RecordType/date_del152"/>
-			<field column="date_de520" xpath="/RecordType/date_de520"/>
-			<field column="date_ded13" xpath="/RecordType/date_ded13"/>
-			<field column="date_de105" xpath="/RecordType/date_de105"/>
-			<field column="date_de15" xpath="/RecordType/date_de15"/>
-			<field column="date_dezi4" xpath="/RecordType/date_dezi4"/>
-			<field column="date_dezwi2" xpath="/RecordType/date_dezwi2"/>
 			<field column="fulltext_unstemmed" xpath="/RecordType/fulltext_unstemmed"/>
 			<field column="hierarchytype" xpath="/RecordType/hierarchytype"/>
 			<field column="hierarchy_top_id" xpath="/RecordType/hierarchy_top_id"/>
@@ -158,6 +149,11 @@
 			<field column="hierarchy_sequence" xpath="/RecordType/hierarchy_sequence"/>
 			<field column="is_hierarchy_id" xpath="/RecordType/is_hierarchy_id"/>
 			<field column="is_hierarchy_title" xpath="/RecordType/is_hierarchy_title"/>
+			<field column="container_title" xpath="/RecordType/container_title"/>
+			<field column="container_volume" xpath="/RecordType/container_volume"/>
+			<field column="container_issue" xpath="/RecordType/container_issue"/>
+			<field column="container_start_page" xpath="/RecordType/container_start_page"/>
+			<field column="container_reference" xpath="/RecordType/container_reference"/>
 		</entity>
 	</document>
 </dataConfig>
