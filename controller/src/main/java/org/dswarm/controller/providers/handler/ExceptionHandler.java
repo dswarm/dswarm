@@ -15,6 +15,8 @@
  */
 package org.dswarm.controller.providers.handler;
 
+import java.util.Optional;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
@@ -28,19 +30,55 @@ import org.dswarm.controller.providers.BaseExceptionHandler;
 @Provider
 public class ExceptionHandler extends BaseExceptionHandler<Exception> {
 
+	protected static final String UNDEFINED_ERROR = "undefined error";
+
 	@Override
 	protected Response.Status getStatusFrom(final Exception exception) {
+
 		return Response.Status.INTERNAL_SERVER_ERROR;
 	}
 
 	@Override
 	protected String getErrorMessageFrom(final Exception exception) {
-		if (exception == null || exception.getMessage() == null) {
-			return "";
-		} else {
-			final String[] clientSegments;
-			clientSegments = exception.getMessage().split(":");
-			return clientSegments[clientSegments.length - 1];
+
+		if (exception == null) {
+
+			return UNDEFINED_ERROR;
 		}
+
+		final Optional<String> optionalExceptionMessage = getOptionalExceptionMessage(exception);
+
+		if(!optionalExceptionMessage.isPresent()) {
+
+			return UNDEFINED_ERROR;
+		}
+
+		final String exceptionMessage = optionalExceptionMessage.get();
+		final String[] clientSegments = exceptionMessage.split(":");
+
+		return clientSegments[clientSegments.length - 1];
+	}
+
+	private Optional<String> getOptionalExceptionMessage(final Throwable exception) {
+
+		final String exceptionMessage = exception.getMessage();
+
+		if (exceptionMessage == null || exceptionMessage.trim().isEmpty()) {
+
+			final Throwable exceptionCause = exception.getCause();
+
+			if (exceptionCause == null) {
+
+				// no (further) exception cause available
+
+				return Optional.empty();
+			}
+
+			// traverse the exception cause tree until an exception is found with a message or the end of the exception cause tree is reached
+
+			return getOptionalExceptionMessage(exceptionCause);
+		}
+
+		return Optional.of(exceptionMessage);
 	}
 }
