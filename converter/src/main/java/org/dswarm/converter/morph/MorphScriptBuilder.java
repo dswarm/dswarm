@@ -82,6 +82,8 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 	private static final String METAMORPH_FUNCTION_CONCAT = "concat";
 
+	private static final String DSWARM_FUNCTION_COLLECT = "collect";
+
 	private static final String DSWARM_FUNCTION_IFELSE = "ifelse";
 
 	private static final String IF_VARIABLE_IDENTIFIER = "if";
@@ -704,7 +706,9 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 			return;
 		}
 
-		if (sourceAttributes.size() > 1) {
+		final String functionName = component.getFunction().getName();
+
+		if (sourceAttributes.size() > 1 || DSWARM_FUNCTION_COLLECT.equals(functionName)) {
 
 			// TODO: [@tgaengler] multiple identified input variables doesn't really mean that the component refers to a
 			// collection, or?
@@ -796,6 +800,13 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 				convertConcatFunction(multipleInputComponent, collectionSourceAttributes);
 
 				collection = doc.createElement(METAMORPH_FUNCTION_COMBINE);
+
+				return convertCollectionFunction(multipleInputComponent, collectionNameAttribute, collectionSourceAttributes, collection);
+			case DSWARM_FUNCTION_COLLECT:
+
+				convertCollectFunction(multipleInputComponent);
+
+				collection = doc.createElement(METAMORPH_FUNCTION_CONCAT);
 
 				return convertCollectionFunction(multipleInputComponent, collectionNameAttribute, collectionSourceAttributes, collection);
 			case DSWARM_FUNCTION_IFELSE:
@@ -1024,6 +1035,18 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 		extendedParameterMappings.put(MF_COLLECTOR_RESET_ATTRIBUTE_IDENTIFIER, BOOLEAN_VALUE_TRUE);
 
 		multipleInputComponent.setParameterMappings(extendedParameterMappings);
+	}
+
+	/**
+	 *
+	 * convert collect function to concat function to allow concatenating of field that occur multiple times in a record
+	 *
+	 * @param multipleInputComponent
+	 */
+	private void convertCollectFunction(final Component multipleInputComponent) {
+
+		multipleInputComponent.addParameterMapping(MF_FLUSH_WITH_ATTRIBUTE_IDENTIFIER, METAFACTURE_RECORD_IDENTIFIER);
+		multipleInputComponent.addParameterMapping(MF_COLLECTOR_RESET_ATTRIBUTE_IDENTIFIER, BOOLEAN_VALUE_TRUE);
 	}
 
 	private Element convertIfElseFunction(final Component multipleInputComponent, final String collectionNameAttribute, final Element collection)
