@@ -86,6 +86,12 @@ public class MorphScriptBuilderTest extends GuicedTest {
 	}
 
 	@Test
+	public void testHTTPAPIFunctionToMorph() throws Exception {
+
+		compareTaskGeneratedMorphscript("dd-72.mabxml.task.json", "dd-72.mabxml.morph.xml");
+	}
+
+	@Test
 	public void tesDd906LookupFunction() throws Exception {
 
 		compareTaskGeneratedMorphscript("dd-906.lookups.task.json", "dd-906.lookups.morph.result.xml");
