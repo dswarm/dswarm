@@ -15,16 +15,12 @@
  */
 package org.dswarm.converter.flow;
 
-final class MonitoringFlowStatics {
+import org.dswarm.persistence.model.resource.DataModel;
 
-	static final String METAMORPH = "metamorph";
+/**
+ * @author phorn
+ */
+public interface JsonResourceFlowFactory {
 
-	private MonitoringFlowStatics() {}
-
-	static final String CSV_RECORDS = "CSV Records (Lines)";
-	static final String CSV_TRIPLES = "CSV Triples";
-	static final String INPUT_RESOURCE_FILES = "Input Resource Files";
-	static final String PARSED_XML_RECORDS = "Parsed XML Records";
-	static final String PARSED_JSON_RECORDS = "Parsed JSON Records";
-	static final String XML_EVENTS = "XML Events";
+	JSONSourceResourceGDMStmtsFlow fromDataModel(final DataModel dataModel, final boolean utiliseExistingSchema);
 }

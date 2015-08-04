@@ -57,27 +57,33 @@ public class JsonDecoder extends DefaultObjectPipe<Reader, JsonReceiver> {
 
 					case START_ARRAY:
 
-						getReceiver().startArray(fieldNameStack.peek());
+						final String startArrayFieldName = getCurrentFieldName();
+						getReceiver().startArray(startArrayFieldName);
 
 						break;
 					case START_OBJECT:
 
-						getReceiver().startObject(fieldNameStack.peek());
+						final String startObjectFieldName1 = getCurrentFieldName();
+						getReceiver().startObject(startObjectFieldName1);
 
 						break;
 					case END_ARRAY:
 
-						getReceiver().startArray(fieldNameStack.pop());
+						final String endArrayFieldName = popFieldName();
+						getReceiver().startArray(endArrayFieldName);
 
 						break;
 					case END_OBJECT:
 
-						getReceiver().startObject(fieldNameStack.pop());
+						final String endObjectFieldName = popFieldName();
+						getReceiver().startObject(endObjectFieldName);
 
 						break;
 					case FIELD_NAME:
 
-						fieldNameStack.push(jp.getCurrentName());
+						final String currentFieldName = jp.getCurrentName();
+
+						fieldNameStack.push(currentFieldName);
 
 						break;
 					case VALUE_FALSE:
@@ -88,8 +94,9 @@ public class JsonDecoder extends DefaultObjectPipe<Reader, JsonReceiver> {
 					case VALUE_TRUE:
 
 						final String currentValue = jp.getValueAsString();
+						final String fieldName = fieldNameStack.pop();
 
-						getReceiver().literal(fieldNameStack.pop(), currentValue);
+						getReceiver().literal(fieldName, currentValue);
 
 						break;
 					default:
@@ -97,6 +104,8 @@ public class JsonDecoder extends DefaultObjectPipe<Reader, JsonReceiver> {
 						// TODO: throw an exception (?)
 
 						LOG.debug("unhandled JSON token '{}' found", currentToken);
+
+						System.out.println("unhandled JSON token '" + currentToken + "' found");
 				}
 
 				jp.nextToken();
@@ -107,5 +116,25 @@ public class JsonDecoder extends DefaultObjectPipe<Reader, JsonReceiver> {
 
 			throw new MetafactureException(e);
 		}
+	}
+
+	private String getCurrentFieldName() {
+
+		if(!fieldNameStack.isEmpty()) {
+
+			return fieldNameStack.peek();
+		}
+
+		return null;
+	}
+
+	private String popFieldName() {
+
+		if(!fieldNameStack.isEmpty()) {
+
+			return fieldNameStack.pop();
+		}
+
+		return null;
 	}
 }

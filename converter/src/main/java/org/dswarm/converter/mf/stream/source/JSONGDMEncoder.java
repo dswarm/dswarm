@@ -162,7 +162,7 @@ public class JSONGDMEncoder extends DefaultJsonPipe<ObjectReceiver<GDMModel>> {
 
 			// TODO: is this the correct URI?
 			startEntity(getTermURI(this.uri, name));
-		} else if (optionalRecordTagName.isPresent() && name.equals(optionalRecordTagName.get())) {
+		} else if (optionalRecordTagName.isPresent() && optionalRecordTagName.get().equals(name)) {
 
 			if (recordTagUri == null) {
 
