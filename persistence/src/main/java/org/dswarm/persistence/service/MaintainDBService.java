@@ -128,6 +128,23 @@ public class MaintainDBService {
 	}
 
 	/**
+	 * Executes an SQL script at the DMP DB.
+	 *
+	 * @throws DMPPersistenceException
+	 */
+	@Transactional(rollbackOn = Exception.class)
+	public void executeSQLScript(final String sqlScriptName) throws DMPPersistenceException {
+
+		final EntityManager entityManager = acquire(false);
+
+		MaintainDBService.LOG.debug("try to execute sql script '{}' at the DB", sqlScriptName);
+
+		executeSQLScriptStatementWise(sqlScriptName, entityManager);
+
+		MaintainDBService.LOG.debug("execute sql script '{}' at the DB", sqlScriptName);
+	}
+
+	/**
 	 * Truncates all tables of the DMP DB.
 	 *
 	 * @throws DMPPersistenceException
@@ -159,6 +176,23 @@ public class MaintainDBService {
 		executeSQLScriptLineWise("truncate_tables.sql", entityManager);
 
 		MaintainDBService.LOG.debug("truncated tables of the DB");
+	}
+
+	/**
+	 * Drop all tables of the DMP DB.
+	 *
+	 * @throws DMPPersistenceException
+	 */
+	@Transactional(rollbackOn = Exception.class)
+	public void dropTables() throws DMPPersistenceException {
+
+		final EntityManager entityManager = acquire(false);
+
+		MaintainDBService.LOG.debug("try to drop the tables of the DB");
+
+		executeSQLScriptLineWise("drop_tables.sql", entityManager);
+
+		MaintainDBService.LOG.debug("drop tables of the DB");
 	}
 
 	/**
