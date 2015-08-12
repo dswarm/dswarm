@@ -59,10 +59,10 @@ public class ConfigurationService extends ExtendedBasicDMPJPAService<ProxyConfig
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void updateObjectInternal(final Configuration object, final Configuration updateObject, final EntityManager entityManager)
+	public void updateObjectInternal(final Configuration object, final Configuration updateObject)
 			throws DMPPersistenceException {
 
-		super.updateObjectInternal(object, updateObject, entityManager);
+		super.updateObjectInternal(object, updateObject);
 
 		// TODO: disable resource updating for now (until resource id ref resolution is implemented)
 

@@ -65,7 +65,7 @@ public class SchemaService extends BasicDMPJPAService<ProxySchema, Schema> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void updateObjectInternal(final Schema object, final Schema updateObject, final EntityManager entityManager)
+	public void updateObjectInternal(final Schema object, final Schema updateObject)
 			throws DMPPersistenceException {
 
 		final Collection<SchemaAttributePathInstance> attributePaths = object.getAttributePaths();
@@ -88,7 +88,7 @@ public class SchemaService extends BasicDMPJPAService<ProxySchema, Schema> {
 		updateObject.setRecordClass(recordClass);
 		updateObject.setContentSchema(contentSchema);
 
-		super.updateObjectInternal(object, updateObject, entityManager);
+		super.updateObjectInternal(object, updateObject);
 	}
 
 }

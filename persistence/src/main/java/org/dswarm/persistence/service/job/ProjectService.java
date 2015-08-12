@@ -68,10 +68,10 @@ public class ProjectService extends ExtendedBasicDMPJPAService<ProxyProject, Pro
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void updateObjectInternal(final Project object, final Project updateObject, final EntityManager entityManager)
+	public void updateObjectInternal(final Project object, final Project updateObject)
 			throws DMPPersistenceException {
 
-		super.updateObjectInternal(object, updateObject, entityManager);
+		super.updateObjectInternal(object, updateObject);
 
 		final DataModel inputDataModel = object.getInputDataModel();
 		final DataModel outputDataModel = object.getOutputDataModel();

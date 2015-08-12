@@ -63,7 +63,7 @@ public class ContentSchemaService extends BasicDMPJPAService<ProxyContentSchema,
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void updateObjectInternal(final ContentSchema object, final ContentSchema updateObject, final EntityManager entityManager)
+	public void updateObjectInternal(final ContentSchema object, final ContentSchema updateObject)
 			throws DMPPersistenceException {
 
 		final AttributePath recordIdentifierAttributePath = object.getRecordIdentifierAttributePath();
@@ -74,7 +74,7 @@ public class ContentSchemaService extends BasicDMPJPAService<ProxyContentSchema,
 		updateObject.setKeyAttributePaths(keyAttributePaths);
 		updateObject.setValueAttributePath(valueAttributePath);
 
-		super.updateObjectInternal(object, updateObject, entityManager);
+		super.updateObjectInternal(object, updateObject);
 	}
 
 }

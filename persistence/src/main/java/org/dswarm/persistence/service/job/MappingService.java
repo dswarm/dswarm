@@ -70,10 +70,10 @@ public class MappingService extends BasicDMPJPAService<ProxyMapping, Mapping> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void updateObjectInternal(final Mapping object, final Mapping updateObject, final EntityManager entityManager)
+	public void updateObjectInternal(final Mapping object, final Mapping updateObject)
 			throws DMPPersistenceException {
 
-		super.updateObjectInternal(object, updateObject, entityManager);
+		super.updateObjectInternal(object, updateObject);
 
 		final Set<MappingAttributePathInstance> inputAttributePaths = object.getInputAttributePaths();
 		final MappingAttributePathInstance outputAttributePath = object.getOutputAttributePath();

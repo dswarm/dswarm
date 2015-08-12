@@ -64,10 +64,10 @@ public class ComponentService extends ExtendedBasicDMPJPAService<ProxyComponent,
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void updateObjectInternal(final Component object, final Component updateObject, final EntityManager entityManager)
+	public void updateObjectInternal(final Component object, final Component updateObject)
 			throws DMPPersistenceException {
 
-		super.updateObjectInternal(object, updateObject, entityManager);
+		super.updateObjectInternal(object, updateObject);
 
 		final Function function = object.getFunction();
 		final Set<Component> inputComponents = object.getInputComponents();

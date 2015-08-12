@@ -82,10 +82,10 @@ public class TransformationService extends BasicFunctionService<ProxyTransformat
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void updateObjectInternal(final Transformation object, final Transformation updateObject, final EntityManager entityManager)
+	public void updateObjectInternal(final Transformation object, final Transformation updateObject)
 			throws DMPPersistenceException {
 
-		super.updateObjectInternal(object, updateObject, entityManager);
+		super.updateObjectInternal(object, updateObject);
 
 		final Set<Component> components = object.getComponents();
 

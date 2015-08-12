@@ -129,7 +129,7 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 				newObject = createNewObject(object.getUri());
 			}
 
-			updateObjectInternal(object, newObject, entityManager);
+			updateObjectInternal(object, newObject);
 
 			final POJOCLASS persistedObject = persistObject(newObject, entityManager);
 
@@ -157,7 +157,7 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 
 			newObject = createNewObject(object.getUuid(), uri);
 
-			updateObjectInternal(object, newObject, entityManager);
+			updateObjectInternal(object, newObject);
 
 			final POJOCLASS peristedObject = persistObject(newObject, entityManager);
 
@@ -254,7 +254,7 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 	 * @return the new instance of the concrete POJO class
 	 * @throws DMPPersistenceException if something went wrong at object creation
 	 */
-	private POJOCLASS createNewObject(final String uri) throws DMPPersistenceException {
+	public POJOCLASS createNewObject(final String uri) throws DMPPersistenceException {
 
 		final POJOCLASS object;
 

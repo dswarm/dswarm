@@ -230,7 +230,9 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 		// TODO: shall we check, whether the entity with the UUID already exists in the DB, or not?
 		final POJOCLASS newObject = createNewObject(object.getUuid());
 
-		updateObjectInternal(object, newObject, entityManager);
+		updateObjectInternal(object, newObject);
+
+		// TODO: maybe merge updated entity into entity manager instance again (cf. updateObjectInternal)
 
 		final POJOCLASS persistedObject = persistObject(newObject, entityManager);
 
@@ -290,7 +292,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 		final POJOCLASS updateObject = proxyUpdateObject.getObject();
 
-		updateObjectInternal(object, updateObject, entityManager);
+		updateObjectInternal(object, updateObject);
 
 		final POJOCLASS mergedUpdatedObject = entityManager.merge(updateObject);
 
@@ -316,10 +318,9 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	 *
 	 * @param object        the instance of the specific class with the update data
 	 * @param updateObject  the to be updated instance of the specific class
-	 * @param entityManager the {@link EntityManager} instance for managing the update process
 	 * @throws DMPPersistenceException
 	 */
-	protected abstract void updateObjectInternal(final POJOCLASS object, final POJOCLASS updateObject, final EntityManager entityManager)
+	public abstract void updateObjectInternal(final POJOCLASS object, final POJOCLASS updateObject)
 			throws DMPPersistenceException;
 
 	/**
@@ -444,6 +445,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 		// http://blog.xebia.com/2009/03/23/jpa-implementation-patterns-saving-detached-entities/
 		// "Because of the way merging works, we can also do this if we are unsure whether the object has been already persisted."
+		// pro persist: http://stackoverflow.com/questions/1069992/jpa-entitymanager-why-use-persist-over-merge
 		final POJOCLASS mergedObject = entityManager.merge(object);
 		//.persist(object);
 
@@ -534,7 +536,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	 * @return a new instance of the concrete POJO class
 	 * @throws DMPPersistenceException if something went wrong.
 	 */
-	private POJOCLASS createNewObject(final String uuid) throws DMPPersistenceException {
+	public POJOCLASS createNewObject(final String uuid) throws DMPPersistenceException {
 
 		final POJOCLASS object;
 

@@ -63,10 +63,9 @@ public class SchemaAttributePathInstanceService extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void updateObjectInternal(final SchemaAttributePathInstance object, final SchemaAttributePathInstance updateObject,
-			final EntityManager entityManager) throws DMPPersistenceException {
+	public void updateObjectInternal(final SchemaAttributePathInstance object, final SchemaAttributePathInstance updateObject) throws DMPPersistenceException {
 
-		super.updateObjectInternal(object, updateObject, entityManager);
+		super.updateObjectInternal(object, updateObject);
 
 		final Schema subSchema = object.getSubSchema();
 

@@ -55,7 +55,7 @@ public class ClaszService extends AdvancedDMPJPAService<ProxyClasz, Clasz> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void updateObjectInternal(final Clasz object, final Clasz updateObject, final EntityManager entityManager)
+	public void updateObjectInternal(final Clasz object, final Clasz updateObject)
 			throws DMPPersistenceException {
 
 		final String name = object.getName();

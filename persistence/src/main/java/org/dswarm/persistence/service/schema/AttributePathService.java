@@ -217,7 +217,7 @@ public class AttributePathService extends BasicJPAService<ProxyAttributePath, At
 	}
 
 	@Override
-	protected void updateObjectInternal(final AttributePath object, final AttributePath updateObject, final EntityManager entityManager)
+	public void updateObjectInternal(final AttributePath object, final AttributePath updateObject)
 			throws DMPPersistenceException {
 
 		final List<Attribute> attributes = object.getAttributePath();
