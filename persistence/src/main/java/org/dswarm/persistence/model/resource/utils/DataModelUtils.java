@@ -17,6 +17,8 @@ package org.dswarm.persistence.model.resource.utils;
 
 import java.io.File;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 
@@ -50,6 +52,28 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 	public static final String OAI_PMH_DC_TERMS_DATA_MODEL_UUID    = "DataModel-324e9d95-d06d-4bee-9a7e-a492ad8f0880";
 	public static final String OAI_PMH_MARCXML_DATA_MODEL_UUID     = "DataModel-2ee8ce76-8f17-49b7-a63c-596f88a30ee5";
 	public static final String OAI_PMH_DC_ELEMENTS_AND_EDM_DATA_MODEL_UUID = "DataModel-502401d8-7293-4f12-9e31-4ce2943c222c";
+
+	private static final Collection<String> dataModelsToInbuiltSchemata = new ArrayList<>();
+
+	static {
+
+		dataModelsToInbuiltSchemata.add(BIBRM_CONTRACT_DATA_MODEL_UUID);
+		dataModelsToInbuiltSchemata.add(BIBO_DOCUMENT_DATA_MODEL_UUID);
+		dataModelsToInbuiltSchemata.add(MABXML_DATA_MODEL_UUID);
+		dataModelsToInbuiltSchemata.add(FOAF_PERSON_DATA_MODEL_UUID);
+		dataModelsToInbuiltSchemata.add(PNX_DATA_MODEL_UUID);
+		dataModelsToInbuiltSchemata.add(MARC21_DATA_MODEL_UUID);
+		dataModelsToInbuiltSchemata.add(FINC_SOLR_DATA_MODEL_UUID);
+		dataModelsToInbuiltSchemata.add(OAI_PMH_DC_ELEMENTS_DATA_MODEL_UUID);
+		dataModelsToInbuiltSchemata.add(OAI_PMH_DC_TERMS_DATA_MODEL_UUID);
+		dataModelsToInbuiltSchemata.add(OAI_PMH_MARCXML_DATA_MODEL_UUID);
+		dataModelsToInbuiltSchemata.add(OAI_PMH_DC_ELEMENTS_AND_EDM_DATA_MODEL_UUID);
+	}
+
+	public static Collection<String> getDataModelsToInbuiltSchemata() {
+
+		return dataModelsToInbuiltSchemata;
+	}
 
 	public static String determineDataModelSchemaBaseURI(final DataModel dataModel) {
 

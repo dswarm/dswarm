@@ -49,6 +49,7 @@ import org.dswarm.persistence.model.proxy.ProxyDMPObject;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
+import org.dswarm.persistence.model.resource.utils.DataModelUtils;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Clasz;
@@ -204,13 +205,13 @@ public class MetadataRepositoryMigrator {
 
 		final Map<String, Configuration> persistentConfigurations = recreateExistingConfigurations(configurationsDumpFileName);
 		final Map<String, Resource> persistentResources = recreateExistingResources(resourcesDumpFileName, persistentConfigurations);
-		recreateExistingSchemas(schemasDumpFileName);
-		recreateExistingDataModels(dataModelsDumpFileName);
+		final Map<String, Schema> persistentSchemata = recreateExistingSchemas(schemasDumpFileName);
+		recreateExistingDataModels(dataModelsDumpFileName, persistentSchemata, persistentConfigurations, persistentResources);
 		recreateExistingProjects(projectsDumpFileName);
 	}
 
 	/**
-	 * note: with the new settings that are available at entity creation, we may don't need the separate update step here
+	 * note: with the new settings that are available at entity creation, we may don't need the separate update step here, i.e, we could simply update the configurations at the resources and persist them
 	 *
 	 * 0. remove related configurations from resource
 	 * 1. create resources (without related configurations)
@@ -323,7 +324,12 @@ public class MetadataRepositoryMigrator {
 
 	/**
 	 * recreates existing schemata that are no inbuilt schema
-	 * note: currently, we do not handle schemata with sub schema
+	 * note: currently, we do not handle schemata with sub schemata
+	 * note: currently, we create new schema uuids for those schemata
+	 *
+	 * 0. fetch all existing attributes and attribute paths from schemata
+	 * 2. recreate attributes and attribute paths (with new, persistent attributes)
+	 * 3. recreate schemata with new, persistent attribute paths
 	 *
 	 * @param filePath
 	 * @return a map with the old schema uuids as keys and the new, persistent schemas as values
@@ -428,12 +434,13 @@ public class MetadataRepositoryMigrator {
 			oldUuidNewSchemaMap.put(otherSchema.getUuid(), newSchema);
 		}
 
-		final Map<String, Schema> recreateEntities = recreateEntities(schemaPersistenceServiceProvider, oldUuidNewSchemaMap.values(), PersistenceType.Merge);
+		final Map<String, Schema> recreateEntities = recreateEntities(schemaPersistenceServiceProvider, oldUuidNewSchemaMap.values(),
+				PersistenceType.Merge);
 
 		// create map with old schema uuids and new, persistent schemas
 		final Map<String, Schema> oldUuidNewPersistentSchemaMap = new LinkedHashMap<>();
 
-		for(final Map.Entry<String, Schema> oldUuidNewSchemaEntry : oldUuidNewSchemaMap.entrySet()) {
+		for (final Map.Entry<String, Schema> oldUuidNewSchemaEntry : oldUuidNewSchemaMap.entrySet()) {
 
 			final String oldSchemaUuid = oldUuidNewSchemaEntry.getKey();
 			final String newSchemaUuid = oldUuidNewSchemaEntry.getValue().getUuid();
@@ -446,13 +453,54 @@ public class MetadataRepositoryMigrator {
 		return oldUuidNewPersistentSchemaMap;
 	}
 
-	private void recreateExistingDataModels(final String filePath) throws IOException {
+	/**
+	 * tries to re-create the existing data models.
+	 *
+	 * 1. replace data resource, configuration and schema with persistent entities
+	 * 2. re-create data models (with same uuid as existing ones)
+	 *
+	 * @param filePath
+	 * @param oldUuidNewPersistentSchemaMap
+	 * @param persistentConfigurations
+	 * @param persistentResources
+	 * @return
+	 * @throws IOException
+	 * @throws DMPPersistenceException
+	 */
+	private Map<String, DataModel> recreateExistingDataModels(final String filePath, final Map<String, Schema> oldUuidNewPersistentSchemaMap,
+			final Map<String, Configuration> persistentConfigurations, final Map<String, Resource> persistentResources)
+			throws IOException, DMPPersistenceException {
 
 		final Collection<DataModel> existingDataModels = deserializeEntities(filePath, new TypeReference<ArrayList<DataModel>>() {
 
 		}, DataModel.class.getName());
 
-		System.out.println("here I am");
+		final Collection<String> dataModelsToInbuiltSchemata = DataModelUtils.getDataModelsToInbuiltSchemata();
+		final Map<String, DataModel> otherDataModels = new HashMap<>();
+
+		for (final DataModel existingDataModel : existingDataModels) {
+
+			final String existingDataModelUuid = existingDataModel.getUuid();
+
+			if (dataModelsToInbuiltSchemata.contains(existingDataModelUuid)) {
+
+				// we only need to handle other data models here
+
+				continue;
+			}
+
+			otherDataModels.put(existingDataModelUuid, existingDataModel);
+		}
+
+		for (final DataModel otherDataModel : otherDataModels.values()) {
+
+			replaceDataResource(persistentResources, otherDataModel);
+			replaceConfiguration(persistentConfigurations, otherDataModel);
+			replaceSchema(oldUuidNewPersistentSchemaMap, otherDataModel);
+		}
+
+		return recreateEntities(dataModelPersistenceServiceProvider, otherDataModels.values(),
+				PersistenceType.Merge);
 	}
 
 	private void recreateExistingProjects(final String filePath) throws IOException {
@@ -519,11 +567,12 @@ public class MetadataRepositoryMigrator {
 	private <PERSISTENCE_SERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS>, POJOCLASS extends DMPObject> Map<String, POJOCLASS> recreateEntities(
 			final Provider<PERSISTENCE_SERVICE> persistenceServiceProvider, final Collection<POJOCLASS> entities) throws DMPPersistenceException {
 
-		return recreateEntities(persistenceServiceProvider,entities, PersistenceType.Persist);
+		return recreateEntities(persistenceServiceProvider, entities, PersistenceType.Persist);
 	}
 
 	private <PERSISTENCE_SERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS>, POJOCLASS extends DMPObject> Map<String, POJOCLASS> recreateEntities(
-			final Provider<PERSISTENCE_SERVICE> persistenceServiceProvider, final Collection<POJOCLASS> entities, final PersistenceType persistentType) throws DMPPersistenceException {
+			final Provider<PERSISTENCE_SERVICE> persistenceServiceProvider, final Collection<POJOCLASS> entities,
+			final PersistenceType persistentType) throws DMPPersistenceException {
 
 		final PERSISTENCE_SERVICE persistenceService = persistenceServiceProvider.get();
 		final Class<POJOCLASS> clasz = persistenceService.getClasz();
@@ -614,5 +663,104 @@ public class MetadataRepositoryMigrator {
 		}
 
 		return newAttributes;
+	}
+
+	private static void replaceDataResource(final Map<String, Resource> persistentResources, final DataModel otherDataModel)
+			throws DMPPersistenceException {
+
+		final Resource existingDataResource = otherDataModel.getDataResource();
+
+		if (existingDataResource != null) {
+
+			final String existingDataResourceUuid = existingDataResource.getUuid();
+
+			final Resource persistentResource = persistentResources.get(existingDataResourceUuid);
+
+			if (persistentResource == null) {
+
+				final String message = String.format("could not find resource '%s' in the persistent resources map", existingDataResourceUuid);
+
+				LOG.error(message);
+
+				throw new DMPPersistenceException(message);
+			}
+
+			otherDataModel.setDataResource(persistentResource);
+		}
+	}
+
+	private static void replaceConfiguration(final Map<String, Configuration> persistentConfigurations, final DataModel otherDataModel)
+			throws DMPPersistenceException {
+
+		final Configuration existingConfiguration = otherDataModel.getConfiguration();
+
+		if (existingConfiguration != null) {
+
+			final String existingConfigurationUuid = existingConfiguration.getUuid();
+
+			final Configuration persistentConfiguration = persistentConfigurations.get(existingConfigurationUuid);
+
+			if (persistentConfiguration == null) {
+
+				final String message = String
+						.format("could not find configuration '%s' in the persistent configurations map", existingConfigurationUuid);
+
+				LOG.error(message);
+
+				throw new DMPPersistenceException(message);
+			}
+
+			otherDataModel.setConfiguration(persistentConfiguration);
+		}
+	}
+
+	/**
+	 * replace existing (maybe out-dated (inbuilt)) schemata with persistent ones
+	 *
+	 * @param oldUuidNewPersistentSchemaMap
+	 * @param otherDataModel
+	 * @throws DMPPersistenceException if it couldn't find a persistent schema for the schema uuid of the existing data model
+	 */
+	private void replaceSchema(final Map<String, Schema> oldUuidNewPersistentSchemaMap, final DataModel otherDataModel)
+			throws DMPPersistenceException {
+
+		final Schema existingSchema = otherDataModel.getSchema();
+
+		if (existingSchema != null) {
+
+			final String existingSchemaUuid = existingSchema.getUuid();
+
+			final Collection<String> inbuiltSchemaUuids = SchemaUtils.getInbuiltSchemaUuids();
+
+			final Schema persistentSchema;
+
+			if (inbuiltSchemaUuids.contains(existingSchemaUuid)) {
+
+				// schema is an inbuilt schema
+
+				final SchemaService schemaService = schemaPersistenceServiceProvider.get();
+
+				LOG.debug("schema '{}' is an inbuilt schema, will try re-retrieve it from DB");
+
+				persistentSchema = schemaService.getObject(existingSchemaUuid);
+			} else {
+
+				// schema is not an inbuilt schema
+
+				persistentSchema = oldUuidNewPersistentSchemaMap.get(existingSchemaUuid);
+
+				if (persistentSchema == null) {
+
+					final String message = String
+							.format("could not find schema '%s' in the persistent schemas map", existingSchemaUuid);
+
+					LOG.error(message);
+
+					throw new DMPPersistenceException(message);
+				}
+			}
+
+			otherDataModel.setSchema(persistentSchema);
+		}
 	}
 }
