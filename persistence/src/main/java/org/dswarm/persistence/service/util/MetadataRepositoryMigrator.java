@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -48,14 +49,25 @@ import org.dswarm.persistence.model.proxy.ProxyDMPObject;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
+import org.dswarm.persistence.model.schema.Attribute;
+import org.dswarm.persistence.model.schema.AttributePath;
+import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
+import org.dswarm.persistence.model.schema.utils.AttributePathUtils;
+import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 import org.dswarm.persistence.service.BasicJPAService;
 import org.dswarm.persistence.service.MaintainDBService;
 import org.dswarm.persistence.service.PersistenceType;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.job.ProjectService;
 import org.dswarm.persistence.service.resource.ConfigurationService;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.service.resource.ResourceService;
+import org.dswarm.persistence.service.schema.AttributePathService;
+import org.dswarm.persistence.service.schema.AttributeService;
+import org.dswarm.persistence.service.schema.ClaszService;
+import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
 import org.dswarm.persistence.service.schema.SchemaService;
 
 /**
@@ -73,12 +85,16 @@ public class MetadataRepositoryMigrator {
 	private static final String DATA_MODELS_FILE_NAME    = "data_models.json";
 	private static final String PROJECTS_FILE_NAME       = "projects.json";
 
-	private final Provider<ResourceService>      resourcePersistenceServiceProvider;
-	private final Provider<ConfigurationService> configurationPersistenceServiceProvider;
-	private final Provider<SchemaService>        schemaPersistenceServiceProvider;
-	private final Provider<DataModelService>     dataModelPersistenceServiceProvider;
-	private final Provider<ProjectService>       projectPersistenceServiceProvider;
-	private final Provider<MaintainDBService>    maintainDBServiceProvider;
+	private final Provider<ResourceService>                    resourcePersistenceServiceProvider;
+	private final Provider<ConfigurationService>               configurationPersistenceServiceProvider;
+	private final Provider<SchemaService>                      schemaPersistenceServiceProvider;
+	private final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstancePersistenceServiceProvider;
+	private final Provider<AttributePathService>               attributePathPersistenceServiceProvider;
+	private final Provider<AttributeService>                   attributePersistenceServiceProvider;
+	private final Provider<ClaszService>                       classPersistenceServiceProvider;
+	private final Provider<DataModelService>                   dataModelPersistenceServiceProvider;
+	private final Provider<ProjectService>                     projectPersistenceServiceProvider;
+	private final Provider<MaintainDBService>                  maintainDBServiceProvider;
 
 	private static final JaxbAnnotationModule module = new JaxbAnnotationModule();
 	private static final ObjectMapper         MAPPER = new ObjectMapper()
@@ -91,6 +107,10 @@ public class MetadataRepositoryMigrator {
 	public MetadataRepositoryMigrator(final Provider<ResourceService> resourcePersistenceServiceProviderArg,
 			final Provider<ConfigurationService> configurationPersistenceServiceProviderArg,
 			final Provider<SchemaService> schemaPersistenceServiceProviderArg,
+			final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstancePersistenceServiceProviderArg,
+			final Provider<AttributePathService> attributePathPersistenceServiceProviderArg,
+			final Provider<AttributeService> attributePersistenceServiceProviderArg,
+			final Provider<ClaszService> classPersistenceServiceProviderArg,
 			final Provider<DataModelService> dataModelPersistenceServiceProviderArg,
 			final Provider<ProjectService> projectPersistenceServiceProviderArg,
 			final Provider<MaintainDBService> maintainDBServiceProvierArg) {
@@ -98,6 +118,10 @@ public class MetadataRepositoryMigrator {
 		resourcePersistenceServiceProvider = resourcePersistenceServiceProviderArg;
 		configurationPersistenceServiceProvider = configurationPersistenceServiceProviderArg;
 		schemaPersistenceServiceProvider = schemaPersistenceServiceProviderArg;
+		schemaAttributePathInstancePersistenceServiceProvider = schemaAttributePathInstancePersistenceServiceProviderArg;
+		attributePathPersistenceServiceProvider = attributePathPersistenceServiceProviderArg;
+		attributePersistenceServiceProvider = attributePersistenceServiceProviderArg;
+		classPersistenceServiceProvider = classPersistenceServiceProviderArg;
 		dataModelPersistenceServiceProvider = dataModelPersistenceServiceProviderArg;
 		projectPersistenceServiceProvider = projectPersistenceServiceProviderArg;
 		maintainDBServiceProvider = maintainDBServiceProvierArg;
@@ -186,6 +210,8 @@ public class MetadataRepositoryMigrator {
 	}
 
 	/**
+	 * note: with the new settings that are available at entity creation, we may don't need the separate update step here
+	 *
 	 * 0. remove related configurations from resource
 	 * 1. create resources (without related configurations)
 	 * 2. add related configurations to persistent resources
@@ -210,7 +236,7 @@ public class MetadataRepositoryMigrator {
 
 			final Set<Configuration> configurations = existingResource.getConfigurations();
 
-			if(configurations != null) {
+			if (configurations != null) {
 
 				final Set<Configuration> configurationsCopy = new LinkedHashSet<>();
 				configurationsCopy.addAll(configurations);
@@ -225,7 +251,7 @@ public class MetadataRepositoryMigrator {
 					final String configurationUuid = configuration.getUuid();
 					final Configuration persistentConfiguration = persistentConfigurations.get(configurationUuid);
 
-					if(persistentConfiguration != null) {
+					if (persistentConfiguration != null) {
 
 						resourcesConfigurations.get(existingResourceUuid).add(persistentConfiguration);
 					} else {
@@ -241,24 +267,22 @@ public class MetadataRepositoryMigrator {
 		// create resources without related configurations
 		final Map<String, Resource> persistentResources = recreateEntities(resourcePersistenceServiceProvider, modifiedResources);
 
-		System.out.println("here I am");
-
 		final Collection<Resource> updatedResources = new ArrayList<>();
 
 		// add related configurations to persistent resources
-		for(final Map.Entry<String, Resource> persistentResourceEnty : persistentResources.entrySet()) {
+		for (final Map.Entry<String, Resource> persistentResourceEnty : persistentResources.entrySet()) {
 
 			final String persistentResourceUuid = persistentResourceEnty.getKey();
 			final Resource persistentResource = persistentResourceEnty.getValue();
 
 			final Collection<Configuration> resourceConfigurations = resourcesConfigurations.get(persistentResourceUuid);
 
-			if(resourceConfigurations == null) {
+			if (resourceConfigurations == null) {
 
 				continue;
 			}
 
-			for(final Configuration resourceConfiguration : resourceConfigurations) {
+			for (final Configuration resourceConfiguration : resourceConfigurations) {
 
 				persistentResource.addConfiguration(resourceConfiguration);
 			}
@@ -267,11 +291,7 @@ public class MetadataRepositoryMigrator {
 		}
 
 		// updated resources with related configurations
-		final Map<String, Resource> updatedPersistentResources = updateEntities(resourcePersistenceServiceProvider, updatedResources);
-
-		System.out.println("here I am");
-
-		return updatedPersistentResources;
+		return updateEntities(resourcePersistenceServiceProvider, updatedResources);
 	}
 
 	/**
@@ -298,20 +318,132 @@ public class MetadataRepositoryMigrator {
 			modifiedConfigurations.add(existingConfiguration);
 		}
 
-		final Map<String, Configuration> persistentConfigurations = recreateEntities(configurationPersistenceServiceProvider, modifiedConfigurations);
-
-		System.out.println("here I am");
-
-		return persistentConfigurations;
+		return recreateEntities(configurationPersistenceServiceProvider, modifiedConfigurations);
 	}
 
-	private void recreateExistingSchemas(final String filePath) throws IOException {
+	/**
+	 * recreates existing schemata that are no inbuilt schema
+	 * note: currently, we do not handle schemata with sub schema
+	 *
+	 * @param filePath
+	 * @return a map with the old schema uuids as keys and the new, persistent schemas as values
+	 * @throws IOException
+	 * @throws DMPPersistenceException
+	 */
+	private Map<String, Schema> recreateExistingSchemas(final String filePath) throws IOException, DMPPersistenceException {
 
 		final Collection<Schema> existingSchemas = deserializeEntities(filePath, new TypeReference<ArrayList<Schema>>() {
 
 		}, Schema.class.getName());
 
-		System.out.println("here I am");
+		final Collection<String> inbuiltSchemaUuids = SchemaUtils.getInbuiltSchemaUuids();
+		final Map<String, Schema> otherSchemata = new HashMap<>();
+
+		for (final Schema existingSchema : existingSchemas) {
+
+			final String existingSchemaUuid = existingSchema.getUuid();
+
+			if (inbuiltSchemaUuids.contains(existingSchemaUuid)) {
+
+				// we only need to handle other schemas here
+
+				continue;
+			}
+
+			otherSchemata.put(existingSchemaUuid, existingSchema);
+		}
+
+		// note:
+		// - we (probably) need a mapping between old and new attribute paths (identifiers)
+		// - we (probably) need a mapping between old and new attributes (identifiers)
+		// - we (probably) need a mapping between old and new classes (identifiers)
+		// - we (probably) need a mapping between old and new schema (identifiers)
+
+		final Map<String, Schema> oldUuidNewSchemaMap = new LinkedHashMap<>();
+		final Map<String, AttributePath> persistentAttributePaths = new LinkedHashMap<>();
+
+		final AttributePathService attributePathService = attributePathPersistenceServiceProvider.get();
+		final SchemaAttributePathInstanceService schemaAttributePathInstanceService = schemaAttributePathInstancePersistenceServiceProvider
+				.get();
+
+		for (final Map.Entry<String, Schema> otherSchemaEntry : otherSchemata.entrySet()) {
+
+			final Schema otherSchema = otherSchemaEntry.getValue();
+
+			// TODO: or shall we simply take the uuid from the old, existing schema?
+			final String schemaUUID = UUIDService.getUUID(Schema.class.getSimpleName());
+			final Schema newSchema = new Schema(schemaUUID);
+
+			final Map<String, Attribute> otherSchemaAttributeMap = SchemaUtils.generateAttributeMap2(otherSchema);
+
+			// handle attribute paths
+			if (otherSchemaAttributeMap != null) {
+
+				// re-create all attributes
+				final Map<String, Attribute> persistentAttributes = recreateEntities(attributePersistenceServiceProvider,
+						otherSchemaAttributeMap.values());
+
+				final Map<String, Attribute> attributeUriPersistentAttributeMap = generateAttributeMap(persistentAttributes.values());
+
+				final Map<String, AttributePath> otherSchemaAttributePathMap = SchemaUtils.generateAttributePathMap(otherSchema);
+
+				// re-create all attribute paths with re-created attributes (instead of old ones)
+				final Map<String, LinkedList<Attribute>> newAttributePaths = generateAttributesLists(otherSchemaAttributePathMap.values(),
+						attributeUriPersistentAttributeMap);
+
+				for (final Map.Entry<String, LinkedList<Attribute>> newAttributePathEntry : newAttributePaths.entrySet()) {
+
+					final String newAttributePathString = newAttributePathEntry.getKey();
+					final LinkedList<Attribute> newAttributePath = newAttributePathEntry.getValue();
+
+					if (!persistentAttributePaths.containsKey(newAttributePathString)) {
+
+						final AttributePath recreatedAttributePath = SchemaUtils
+								.addAttributePaths(newSchema, newAttributePath, attributePathService, schemaAttributePathInstanceService);
+
+						persistentAttributePaths.put(recreatedAttributePath.toAttributePath(), recreatedAttributePath);
+					} else {
+
+						// re-utilise already persistent attribute paths (i.e. this is a cache)
+
+						final AttributePath persistentAttributePath = persistentAttributePaths.get(newAttributePathString);
+
+						final String sapiUUID = UUIDService.getUUID(SchemaAttributePathInstance.class.getSimpleName());
+						final SchemaAttributePathInstance sapi = new SchemaAttributePathInstance(sapiUUID);
+						sapi.setAttributePath(persistentAttributePath);
+
+						newSchema.addAttributePath(sapi);
+					}
+				}
+			}
+
+			final Clasz recordClass = otherSchema.getRecordClass();
+
+			// handle record class
+			if (recordClass != null) {
+
+				SchemaUtils.addRecordClass(newSchema, recordClass.getUri(), classPersistenceServiceProvider);
+			}
+
+			oldUuidNewSchemaMap.put(otherSchema.getUuid(), newSchema);
+		}
+
+		final Map<String, Schema> recreateEntities = recreateEntities(schemaPersistenceServiceProvider, oldUuidNewSchemaMap.values(), PersistenceType.Merge);
+
+		// create map with old schema uuids and new, persistent schemas
+		final Map<String, Schema> oldUuidNewPersistentSchemaMap = new LinkedHashMap<>();
+
+		for(final Map.Entry<String, Schema> oldUuidNewSchemaEntry : oldUuidNewSchemaMap.entrySet()) {
+
+			final String oldSchemaUuid = oldUuidNewSchemaEntry.getKey();
+			final String newSchemaUuid = oldUuidNewSchemaEntry.getValue().getUuid();
+
+			final Schema newPersistentSchema = recreateEntities.get(newSchemaUuid);
+
+			oldUuidNewPersistentSchemaMap.put(oldSchemaUuid, newPersistentSchema);
+		}
+
+		return oldUuidNewPersistentSchemaMap;
 	}
 
 	private void recreateExistingDataModels(final String filePath) throws IOException {
@@ -387,6 +519,12 @@ public class MetadataRepositoryMigrator {
 	private <PERSISTENCE_SERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS>, POJOCLASS extends DMPObject> Map<String, POJOCLASS> recreateEntities(
 			final Provider<PERSISTENCE_SERVICE> persistenceServiceProvider, final Collection<POJOCLASS> entities) throws DMPPersistenceException {
 
+		return recreateEntities(persistenceServiceProvider,entities, PersistenceType.Persist);
+	}
+
+	private <PERSISTENCE_SERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS>, POJOCLASS extends DMPObject> Map<String, POJOCLASS> recreateEntities(
+			final Provider<PERSISTENCE_SERVICE> persistenceServiceProvider, final Collection<POJOCLASS> entities, final PersistenceType persistentType) throws DMPPersistenceException {
+
 		final PERSISTENCE_SERVICE persistenceService = persistenceServiceProvider.get();
 		final Class<POJOCLASS> clasz = persistenceService.getClasz();
 		final String claszName = clasz.getName();
@@ -397,7 +535,7 @@ public class MetadataRepositoryMigrator {
 
 		for (final POJOCLASS entity : entities) {
 
-			final PROXYPOJOCLASS proxyPersistentEntity = persistenceService.createObjectTransactional(entity, PersistenceType.Persist);
+			final PROXYPOJOCLASS proxyPersistentEntity = persistenceService.createObjectTransactional(entity, persistentType);
 			final POJOCLASS persistentEntity = proxyPersistentEntity.getObject();
 
 			persistentEntities.put(persistentEntity.getUuid(), persistentEntity);
@@ -430,5 +568,51 @@ public class MetadataRepositoryMigrator {
 		LOG.debug("updated '{}' {}s", persistentEntities.size(), claszName);
 
 		return persistentEntities;
+	}
+
+	private static Map<String, Attribute> generateAttributeMap(final Collection<Attribute> attributes) {
+
+		final Map<String, Attribute> attributeMap = new LinkedHashMap<>();
+
+		for (final Attribute attribute : attributes) {
+
+			attributeMap.put(attribute.getUri(), attribute);
+		}
+
+		return attributeMap;
+	}
+
+	private static Map<String, LinkedList<Attribute>> generateAttributesLists(final Collection<AttributePath> attributePaths,
+			final Map<String, Attribute> attributeMap) {
+
+		final Map<String, LinkedList<Attribute>> actualAttributesLists = new LinkedHashMap<>();
+
+		for (final AttributePath attributePath : attributePaths) {
+
+			final List<Attribute> attributePathAttributesList = attributePath.getAttributePath();
+
+			final LinkedList<Attribute> newAttributes = generateAttributeList(attributePathAttributesList, attributeMap);
+
+			final String newAttributePathString = AttributePathUtils.generateAttributePath(newAttributes);
+
+			actualAttributesLists.put(newAttributePathString, newAttributes);
+		}
+
+		return actualAttributesLists;
+	}
+
+	private static LinkedList<Attribute> generateAttributeList(final List<Attribute> existingAttributes,
+			final Map<String, Attribute> recreatedAttributes) {
+
+		final LinkedList<Attribute> newAttributes = new LinkedList<>();
+
+		for (final Attribute existingAttribute : existingAttributes) {
+
+			final Attribute newAttribute = recreatedAttributes.get(existingAttribute.getUri());
+
+			newAttributes.add(newAttribute);
+		}
+
+		return newAttributes;
 	}
 }

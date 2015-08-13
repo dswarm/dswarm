@@ -16,6 +16,8 @@
 package org.dswarm.persistence.model.schema.utils;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -82,6 +84,29 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 	public static final String OAI_PMH_DC_TERMS_SCHEMA_UUID            = "Schema-8fefbced-c2f2-478c-a22a-debb122e05de";
 	public static final String OAI_PMH_MARCXML_SCHEMA_UUID             = "Schema-5ca8e59f-0f40-4f17-8237-e5d0a6e83f18";
 	public static final String OAI_PMH_DC_ELEMENTS_AND_EDM_SCHEMA_UUID = "Schema-e6d4ff86-07d9-494f-9299-9d67d3a0d9e8";
+
+	private static final Collection<String> inbuiltSchemaUuids = new ArrayList<>();
+
+	static {
+
+		// add all inbuilt schema uuids here
+		inbuiltSchemaUuids.add(MABXML_SCHEMA_UUID);
+		inbuiltSchemaUuids.add(BIBRM_CONTRACT_ITEM_SCHEMA_UUID);
+		inbuiltSchemaUuids.add(BIBO_DOCUMENT_SCHEMA_UUID);
+		inbuiltSchemaUuids.add(FOAF_SCHEMA_UUID);
+		inbuiltSchemaUuids.add(PNX_SCHEMA_UUID);
+		inbuiltSchemaUuids.add(MARC21_SCHEMA_UUID);
+		inbuiltSchemaUuids.add(FINC_SOLR_SCHEMA_UUID);
+		inbuiltSchemaUuids.add(OAI_PMH_DC_ELEMENTS_SCHEMA_UUID);
+		inbuiltSchemaUuids.add(OAI_PMH_DC_TERMS_SCHEMA_UUID);
+		inbuiltSchemaUuids.add(OAI_PMH_MARCXML_SCHEMA_UUID);
+		inbuiltSchemaUuids.add(OAI_PMH_DC_ELEMENTS_AND_EDM_SCHEMA_UUID);
+	}
+
+	public static Collection<String> getInbuiltSchemaUuids() {
+
+		return inbuiltSchemaUuids;
+	}
 
 	public static String determineRelativeURIPart(final String uri) {
 
@@ -265,13 +290,15 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 		return true;
 	}
 
-	public static void addAttributePaths(final Schema schema, final LinkedList<Attribute> attributes, final AttributePathService attributePathService,
+	public static AttributePath addAttributePaths(final Schema schema, final LinkedList<Attribute> attributes, final AttributePathService attributePathService,
 			final SchemaAttributePathInstanceService schemaAttributePathInstanceService) throws DMPPersistenceException {
 
 		final SchemaAttributePathInstance schemaAttributePathInstance = createSchemaAttributePathInstance(attributes, attributePathService,
 				schemaAttributePathInstanceService);
 
 		schema.addAttributePath(schemaAttributePathInstance);
+
+		return schemaAttributePathInstance.getAttributePath();
 	}
 
 	public static SchemaAttributePathInstance createSchemaAttributePathInstance(final LinkedList<Attribute> attributes,
@@ -462,24 +489,112 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 		final Map<String, AdvancedDMPJPAObject> termMap = new HashMap<>();
 
-		for (final SchemaAttributePathInstance sapi : schema.getAttributePaths()) {
-
-			final AttributePath attributePath = sapi.getAttributePath();
-
-			for (final Attribute attribute : attributePath.getAttributes()) {
-
-				termMap.put(attribute.getName(), attribute);
-			}
-		}
+		generateAttributeMap(schema, termMap);
 
 		final Clasz recordClass = schema.getRecordClass();
 
-		if(recordClass != null) {
+		if (recordClass != null) {
 
 			termMap.put(recordClass.getName(), recordClass);
 		}
 
 		return termMap;
+	}
+
+	/**
+	 * returns an attribute map with local attribute names as key and attribute objects as values of an entry.
+	 *
+	 * note: if a local name occurs multiple times, this won't be handles right now
+	 *
+	 * @param schema
+	 * @return
+	 */
+	public static Map<String, Attribute> generateAttributeMap(final Schema schema) {
+
+		if (schema == null) {
+
+			return null;
+		}
+
+		final Map<String, Attribute> termMap = new HashMap<>();
+
+		generateAttributeMap(schema, termMap);
+
+		return termMap;
+	}
+
+	/**
+	 * returns an attribute map with attribute uuids as key and attribute objects as values of an entry.
+	 *
+	 * @param schema
+	 * @return
+	 */
+	public static Map<String, Attribute> generateAttributeMap2(final Schema schema) {
+
+		if (schema == null) {
+
+			return null;
+		}
+
+		final Map<String, Attribute> termMap = new HashMap<>();
+
+		generateAttributeMap2(schema, termMap);
+
+		return termMap;
+	}
+
+	/**
+	 * returns an attribute map with local attribute names as key and attribute objects as values of an entry.
+	 *
+	 * note: if a local name occurs multiple times, this won't be handles right now
+	 *
+	 * @param schema
+	 * @return
+	 */
+	private static <T extends AdvancedDMPJPAObject> void generateAttributeMap(final Schema schema, final Map<String, T> termMap) {
+
+		final Collection<SchemaAttributePathInstance> attributePaths = schema.getAttributePaths();
+
+		if (attributePaths == null) {
+
+			return;
+		}
+
+		for (final SchemaAttributePathInstance sapi : attributePaths) {
+
+			final AttributePath attributePath = sapi.getAttributePath();
+
+			for (final Attribute attribute : attributePath.getAttributes()) {
+
+				termMap.put(attribute.getName(), (T) attribute);
+			}
+		}
+	}
+
+	/**
+	 * returns an attribute map with attribute uuids as key and attribute objects as values of an entry.
+	 *
+	 * @param schema
+	 * @return
+	 */
+	private static <T extends AdvancedDMPJPAObject> void generateAttributeMap2(final Schema schema, final Map<String, T> termMap) {
+
+		final Collection<SchemaAttributePathInstance> attributePaths = schema.getAttributePaths();
+
+		if (attributePaths == null) {
+
+			return;
+		}
+
+		for (final SchemaAttributePathInstance sapi : attributePaths) {
+
+			final AttributePath attributePath = sapi.getAttributePath();
+
+			for (final Attribute attribute : attributePath.getAttributes()) {
+
+				termMap.put(attribute.getUuid(), (T) attribute);
+			}
+		}
 	}
 
 	private static String mintTermUri(final String termUri, final String localTermName, final String baseUri) {

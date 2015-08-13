@@ -50,6 +50,7 @@ import org.slf4j.LoggerFactory;
 import org.dswarm.init.DMPException;
 import org.dswarm.init.util.DMPStatics;
 import org.dswarm.persistence.model.DMPObject;
+import org.dswarm.persistence.model.schema.utils.AttributePathUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -429,34 +430,9 @@ public class AttributePath extends DMPObject {
 	 */
 	public String toAttributePath() {
 
-		if (null == getAttributePath()) {
+		final List<Attribute> attributePath = getAttributePath();
 
-			return null;
-		}
-
-		if (getAttributePath().isEmpty()) {
-
-			return null;
-		}
-
-		final StringBuilder sb = new StringBuilder();
-
-		boolean first = true;
-
-		for (final Attribute attribute : getAttributePath()) {
-
-			if (!first) {
-
-				sb.append(DMPStatics.ATTRIBUTE_DELIMITER);
-			} else {
-
-				first = false;
-			}
-
-			sb.append(attribute.getUri());
-		}
-
-		return sb.toString();
+		return AttributePathUtils.generateAttributePath(attributePath);
 	}
 
 	/**
