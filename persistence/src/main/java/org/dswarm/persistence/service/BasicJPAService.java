@@ -18,6 +18,7 @@ package org.dswarm.persistence.service;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -43,7 +44,10 @@ import org.dswarm.persistence.model.proxy.RetrievalType;
  */
 public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS>, POJOCLASS extends DMPObject> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(BasicJPAService.class);
+	private static final Logger LOG                                = LoggerFactory.getLogger(BasicJPAService.class);
+
+	protected static final  String TRANSACTIONAL_TRANSACTION_TYPE     = "transactional";
+	protected static final  String NON_TRANSACTIONAL_TRANSACTION_TYPE = "non-transactional";
 
 	/**
 	 * The concrete POJO class of this persistence service.
@@ -155,7 +159,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 		final EntityManager entityManager = acquire(false);
 
-		return createObjectInternal(entityManager);
+		return createObjectInternal(entityManager, PersistenceType.Merge);
 	}
 
 	/**
@@ -168,26 +172,43 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 		final EntityManager entityManager = acquire(false);
 
-		return createObjectInternal(uuid, entityManager);
+		return createObjectInternal(uuid, entityManager, PersistenceType.Merge);
 	}
 
-	protected PROXYPOJOCLASS createObjectInternal(final EntityManager entityManager) throws DMPPersistenceException {
+	/**
+	 * Create and persist an object of the specific class non-transactional with the given uuid.<br>
+	 *
+	 * @param uuid the uuid that should be utilised to created the object
+	 * @return the persisted object of the specific class with the given uuid
+	 */
+	public PROXYPOJOCLASS createObject(final String uuid, final PersistenceType persistenceType) throws DMPPersistenceException {
+
+		final EntityManager entityManager = acquire(false);
+
+		return createObjectInternal(uuid, entityManager, persistenceType);
+	}
+
+	protected PROXYPOJOCLASS createObjectInternal(final EntityManager entityManager, final PersistenceType persistenceType)
+			throws DMPPersistenceException {
 
 		// i.e. uuid will be created on demand in createNewObject
 		final POJOCLASS object = createNewObject(null);
 
-		final POJOCLASS persistedObject = persistObject(object, entityManager);
+		final Optional<POJOCLASS> optionalPersistentObject = persistObject(object, entityManager, persistenceType);
+		final POJOCLASS persistentObject = determinePersistentObject(object, optionalPersistentObject);
 
-		return createNewProxyObject(persistedObject);
+		return createNewProxyObject(persistentObject);
 	}
 
-	protected PROXYPOJOCLASS createObjectInternal(final String uuid, final EntityManager entityManager) throws DMPPersistenceException {
+	protected PROXYPOJOCLASS createObjectInternal(final String uuid, final EntityManager entityManager, final PersistenceType persistenceType)
+			throws DMPPersistenceException {
 
 		final POJOCLASS object = createNewObject(uuid);
 
-		final POJOCLASS persistedObject = persistObject(object, entityManager);
+		final Optional<POJOCLASS> optionalPersistentObject = persistObject(object, entityManager, persistenceType);
+		final POJOCLASS persistentObject = determinePersistentObject(object, optionalPersistentObject);
 
-		return createNewProxyObject(persistedObject);
+		return createNewProxyObject(persistentObject);
 	}
 
 	/**
@@ -201,7 +222,21 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	@Transactional(rollbackOn = Exception.class)
 	public PROXYPOJOCLASS createObjectTransactional(final POJOCLASS object) throws DMPPersistenceException {
 
-		return createObjectInternal(object, "transactional");
+		return createObjectInternal(object, TRANSACTIONAL_TRANSACTION_TYPE, PersistenceType.Merge);
+	}
+
+	/**
+	 * Create and persist an object of the specific class transactional. The given object can be utilised for initialisation of
+	 * the persisted object or to ensure certain constraints, e.g., a uniqueness constraint.<br>
+	 *
+	 * @param object
+	 * @return
+	 * @throws DMPPersistenceException
+	 */
+	@Transactional(rollbackOn = Exception.class)
+	public PROXYPOJOCLASS createObjectTransactional(final POJOCLASS object, final PersistenceType persistenceType) throws DMPPersistenceException {
+
+		return createObjectInternal(object, TRANSACTIONAL_TRANSACTION_TYPE, persistenceType);
 	}
 
 	/**
@@ -214,17 +249,20 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	 */
 	public PROXYPOJOCLASS createObject(final POJOCLASS object) throws DMPPersistenceException {
 
-		return createObjectInternal(object, "non-transactional");
+		// TODO: change persistent type as required or make it a parameter of the method
+		return createObjectInternal(object, NON_TRANSACTIONAL_TRANSACTION_TYPE, PersistenceType.Merge);
 	}
 
-	protected PROXYPOJOCLASS createObjectInternal(final POJOCLASS object, final String transactionType) throws DMPPersistenceException {
+	protected PROXYPOJOCLASS createObjectInternal(final POJOCLASS object, final String transactionType, final PersistenceType persistenceType)
+			throws DMPPersistenceException {
 
 		final EntityManager entityManager = acquire(false);
 
-		return createObjectInternal(object, entityManager, transactionType);
+		return createObjectInternal(object, entityManager, transactionType, persistenceType);
 	}
 
-	protected PROXYPOJOCLASS createObjectInternal(final POJOCLASS object, final EntityManager entityManager, final String transactionType)
+	protected PROXYPOJOCLASS createObjectInternal(final POJOCLASS object, final EntityManager entityManager, final String transactionType,
+			final PersistenceType persistenceType)
 			throws DMPPersistenceException {
 
 		// TODO: shall we check, whether the entity with the UUID already exists in the DB, or not?
@@ -234,9 +272,11 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 		// TODO: maybe merge updated entity into entity manager instance again (cf. updateObjectInternal)
 
-		final POJOCLASS persistedObject = persistObject(newObject, entityManager);
+		final Optional<POJOCLASS> optionalPersistentObject = persistObject(newObject, entityManager, persistenceType);
 
-		return createNewProxyObject(persistedObject, RetrievalType.CREATED);
+		final POJOCLASS persistentObject = determinePersistentObject(newObject, optionalPersistentObject);
+
+		return createNewProxyObject(persistentObject, RetrievalType.CREATED);
 	}
 
 	/**
@@ -252,7 +292,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 		// TODO [@tgaengler]: maybe we should also make use of a _fresh_ entity manager here (cf. concurrent modification exception case from Resource <-> Configuration
 		final EntityManager entityManager = acquire(false);
 
-		return updateObjectInternal(object, entityManager, "transactional");
+		return updateObjectInternal(object, entityManager, TRANSACTIONAL_TRANSACTION_TYPE);
 	}
 
 	/**
@@ -266,24 +306,29 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 		final EntityManager entityManager = acquire(false);
 
-		return updateObjectInternal(object, entityManager, "non-transactional");
+		return updateObjectInternal(object, entityManager, NON_TRANSACTIONAL_TRANSACTION_TYPE);
 	}
 
 	protected PROXYPOJOCLASS updateObjectInternal(final POJOCLASS object, final EntityManager entityManager, final String transactionType)
 			throws DMPPersistenceException {
 
-		final PROXYPOJOCLASS proxyUpdateObject = getObject(object, entityManager, transactionType);
+		// TODO: change persistent type as required or make it a parameter of the method
+		final PROXYPOJOCLASS proxyUpdateObject = getObject(object, entityManager, transactionType, PersistenceType.Merge);
 
 		if (proxyUpdateObject == null) {
 
-			BasicJPAService.LOG.debug("couldn't continue {} update for {} with id '{}', because the proxy object is invalid.", transactionType, className, object.getUuid());
+			BasicJPAService.LOG
+					.debug("couldn't continue {} update for {} with id '{}', because the proxy object is invalid.", transactionType, className,
+							object.getUuid());
 
 			return proxyUpdateObject;
 		}
 
 		if (proxyUpdateObject.getObject() == null) {
 
-			BasicJPAService.LOG.debug("couldn't continue {} update for {} with id '{}', because the retrieved/created object is invalid.", transactionType, className, object.getUuid());
+			BasicJPAService.LOG
+					.debug("couldn't continue {} update for {} with id '{}', because the retrieved/created object is invalid.", transactionType,
+							className, object.getUuid());
 
 			return proxyUpdateObject;
 		}
@@ -418,7 +463,8 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	 * @return the requested POJOCLASS instance fresh from the DB or a new POJOCLASS instance
 	 * @throws DMPPersistenceException
 	 */
-	protected PROXYPOJOCLASS getObject(final POJOCLASS object, final EntityManager entityManager, final String transactionType)
+	protected PROXYPOJOCLASS getObject(final POJOCLASS object, final EntityManager entityManager, final String transactionType,
+			final PersistenceType persistenceType)
 			throws DMPPersistenceException {
 
 		final PROXYPOJOCLASS proxyUpdateObject;
@@ -430,7 +476,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 
 			BasicJPAService.LOG.debug("{} id is null, will create a new {}", className, className);
 
-			proxyUpdateObject = createObjectInternal(object, entityManager, transactionType);
+			proxyUpdateObject = createObjectInternal(object, entityManager, transactionType, persistenceType);
 		} else {
 
 			proxyUpdateObject = getObjectInternal(object, entityManager);
@@ -439,19 +485,43 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 		return proxyUpdateObject;
 	}
 
-	protected POJOCLASS persistObject(final POJOCLASS object, final EntityManager entityManager) {
+	protected Optional<POJOCLASS> persistObject(final POJOCLASS object, final EntityManager entityManager, final PersistenceType persistenceType)
+			throws DMPPersistenceException {
 
 		BasicJPAService.LOG.debug("try to create new {}", className);
 
 		// http://blog.xebia.com/2009/03/23/jpa-implementation-patterns-saving-detached-entities/
 		// "Because of the way merging works, we can also do this if we are unsure whether the object has been already persisted."
 		// pro persist: http://stackoverflow.com/questions/1069992/jpa-entitymanager-why-use-persist-over-merge
-		final POJOCLASS mergedObject = entityManager.merge(object);
-		//.persist(object);
+
+		final Optional<POJOCLASS> optionalPersistentObject;
+
+		switch (persistenceType) {
+
+			case Persist:
+
+				entityManager.persist(object);
+
+				optionalPersistentObject = Optional.empty();
+
+				break;
+			case Merge:
+
+				optionalPersistentObject = Optional.of(entityManager.merge(object));
+
+				break;
+			default:
+
+				final String message = String.format("cannot persist %s; found unknown persistence type '%s'", className, persistenceType.toString());
+
+				LOG.error(message);
+
+				throw new DMPPersistenceException(message);
+		}
 
 		BasicJPAService.LOG.debug("created new {} with id '{}'", className, object.getUuid());
 
-		return mergedObject;
+		return optionalPersistentObject;
 	}
 
 	/**
@@ -574,5 +644,20 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 		}
 
 		return object;
+	}
+
+	protected POJOCLASS determinePersistentObject(final POJOCLASS newObject, final Optional<POJOCLASS> optionalPersistentObject) {
+
+		final POJOCLASS persistentObject;
+
+		if (optionalPersistentObject.isPresent()) {
+
+			persistentObject = optionalPersistentObject.get();
+		} else {
+
+			persistentObject = newObject;
+		}
+
+		return persistentObject;
 	}
 }

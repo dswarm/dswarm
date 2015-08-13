@@ -17,6 +17,7 @@ package org.dswarm.persistence.service;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -66,7 +67,7 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 	@Transactional(rollbackOn = DMPPersistenceException.class)
 	public PROXYPOJOCLASS createOrGetObjectTransactional(final POJOCLASS object) throws DMPPersistenceException {
 
-		return createOrGetObject(object, "transactional");
+		return createOrGetObject(object, TRANSACTIONAL_TRANSACTION_TYPE);
 	}
 
 	/**
@@ -80,7 +81,7 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 
 		final POJOCLASS object = createNewObject(uri);
 
-		return createOrGetObject(object, "transactional");
+		return createOrGetObject(object, TRANSACTIONAL_TRANSACTION_TYPE);
 	}
 
 	/**
@@ -131,9 +132,11 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 
 			updateObjectInternal(object, newObject);
 
-			final POJOCLASS persistedObject = persistObject(newObject, entityManager);
+			// TODO: change persistent type as required or make it a parameter of the method
+			final Optional<POJOCLASS> optionalPersistentObject = persistObject(newObject, entityManager, PersistenceType.Merge);
+			final POJOCLASS persistentObject = determinePersistentObject(newObject, optionalPersistentObject);
 
-			return createNewProxyObject(persistedObject);
+			return createNewProxyObject(persistentObject);
 		} else {
 
 			AdvancedDMPJPAService.LOG.debug(className + " with uri '" + uri
@@ -144,7 +147,8 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 	}
 
 	@Override
-	protected PROXYPOJOCLASS createObjectInternal(final POJOCLASS object, final EntityManager entityManager, final String transactionType)
+	protected PROXYPOJOCLASS createObjectInternal(final POJOCLASS object, final EntityManager entityManager, final String transactionType,
+			final PersistenceType persistenceType)
 			throws DMPPersistenceException {
 
 		final String uri = object.getUri();
@@ -159,9 +163,10 @@ public abstract class AdvancedDMPJPAService<PROXYPOJOCLASS extends ProxyAdvanced
 
 			updateObjectInternal(object, newObject);
 
-			final POJOCLASS peristedObject = persistObject(newObject, entityManager);
+			final Optional<POJOCLASS> optionalPersistentObject = persistObject(newObject, entityManager, persistenceType);
+			final POJOCLASS persistentObject = determinePersistentObject(newObject, optionalPersistentObject);
 
-			return createNewProxyObject(peristedObject);
+			return createNewProxyObject(persistentObject);
 		} else {
 
 			AdvancedDMPJPAService.LOG.debug(className + " with uri '" + uri

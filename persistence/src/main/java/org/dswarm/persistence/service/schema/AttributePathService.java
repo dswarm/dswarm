@@ -16,6 +16,7 @@
 package org.dswarm.persistence.service.schema;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -34,6 +35,7 @@ import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.proxy.ProxyAttributePath;
 import org.dswarm.persistence.service.BasicJPAService;
+import org.dswarm.persistence.service.PersistenceType;
 import org.dswarm.persistence.service.UUIDService;
 
 /**
@@ -91,11 +93,13 @@ public class AttributePathService extends BasicJPAService<ProxyAttributePath, At
 
 		final EntityManager em = acquire();
 
-		return createObjectInternal(object, em, "non-transactional");
+		// TODO: change persistent type as required or make it a parameter of the method
+		return createObjectInternal(object, em, NON_TRANSACTIONAL_TRANSACTION_TYPE, PersistenceType.Merge);
 	}
 
 	@Override
-	protected ProxyAttributePath createObjectInternal(final AttributePath object, final EntityManager entityManager, final String transactionalType)
+	protected ProxyAttributePath createObjectInternal(final AttributePath object, final EntityManager entityManager, final String transactionalType,
+			final PersistenceType persistenceType)
 			throws DMPPersistenceException {
 
 		final AttributePath existingObject = getObject(object.getAttributePathAsJSONObjectString(), entityManager);
@@ -106,7 +110,8 @@ public class AttributePathService extends BasicJPAService<ProxyAttributePath, At
 
 			final AttributePath tempAttributePath = mergeAttributesIntoEntityManager(object, entityManager);
 
-			newObject = persistObject(tempAttributePath, entityManager);
+			final Optional<AttributePath> optionalPersistentObject = persistObject(tempAttributePath, entityManager, persistenceType);
+			newObject = determinePersistentObject(tempAttributePath, optionalPersistentObject);
 
 			return new ProxyAttributePath(newObject);
 		} else {
@@ -185,7 +190,7 @@ public class AttributePathService extends BasicJPAService<ProxyAttributePath, At
 
 		final String uuid;
 
-		if(object.getUuid() != null) {
+		if (object.getUuid() != null) {
 
 			uuid = object.getUuid();
 		} else {
@@ -229,7 +234,8 @@ public class AttributePathService extends BasicJPAService<ProxyAttributePath, At
 
 		final EntityManager entityManager = acquire(true);
 
-		final String queryString = "SELECT o FROM " + AttributePath.class.getName() + " o WHERE o.attributePath = '" + attributePathJSONArrayString + "'";
+		final String queryString =
+				"SELECT o FROM " + AttributePath.class.getName() + " o WHERE o.attributePath = '" + attributePathJSONArrayString + "'";
 
 		final TypedQuery<AttributePath> query = entityManager.createQuery(queryString, AttributePath.class);
 
