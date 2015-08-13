@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) 2013 – 2015 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.dswarm.persistence.service.util;
 
 import java.io.File;
@@ -9,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,6 +51,7 @@ import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.service.BasicJPAService;
 import org.dswarm.persistence.service.MaintainDBService;
+import org.dswarm.persistence.service.PersistenceType;
 import org.dswarm.persistence.service.job.ProjectService;
 import org.dswarm.persistence.service.resource.ConfigurationService;
 import org.dswarm.persistence.service.resource.DataModelService;
@@ -169,8 +186,10 @@ public class MetadataRepositoryMigrator {
 	}
 
 	/**
-	 * 0. replace existing configurations with persistent configurations
-	 * 1. create resources
+	 * 0. remove related configurations from resource
+	 * 1. create resources (without related configurations)
+	 * 2. add related configurations to persistent resources
+	 * 3. update resources with related configurations
 	 *
 	 * @param filePath
 	 * @throws IOException
@@ -184,23 +203,31 @@ public class MetadataRepositoryMigrator {
 		}, Resource.class.getName());
 
 		final Collection<Resource> modifiedResources = new ArrayList<>();
+		final Map<String, Collection<Configuration>> resourcesConfigurations = new LinkedHashMap<>();
 
+		// remove related configurations from resources
 		for (final Resource existingResource : existingResources) {
 
 			final Set<Configuration> configurations = existingResource.getConfigurations();
 
 			if(configurations != null) {
 
+				final Set<Configuration> configurationsCopy = new LinkedHashSet<>();
+				configurationsCopy.addAll(configurations);
+
 				existingResource.setConfigurations(null);
 
-				for (final Configuration configuration : configurations) {
+				final String existingResourceUuid = existingResource.getUuid();
+				resourcesConfigurations.put(existingResourceUuid, new ArrayList<>());
+
+				for (final Configuration configuration : configurationsCopy) {
 
 					final String configurationUuid = configuration.getUuid();
 					final Configuration persistentConfiguration = persistentConfigurations.get(configurationUuid);
 
 					if(persistentConfiguration != null) {
 
-						existingResource.addConfiguration(persistentConfiguration);
+						resourcesConfigurations.get(existingResourceUuid).add(persistentConfiguration);
 					} else {
 
 						LOG.debug("couldn't find configuration '{}' in the collection of persistent configurations", configurationUuid);
@@ -211,11 +238,40 @@ public class MetadataRepositoryMigrator {
 			modifiedResources.add(existingResource);
 		}
 
+		// create resources without related configurations
 		final Map<String, Resource> persistentResources = recreateEntities(resourcePersistenceServiceProvider, modifiedResources);
 
 		System.out.println("here I am");
 
-		return persistentResources;
+		final Collection<Resource> updatedResources = new ArrayList<>();
+
+		// add related configurations to persistent resources
+		for(final Map.Entry<String, Resource> persistentResourceEnty : persistentResources.entrySet()) {
+
+			final String persistentResourceUuid = persistentResourceEnty.getKey();
+			final Resource persistentResource = persistentResourceEnty.getValue();
+
+			final Collection<Configuration> resourceConfigurations = resourcesConfigurations.get(persistentResourceUuid);
+
+			if(resourceConfigurations == null) {
+
+				continue;
+			}
+
+			for(final Configuration resourceConfiguration : resourceConfigurations) {
+
+				persistentResource.addConfiguration(resourceConfiguration);
+			}
+
+			updatedResources.add(persistentResource);
+		}
+
+		// updated resources with related configurations
+		final Map<String, Resource> updatedPersistentResources = updateEntities(resourcePersistenceServiceProvider, updatedResources);
+
+		System.out.println("here I am");
+
+		return updatedPersistentResources;
 	}
 
 	/**
@@ -341,13 +397,37 @@ public class MetadataRepositoryMigrator {
 
 		for (final POJOCLASS entity : entities) {
 
-			final PROXYPOJOCLASS proxyEntity = persistenceService.createObjectTransactional(entity);
-			final POJOCLASS persistentEntity = proxyEntity.getObject();
+			final PROXYPOJOCLASS proxyPersistentEntity = persistenceService.createObjectTransactional(entity, PersistenceType.Persist);
+			final POJOCLASS persistentEntity = proxyPersistentEntity.getObject();
 
 			persistentEntities.put(persistentEntity.getUuid(), persistentEntity);
 		}
 
 		LOG.debug("re-created '{}' {}s", persistentEntities.size(), claszName);
+
+		return persistentEntities;
+	}
+
+	private <PERSISTENCE_SERVICE extends BasicJPAService<PROXYPOJOCLASS, POJOCLASS>, PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS>, POJOCLASS extends DMPObject> Map<String, POJOCLASS> updateEntities(
+			final Provider<PERSISTENCE_SERVICE> persistenceServiceProvider, final Collection<POJOCLASS> entities) throws DMPPersistenceException {
+
+		final PERSISTENCE_SERVICE persistenceService = persistenceServiceProvider.get();
+		final Class<POJOCLASS> clasz = persistenceService.getClasz();
+		final String claszName = clasz.getName();
+
+		LOG.debug("try to update '{}' {}s", entities.size(), claszName);
+
+		final Map<String, POJOCLASS> persistentEntities = new LinkedHashMap<>();
+
+		for (final POJOCLASS entity : entities) {
+
+			final PROXYPOJOCLASS proxyEntity = persistenceService.updateObjectTransactional(entity);
+			final POJOCLASS persistentEntity = proxyEntity.getObject();
+
+			persistentEntities.put(persistentEntity.getUuid(), persistentEntity);
+		}
+
+		LOG.debug("updated '{}' {}s", persistentEntities.size(), claszName);
 
 		return persistentEntities;
 	}

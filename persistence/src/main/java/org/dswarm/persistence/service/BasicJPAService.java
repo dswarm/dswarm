@@ -44,10 +44,10 @@ import org.dswarm.persistence.model.proxy.RetrievalType;
  */
 public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJOCLASS>, POJOCLASS extends DMPObject> {
 
-	private static final Logger LOG                                = LoggerFactory.getLogger(BasicJPAService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(BasicJPAService.class);
 
-	protected static final  String TRANSACTIONAL_TRANSACTION_TYPE     = "transactional";
-	protected static final  String NON_TRANSACTIONAL_TRANSACTION_TYPE = "non-transactional";
+	protected static final String TRANSACTIONAL_TRANSACTION_TYPE     = "transactional";
+	protected static final String NON_TRANSACTIONAL_TRANSACTION_TYPE = "non-transactional";
 
 	/**
 	 * The concrete POJO class of this persistence service.
@@ -230,6 +230,7 @@ public abstract class BasicJPAService<PROXYPOJOCLASS extends ProxyDMPObject<POJO
 	 * the persisted object or to ensure certain constraints, e.g., a uniqueness constraint.<br>
 	 *
 	 * @param object
+	 * @param persistenceType the persistence type on how the entity should be persisted in the database (i.e. with which persistence method from {@link EntityManager}
 	 * @return
 	 * @throws DMPPersistenceException
 	 */
