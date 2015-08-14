@@ -44,7 +44,12 @@ import org.slf4j.LoggerFactory;
 import org.dswarm.common.types.Tuple;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.DMPObject;
+import org.dswarm.persistence.model.job.Component;
+import org.dswarm.persistence.model.job.Function;
+import org.dswarm.persistence.model.job.FunctionType;
+import org.dswarm.persistence.model.job.Mapping;
 import org.dswarm.persistence.model.job.Project;
+import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.proxy.ProxyDMPObject;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
@@ -53,6 +58,7 @@ import org.dswarm.persistence.model.resource.utils.DataModelUtils;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Clasz;
+import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.utils.AttributePathUtils;
@@ -61,6 +67,7 @@ import org.dswarm.persistence.service.BasicJPAService;
 import org.dswarm.persistence.service.MaintainDBService;
 import org.dswarm.persistence.service.PersistenceType;
 import org.dswarm.persistence.service.UUIDService;
+import org.dswarm.persistence.service.job.FunctionService;
 import org.dswarm.persistence.service.job.ProjectService;
 import org.dswarm.persistence.service.resource.ConfigurationService;
 import org.dswarm.persistence.service.resource.DataModelService;
@@ -95,7 +102,10 @@ public class MetadataRepositoryMigrator {
 	private final Provider<ClaszService>                       classPersistenceServiceProvider;
 	private final Provider<DataModelService>                   dataModelPersistenceServiceProvider;
 	private final Provider<ProjectService>                     projectPersistenceServiceProvider;
+	private final Provider<FunctionService>                    functionPersistenceServiceProvider;
 	private final Provider<MaintainDBService>                  maintainDBServiceProvider;
+
+	private final Map<String, Function> persistentFunctionsCache = new HashMap<>();
 
 	private static final JaxbAnnotationModule module = new JaxbAnnotationModule();
 	private static final ObjectMapper         MAPPER = new ObjectMapper()
@@ -114,6 +124,7 @@ public class MetadataRepositoryMigrator {
 			final Provider<ClaszService> classPersistenceServiceProviderArg,
 			final Provider<DataModelService> dataModelPersistenceServiceProviderArg,
 			final Provider<ProjectService> projectPersistenceServiceProviderArg,
+			final Provider<FunctionService> functionPersistenceServiceProviderArg,
 			final Provider<MaintainDBService> maintainDBServiceProvierArg) {
 
 		resourcePersistenceServiceProvider = resourcePersistenceServiceProviderArg;
@@ -125,6 +136,7 @@ public class MetadataRepositoryMigrator {
 		classPersistenceServiceProvider = classPersistenceServiceProviderArg;
 		dataModelPersistenceServiceProvider = dataModelPersistenceServiceProviderArg;
 		projectPersistenceServiceProvider = projectPersistenceServiceProviderArg;
+		functionPersistenceServiceProvider = functionPersistenceServiceProviderArg;
 		maintainDBServiceProvider = maintainDBServiceProvierArg;
 	}
 
@@ -205,9 +217,14 @@ public class MetadataRepositoryMigrator {
 
 		final Map<String, Configuration> persistentConfigurations = recreateExistingConfigurations(configurationsDumpFileName);
 		final Map<String, Resource> persistentResources = recreateExistingResources(resourcesDumpFileName, persistentConfigurations);
-		final Map<String, Schema> persistentSchemata = recreateExistingSchemas(schemasDumpFileName);
-		recreateExistingDataModels(dataModelsDumpFileName, persistentSchemata, persistentConfigurations, persistentResources);
-		recreateExistingProjects(projectsDumpFileName);
+		final SchemaRecreationResultSet schemaRecreationResultSet = recreateExistingSchemas(schemasDumpFileName);
+
+		final Map<String, Schema> persistentSchemata = schemaRecreationResultSet.getOldUuidNewPersistentSchemaMap();
+		final Map<String, AttributePath> persistentAttributePaths = schemaRecreationResultSet.getOldUuidNewPersistentAttributePathMap();
+
+		final Map<String, DataModel> persistentDataModels = recreateExistingDataModels(dataModelsDumpFileName, persistentSchemata,
+				persistentConfigurations, persistentResources);
+		recreateExistingProjects(projectsDumpFileName, persistentDataModels, persistentAttributePaths);
 	}
 
 	/**
@@ -336,7 +353,7 @@ public class MetadataRepositoryMigrator {
 	 * @throws IOException
 	 * @throws DMPPersistenceException
 	 */
-	private Map<String, Schema> recreateExistingSchemas(final String filePath) throws IOException, DMPPersistenceException {
+	private SchemaRecreationResultSet recreateExistingSchemas(final String filePath) throws IOException, DMPPersistenceException {
 
 		final Collection<Schema> existingSchemas = deserializeEntities(filePath, new TypeReference<ArrayList<Schema>>() {
 
@@ -366,6 +383,7 @@ public class MetadataRepositoryMigrator {
 		// - we (probably) need a mapping between old and new schema (identifiers)
 
 		final Map<String, Schema> oldUuidNewSchemaMap = new LinkedHashMap<>();
+		final Map<String, AttributePath> oldUuidNewPersistentAttributePathMap = new LinkedHashMap<>();
 		final Map<String, AttributePath> persistentAttributePaths = new LinkedHashMap<>();
 
 		final AttributePathService attributePathService = attributePathPersistenceServiceProvider.get();
@@ -402,24 +420,35 @@ public class MetadataRepositoryMigrator {
 					final String newAttributePathString = newAttributePathEntry.getKey();
 					final LinkedList<Attribute> newAttributePath = newAttributePathEntry.getValue();
 
+					final AttributePath persistentAttributePath;
+
 					if (!persistentAttributePaths.containsKey(newAttributePathString)) {
 
 						final AttributePath recreatedAttributePath = SchemaUtils
 								.addAttributePaths(newSchema, newAttributePath, attributePathService, schemaAttributePathInstanceService);
 
-						persistentAttributePaths.put(recreatedAttributePath.toAttributePath(), recreatedAttributePath);
+						final String recreatedAttributePathString = recreatedAttributePath.toAttributePath();
+
+						persistentAttributePaths.put(recreatedAttributePathString, recreatedAttributePath);
+
+						final AttributePath otherSchemaAttributePath = otherSchemaAttributePathMap.get(recreatedAttributePathString);
+						final String oldAttributePathUuid = otherSchemaAttributePath.getUuid();
+
+						oldUuidNewPersistentAttributePathMap.put(oldAttributePathUuid, recreatedAttributePath);
+
+						persistentAttributePath = recreatedAttributePath;
 					} else {
 
 						// re-utilise already persistent attribute paths (i.e. this is a cache)
 
-						final AttributePath persistentAttributePath = persistentAttributePaths.get(newAttributePathString);
-
-						final String sapiUUID = UUIDService.getUUID(SchemaAttributePathInstance.class.getSimpleName());
-						final SchemaAttributePathInstance sapi = new SchemaAttributePathInstance(sapiUUID);
-						sapi.setAttributePath(persistentAttributePath);
-
-						newSchema.addAttributePath(sapi);
+						persistentAttributePath = persistentAttributePaths.get(newAttributePathString);
 					}
+
+					final String sapiUUID = UUIDService.getUUID(SchemaAttributePathInstance.class.getSimpleName());
+					final SchemaAttributePathInstance sapi = new SchemaAttributePathInstance(sapiUUID);
+					sapi.setAttributePath(persistentAttributePath);
+
+					newSchema.addAttributePath(sapi);
 				}
 			}
 
@@ -450,7 +479,7 @@ public class MetadataRepositoryMigrator {
 			oldUuidNewPersistentSchemaMap.put(oldSchemaUuid, newPersistentSchema);
 		}
 
-		return oldUuidNewPersistentSchemaMap;
+		return new SchemaRecreationResultSet(oldUuidNewPersistentSchemaMap, oldUuidNewPersistentAttributePathMap);
 	}
 
 	/**
@@ -503,13 +532,38 @@ public class MetadataRepositoryMigrator {
 				PersistenceType.Merge);
 	}
 
-	private void recreateExistingProjects(final String filePath) throws IOException {
+	/**
+	 *
+	 *
+	 * 1. replace input and output data models with persistent ones (or inbuilt ones)
+	 * 2. replace attribute paths of MAPIs with persistent ones (we also fetch APs from inbuilt schemata from DB)
+	 * 3. replace functions with persistent ones (i.e. those that are at a project and those that are at a mapping)
+	 * 4. re-create projects
+	 *
+	 * @param filePath
+	 * @param persistentDataModels
+	 * @param persistentAttributePaths
+	 * @throws IOException
+	 */
+	private Map<String, Project> recreateExistingProjects(final String filePath, final Map<String, DataModel> persistentDataModels,
+			final Map<String, AttributePath> persistentAttributePaths) throws IOException, DMPPersistenceException {
 
 		final Collection<Project> existingProjects = deserializeEntities(filePath, new TypeReference<ArrayList<Project>>() {
 
 		}, Project.class.getName());
 
+		for (final Project existingProject : existingProjects) {
+
+			replaceDataModels(persistentDataModels, existingProject);
+			replaceAttributePathsInMappings(persistentAttributePaths, existingProject);
+			replaceFunctions(existingProject);
+		}
+
+		final Map<String, Project> persistentProjects = recreateEntities(projectPersistenceServiceProvider, existingProjects, PersistenceType.Merge);
+
 		System.out.println("here I am");
+
+		return persistentProjects;
 	}
 
 	private <PERSISTENCE_SERVICE extends BasicJPAService> Tuple<String, String> dumpEntities(
@@ -670,23 +724,25 @@ public class MetadataRepositoryMigrator {
 
 		final Resource existingDataResource = otherDataModel.getDataResource();
 
-		if (existingDataResource != null) {
+		if (existingDataResource == null) {
 
-			final String existingDataResourceUuid = existingDataResource.getUuid();
-
-			final Resource persistentResource = persistentResources.get(existingDataResourceUuid);
-
-			if (persistentResource == null) {
-
-				final String message = String.format("could not find resource '%s' in the persistent resources map", existingDataResourceUuid);
-
-				LOG.error(message);
-
-				throw new DMPPersistenceException(message);
-			}
-
-			otherDataModel.setDataResource(persistentResource);
+			return;
 		}
+
+		final String existingDataResourceUuid = existingDataResource.getUuid();
+
+		final Resource persistentResource = persistentResources.get(existingDataResourceUuid);
+
+		if (persistentResource == null) {
+
+			final String message = String.format("could not find resource '%s' in the persistent resources map", existingDataResourceUuid);
+
+			LOG.error(message);
+
+			throw new DMPPersistenceException(message);
+		}
+
+		otherDataModel.setDataResource(persistentResource);
 	}
 
 	private static void replaceConfiguration(final Map<String, Configuration> persistentConfigurations, final DataModel otherDataModel)
@@ -694,24 +750,26 @@ public class MetadataRepositoryMigrator {
 
 		final Configuration existingConfiguration = otherDataModel.getConfiguration();
 
-		if (existingConfiguration != null) {
+		if (existingConfiguration == null) {
 
-			final String existingConfigurationUuid = existingConfiguration.getUuid();
-
-			final Configuration persistentConfiguration = persistentConfigurations.get(existingConfigurationUuid);
-
-			if (persistentConfiguration == null) {
-
-				final String message = String
-						.format("could not find configuration '%s' in the persistent configurations map", existingConfigurationUuid);
-
-				LOG.error(message);
-
-				throw new DMPPersistenceException(message);
-			}
-
-			otherDataModel.setConfiguration(persistentConfiguration);
+			return;
 		}
+
+		final String existingConfigurationUuid = existingConfiguration.getUuid();
+
+		final Configuration persistentConfiguration = persistentConfigurations.get(existingConfigurationUuid);
+
+		if (persistentConfiguration == null) {
+
+			final String message = String
+					.format("could not find configuration '%s' in the persistent configurations map", existingConfigurationUuid);
+
+			LOG.error(message);
+
+			throw new DMPPersistenceException(message);
+		}
+
+		otherDataModel.setConfiguration(persistentConfiguration);
 	}
 
 	/**
@@ -726,41 +784,346 @@ public class MetadataRepositoryMigrator {
 
 		final Schema existingSchema = otherDataModel.getSchema();
 
-		if (existingSchema != null) {
+		if (existingSchema == null) {
 
-			final String existingSchemaUuid = existingSchema.getUuid();
+			return;
+		}
 
-			final Collection<String> inbuiltSchemaUuids = SchemaUtils.getInbuiltSchemaUuids();
+		final String existingSchemaUuid = existingSchema.getUuid();
 
-			final Schema persistentSchema;
+		final Collection<String> inbuiltSchemaUuids = SchemaUtils.getInbuiltSchemaUuids();
 
-			if (inbuiltSchemaUuids.contains(existingSchemaUuid)) {
+		final Schema persistentSchema;
 
-				// schema is an inbuilt schema
+		if (inbuiltSchemaUuids.contains(existingSchemaUuid)) {
 
-				final SchemaService schemaService = schemaPersistenceServiceProvider.get();
+			// schema is an inbuilt schema
 
-				LOG.debug("schema '{}' is an inbuilt schema, will try re-retrieve it from DB");
+			final SchemaService schemaService = schemaPersistenceServiceProvider.get();
 
-				persistentSchema = schemaService.getObject(existingSchemaUuid);
-			} else {
+			LOG.debug("schema '{}' is an inbuilt schema, will try re-retrieve it from DB");
 
-				// schema is not an inbuilt schema
+			persistentSchema = schemaService.getObject(existingSchemaUuid);
+		} else {
 
-				persistentSchema = oldUuidNewPersistentSchemaMap.get(existingSchemaUuid);
+			// schema is not an inbuilt schema
 
-				if (persistentSchema == null) {
+			persistentSchema = oldUuidNewPersistentSchemaMap.get(existingSchemaUuid);
+
+			if (persistentSchema == null) {
+
+				final String message = String
+						.format("could not find schema '%s' in the persistent schemas map", existingSchemaUuid);
+
+				LOG.error(message);
+
+				throw new DMPPersistenceException(message);
+			}
+		}
+
+		otherDataModel.setSchema(persistentSchema);
+	}
+
+	/**
+	 * replaces input and output data models with persistent ones (or inbuilt ones)
+	 *
+	 * @param persistentDataModels
+	 * @param project
+	 * @throws DMPPersistenceException
+	 */
+	private void replaceDataModels(final Map<String, DataModel> persistentDataModels, final Project project)
+			throws DMPPersistenceException {
+
+		final DataModel existingInputDataModel = project.getInputDataModel();
+		final DataModel persistentInputDataModel = replaceDataModel(persistentDataModels, existingInputDataModel);
+		project.setInputDataModel(persistentInputDataModel);
+
+		final DataModel existingOutputDataModel = project.getOutputDataModel();
+		final DataModel persistentOutputDataModel = replaceDataModel(persistentDataModels, existingOutputDataModel);
+		project.setOutputDataModel(persistentOutputDataModel);
+	}
+
+	private DataModel replaceDataModel(final Map<String, DataModel> persistentDataModels, final DataModel existingDataModel)
+			throws DMPPersistenceException {
+
+		if (existingDataModel == null) {
+
+			return null;
+		}
+
+		final String existingDataModelUuid = existingDataModel.getUuid();
+
+		final DataModel persistentDataModel;
+
+		if (persistentDataModels.containsKey(existingDataModelUuid)) {
+
+			// take data model from persistent data models cache
+
+			persistentDataModel = persistentDataModels.get(existingDataModelUuid);
+		} else {
+
+			// try to retrieve (inbuilt) data model from metadata repository
+
+			final DataModelService dataModelService = dataModelPersistenceServiceProvider.get();
+
+			persistentDataModel = dataModelService.getObject(existingDataModelUuid);
+
+			if (persistentDataModel == null) {
+
+				// TODO: what should we do with non-existing data models in projects?
+
+				final String message = String
+						.format("could not find data model '%s' in the persistent data models map nor in the metadata repository",
+								existingDataModelUuid);
+
+				LOG.error(message);
+
+				throw new DMPPersistenceException(message);
+			}
+		}
+
+		return persistentDataModel;
+	}
+
+	/**
+	 * replace attribute paths of MAPIs with persistent ones (we also fetch APs from inbuilt schemata from DB)
+	 *
+	 * @param oldUuidNewPersistentAttributePathMap
+	 * @param project
+	 * @throws DMPPersistenceException
+	 */
+	private void replaceAttributePathsInMappings(final Map<String, AttributePath> oldUuidNewPersistentAttributePathMap, final Project project)
+			throws DMPPersistenceException {
+
+		if (project == null) {
+
+			return;
+		}
+
+		final Set<Mapping> existingMappings = project.getMappings();
+
+		if (existingMappings == null) {
+
+			return;
+		}
+
+		for (final Mapping existingMapping : existingMappings) {
+
+			final Set<MappingAttributePathInstance> existingMappingInputAttributePaths = existingMapping.getInputAttributePaths();
+
+			if (existingMappingInputAttributePaths != null) {
+
+				for (final MappingAttributePathInstance existingMAPI : existingMappingInputAttributePaths) {
+
+					replaceAttributePathInMAPI(oldUuidNewPersistentAttributePathMap, existingMAPI);
+				}
+			}
+
+			final MappingAttributePathInstance existingMappingOutputAttributePath = existingMapping.getOutputAttributePath();
+
+			replaceAttributePathInMAPI(oldUuidNewPersistentAttributePathMap, existingMappingOutputAttributePath);
+		}
+	}
+
+	private void replaceAttributePathInMAPI(final Map<String, AttributePath> oldUuidNewPersistentAttributePathMap,
+			final MappingAttributePathInstance mapi) throws DMPPersistenceException {
+
+		final AttributePath existingAttributePath = mapi.getAttributePath();
+		final String existingAttributePathUuid = existingAttributePath.getUuid();
+
+		final AttributePath persistentAttributePath;
+
+		if (oldUuidNewPersistentAttributePathMap.containsKey(existingAttributePathUuid)) {
+
+			// existing attribute path was replaced by a new, persistent attribute path
+
+			persistentAttributePath = oldUuidNewPersistentAttributePathMap.get(existingAttributePathUuid);
+		} else {
+
+			// check, whether other attribute paths does really exists in the DB
+
+			final AttributePathService attributePathService = attributePathPersistenceServiceProvider.get();
+
+			final AttributePath attributePathFromDB = attributePathService.getObject(existingAttributePathUuid);
+
+			if (attributePathFromDB == null) {
+
+				// try to retrieve attribute path (e.g. from an inbuilt schema) via attribute path string from DB
+
+				final String existingAttributePathString = existingAttributePath.toAttributePath();
+
+				// TODO: this method expects an input á la "["Attribute-d51ccda8-d663-442f-b1c3-86b4eaff4608","Attribute-45227e11-4bee-49ea-b5a2-0a087c6dc417","Attribute-06d09c8d-465d-417c-9b7f-0a3a2ca78b2d"]", i.e., no attribute path string but rather then a list of (valid) attribute uuids as JSON array
+				final List<AttributePath> attributePathsWithPathFromDB = attributePathService.getAttributePathsWithPath(existingAttributePathString);
+
+				if (attributePathsWithPathFromDB == null || attributePathsWithPathFromDB.isEmpty()) {
+
+					// TODO: how should we deal with attribute paths that do not really exist anymore in their schemata?
 
 					final String message = String
-							.format("could not find schema '%s' in the persistent schemas map", existingSchemaUuid);
+							.format("could not find attribute path '%s' ('%s') in the persistent attribute paths map nor in the metadata repository",
+									existingAttributePathUuid, existingAttributePathString);
 
 					LOG.error(message);
 
 					throw new DMPPersistenceException(message);
 				}
+
+				// result list should always be of size 1
+				final AttributePath attributePathWithPathFromDB = attributePathsWithPathFromDB.get(0);
+
+				oldUuidNewPersistentAttributePathMap.put(existingAttributePathUuid, attributePathWithPathFromDB);
+
+				persistentAttributePath = attributePathWithPathFromDB;
+			} else {
+
+				persistentAttributePath = attributePathFromDB;
+			}
+		}
+
+		mapi.setAttributePath(persistentAttributePath);
+	}
+
+	/**
+	 * replace functions with persistent ones (i.e. those that are at a project and those that are at a mapping)
+	 *
+	 * @param project
+	 */
+	private void replaceFunctions(final Project project) throws DMPPersistenceException {
+
+		final Set<Function> existingProjectFunctions = project.getFunctions();
+
+		// replace project functions
+		if (existingProjectFunctions != null) {
+
+			final Set<Function> persistentProjectFunctions = new LinkedHashSet<>();
+
+			for (final Function existingProjectFunction : existingProjectFunctions) {
+
+				final Function persistentProjectFunction = replaceFunction(existingProjectFunction);
+
+				persistentProjectFunctions.add(persistentProjectFunction);
 			}
 
-			otherDataModel.setSchema(persistentSchema);
+			project.setFunctions(persistentProjectFunctions);
+		}
+
+		final Set<Mapping> existingProjectMappings = project.getMappings();
+
+		// replace mapping functions
+		if (existingProjectMappings != null) {
+
+			for (final Mapping existingProjectMapping : existingProjectMappings) {
+
+				final Component existingProjectMappingTransformationComponent = existingProjectMapping.getTransformation();
+
+				if (existingProjectMappingTransformationComponent != null) {
+
+					replaceFunctionsInComponent(existingProjectMappingTransformationComponent);
+				}
+			}
+		}
+	}
+
+	private Function replaceFunction(final Function existingFunction) throws DMPPersistenceException {
+
+		if (existingFunction == null) {
+
+			return null;
+		}
+
+		final String existingFunctionUuid = existingFunction.getUuid();
+
+		if (!persistentFunctionsCache.containsKey(existingFunctionUuid)) {
+
+			final FunctionService functionService = functionPersistenceServiceProvider.get();
+
+			final Function persistentFunction = functionService.getObject(existingFunctionUuid);
+
+			if (persistentFunction == null) {
+
+				final String message = String.format("could not find function '%s' in the persistent functions cache nor in the metadata repository",
+						existingFunctionUuid);
+
+				LOG.error(message);
+
+				throw new DMPPersistenceException(message);
+			}
+
+			persistentFunctionsCache.put(existingFunctionUuid, persistentFunction);
+		}
+
+		return persistentFunctionsCache.get(existingFunctionUuid);
+	}
+
+	private void replaceFunctionsInComponent(final Component component) throws DMPPersistenceException {
+
+		if (component == null) {
+
+			return;
+		}
+
+		final Function existingComponentFunction = component.getFunction();
+
+		final FunctionType componentFunctionFunctionType = existingComponentFunction.getFunctionType();
+
+		switch (componentFunctionFunctionType) {
+
+			case Function:
+
+				final Function persistentFunction = replaceFunction(existingComponentFunction);
+
+				component.setFunction(persistentFunction);
+
+				break;
+			case Transformation:
+
+				replaceFunctionsInTransformation((Transformation) existingComponentFunction);
+
+				break;
+		}
+	}
+
+	private void replaceFunctionsInTransformation(final Transformation transformation) throws DMPPersistenceException {
+
+		if (transformation == null) {
+
+			return;
+		}
+
+		final Set<Component> transformationComponents = transformation.getComponents();
+
+		if (transformationComponents == null) {
+
+			return;
+		}
+
+		for (final Component transformationComponent : transformationComponents) {
+
+			replaceFunctionsInComponent(transformationComponent);
+		}
+	}
+
+	private class SchemaRecreationResultSet {
+
+		private final Map<String, Schema> oldUuidNewPersistentSchemaMap;
+
+		private final Map<String, AttributePath> oldUuidNewPersistentAttributePathMap;
+
+		private SchemaRecreationResultSet(final Map<String, Schema> oldUuidNewPersistentSchemaMap,
+				final Map<String, AttributePath> oldUuidNewPersistentAttributePathMap) {
+
+			this.oldUuidNewPersistentSchemaMap = oldUuidNewPersistentSchemaMap;
+			this.oldUuidNewPersistentAttributePathMap = oldUuidNewPersistentAttributePathMap;
+		}
+
+		public Map<String, Schema> getOldUuidNewPersistentSchemaMap() {
+
+			return oldUuidNewPersistentSchemaMap;
+		}
+
+		public Map<String, AttributePath> getOldUuidNewPersistentAttributePathMap() {
+
+			return oldUuidNewPersistentAttributePathMap;
 		}
 	}
 }
