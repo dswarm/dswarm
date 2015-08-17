@@ -38,13 +38,23 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import com.google.common.io.Files;
+import com.google.inject.Guice;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.Provider;
+import com.google.inject.persist.PersistService;
+import com.typesafe.config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.dswarm.common.types.Tuple;
+import org.dswarm.init.ConfigModule;
+import org.dswarm.init.ExecutionScope;
+import org.dswarm.init.LoggingConfigurator;
 import org.dswarm.persistence.DMPPersistenceException;
+import org.dswarm.persistence.JacksonObjectMapperModule;
+import org.dswarm.persistence.JpaHibernateModule;
+import org.dswarm.persistence.PersistenceModule;
 import org.dswarm.persistence.model.DMPObject;
 import org.dswarm.persistence.model.job.Component;
 import org.dswarm.persistence.model.job.Function;
@@ -1165,5 +1175,41 @@ public class MetadataRepositoryMigrator {
 
 			return oldUuidNewPersistentAttributePathMap;
 		}
+	}
+
+	public static void main(final String[] args) {
+
+		final Injector injector = getInjector();
+
+		injector.getInstance(PersistService.class).start();
+		injector.getInstance(ExecutionScope.class).enter();
+
+		final MetadataRepositoryMigrator metadataRepositoryMigrator = injector.getInstance(MetadataRepositoryMigrator.class);
+
+		try {
+
+			metadataRepositoryMigrator.migrateData();
+		} catch (final IOException | DMPPersistenceException e) {
+
+			final String message = "could not migrate metadata repository state successfully";
+
+			LOG.error(message, e);
+
+			throw new RuntimeException(message, e);
+		}
+	}
+
+	private static Injector getInjector() {
+
+		final ConfigModule configModule = new ConfigModule();
+		final Config config = configModule.getConfig();
+		LoggingConfigurator.configureFrom(config);
+
+		return Guice.createInjector(
+				configModule,
+				new PersistenceModule(),
+				new JacksonObjectMapperModule(),
+				new JpaHibernateModule(config)
+		);
 	}
 }
