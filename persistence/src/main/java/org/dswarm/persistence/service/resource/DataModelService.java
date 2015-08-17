@@ -64,10 +64,10 @@ public class DataModelService extends ExtendedMediumBasicDMPJPAService<ProxyData
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void updateObjectInternal(final DataModel object, final DataModel updateObject, final EntityManager entityManager)
+	public void updateObjectInternal(final DataModel object, final DataModel updateObject)
 			throws DMPPersistenceException {
 
-		super.updateObjectInternal(object, updateObject, entityManager);
+		super.updateObjectInternal(object, updateObject);
 
 		final Schema schema = object.getSchema();
 		final Resource resource = object.getDataResource();

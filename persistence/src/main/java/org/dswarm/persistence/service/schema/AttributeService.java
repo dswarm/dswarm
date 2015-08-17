@@ -57,7 +57,7 @@ public class AttributeService extends AdvancedDMPJPAService<ProxyAttribute, Attr
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void updateObjectInternal(final Attribute object, final Attribute updateObject, final EntityManager entityManager)
+	public void updateObjectInternal(final Attribute object, final Attribute updateObject)
 			throws DMPPersistenceException {
 
 		final String name = object.getName();

@@ -49,7 +49,7 @@ public abstract class BasicDMPJPAService<PROXYPOJOCLASS extends ProxyBasicDMPJPA
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void updateObjectInternal(final POJOCLASS object, final POJOCLASS updateObject, final EntityManager entityManager)
+	public void updateObjectInternal(final POJOCLASS object, final POJOCLASS updateObject)
 			throws DMPPersistenceException {
 
 		final String name = object.getName();

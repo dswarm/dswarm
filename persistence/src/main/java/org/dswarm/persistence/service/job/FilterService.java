@@ -55,14 +55,14 @@ public class FilterService extends BasicDMPJPAService<ProxyFilter, Filter> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void updateObjectInternal(final Filter object, final Filter updateObject, final EntityManager entityManager)
+	public void updateObjectInternal(final Filter object, final Filter updateObject)
 			throws DMPPersistenceException {
 
 		final String expression = object.getExpression();
 
 		updateObject.setExpression(expression);
 
-		super.updateObjectInternal(object, updateObject, entityManager);
+		super.updateObjectInternal(object, updateObject);
 	}
 
 }

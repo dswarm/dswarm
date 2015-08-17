@@ -62,10 +62,10 @@ public class ResourceService extends ExtendedBasicDMPJPAService<ProxyResource, R
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void updateObjectInternal(final Resource object, final Resource updateObject, final EntityManager entityManager)
+	public void updateObjectInternal(final Resource object, final Resource updateObject)
 			throws DMPPersistenceException {
 
-		super.updateObjectInternal(object, updateObject, entityManager);
+		super.updateObjectInternal(object, updateObject);
 
 		final Set<Configuration> configurations = object.getConfigurations();
 

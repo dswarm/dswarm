@@ -61,10 +61,9 @@ public class MappingAttributePathInstanceService extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void updateObjectInternal(final MappingAttributePathInstance object, final MappingAttributePathInstance updateObject,
-			final EntityManager entityManager) throws DMPPersistenceException {
+	public void updateObjectInternal(final MappingAttributePathInstance object, final MappingAttributePathInstance updateObject) throws DMPPersistenceException {
 
-		super.updateObjectInternal(object, updateObject, entityManager);
+		super.updateObjectInternal(object, updateObject);
 
 		final Filter filter = object.getFilter();
 

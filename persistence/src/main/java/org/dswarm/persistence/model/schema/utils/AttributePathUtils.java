@@ -15,9 +15,44 @@
  */
 package org.dswarm.persistence.model.schema.utils;
 
+import java.util.Collection;
+
+import org.dswarm.init.util.DMPStatics;
+import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.utils.DMPObjectUtils;
 
 public final class AttributePathUtils extends DMPObjectUtils<AttributePath> {
 
+	public static String generateAttributePath(final Collection<Attribute> attributePath) {
+
+		if (null == attributePath) {
+
+			return null;
+		}
+
+		if (attributePath.isEmpty()) {
+
+			return null;
+		}
+
+		final StringBuilder sb = new StringBuilder();
+
+		boolean first = true;
+
+		for (final Attribute attribute : attributePath) {
+
+			if (!first) {
+
+				sb.append(DMPStatics.ATTRIBUTE_DELIMITER);
+			} else {
+
+				first = false;
+			}
+
+			sb.append(attribute.getUri());
+		}
+
+		return sb.toString();
+	}
 }

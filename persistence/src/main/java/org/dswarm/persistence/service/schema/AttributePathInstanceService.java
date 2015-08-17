@@ -60,14 +60,14 @@ public abstract class AttributePathInstanceService<PROXYATTRIBUTEPATHIMPL extend
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void updateObjectInternal(final ATTRIBUTEPATHIMPL object, final ATTRIBUTEPATHIMPL updateObject, final EntityManager entityManager)
+	public void updateObjectInternal(final ATTRIBUTEPATHIMPL object, final ATTRIBUTEPATHIMPL updateObject)
 			throws DMPPersistenceException {
 
 		final AttributePath attributePath = object.getAttributePath();
 
 		updateObject.setAttributePath(attributePath);
 
-		super.updateObjectInternal(object, updateObject, entityManager);
+		super.updateObjectInternal(object, updateObject);
 	}
 
 }

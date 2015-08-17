@@ -64,11 +64,11 @@ public abstract class AttributePathInstance extends BasicDMPJPAObject {
 	 * The attribute path instance type, e.g., mapping attribute path instance (
 	 * {@link AttributePathInstanceType#MappingAttributePathInstance}).
 	 */
-	@XmlElement(name = "type")
 	// -> note: separate attribute for entity type is not necessary since Jackson will include this
 	// property automatically, when serialising the object
 	// however, it needs to be enabled - otherwise on could not serialise a JSON string to a POJO object
 	// @JsonIgnore
+	@XmlElement(name = "type")
 	@Column(name = "ATTRIBUTE_PATH_INSTANCE_TYPE")
 	@Enumerated(EnumType.STRING)
 	private AttributePathInstanceType	attributePathInstanceType;

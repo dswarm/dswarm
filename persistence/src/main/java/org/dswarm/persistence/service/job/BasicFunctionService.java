@@ -59,7 +59,7 @@ public abstract class BasicFunctionService<PROXYFUNCTIONIMPL extends ProxyBasicF
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void updateObjectInternal(final FUNCTIONIMPL object, final FUNCTIONIMPL updateObject, final EntityManager entityManager)
+	public void updateObjectInternal(final FUNCTIONIMPL object, final FUNCTIONIMPL updateObject)
 			throws DMPPersistenceException {
 
 		final LinkedList<String> parameters = object.getParameters();
@@ -68,7 +68,7 @@ public abstract class BasicFunctionService<PROXYFUNCTIONIMPL extends ProxyBasicF
 
 		updateObject.setFunctionDescription(object.getFunctionDescription());
 
-		super.updateObjectInternal(object, updateObject, entityManager);
+		super.updateObjectInternal(object, updateObject);
 	}
 
 }

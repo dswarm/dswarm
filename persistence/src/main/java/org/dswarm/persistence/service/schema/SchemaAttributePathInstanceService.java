@@ -63,23 +63,26 @@ public class SchemaAttributePathInstanceService extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void updateObjectInternal(final SchemaAttributePathInstance object, final SchemaAttributePathInstance updateObject,
-			final EntityManager entityManager) throws DMPPersistenceException {
+	public void updateObjectInternal(final SchemaAttributePathInstance object, final SchemaAttributePathInstance updateObject)
+			throws DMPPersistenceException {
 
-		super.updateObjectInternal(object, updateObject, entityManager);
+		super.updateObjectInternal(object, updateObject);
 
 		final Schema subSchema = object.getSubSchema();
 
 		updateObject.setSubSchema(subSchema);
 	}
 
-	public ProxySchemaAttributePathInstance createObjectTransactional( final AttributePath attributePath ) throws DMPPersistenceException {
+	public ProxySchemaAttributePathInstance createObjectTransactional(final AttributePath attributePath) throws DMPPersistenceException {
 
 		final String uuid = UUIDService.getUUID(SchemaAttributePathInstance.class.getSimpleName());
 
 		final SchemaAttributePathInstance sapi = new SchemaAttributePathInstance(uuid);
-		sapi.setAttributePath( attributePath );
-		final ProxySchemaAttributePathInstance psapi = createObjectTransactional( sapi );
+
+		sapi.setAttributePath(attributePath);
+
+		final ProxySchemaAttributePathInstance psapi = createObjectTransactional(sapi);
+
 		return psapi;
 	}
 }
