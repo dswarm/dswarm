@@ -121,7 +121,8 @@ public class MetadataRepositoryMigrator {
 	private final Map<String, Attribute> persistentAttributesCache = new HashMap<>();
 
 	private static final JaxbAnnotationModule module = new JaxbAnnotationModule();
-	private static final ObjectMapper         MAPPER = new ObjectMapper()
+	private final ObjectMapper mapper;
+	private static final ObjectMapper MAPPER = new ObjectMapper()
 			.registerModule(module)
 			.setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
 			.setSerializationInclusion(JsonInclude.Include.NON_NULL)
@@ -138,7 +139,8 @@ public class MetadataRepositoryMigrator {
 			final Provider<DataModelService> dataModelPersistenceServiceProviderArg,
 			final Provider<ProjectService> projectPersistenceServiceProviderArg,
 			final Provider<FunctionService> functionPersistenceServiceProviderArg,
-			final Provider<MaintainDBService> maintainDBServiceProvierArg) {
+			final Provider<MaintainDBService> maintainDBServiceProvierArg,
+			final ObjectMapper mapperArg) {
 
 		resourcePersistenceServiceProvider = resourcePersistenceServiceProviderArg;
 		configurationPersistenceServiceProvider = configurationPersistenceServiceProviderArg;
@@ -151,6 +153,11 @@ public class MetadataRepositoryMigrator {
 		projectPersistenceServiceProvider = projectPersistenceServiceProviderArg;
 		functionPersistenceServiceProvider = functionPersistenceServiceProviderArg;
 		maintainDBServiceProvider = maintainDBServiceProvierArg;
+		mapper = mapperArg
+				.registerModule(module)
+				.setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
+				.setSerializationInclusion(JsonInclude.Include.NON_NULL)
+				.configure(SerializationFeature.INDENT_OUTPUT, true);
 	}
 
 	public void migrateData() throws IOException, DMPPersistenceException {
@@ -185,12 +192,12 @@ public class MetadataRepositoryMigrator {
 
 	private Tuple<String, String> dumpResources() throws IOException {
 
-		return dumpEntities(resourcePersistenceServiceProvider, RESOURCES_FILE_NAME);
+		return dumpEntities(resourcePersistenceServiceProvider, RESOURCES_FILE_NAME, MAPPER);
 	}
 
 	private Tuple<String, String> dumpConfigurations() throws IOException {
 
-		return dumpEntities(configurationPersistenceServiceProvider, CONFIGURATIONS_FILE_NAME);
+		return dumpEntities(configurationPersistenceServiceProvider, CONFIGURATIONS_FILE_NAME, MAPPER);
 	}
 
 	private Tuple<String, String> dumpSchemas() throws IOException {
@@ -257,7 +264,7 @@ public class MetadataRepositoryMigrator {
 
 		final Collection<Resource> existingResources = deserializeEntities(filePath, new TypeReference<ArrayList<Resource>>() {
 
-		}, Resource.class.getName());
+		}, Resource.class.getName(), MAPPER);
 
 		final Collection<Resource> modifiedResources = new ArrayList<>();
 		final Map<String, Collection<Configuration>> resourcesConfigurations = new LinkedHashMap<>();
@@ -338,7 +345,7 @@ public class MetadataRepositoryMigrator {
 
 		final Collection<Configuration> existingConfigurations = deserializeEntities(filePath, new TypeReference<ArrayList<Configuration>>() {
 
-		}, Configuration.class.getName());
+		}, Configuration.class.getName(), MAPPER);
 
 		final Collection<Configuration> modifiedConfigurations = new ArrayList<>();
 
@@ -579,6 +586,12 @@ public class MetadataRepositoryMigrator {
 			final Provider<PERSISTENCE_SERVICE> persistenceServiceProvider, final String fileName)
 			throws IOException {
 
+		return dumpEntities(persistenceServiceProvider, fileName, mapper);
+	}
+
+	private <PERSISTENCE_SERVICE extends BasicJPAService> Tuple<String, String> dumpEntities(
+			final Provider<PERSISTENCE_SERVICE> persistenceServiceProvider, final String fileName, final ObjectMapper mapper) throws IOException {
+
 		final PERSISTENCE_SERVICE persistenceService = persistenceServiceProvider.get();
 
 		final Class clasz = persistenceService.getClasz();
@@ -590,7 +603,7 @@ public class MetadataRepositoryMigrator {
 
 		LOG.debug("retrieved '{}' {}s", entities.size(), claszName);
 
-		final String entitiesJSONString = MAPPER.writeValueAsString(entities);
+		final String entitiesJSONString = mapper.writeValueAsString(entities);
 		final byte[] entitiesJSONBytes = entitiesJSONString.getBytes();
 
 		final File file = createFile(fileName);
@@ -611,8 +624,14 @@ public class MetadataRepositoryMigrator {
 		return File.createTempFile(fileNameParts[0], "." + fileNameParts[1]);
 	}
 
-	private static <POJOCLASS extends DMPObject, T extends ArrayList<POJOCLASS>> Collection<POJOCLASS> deserializeEntities(final String filePath,
+	private <POJOCLASS extends DMPObject, T extends ArrayList<POJOCLASS>> Collection<POJOCLASS> deserializeEntities(final String filePath,
 			final TypeReference<T> typeReference, final String entityName) throws IOException {
+
+		return deserializeEntities(filePath, typeReference, entityName, mapper);
+	}
+
+	private <POJOCLASS extends DMPObject, T extends ArrayList<POJOCLASS>> Collection<POJOCLASS> deserializeEntities(final String filePath,
+			final TypeReference<T> typeReference, final String entityName, final ObjectMapper mapper) throws IOException {
 
 		LOG.debug("try to deserialize some {}s", entityName);
 
@@ -620,7 +639,7 @@ public class MetadataRepositoryMigrator {
 		final URI uri = path.toUri();
 		final File file = new File(uri);
 
-		final Collection<POJOCLASS> deserializedEntities = MAPPER.readValue(file, typeReference);
+		final Collection<POJOCLASS> deserializedEntities = mapper.readValue(file, typeReference);
 
 		LOG.debug("deserialized '{}' {}s", deserializedEntities.size(), entityName);
 
@@ -1121,7 +1140,7 @@ public class MetadataRepositoryMigrator {
 			throws DMPPersistenceException, JsonProcessingException {
 
 		final AttributeService attributeService = attributePersistenceServiceProvider.get();
-		final ArrayNode attributePathAttributesJSONArray = MAPPER.createArrayNode();
+		final ArrayNode attributePathAttributesJSONArray = mapper.createArrayNode();
 
 		for (final Attribute attribute : attributePathAttributesList) {
 
