@@ -31,9 +31,11 @@ import java.util.Map;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
@@ -105,7 +107,8 @@ public class MetadataRepositoryMigrator {
 	private final Provider<FunctionService>                    functionPersistenceServiceProvider;
 	private final Provider<MaintainDBService>                  maintainDBServiceProvider;
 
-	private final Map<String, Function> persistentFunctionsCache = new HashMap<>();
+	private final Map<String, Function>  persistentFunctionsCache  = new HashMap<>();
+	private final Map<String, Attribute> persistentAttributesCache = new HashMap<>();
 
 	private static final JaxbAnnotationModule module = new JaxbAnnotationModule();
 	private static final ObjectMapper         MAPPER = new ObjectMapper()
@@ -559,11 +562,7 @@ public class MetadataRepositoryMigrator {
 			replaceFunctions(existingProject);
 		}
 
-		final Map<String, Project> persistentProjects = recreateEntities(projectPersistenceServiceProvider, existingProjects, PersistenceType.Merge);
-
-		System.out.println("here I am");
-
-		return persistentProjects;
+		return recreateEntities(projectPersistenceServiceProvider, existingProjects, PersistenceType.Merge);
 	}
 
 	private <PERSISTENCE_SERVICE extends BasicJPAService> Tuple<String, String> dumpEntities(
@@ -893,7 +892,7 @@ public class MetadataRepositoryMigrator {
 	 * @throws DMPPersistenceException
 	 */
 	private void replaceAttributePathsInMappings(final Map<String, AttributePath> oldUuidNewPersistentAttributePathMap, final Project project)
-			throws DMPPersistenceException {
+			throws DMPPersistenceException, JsonProcessingException {
 
 		if (project == null) {
 
@@ -926,7 +925,7 @@ public class MetadataRepositoryMigrator {
 	}
 
 	private void replaceAttributePathInMAPI(final Map<String, AttributePath> oldUuidNewPersistentAttributePathMap,
-			final MappingAttributePathInstance mapi) throws DMPPersistenceException {
+			final MappingAttributePathInstance mapi) throws DMPPersistenceException, JsonProcessingException {
 
 		final AttributePath existingAttributePath = mapi.getAttributePath();
 		final String existingAttributePathUuid = existingAttributePath.getUuid();
@@ -950,10 +949,15 @@ public class MetadataRepositoryMigrator {
 
 				// try to retrieve attribute path (e.g. from an inbuilt schema) via attribute path string from DB
 
-				final String existingAttributePathString = existingAttributePath.toAttributePath();
+				// 1. retrieve all attributes of the attribute path via URI from DB
+				// 2. compose a new JSON array of the attribute path with the attribute UUIDs of the containing attributes
 
-				// TODO: this method expects an input á la "["Attribute-d51ccda8-d663-442f-b1c3-86b4eaff4608","Attribute-45227e11-4bee-49ea-b5a2-0a087c6dc417","Attribute-06d09c8d-465d-417c-9b7f-0a3a2ca78b2d"]", i.e., no attribute path string but rather then a list of (valid) attribute uuids as JSON array
-				final List<AttributePath> attributePathsWithPathFromDB = attributePathService.getAttributePathsWithPath(existingAttributePathString);
+				final List<Attribute> attributePathAttributesList = existingAttributePath.getAttributePath();
+				final String attributePathAttributesJSONArray = buildActualAttributePathJSONArray(attributePathAttributesList);
+
+				// 3. do the request at the attribute path persistence service with the string representation of this JSON array
+				final List<AttributePath> attributePathsWithPathFromDB = attributePathService.getAttributePathsWithPath(
+						attributePathAttributesJSONArray);
 
 				if (attributePathsWithPathFromDB == null || attributePathsWithPathFromDB.isEmpty()) {
 
@@ -961,7 +965,7 @@ public class MetadataRepositoryMigrator {
 
 					final String message = String
 							.format("could not find attribute path '%s' ('%s') in the persistent attribute paths map nor in the metadata repository",
-									existingAttributePathUuid, existingAttributePathString);
+									existingAttributePathUuid, existingAttributePath.toAttributePath());
 
 					LOG.error(message);
 
@@ -1101,6 +1105,42 @@ public class MetadataRepositoryMigrator {
 
 			replaceFunctionsInComponent(transformationComponent);
 		}
+	}
+
+	private String buildActualAttributePathJSONArray(final List<Attribute> attributePathAttributesList)
+			throws DMPPersistenceException, JsonProcessingException {
+
+		final AttributeService attributeService = attributePersistenceServiceProvider.get();
+		final ArrayNode attributePathAttributesJSONArray = MAPPER.createArrayNode();
+
+		for (final Attribute attribute : attributePathAttributesList) {
+
+			final String attributeUri = attribute.getUri();
+
+			if (!persistentAttributesCache.containsKey(attributeUri)) {
+
+				final Attribute persistentAttribute = attributeService.getObjectByUri(attributeUri);
+
+				if (persistentAttribute == null) {
+
+					final String message = String.format("could not find an attribute for uri '%s' in the metadata repository", attributeUri);
+
+					LOG.error(message);
+
+					throw new DMPPersistenceException(message);
+				}
+
+				persistentAttributesCache.put(attributeUri, persistentAttribute);
+			}
+
+			final Attribute persistentAttribute = persistentAttributesCache.get(attributeUri);
+
+			final String persistentAttributeUuid = persistentAttribute.getUuid();
+
+			attributePathAttributesJSONArray.add(persistentAttributeUuid);
+		}
+
+		return attributePathAttributesJSONArray.toString();
 	}
 
 	private class SchemaRecreationResultSet {

@@ -33,8 +33,6 @@ public class MetadataRepositoryMigratorTest extends GuicedTest {
 		GuicedTest.tearDown();
 		GuicedTest.startUp();
 		initObjects();
-		//maintainDBService.createTables();
-		//maintainDBService.truncateTables();
 	}
 
 	@Override public void tearDown3() throws Exception {
@@ -54,12 +52,8 @@ public class MetadataRepositoryMigratorTest extends GuicedTest {
 	@Test
 	public void migrateDataTest() throws IOException, DMPPersistenceException {
 
-		//maintainDBService.executeSQLScript("metadata-20150806135818.sql");
-
 		final MetadataRepositoryMigrator metadataRepositoryMigrator = GuicedTest.injector.getInstance(MetadataRepositoryMigrator.class);
 
 		metadataRepositoryMigrator.migrateData();
-
-		System.out.println("here I am");
 	}
 }
