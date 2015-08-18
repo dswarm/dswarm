@@ -37,10 +37,6 @@ public class MetadataRepositoryMigratorTest extends GuicedTest {
 
 	@Override public void tearDown3() throws Exception {
 
-		GuicedTest.tearDown();
-		GuicedTest.startUp();
-		initObjects();
-		maintainDBService.truncateTables();
 	}
 
 	/**
@@ -49,7 +45,7 @@ public class MetadataRepositoryMigratorTest extends GuicedTest {
 	 * @throws IOException
 	 * @throws DMPPersistenceException
 	 */
-	@Test
+	//@Test
 	public void migrateDataTest() throws IOException, DMPPersistenceException {
 
 		final MetadataRepositoryMigrator metadataRepositoryMigrator = GuicedTest.injector.getInstance(MetadataRepositoryMigrator.class);
