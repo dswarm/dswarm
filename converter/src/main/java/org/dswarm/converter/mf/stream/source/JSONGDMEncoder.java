@@ -6,6 +6,9 @@ import java.util.Stack;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
+import javax.annotation.Nullable;
+
+import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.culturegraph.mf.exceptions.MetafactureException;
@@ -14,6 +17,8 @@ import org.culturegraph.mf.framework.XmlReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.mf.framework.DefaultJsonPipe;
@@ -40,6 +45,8 @@ import org.dswarm.persistence.util.GDMUtil;
 @In(XmlReceiver.class)
 @Out(GDMModel.class)
 public class JSONGDMEncoder extends DefaultJsonPipe<ObjectReceiver<GDMModel>> {
+
+	private static final Logger LOG = LoggerFactory.getLogger(JSONGDMEncoder.class);
 
 	private       String                        currentId;
 	private       Model                         model;
@@ -73,12 +80,12 @@ public class JSONGDMEncoder extends DefaultJsonPipe<ObjectReceiver<GDMModel>> {
 	private final Optional<Map<String, AdvancedDMPJPAObject>> optionalTermMap;
 	private final Optional<String>                            dataModelUri;
 
-	private       long                      nodeIdCounter = 1;
-	private final Predicate                 rdfType       = new Predicate(GDMUtil.RDF_type);
-	private final Map<String, Predicate>    predicates    = Maps.newHashMap();
-	private final Map<String, ResourceNode> types         = Maps.newHashMap();
-	private final Map<String, AtomicLong>   valueCounter  = Maps.newHashMap();
-	private final Map<String, String>       uris          = Maps.newHashMap();
+	private       AtomicLong                      nodeIdCounter = new AtomicLong(1);
+	private final Predicate                 rdfType      = new Predicate(GDMUtil.RDF_type);
+	private final Map<String, Predicate>    predicates   = Maps.newHashMap();
+	private final Map<String, ResourceNode> types        = Maps.newHashMap();
+	private final Map<String, AtomicLong>   valueCounter = Maps.newHashMap();
+	private final Map<String, String>       uris         = Maps.newHashMap();
 
 	public JSONGDMEncoder(final Optional<DataModel> dataModel, final boolean utiliseExistingSchema) {
 
@@ -133,6 +140,8 @@ public class JSONGDMEncoder extends DefaultJsonPipe<ObjectReceiver<GDMModel>> {
 
 		// TODO: is there any difference between JSON object and array for our handling?
 
+		System.out.println("in endObject with '" + name + "'");
+
 		endElement(name);
 	}
 
@@ -140,6 +149,8 @@ public class JSONGDMEncoder extends DefaultJsonPipe<ObjectReceiver<GDMModel>> {
 	public void startArray(final String name) {
 
 		// TODO: is there any difference between JSON object and array for our handling?
+
+		System.out.println("in endArray with '" + name + "'");
 
 		startElement(name);
 	}
@@ -154,7 +165,9 @@ public class JSONGDMEncoder extends DefaultJsonPipe<ObjectReceiver<GDMModel>> {
 
 	private void startElement(final String name) {
 
-		this.uri = mintDataModelUri();
+		this.uri = determineElementURI(name);
+
+		System.out.println("add '" + this.uri + "' to element URI stack");
 
 		elementURIStack.push(this.uri);
 
@@ -188,12 +201,29 @@ public class JSONGDMEncoder extends DefaultJsonPipe<ObjectReceiver<GDMModel>> {
 
 		if (inRecord) {
 
-			final String elementUri = elementURIStack.pop();
+			final String elementUriFromStack = elementURIStack.pop();
+			final String elementUri = determineElementURI(name);
 
-			if (recordTagUri.equals(getRecordTagURI(elementUri, name))) {
+			System.out.println("remove '" + elementUriFromStack + "' from element URI stack (with '" + elementUri + "')");
+
+			LOG.debug("record tag URI = '{}' :: element URI from stack = '{}' :: name = '{}' :: element URI = '{}'", recordTagUri,
+					elementUriFromStack, name, elementUri);
+
+			if (recordTagUri.equals(elementUriFromStack)) {
 				inRecord = false;
 				endRecord();
 			} else {
+
+				if (!elementUriFromStack.equals(elementUri)) {
+
+					LOG.debug("try to close entity for element URI '{}' with element URI '{}'", elementUriFromStack, elementUri);
+
+					// re-add
+					elementURIStack.push(elementUriFromStack);
+
+					return;
+				}
+
 				endEntity();
 			}
 		}
@@ -330,22 +360,23 @@ public class JSONGDMEncoder extends DefaultJsonPipe<ObjectReceiver<GDMModel>> {
 		return dataModel.map(dm -> StringUtils.stripEnd(DataModelUtils.determineDataModelSchemaBaseURI(dm), SchemaUtils.HASH));
 	}
 
-	private String mintDataModelUri() {
+	private String mintDataModelUri(@Nullable final String uri) {
 
-		if (dataModelUri.isPresent()) {
+		if (Strings.isNullOrEmpty(uri) || !SchemaUtils.isValidUri(uri)) {
+			if (dataModelUri.isPresent()) {
 
-			return dataModelUri.get();
+				return dataModelUri.get();
+			}
+
+			return String.format(DATA_MODEL_BASE_URI, UUID.randomUUID());
 		}
 
-		return String.format(DATA_MODEL_BASE_URI, UUID.randomUUID());
+		return uri;
 	}
 
 	private long getNewNodeId() {
 
-		final long newNodeId = nodeIdCounter;
-		nodeIdCounter++;
-
-		return newNodeId;
+		return nodeIdCounter.incrementAndGet();
 	}
 
 	private Predicate getPredicate(final String predicateId) {
@@ -413,7 +444,22 @@ public class JSONGDMEncoder extends DefaultJsonPipe<ObjectReceiver<GDMModel>> {
 		return uris.get(id);
 	}
 
+	private Optional<String> getOptionalURI(final String identifier) {
+
+		if (identifier == null) {
+
+			return Optional.empty();
+		}
+
+		return Optional.of(getURI(identifier));
+	}
+
 	private String getRecordTagURI(final String uri, final String localName) {
+
+		if(takeURIAsIs(uri, localName)) {
+
+			return uri;
+		}
 
 		final String typedLocalName = localName + SchemaUtils.TYPE_POSTFIX;
 
@@ -428,6 +474,10 @@ public class JSONGDMEncoder extends DefaultJsonPipe<ObjectReceiver<GDMModel>> {
 	}
 
 	private String getTermURI(final String uri, final String localName) {
+
+		if (takeURIAsIs(uri, localName))
+
+			return uri;
 
 		if (!optionalSchema.isPresent()) {
 
@@ -471,5 +521,33 @@ public class JSONGDMEncoder extends DefaultJsonPipe<ObjectReceiver<GDMModel>> {
 		final Optional<Map<String, AdvancedDMPJPAObject>> optionalTermMap = Optional.ofNullable(SchemaUtils.generateTermMap(schema));
 
 		return Tuple.tuple(Optional.ofNullable(schema), optionalTermMap);
+	}
+
+	private String determineElementURI(final String name) {
+
+		String uri = mintDataModelUri(name);
+
+		final Optional<String> optionalURI = getOptionalURI(name);
+
+		if (optionalURI.isPresent()) {
+
+			uri = optionalURI.get();
+		}
+
+		return uri;
+	}
+
+	private boolean takeURIAsIs(final String uri, final String localName) {
+
+		if (uri != null && localName != null && uri.contains("#") && uri.endsWith(localName)) {
+
+			// take uri as is
+
+			System.out.println("take uri as is '" + uri + "'");
+
+			return true;
+		}
+
+		return false;
 	}
 }

@@ -33,6 +33,8 @@ public class JsonDecoder extends DefaultObjectPipe<Reader, JsonReceiver> {
 
 	private final Stack<String> fieldNameStack;
 
+	private boolean wasFieldNameBefore = false;
+
 	public JsonDecoder() {
 
 		super();
@@ -58,45 +60,95 @@ public class JsonDecoder extends DefaultObjectPipe<Reader, JsonReceiver> {
 					case START_ARRAY:
 
 						final String startArrayFieldName = getCurrentFieldName();
+
+//						if(!wasFieldNameBefore) {
+//
+//							fieldNameStack.push(startArrayFieldName);
+//						}
+
 						getReceiver().startArray(startArrayFieldName);
+
+						wasFieldNameBefore = false;
 
 						break;
 					case START_OBJECT:
 
 						final String startObjectFieldName1 = getCurrentFieldName();
+
+						if(!wasFieldNameBefore) {
+
+							fieldNameStack.push(startObjectFieldName1);
+						}
+
 						getReceiver().startObject(startObjectFieldName1);
+
+						wasFieldNameBefore = false;
 
 						break;
 					case END_ARRAY:
 
 						final String endArrayFieldName = popFieldName();
-						getReceiver().startArray(endArrayFieldName);
+						getReceiver().endArray(endArrayFieldName);
+
+						wasFieldNameBefore = false;
 
 						break;
 					case END_OBJECT:
 
 						final String endObjectFieldName = popFieldName();
-						getReceiver().startObject(endObjectFieldName);
+						getReceiver().endObject(endObjectFieldName);
+
+						wasFieldNameBefore = false;
 
 						break;
 					case FIELD_NAME:
 
 						final String currentFieldName = jp.getCurrentName();
 
+						System.out.println("add field name '" + currentFieldName + "'");
+
 						fieldNameStack.push(currentFieldName);
+
+						wasFieldNameBefore = true;
 
 						break;
 					case VALUE_FALSE:
-					case VALUE_NULL:
+						//case VALUE_NULL:
 					case VALUE_NUMBER_FLOAT:
 					case VALUE_NUMBER_INT:
 					case VALUE_STRING:
 					case VALUE_TRUE:
 
 						final String currentValue = jp.getValueAsString();
-						final String fieldName = fieldNameStack.pop();
+						final String fieldName = getCurrentFieldName();
 
 						getReceiver().literal(fieldName, currentValue);
+
+						if (wasFieldNameBefore) {
+
+							popFieldName();
+
+							System.out.println("remove field name '" + fieldName + "'");
+
+							wasFieldNameBefore = false;
+						}
+
+						break;
+					case VALUE_NULL:
+
+						final String currentValue2 = jp.getValueAsString();
+						final String fieldName2 = getCurrentFieldName();
+
+						getReceiver().literal(fieldName2, currentValue2);
+
+						if (wasFieldNameBefore) {
+
+							popFieldName();
+
+							System.out.println("remove field name '" + fieldName2 + "'");
+
+							wasFieldNameBefore = false;
+						}
 
 						break;
 					default:
@@ -120,7 +172,7 @@ public class JsonDecoder extends DefaultObjectPipe<Reader, JsonReceiver> {
 
 	private String getCurrentFieldName() {
 
-		if(!fieldNameStack.isEmpty()) {
+		if (!fieldNameStack.isEmpty()) {
 
 			return fieldNameStack.peek();
 		}
@@ -130,7 +182,7 @@ public class JsonDecoder extends DefaultObjectPipe<Reader, JsonReceiver> {
 
 	private String popFieldName() {
 
-		if(!fieldNameStack.isEmpty()) {
+		if (!fieldNameStack.isEmpty()) {
 
 			return fieldNameStack.pop();
 		}
