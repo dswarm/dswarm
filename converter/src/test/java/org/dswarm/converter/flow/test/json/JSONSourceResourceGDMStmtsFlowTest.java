@@ -59,7 +59,7 @@ public class JSONSourceResourceGDMStmtsFlowTest extends GuicedTest {
 				.getInstance(JsonResourceFlowFactory.class)
 				.fromDataModel(dataModel, false);
 
-		testFlow(flow, "bib-record-marc.json", "test-record-marc-gdm.json", 0);
+		testFlow(flow, "bib-record-marc.json", "test-record-marc-gdm.json", null);
 	}
 
 	private void testFlow(final JSONSourceResourceGDMStmtsFlow flow, final String fileName, final String expectedResultFileName, final Integer offset)
@@ -198,9 +198,7 @@ public class JSONSourceResourceGDMStmtsFlowTest extends GuicedTest {
 					expectedResultLength = expectedResult.length();
 				}
 
-				//Assert.assertEquals("the processing result length is not equal to the expected one", expectedResultLength, modelJSON.length());
-
-				System.out.println("result = '" + modelJSON + "'");
+				Assert.assertEquals("the processing result length is not equal to the expected one", expectedResultLength, modelJSON.length());
 			}
 		}
 	}

@@ -31,15 +31,15 @@ public class JsonDecoder extends DefaultObjectPipe<Reader, JsonReceiver> {
 	private static final ObjectMapper MAPPER      = new ObjectMapper();
 	private static final JsonFactory  jsonFactory = MAPPER.getFactory();
 
-	private final Stack<String> fieldNameStack;
-
-	private boolean wasFieldNameBefore = false;
+	private final Stack<String>    fieldNameStack;
+	private final Stack<JsonToken> tokenStack;
 
 	public JsonDecoder() {
 
 		super();
 
 		fieldNameStack = new Stack<>();
+		tokenStack = new Stack<>();
 	}
 
 	@Override
@@ -59,57 +59,48 @@ public class JsonDecoder extends DefaultObjectPipe<Reader, JsonReceiver> {
 
 					case START_ARRAY:
 
-						final String startArrayFieldName = getCurrentFieldName();
-
-//						if(!wasFieldNameBefore) {
-//
-//							fieldNameStack.push(startArrayFieldName);
-//						}
-
-						getReceiver().startArray(startArrayFieldName);
-
-						wasFieldNameBefore = false;
+						tokenStack.push(currentToken);
 
 						break;
 					case START_OBJECT:
 
 						final String startObjectFieldName1 = getCurrentFieldName();
 
-						if(!wasFieldNameBefore) {
-
-							fieldNameStack.push(startObjectFieldName1);
-						}
-
 						getReceiver().startObject(startObjectFieldName1);
 
-						wasFieldNameBefore = false;
+						tokenStack.push(currentToken);
 
 						break;
 					case END_ARRAY:
 
-						final String endArrayFieldName = popFieldName();
-						getReceiver().endArray(endArrayFieldName);
+						popFieldName();
+						tokenStack.pop();
 
-						wasFieldNameBefore = false;
+						if (JsonToken.FIELD_NAME.equals(tokenStack.peek())) {
+
+							tokenStack.pop();
+						}
 
 						break;
 					case END_OBJECT:
 
-						final String endObjectFieldName = popFieldName();
+						final String endObjectFieldName = getCurrentFieldName();
 						getReceiver().endObject(endObjectFieldName);
 
-						wasFieldNameBefore = false;
+						tokenStack.pop();
+
+						if (!tokenStack.isEmpty() && JsonToken.FIELD_NAME.equals(tokenStack.peek())) {
+
+							tokenStack.pop();
+						}
 
 						break;
 					case FIELD_NAME:
 
 						final String currentFieldName = jp.getCurrentName();
 
-						System.out.println("add field name '" + currentFieldName + "'");
-
 						fieldNameStack.push(currentFieldName);
-
-						wasFieldNameBefore = true;
+						tokenStack.push(currentToken);
 
 						break;
 					case VALUE_FALSE:
@@ -124,13 +115,10 @@ public class JsonDecoder extends DefaultObjectPipe<Reader, JsonReceiver> {
 
 						getReceiver().literal(fieldName, currentValue);
 
-						if (wasFieldNameBefore) {
+						if (JsonToken.FIELD_NAME.equals(tokenStack.peek())) {
 
 							popFieldName();
-
-							System.out.println("remove field name '" + fieldName + "'");
-
-							wasFieldNameBefore = false;
+							tokenStack.pop();
 						}
 
 						break;
@@ -141,14 +129,12 @@ public class JsonDecoder extends DefaultObjectPipe<Reader, JsonReceiver> {
 
 						getReceiver().literal(fieldName2, currentValue2);
 
-						if (wasFieldNameBefore) {
+						if (JsonToken.FIELD_NAME.equals(tokenStack.peek())) {
 
 							popFieldName();
-
-							System.out.println("remove field name '" + fieldName2 + "'");
-
-							wasFieldNameBefore = false;
 						}
+
+						tokenStack.pop();
 
 						break;
 					default:
@@ -156,8 +142,6 @@ public class JsonDecoder extends DefaultObjectPipe<Reader, JsonReceiver> {
 						// TODO: throw an exception (?)
 
 						LOG.debug("unhandled JSON token '{}' found", currentToken);
-
-						System.out.println("unhandled JSON token '" + currentToken + "' found");
 				}
 
 				jp.nextToken();

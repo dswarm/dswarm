@@ -130,17 +130,11 @@ public class JSONGDMEncoder extends DefaultJsonPipe<ObjectReceiver<GDMModel>> {
 	@Override
 	public void startObject(final String name) {
 
-		// TODO: is there any difference between JSON object and array for our handling?
-
 		startElement(name);
 	}
 
 	@Override
 	public void endObject(final String name) {
-
-		// TODO: is there any difference between JSON object and array for our handling?
-
-		System.out.println("in endObject with '" + name + "'");
 
 		endElement(name);
 	}
@@ -148,26 +142,22 @@ public class JSONGDMEncoder extends DefaultJsonPipe<ObjectReceiver<GDMModel>> {
 	@Override
 	public void startArray(final String name) {
 
-		// TODO: is there any difference between JSON object and array for our handling?
+		// TODO: we don't need this right now, or?
 
-		System.out.println("in endArray with '" + name + "'");
-
-		startElement(name);
+		//startElement(name);
 	}
 
 	@Override
 	public void endArray(final String name) {
 
-		// TODO: is there any difference between JSON object and array for our handling?
+		// TODO: we don't need this right now, or?
 
-		endElement(name);
+		//endElement(name);
 	}
 
 	private void startElement(final String name) {
 
 		this.uri = determineElementURI(name);
-
-		System.out.println("add '" + this.uri + "' to element URI stack");
 
 		elementURIStack.push(this.uri);
 
@@ -197,17 +187,10 @@ public class JSONGDMEncoder extends DefaultJsonPipe<ObjectReceiver<GDMModel>> {
 
 	private void endElement(final String name) {
 
-		// System.out.println("in end element with: uri = '" + uri + "' :: local name = '" + localName + "'");
-
 		if (inRecord) {
 
 			final String elementUriFromStack = elementURIStack.pop();
 			final String elementUri = determineElementURI(name);
-
-			System.out.println("remove '" + elementUriFromStack + "' from element URI stack (with '" + elementUri + "')");
-
-			LOG.debug("record tag URI = '{}' :: element URI from stack = '{}' :: name = '{}' :: element URI = '{}'", recordTagUri,
-					elementUriFromStack, name, elementUri);
 
 			if (recordTagUri.equals(elementUriFromStack)) {
 				inRecord = false;
@@ -216,7 +199,7 @@ public class JSONGDMEncoder extends DefaultJsonPipe<ObjectReceiver<GDMModel>> {
 
 				if (!elementUriFromStack.equals(elementUri)) {
 
-					LOG.debug("try to close entity for element URI '{}' with element URI '{}'", elementUriFromStack, elementUri);
+					// LOG.debug("try to close entity for element URI '{}' with element URI '{}'", elementUriFromStack, elementUri);
 
 					// re-add
 					elementURIStack.push(elementUriFromStack);
@@ -231,8 +214,6 @@ public class JSONGDMEncoder extends DefaultJsonPipe<ObjectReceiver<GDMModel>> {
 
 	@Override
 	public void literal(final String name, final String value) {
-
-		// System.out.println("in literal with name = '" + name + "' :: value = '" + value + "'");
 
 		assert !isClosed();
 
@@ -260,8 +241,6 @@ public class JSONGDMEncoder extends DefaultJsonPipe<ObjectReceiver<GDMModel>> {
 
 	public void startRecord(final String identifier) {
 
-		// System.out.println("in start record with: identifier = '" + identifier + "'");
-
 		assert !isClosed();
 
 		currentId = SchemaUtils.isValidUri(identifier) ? identifier : SchemaUtils.mintRecordUri(identifier, currentId, dataModel);
@@ -285,8 +264,6 @@ public class JSONGDMEncoder extends DefaultJsonPipe<ObjectReceiver<GDMModel>> {
 
 	public void endRecord() {
 
-		// System.out.println("in end record");
-
 		assert !isClosed();
 
 		inRecord = false;
@@ -303,8 +280,6 @@ public class JSONGDMEncoder extends DefaultJsonPipe<ObjectReceiver<GDMModel>> {
 	}
 
 	public void startEntity(final String name) {
-
-		// System.out.println("in start entity with name = '" + name + "'");
 
 		assert !isClosed();
 
@@ -330,20 +305,14 @@ public class JSONGDMEncoder extends DefaultJsonPipe<ObjectReceiver<GDMModel>> {
 		addStatement(entityNode, rdfType, entityType);
 
 		entityStack.push(new Tuple<>(entityNode, entityPredicate));
-
-		// System.out.println("in start entity with entity stact size: '" + entityStack.size() + "'");
 	}
 
 	public void endEntity() {
-
-		// System.out.println("in end entity");
 
 		assert !isClosed();
 
 		// write sub resource
 		entityStack.pop();
-
-		// System.out.println("in end entity with entity stact size: '" + entityStack.size() + "'");
 
 		// add entity resource to parent entity resource (or to record resource, if there is no parent entity)
 		if (!entityStack.isEmpty()) {
@@ -539,15 +508,6 @@ public class JSONGDMEncoder extends DefaultJsonPipe<ObjectReceiver<GDMModel>> {
 
 	private boolean takeURIAsIs(final String uri, final String localName) {
 
-		if (uri != null && localName != null && uri.contains("#") && uri.endsWith(localName)) {
-
-			// take uri as is
-
-			System.out.println("take uri as is '" + uri + "'");
-
-			return true;
-		}
-
-		return false;
+		return uri != null && localName != null && uri.contains(SchemaUtils.HASH) && uri.endsWith(localName);
 	}
 }
