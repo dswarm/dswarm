@@ -18,6 +18,8 @@ package org.dswarm.converter.flow;
 import org.dswarm.persistence.model.resource.DataModel;
 
 /**
+ * TODO: maybe refactor this inferface and JsonResourceFlowFactory
+ *
  * @author phorn
  */
 public interface XmlResourceFlowFactory {

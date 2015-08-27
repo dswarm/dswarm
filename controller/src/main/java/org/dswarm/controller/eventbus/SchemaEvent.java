@@ -21,8 +21,8 @@ import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 
 public class SchemaEvent extends DataModelEvent {
 
-	public static enum SchemaType {
-		CSV, XML, XSD;
+	public enum SchemaType {
+		CSV, XML, XSD, JSON;
 
 		public static SchemaType fromString(final String type) {
 
@@ -47,6 +47,9 @@ public class SchemaEvent extends DataModelEvent {
 				case ConfigurationStatics.CSV_STORAGE_TYPE:
 
 					return CSV;
+				case ConfigurationStatics.JSON_STORAGE_TYPE:
+
+					return JSON;
 				default:
 
 					throw new IllegalArgumentException("No schema type for [" + type + "]");

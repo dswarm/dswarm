@@ -25,8 +25,8 @@ import org.slf4j.LoggerFactory;
 import rx.Observable;
 import rx.Scheduler;
 
-import org.dswarm.converter.flow.XMLSourceResourceGDMStmtsFlow;
-import org.dswarm.converter.flow.XmlResourceFlowFactory;
+import org.dswarm.converter.flow.JSONSourceResourceGDMStmtsFlow;
+import org.dswarm.converter.flow.JsonResourceFlowFactory;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.monitoring.MonitoringLogger;
@@ -34,51 +34,51 @@ import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.service.internal.graph.util.SchemaDeterminator;
 
 /**
- * An event recorder for converting XML documents.
+ * An event recorder for converting JSON documents.
  *
  * @author phorn
  * @author tgaengler
  */
 @Singleton
-public class XMLConverterEventRecorder extends ConverterEventRecorder<XMLConverterEvent> {
+public class JSONConverterEventRecorder extends ConverterEventRecorder<JSONConverterEvent> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(XMLConverterEventRecorder.class);
+	private static final Logger LOG = LoggerFactory.getLogger(JSONConverterEventRecorder.class);
 
-	private static final String TYPE = "XML";
+	private static final String TYPE = "JSON";
 
 	/**
 	 * The internal model service factory
 	 */
-	private final Provider<XmlResourceFlowFactory> xmlFlowFactory;
+	private final Provider<JsonResourceFlowFactory> jsonFlowFactory;
 
 	/**
-	 * Creates a new event recorder for converting XML documents with the given internal model service factory and event bus.
+	 * Creates a new event recorder for converting JSON documents with the given internal model service factory and event bus.
 	 *
 	 * @param internalModelServiceFactory an internal model service factory
 	 */
 	@Inject
-	public XMLConverterEventRecorder(
+	public JSONConverterEventRecorder(
 			final InternalModelServiceFactory internalModelServiceFactory,
-			final Provider<XmlResourceFlowFactory> xmlFlowFactory,
+			final Provider<JsonResourceFlowFactory> jsonFlowFactory,
 			final Provider<MonitoringLogger> loggerProvider,
 			final Provider<SchemaDeterminator> schemaDeterminatorProvider) {
 
 		super(internalModelServiceFactory, loggerProvider, schemaDeterminatorProvider, TYPE);
 
-		this.xmlFlowFactory = xmlFlowFactory;
+		this.jsonFlowFactory = jsonFlowFactory;
 	}
 
 	@Override
 	protected Observable<GDMModel> convertData(final DataModel dataModel, final boolean utiliseExistingSchema, final Scheduler scheduler,
 			final String path, final boolean hasSchema) {
 
-		final CompletableFuture<XMLSourceResourceGDMStmtsFlow> futureFlow = CompletableFuture
-				.supplyAsync(() -> xmlFlowFactory.get().fromDataModel(dataModel, utiliseExistingSchema));
-		final Observable<XMLSourceResourceGDMStmtsFlow> obserableFlow = Observable.from(futureFlow);
+		final CompletableFuture<JSONSourceResourceGDMStmtsFlow> futureFlow = CompletableFuture
+				.supplyAsync(() -> jsonFlowFactory.get().fromDataModel(dataModel, utiliseExistingSchema));
+		final Observable<JSONSourceResourceGDMStmtsFlow> obserableFlow = Observable.from(futureFlow);
 
 		return obserableFlow.subscribeOn(scheduler).flatMap(flow -> {
 
-			LOG.debug("process xml data resource at '{}' into data model '{}' (has schema = '{}')", path, dataModel.getUuid(), hasSchema);
+			LOG.debug("process JSON data resource at '{}' into data model '{}' (has schema = '{}')", path, dataModel.getUuid(), hasSchema);
 
 			return flow.applyResource(path);
 		});

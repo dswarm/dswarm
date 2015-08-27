@@ -52,7 +52,7 @@ import org.dswarm.persistence.service.internal.graph.util.SchemaDeterminator;
  * @author phorn
  * @author tgaengler
  */
-public abstract class ConverterEventRecorder {
+public abstract class ConverterEventRecorder<CONVERTER_EVENT_IMPL extends ConverterEvent> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ConverterEventRecorder.class);
 
@@ -87,7 +87,7 @@ public abstract class ConverterEventRecorder {
 	 * @param event an converter event that provides a data model
 	 */
 	// @Subscribe
-	public void processDataModel(final ConverterEvent event) throws DMPControllerException {
+	public void processDataModel(final CONVERTER_EVENT_IMPL event) throws DMPControllerException {
 
 		final DataModel dataModel = event.getDataModel();
 		final UpdateFormat updateFormat = event.getUpdateFormat();

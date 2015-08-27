@@ -68,6 +68,8 @@ import org.dswarm.common.types.Tuple;
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.eventbus.CSVConverterEvent;
 import org.dswarm.controller.eventbus.CSVConverterEventRecorder;
+import org.dswarm.controller.eventbus.JSONConverterEvent;
+import org.dswarm.controller.eventbus.JSONConverterEventRecorder;
 import org.dswarm.controller.eventbus.SchemaEvent;
 import org.dswarm.controller.eventbus.SchemaEventRecorder;
 import org.dswarm.controller.eventbus.XMLConverterEvent;
@@ -119,7 +121,8 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	private final Provider<XMLSchemaEventRecorder>    xmlSchemaEventRecorderProvider;
 	private final Provider<CSVConverterEventRecorder> csvConverterEventRecorderProvider;
 	private final Provider<XMLConverterEventRecorder> xmlConvertEventRecorderProvider;
-	private final Provider<SchemaDeterminator>        schemaDeterminatorProvider;
+	private final Provider<JSONConverterEventRecorder> jsonConvertEventRecorderProvider;
+	private final Provider<SchemaDeterminator>         schemaDeterminatorProvider;
 
 	// this is likely to be http://localhost:7474/graph
 	private final String graphEndpoint;
@@ -148,6 +151,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			final Provider<XMLSchemaEventRecorder> xmlSchemaEventRecorderProviderArg,
 			final Provider<CSVConverterEventRecorder> csvConverterEventRecorderProviderArg,
 			final Provider<XMLConverterEventRecorder> xmlConverterEventRecorderProviderArg,
+			final Provider<JSONConverterEventRecorder> jsonConverterEventRecorderProviderArg,
 			final Provider<SchemaDeterminator> schemaDeterminatorProviderArg,
 			@Named("dswarm.db.graph.endpoint") final String graphEndpointArg) throws DMPControllerException {
 
@@ -158,6 +162,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 		xmlSchemaEventRecorderProvider = xmlSchemaEventRecorderProviderArg;
 		csvConverterEventRecorderProvider = csvConverterEventRecorderProviderArg;
 		xmlConvertEventRecorderProvider = xmlConverterEventRecorderProviderArg;
+		jsonConvertEventRecorderProvider = jsonConverterEventRecorderProviderArg;
 		schemaDeterminatorProvider = schemaDeterminatorProviderArg;
 		graphEndpoint = graphEndpointArg;
 	}
@@ -869,6 +874,12 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 				final XMLConverterEvent xmlConverterEvent = new XMLConverterEvent(dataModel, updateFormat, enableVersioning);
 				xmlConvertEventRecorderProvider.get().processDataModel(xmlConverterEvent);
+
+				break;
+			case ConfigurationStatics.JSON_STORAGE_TYPE:
+
+				final JSONConverterEvent jsonConverterEvent = new JSONConverterEvent(dataModel, updateFormat, enableVersioning);
+				jsonConvertEventRecorderProvider.get().processDataModel(jsonConverterEvent);
 
 				break;
 			default:

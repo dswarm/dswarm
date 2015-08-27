@@ -22,6 +22,7 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 
 import org.dswarm.controller.eventbus.CSVConverterEventRecorder;
+import org.dswarm.controller.eventbus.JSONConverterEventRecorder;
 import org.dswarm.controller.eventbus.SchemaEventRecorder;
 import org.dswarm.controller.eventbus.XMLConverterEventRecorder;
 import org.dswarm.controller.eventbus.XMLSchemaEventRecorder;
@@ -47,6 +48,7 @@ public class DMPModule extends AbstractModule {
 		bind(SchemaEventRecorder.class);
 		bind(CSVConverterEventRecorder.class);
 		bind(XMLConverterEventRecorder.class);
+		bind(JSONConverterEventRecorder.class);
 		bind(XMLSchemaEventRecorder.class);
 
 		bind(DataModelUtil.class);

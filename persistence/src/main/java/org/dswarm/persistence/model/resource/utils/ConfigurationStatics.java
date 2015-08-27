@@ -130,6 +130,8 @@ public interface ConfigurationStatics {
 
 	String XML_STORAGE_TYPE = "xml";
 
+	String JSON_STORAGE_TYPE = "json";
+
 	String MABXML_STORAGE_TYPE = "mabxml";
 
 	String MARCXML_STORAGE_TYPE = "marc21";

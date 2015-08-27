@@ -477,7 +477,7 @@ public class DataModelsResourceTest2 extends
 		final String configurationFileName = "xml-configuration.2.json";
 		final String dataModelUuid = "DataModel-e1677fea-9b35-46d0-acb0-8c6c0ff7c0c4";
 		final String dataModelName = dataModelUuid + " name";
-		final String expectedResponse = "{\"status\":\"nok\",\"status_code\":500,\"error\":\"couldn't transform any record from xml data resource at '/home/tgaengler/git/tgaengler/dswarm/tmp/resources/controller_test-mabxml.xml' to GDM for data model 'DataModel-e1677fea-9b35-46d0-acb0-8c6c0ff7c0c4'; maybe you set a wrong record tag (current one = 'record')\"}";
+		final String expectedResponse = "{\"status\":\"nok\",\"status_code\":500,\"error\":\"couldn't transform any record from XML data resource at '/home/tgaengler/git/tgaengler/dswarm/tmp/resources/controller_test-mabxml.xml' to GDM for data model 'DataModel-e1677fea-9b35-46d0-acb0-8c6c0ff7c0c4'; maybe you set a wrong record tag (current one = 'record')\"}";
 
 		doNegativeDataModelTest(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelUuid, dataModelName,
 				expectedResponse);
