@@ -329,6 +329,50 @@ public class DataModelsResourceTest2 extends
 		DataModelsResourceTest2.LOG.debug("end get XML data test");
 	}
 
+	@Test
+	public void testJSONData() throws Exception {
+
+		DataModelsResourceTest2.LOG.debug("start get JSON data test");
+
+		// START DATA MODEL CREATION
+
+		final String dataResourceResourceFileName = "test-json-resource.json";
+		final String dataResourceFileName = "controller_bib-record-marc.json";
+		final String configurationFileName = "json-configuration.json";
+		final String dataModelName = "json-example-datamodel";
+
+		final DataModel dataModel = createDataModel(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName);
+
+		// END DATA MODEL CREATION
+
+		final int atMost = 1;
+
+		final Tuple<Optional<Map<String, Model>>, ObjectNode> result = readData(dataModel, Optional.of(atMost));
+
+		final Optional<Map<String, Model>> data = result.v1();
+		final ObjectNode assoziativeJsonArray = result.v2();
+		final String recordId = data.get().keySet().iterator().next();
+
+		Assert.assertThat(assoziativeJsonArray.size(), CoreMatchers.equalTo(atMost));
+
+		final JsonNode json = assoziativeJsonArray.get(recordId);
+
+		final JsonNode expectedJson = data.get().get(recordId).toRawJSON();
+
+		Assert.assertNotNull("the expected data JSON shouldn't be null", expectedJson);
+
+		Assert.assertThat(getValue("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", json),
+				CoreMatchers.equalTo(getValue("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", expectedJson)));
+		Assert.assertThat(getValue("http://data.slub-dresden.de/resources/1/schema#controlNumber", json),
+				CoreMatchers.equalTo(getValue("http://data.slub-dresden.de/resources/1/schema#controlNumber", expectedJson)));
+		Assert.assertThat(getValue("http://data.slub-dresden.de/resources/1/schema#format", json),
+				CoreMatchers.equalTo(getValue("http://data.slub-dresden.de/resources/1/schema#format", expectedJson)));
+		Assert.assertThat(getValueNode("http://data.slub-dresden.de/resources/1/schema#fixedFields", json).size(),
+				CoreMatchers.equalTo(getValueNode("http://data.slub-dresden.de/resources/1/schema#fixedFields", expectedJson).size()));
+
+		DataModelsResourceTest2.LOG.debug("end get JSON data test");
+	}
+
 	/**
 	 * to ensure that the inbuilt schema won't be corrupted during processing
 	 *

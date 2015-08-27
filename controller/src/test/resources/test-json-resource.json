@@ -1,0 +1,11 @@
+{
+  "name" : "controller_bib-record-marc.json",
+  "type" : "FILE",
+  "description" : "this is a description",
+  "resource_attributes" : {
+    "path" : "dummy/path/to/controller_bib-record-marc.json",
+    "filesize" : 2279,
+    "filetype" : "application/json"
+  },
+  "uuid" : "1"
+}

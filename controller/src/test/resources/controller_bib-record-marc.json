@@ -1,0 +1,926 @@
+{
+  "record": {
+    "controlNumber": "ocn319501305",
+    "format": "a",
+    "lccnIdentifiers": [
+      "  2009034108"
+    ],
+    "isbnIdentifiers": [
+      "9780399156380",
+      "0399156380"
+    ],
+    "issnIdentifiers": [
+    ],
+    "fixedFields": [
+      {
+        "tag": "000",
+        "data": "cam   a ",
+        "errors": [
+        ],
+        "fixedElements": [
+          {
+            "label": "recstat",
+            "data": "c",
+            "startingPosition": 0,
+            "length": 1
+          },
+          {
+            "label": "type",
+            "data": "a",
+            "startingPosition": 1,
+            "length": 1
+          },
+          {
+            "label": "blvl",
+            "data": "m",
+            "startingPosition": 2,
+            "length": 1
+          },
+          {
+            "label": "ctrl",
+            "data": " ",
+            "startingPosition": 3,
+            "length": 1
+          },
+          {
+            "label": "elvl",
+            "data": " ",
+            "startingPosition": 5,
+            "length": 1
+          },
+          {
+            "label": "desc",
+            "data": "a",
+            "startingPosition": 6,
+            "length": 1
+          },
+          {
+            "label": "undef",
+            "data": " ",
+            "startingPosition": 7,
+            "length": 1
+          }
+        ]
+      },
+      {
+        "tag": "001",
+        "data": "ocn319501305",
+        "errors": [
+        ],
+        "fixedElements": [
+        ]
+      },
+      {
+        "tag": "003",
+        "data": "OCoLC",
+        "errors": [
+        ],
+        "fixedElements": [
+        ]
+      },
+      {
+        "tag": "005",
+        "data": "20120531100955.8",
+        "errors": [
+        ],
+        "fixedElements": [
+        ]
+      },
+      {
+        "tag": "008",
+        "data": "090819s2009    nyu           000 1 eng  ",
+        "errors": [
+        ],
+        "fixedElements": [
+          {
+            "label": "entered",
+            "data": "090819",
+            "startingPosition": 0,
+            "length": 6
+          },
+          {
+            "label": "dtst",
+            "data": "s",
+            "startingPosition": 6,
+            "length": 1
+          },
+          {
+            "label": "date1",
+            "data": "2009",
+            "startingPosition": 7,
+            "length": 4
+          },
+          {
+            "label": "date2",
+            "data": "    ",
+            "startingPosition": 11,
+            "length": 4
+          },
+          {
+            "label": "ctry",
+            "data": "nyu",
+            "startingPosition": 15,
+            "length": 3
+          },
+          {
+            "label": "ills",
+            "data": "    ",
+            "startingPosition": 18,
+            "length": 4
+          },
+          {
+            "label": "audn",
+            "data": " ",
+            "startingPosition": 22,
+            "length": 1
+          },
+          {
+            "label": "form",
+            "data": " ",
+            "startingPosition": 23,
+            "length": 1
+          },
+          {
+            "label": "contbks",
+            "data": "    ",
+            "startingPosition": 24,
+            "length": 4
+          },
+          {
+            "label": "gpub",
+            "data": " ",
+            "startingPosition": 28,
+            "length": 1
+          },
+          {
+            "label": "conf",
+            "data": "0",
+            "startingPosition": 29,
+            "length": 1
+          },
+          {
+            "label": "fest",
+            "data": "0",
+            "startingPosition": 30,
+            "length": 1
+          },
+          {
+            "label": "indx",
+            "data": "0",
+            "startingPosition": 31,
+            "length": 1
+          },
+          {
+            "label": "litf",
+            "data": "1",
+            "startingPosition": 33,
+            "length": 1
+          },
+          {
+            "label": "biog",
+            "data": " ",
+            "startingPosition": 34,
+            "length": 1
+          },
+          {
+            "label": "lang",
+            "data": "eng",
+            "startingPosition": 35,
+            "length": 3
+          },
+          {
+            "label": "mrec",
+            "data": " ",
+            "startingPosition": 38,
+            "length": 1
+          },
+          {
+            "label": "srce",
+            "data": " ",
+            "startingPosition": 39,
+            "length": 1
+          }
+        ]
+      },
+      {
+        "tag": "009",
+        "data": "466",
+        "errors": [
+        ],
+        "fixedElements": [
+        ]
+      }
+    ],
+    "variableFields": [
+      {
+        "tag": "010",
+        "errors": [
+        ],
+        "i1": " ",
+        "i2": " ",
+        "ed": null,
+        "ex": null,
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "  2009034108",
+            "authorityFragment": null
+          }
+        ]
+      },
+      {
+        "tag": "040",
+        "errors": [
+        ],
+        "i1": " ",
+        "i2": " ",
+        "ed": null,
+        "ex": null,
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "DLC",
+            "authorityFragment": null
+          },
+          {
+            "subfieldCode": "b",
+            "data": "eng",
+            "authorityFragment": null
+          },
+          {
+            "subfieldCode": "c",
+            "data": "DLC",
+            "authorityFragment": null
+          },
+          {
+            "subfieldCode": "d",
+            "data": "BTCTA",
+            "authorityFragment": null
+          },
+          {
+            "subfieldCode": "d",
+            "data": "UPZ",
+            "authorityFragment": null
+          },
+          {
+            "subfieldCode": "d",
+            "data": "GO3",
+            "authorityFragment": null
+          },
+          {
+            "subfieldCode": "d",
+            "data": "FTL",
+            "authorityFragment": null
+          },
+          {
+            "subfieldCode": "d",
+            "data": "VP@",
+            "authorityFragment": null
+          },
+          {
+            "subfieldCode": "d",
+            "data": "YDXCP",
+            "authorityFragment": null
+          }
+        ]
+      },
+      {
+        "tag": "020",
+        "errors": [
+        ],
+        "i1": " ",
+        "i2": " ",
+        "ed": null,
+        "ex": null,
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "9780399156380",
+            "authorityFragment": null
+          }
+        ]
+      },
+      {
+        "tag": "020",
+        "errors": [
+        ],
+        "i1": " ",
+        "i2": " ",
+        "ed": null,
+        "ex": null,
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "0399156380",
+            "authorityFragment": null
+          }
+        ]
+      },
+      {
+        "tag": "029",
+        "errors": [
+        ],
+        "i1": "1",
+        "i2": " ",
+        "ed": "0",
+        "ex": "0",
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "AU@",
+            "authorityFragment": null
+          },
+          {
+            "subfieldCode": "b",
+            "data": "000044582223",
+            "authorityFragment": null
+          }
+        ]
+      },
+      {
+        "tag": "029",
+        "errors": [
+        ],
+        "i1": "1",
+        "i2": " ",
+        "ed": "0",
+        "ex": "0",
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "NZ1",
+            "authorityFragment": null
+          },
+          {
+            "subfieldCode": "b",
+            "data": "13108959",
+            "authorityFragment": null
+          }
+        ]
+      },
+      {
+        "tag": "035",
+        "errors": [
+        ],
+        "i1": " ",
+        "i2": " ",
+        "ed": null,
+        "ex": null,
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "(OCoLC)319501305",
+            "authorityFragment": null
+          }
+        ]
+      },
+      {
+        "tag": "043",
+        "errors": [
+        ],
+        "i1": " ",
+        "i2": " ",
+        "ed": null,
+        "ex": null,
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "n-us-ny",
+            "authorityFragment": null
+          },
+          {
+            "subfieldCode": "a",
+            "data": "e-uk-st",
+            "authorityFragment": null
+          }
+        ]
+      },
+      {
+        "tag": "050",
+        "errors": [
+        ],
+        "i1": "0",
+        "i2": "0",
+        "ed": null,
+        "ex": null,
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "PR9199.4.J336",
+            "authorityFragment": null
+          },
+          {
+            "subfieldCode": "b",
+            "data": "K55 2009",
+            "authorityFragment": null
+          }
+        ]
+      },
+      {
+        "tag": "082",
+        "errors": [
+        ],
+        "i1": "0",
+        "i2": "0",
+        "ed": null,
+        "ex": null,
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "813/.6",
+            "authorityFragment": null
+          },
+          {
+            "subfieldCode": "2",
+            "data": "22",
+            "authorityFragment": null
+          }
+        ]
+      },
+      {
+        "tag": "049",
+        "errors": [
+        ],
+        "i1": " ",
+        "i2": " ",
+        "ed": null,
+        "ex": null,
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "MAIN",
+            "authorityFragment": null
+          }
+        ]
+      },
+      {
+        "tag": "100",
+        "errors": [
+        ],
+        "i1": "1",
+        "i2": " ",
+        "ed": null,
+        "ex": null,
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "Jacobs, Kate,",
+            "authorityFragment": "<Authority><Link status=\"controlled\" source=\"CorcAuthDB\">7184457</Link></Authority>"
+          },
+          {
+            "subfieldCode": "d",
+            "data": "1973-",
+            "authorityFragment": "<Authority><Link status=\"controlled\" source=\"CorcAuthDB\">7184457</Link></Authority>"
+          }
+        ]
+      },
+      {
+        "tag": "245",
+        "errors": [
+        ],
+        "i1": "1",
+        "i2": "0",
+        "ed": null,
+        "ex": null,
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "Knit the season /",
+            "authorityFragment": null
+          },
+          {
+            "subfieldCode": "c",
+            "data": "Kate Jacobs.",
+            "authorityFragment": null
+          }
+        ]
+      },
+      {
+        "tag": "260",
+        "errors": [
+        ],
+        "i1": " ",
+        "i2": " ",
+        "ed": null,
+        "ex": null,
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "New York :",
+            "authorityFragment": null
+          },
+          {
+            "subfieldCode": "b",
+            "data": "G.P. Putnam's Sons,",
+            "authorityFragment": null
+          },
+          {
+            "subfieldCode": "c",
+            "data": "2009.",
+            "authorityFragment": null
+          }
+        ]
+      },
+      {
+        "tag": "300",
+        "errors": [
+        ],
+        "i1": " ",
+        "i2": " ",
+        "ed": null,
+        "ex": null,
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "260 p. ;",
+            "authorityFragment": null
+          },
+          {
+            "subfieldCode": "c",
+            "data": "24 cm.",
+            "authorityFragment": null
+          }
+        ]
+      },
+      {
+        "tag": "490",
+        "errors": [
+        ],
+        "i1": "1",
+        "i2": " ",
+        "ed": null,
+        "ex": null,
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "Friday night knitting club novel",
+            "authorityFragment": null
+          }
+        ]
+      },
+      {
+        "tag": "520",
+        "errors": [
+        ],
+        "i1": " ",
+        "i2": " ",
+        "ed": null,
+        "ex": null,
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "Dakota Walker spends the Christmas holidays with her Gran in Scotland--accompanied by her father, her grandparents, and her mother's best friend, Catherine. Join them as they share a trove of happy memories about Christmases past with Dakota's mom, Georgia Walker--from Georgia's childhood to her blissful time as a doting new mom.",
+            "authorityFragment": null
+          }
+        ]
+      },
+      {
+        "tag": "650",
+        "errors": [
+        ],
+        "i1": " ",
+        "i2": "0",
+        "ed": null,
+        "ex": null,
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "Young women",
+            "authorityFragment": "<Authority><Link status=\"controlled\" source=\"CorcAuthDB\">7704709</Link></Authority>"
+          },
+          {
+            "subfieldCode": "v",
+            "data": "Fiction.",
+            "authorityFragment": "<Authority><Link status=\"controlled\" source=\"CorcAuthDB\">7704709</Link></Authority>"
+          }
+        ]
+      },
+      {
+        "tag": "650",
+        "errors": [
+        ],
+        "i1": " ",
+        "i2": "0",
+        "ed": null,
+        "ex": null,
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "Grandmothers",
+            "authorityFragment": "<Authority><Link status=\"controlled\" source=\"CorcAuthDB\">7674020</Link></Authority>"
+          },
+          {
+            "subfieldCode": "v",
+            "data": "Fiction.",
+            "authorityFragment": "<Authority><Link status=\"controlled\" source=\"CorcAuthDB\">7674020</Link></Authority>"
+          }
+        ]
+      },
+      {
+        "tag": "650",
+        "errors": [
+        ],
+        "i1": " ",
+        "i2": "0",
+        "ed": null,
+        "ex": null,
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "Americans",
+            "authorityFragment": "<Authority><Link status=\"controlled\" source=\"CorcAuthDB\">8099073</Link></Authority>"
+          },
+          {
+            "subfieldCode": "z",
+            "data": "Scotland",
+            "authorityFragment": "<Authority><Link status=\"controlled\" source=\"CorcAuthDB\">8099073</Link></Authority>"
+          },
+          {
+            "subfieldCode": "v",
+            "data": "Fiction.",
+            "authorityFragment": "<Authority><Link status=\"controlled\" source=\"CorcAuthDB\">8099073</Link></Authority>"
+          }
+        ]
+      },
+      {
+        "tag": "650",
+        "errors": [
+        ],
+        "i1": " ",
+        "i2": "0",
+        "ed": null,
+        "ex": null,
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "Knitters (Persons)",
+            "authorityFragment": "<Authority><Link status=\"controlled\" source=\"CorcAuthDB\">7754635</Link></Authority>"
+          },
+          {
+            "subfieldCode": "v",
+            "data": "Fiction.",
+            "authorityFragment": "<Authority><Link status=\"controlled\" source=\"CorcAuthDB\">7754635</Link></Authority>"
+          }
+        ]
+      },
+      {
+        "tag": "650",
+        "errors": [
+        ],
+        "i1": " ",
+        "i2": "0",
+        "ed": null,
+        "ex": null,
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "Knitting",
+            "authorityFragment": "<Authority><Link status=\"controlled\" source=\"CorcAuthDB\">7754636</Link></Authority>"
+          },
+          {
+            "subfieldCode": "v",
+            "data": "Fiction.",
+            "authorityFragment": "<Authority><Link status=\"controlled\" source=\"CorcAuthDB\">7754636</Link></Authority>"
+          }
+        ]
+      },
+      {
+        "tag": "651",
+        "errors": [
+        ],
+        "i1": " ",
+        "i2": "0",
+        "ed": null,
+        "ex": null,
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "New York (N.Y.)",
+            "authorityFragment": "<Authority><Link status=\"controlled\" source=\"CorcAuthDB\">7692409</Link></Authority>"
+          },
+          {
+            "subfieldCode": "v",
+            "data": "Fiction.",
+            "authorityFragment": "<Authority><Link status=\"controlled\" source=\"CorcAuthDB\">7692409</Link></Authority>"
+          }
+        ]
+      },
+      {
+        "tag": "651",
+        "errors": [
+        ],
+        "i1": " ",
+        "i2": "0",
+        "ed": null,
+        "ex": null,
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "Scotland",
+            "authorityFragment": "<Authority><Link status=\"controlled\" source=\"CorcAuthDB\">7701897</Link></Authority>"
+          },
+          {
+            "subfieldCode": "v",
+            "data": "Fiction.",
+            "authorityFragment": "<Authority><Link status=\"controlled\" source=\"CorcAuthDB\">7701897</Link></Authority>"
+          }
+        ]
+      },
+      {
+        "tag": "655",
+        "errors": [
+        ],
+        "i1": " ",
+        "i2": "0",
+        "ed": null,
+        "ex": null,
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "Christmas stories.",
+            "authorityFragment": null
+          }
+        ]
+      },
+      {
+        "tag": "800",
+        "errors": [
+        ],
+        "i1": "1",
+        "i2": " ",
+        "ed": null,
+        "ex": null,
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "Jacobs, Kate,",
+            "authorityFragment": null
+          },
+          {
+            "subfieldCode": "d",
+            "data": "1973-",
+            "authorityFragment": null
+          },
+          {
+            "subfieldCode": "t",
+            "data": "Friday night knitting club novel.",
+            "authorityFragment": null
+          }
+        ]
+      },
+      {
+        "tag": "856",
+        "errors": [
+        ],
+        "i1": "4",
+        "i2": "2",
+        "ed": null,
+        "ex": null,
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "3",
+            "data": "Publisher description",
+            "authorityFragment": null
+          },
+          {
+            "subfieldCode": "u",
+            "data": "http://catdir.loc.gov/catdir/enhancements/fy1002/2009034108-d.html",
+            "authorityFragment": null
+          }
+        ]
+      },
+      {
+        "tag": "856",
+        "errors": [
+        ],
+        "i1": "4",
+        "i2": "2",
+        "ed": null,
+        "ex": null,
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "3",
+            "data": "Contributor biographical information",
+            "authorityFragment": null
+          },
+          {
+            "subfieldCode": "u",
+            "data": "http://catdir.loc.gov/catdir/enhancements/fy1002/2009034108-b.html",
+            "authorityFragment": null
+          }
+        ]
+      },
+      {
+        "tag": "856",
+        "errors": [
+        ],
+        "i1": "4",
+        "i2": "1",
+        "ed": null,
+        "ex": null,
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "3",
+            "data": "Sample text",
+            "authorityFragment": null
+          },
+          {
+            "subfieldCode": "u",
+            "data": "http://catdir.loc.gov/catdir/enhancements/fy1210/2009034108-s.html",
+            "authorityFragment": null
+          }
+        ]
+      },
+      {
+        "tag": "938",
+        "errors": [
+        ],
+        "i1": " ",
+        "i2": " ",
+        "ed": "0",
+        "ex": "0",
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "Baker and Taylor",
+            "authorityFragment": null
+          },
+          {
+            "subfieldCode": "b",
+            "data": "BTCP",
+            "authorityFragment": null
+          },
+          {
+            "subfieldCode": "n",
+            "data": "BK0008342949",
+            "authorityFragment": null
+          }
+        ]
+      },
+      {
+        "tag": "938",
+        "errors": [
+        ],
+        "i1": " ",
+        "i2": " ",
+        "ed": "0",
+        "ex": "0",
+        "translate": null,
+        "subfieldItems": [
+          {
+            "subfieldCode": "a",
+            "data": "YBP Library Services",
+            "authorityFragment": null
+          },
+          {
+            "subfieldCode": "b",
+            "data": "YANK",
+            "authorityFragment": null
+          },
+          {
+            "subfieldCode": "n",
+            "data": "3132452",
+            "authorityFragment": null
+          }
+        ]
+      }
+    ],
+    "admin": "<Admin><CreateDate>20090819</CreateDate><ReplacedDate>20120531</ReplacedDate><ReplacedTime>100955.8</ReplacedTime><OCLCDef><MT form=\"pri\">bks</MT><MT form=\"sec\">bks</MT><MT form=\"fsdspl\">b</MT><MT form=\"sec\">url</MT><MT form=\"fsdspl\">w</MT><MT form=\"gen\">fic</MT><MT form=\"fsill\">g</MT><StdRT>Book</StdRT><StdRT2></StdRT2><StdCT></StdCT><MT form=\"pri2\">bks</MT><MT form=\"sec2\">bks</MT><MT form=\"fsdspl2\">b</MT><MT form=\"gen\">url</MT><MT form=\"fsill2\">b</MT></OCLCDef><LastModifiedBy>MDCBP</LastModifiedBy><LastModifiedByID>MDCBP-448328</LastModifiedByID><Work><ID>319416117</ID><SingletonInd>N</SingletonInd></Work></Admin>",
+    "replaceDate": "20120531",
+    "replaceTime": "100955.8",
+    "localSystemNumber": null,
+    "owningInstitutionSymbol": null,
+    "errors": [
+    ]
+  }
+}
