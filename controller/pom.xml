@@ -33,8 +33,8 @@
 
 	<properties>
 		<version.es-metrics-reporter>2.0</version.es-metrics-reporter>
-		<version.grizzly-http>2.3.8</version.grizzly-http>
-		<version.h2k>2.4.0-b10</version.h2k>
+		<version.grizzly-http>2.3.22</version.grizzly-http>
+		<version.h2k>2.4.0-b31</version.h2k>
 		<version.javax.servlet-api>3.1.0</version.javax.servlet-api>
 		<version.jcl-over-slf4j>1.7.12</version.jcl-over-slf4j>
 		<version.jena>2.13.0</version.jena>
@@ -182,6 +182,12 @@
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-json-jackson</artifactId>
 			<version>${version.jersey}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>jackson-jaxrs-base</artifactId>
+					<groupId>com.fasterxml.jackson.jaxrs</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
