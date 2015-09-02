@@ -533,11 +533,17 @@ public class GDMModel implements Model {
 
 			final ArrayNode jsonArray = (ArrayNode) unnormalizedSchema;
 
-			for (final JsonNode entryNode : jsonArray) {
+			jsonArray.forEach(entryNode -> {
 
 				final Set<AttributePathHelper> newAttributePaths = determineAttributePaths(entryNode, attributePaths, attributePath);
 				attributePaths.addAll(newAttributePaths);
-			}
+			});
+
+//			for (final JsonNode entryNode : jsonArray) {
+//
+//				final Set<AttributePathHelper> newAttributePaths = determineAttributePaths(entryNode, attributePaths, attributePath);
+//				attributePaths.addAll(newAttributePaths);
+//			}
 
 		} else if (ObjectNode.class.isInstance(unnormalizedSchema)) {
 
@@ -545,9 +551,7 @@ public class GDMModel implements Model {
 
 			final Iterator<String> fieldNames = jsonObject.fieldNames();
 
-			while (fieldNames.hasNext()) {
-
-				final String fieldName = fieldNames.next();
+			fieldNames.forEachRemaining(fieldName -> {
 
 				final AttributePathHelper newAttributePath = AttributePathHelperHelper.addAttributePath(fieldName, attributePaths, attributePath);
 
@@ -555,7 +559,19 @@ public class GDMModel implements Model {
 
 				final Set<AttributePathHelper> newAttributePaths = determineAttributePaths(valueNode, attributePaths, newAttributePath);
 				attributePaths.addAll(newAttributePaths);
-			}
+			});
+
+//			while (fieldNames.hasNext()) {
+//
+//				final String fieldName = fieldNames.next();
+//
+//				final AttributePathHelper newAttributePath = AttributePathHelperHelper.addAttributePath(fieldName, attributePaths, attributePath);
+//
+//				final JsonNode valueNode = jsonObject.get(fieldName);
+//
+//				final Set<AttributePathHelper> newAttributePaths = determineAttributePaths(valueNode, attributePaths, newAttributePath);
+//				attributePaths.addAll(newAttributePaths);
+//			}
 
 		} else if (TextNode.class.isInstance(unnormalizedSchema)) {
 
