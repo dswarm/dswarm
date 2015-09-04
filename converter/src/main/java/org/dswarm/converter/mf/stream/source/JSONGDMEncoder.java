@@ -1,18 +1,3 @@
-/**
- * Copyright (C) 2013 – 2015 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.dswarm.converter.mf.stream.source;
 
 import java.util.Map;
@@ -20,25 +5,23 @@ import java.util.Optional;
 import java.util.Stack;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
 
-import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.culturegraph.mf.exceptions.MetafactureException;
-import org.culturegraph.mf.framework.DefaultXmlPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.XmlReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.dswarm.common.types.Tuple;
+import org.dswarm.converter.mf.framework.DefaultJsonPipe;
 import org.dswarm.graph.json.LiteralNode;
 import org.dswarm.graph.json.Model;
 import org.dswarm.graph.json.Node;
@@ -54,15 +37,16 @@ import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 import org.dswarm.persistence.util.GDMUtil;
 
 /**
- * Converts XML records to GDM triples.
+ * Converts JSON records to GDM triples.
  *
  * @author tgaengler
- * @author phorn
  */
 @Description("triplifies records to our graph data model")
 @In(XmlReceiver.class)
 @Out(GDMModel.class)
-public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>> {
+public class JSONGDMEncoder extends DefaultJsonPipe<ObjectReceiver<GDMModel>> {
+
+	private static final Logger LOG = LoggerFactory.getLogger(JSONGDMEncoder.class);
 
 	private       String                        currentId;
 	private       Model                         model;
@@ -74,21 +58,20 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 
 	private static final String DATA_MODEL_BASE_URI = SchemaUtils.DATA_MODEL_BASE_URI + "%s";
 
-	private static final Pattern TABS = Pattern.compile("\t+");
-
 	/**
-	 * note: recordTagName is not biunique, i.e., the record tag name can occur in different name spaces; hence, a record tag
-	 * uniqueness is only give by a complete uri
+	 * note: recordTagName is optional right now, i.e., now record tag means that the whole JSON node is the record
+	 *
+	 * note: recordTagName is not biunique, i.e., the record tag name can occur in different levels; hence, a record tag
+	 * uniqueness is only give by a complete JSON Pointer (see RFC 6901)
 	 */
-	private final String recordTagName;
+	private final Optional<String> optionalRecordTagName;
 
 	/**
 	 * record tag URI should be unique
 	 */
 	private String recordTagUri = null;
 
-	private boolean inRecord;
-	private StringBuilder valueBuffer = new StringBuilder();
+	private boolean      inRecord;
 	private String       uri;
 	private ResourceNode recordType;
 
@@ -97,19 +80,22 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 	private final Optional<Map<String, AdvancedDMPJPAObject>> optionalTermMap;
 	private final Optional<String>                            dataModelUri;
 
-	private       long                      nodeIdCounter = 1;
+	private       AtomicLong                nodeIdCounter = new AtomicLong(1);
 	private final Predicate                 rdfType       = new Predicate(GDMUtil.RDF_type);
 	private final Map<String, Predicate>    predicates    = Maps.newHashMap();
 	private final Map<String, ResourceNode> types         = Maps.newHashMap();
 	private final Map<String, AtomicLong>   valueCounter  = Maps.newHashMap();
 	private final Map<String, String>       uris          = Maps.newHashMap();
 
-	public XMLGDMEncoder(final Optional<DataModel> dataModel, final boolean utiliseExistingSchema) {
+	public JSONGDMEncoder(final Optional<DataModel> dataModel, final boolean utiliseExistingSchema) {
 
 		super();
 
-		recordTagName = System.getProperty("org.culturegraph.metamorph.xml.recordtag");
-		if (recordTagName == null) {
+		// TODO: do we need an optiopnal record tag
+		optionalRecordTagName = Optional.ofNullable(System.getProperty("org.culturegraph.metamorph.xml.recordtag"));
+
+		if (!optionalRecordTagName.isPresent()) {
+
 			throw new MetafactureException("Missing name for the tag marking a record.");
 		}
 
@@ -118,25 +104,23 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 
 		// init
 		elementURIStack = new Stack<>();
-		//model = new Model();
 
 		final Tuple<Optional<Schema>, Optional<Map<String, AdvancedDMPJPAObject>>> tuple = getOptionalSchema(utiliseExistingSchema);
 		optionalSchema = tuple.v1();
 		optionalTermMap = tuple.v2();
 	}
 
-	public XMLGDMEncoder(final String recordTagName, final Optional<DataModel> dataModel, final boolean utiliseExistingSchema) {
+	public JSONGDMEncoder(final Optional<String> optionalRecordTagName, final Optional<DataModel> dataModel, final boolean utiliseExistingSchema) {
 
 		super();
 
-		this.recordTagName = Preconditions.checkNotNull(recordTagName);
+		this.optionalRecordTagName = optionalRecordTagName;
 
 		this.dataModel = dataModel;
 		dataModelUri = init(dataModel);
 
 		// init
 		elementURIStack = new Stack<>();
-		//model = new Model();
 
 		final Tuple<Optional<Schema>, Optional<Map<String, AdvancedDMPJPAObject>>> tuple = getOptionalSchema(utiliseExistingSchema);
 		optionalSchema = tuple.v1();
@@ -144,81 +128,118 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 	}
 
 	@Override
-	public void startElement(final String uri, final String localName, final String qName, final Attributes attributes) throws SAXException {
+	public void startObject(final String name) {
 
-		this.uri = mintDataModelUri(uri);
+		startElement(name);
+	}
+
+	@Override
+	public void endObject(final String name) {
+
+		endElement(name);
+	}
+
+	@Override
+	public void startArray(final String name) {
+
+		// TODO: we don't need this right now, or?
+
+		//startElement(name);
+	}
+
+	@Override
+	public void endArray(final String name) {
+
+		// TODO: we don't need this right now, or?
+
+		//endElement(name);
+	}
+
+	private void startElement(final String name) {
+
+		this.uri = determineElementURI(name);
 
 		elementURIStack.push(this.uri);
 
 		if (inRecord) {
-			writeValue();
-			startEntity(getTermURI(uri, localName));
-			writeAttributes(attributes);
-		} else if (localName.equals(recordTagName)) {
+
+			// TODO: is this the correct URI?
+			startEntity(getTermURI(this.uri, name));
+		} else if (optionalRecordTagName.isPresent() && optionalRecordTagName.get().equals(name)) {
 
 			if (recordTagUri == null) {
 
-				recordTagUri = getRecordTagURI(elementURIStack.peek(), localName);
+				recordTagUri = getRecordTagURI(elementURIStack.peek(), name);
 			}
 
-			if (recordTagUri.equals(getRecordTagURI(elementURIStack.peek(), localName))) {
+			if (recordTagUri.equals(getRecordTagURI(elementURIStack.peek(), name))) {
 
-				// TODO: how to determine the id of an record, or should we mint uris?
-				final String identifier = attributes.getValue("id");
+				// TODO: how to determine the id of an record, or should we mint uris? - e.g. with help of a given schema that contains a content schema with a legacy record identifer
+				//final String identifier = attributes.getValue("id");
+				final String identifier = null;
 				startRecord(identifier);
-				writeAttributes(attributes);
 				inRecord = true;
 			}
+
+			// TODO: implement no-record-tag variant
 		}
 	}
 
-	@Override
-	public void endElement(final String uri, final String localName, final String qName) throws SAXException {
-
-		// System.out.println("in end element with: uri = '" + uri + "' :: local name = '" + localName + "'");
+	private void endElement(final String name) {
 
 		if (inRecord) {
-			writeValue();
 
-			final String elementUri = elementURIStack.pop();
+			final String elementUriFromStack = elementURIStack.pop();
+			final String elementUri = determineElementURI(name);
 
-			if (recordTagUri.equals(getRecordTagURI(elementUri, localName))) {
+			if (recordTagUri.equals(elementUriFromStack)) {
 				inRecord = false;
 				endRecord();
 			} else {
+
+				if (!elementUriFromStack.equals(elementUri)) {
+
+					// LOG.debug("try to close entity for element URI '{}' with element URI '{}'", elementUriFromStack, elementUri);
+
+					// re-add
+					elementURIStack.push(elementUriFromStack);
+
+					return;
+				}
+
 				endEntity();
 			}
 		}
 	}
 
 	@Override
-	public void characters(final char[] chars, final int start, final int length) throws SAXException {
-		if (inRecord) {
-			valueBuffer.append(XMLGDMEncoder.TABS.matcher(new String(chars, start, length)).replaceAll(""));
-		}
-	}
+	public void literal(final String name, final String value) {
 
-	private void writeValue() {
-		final String value = valueBuffer.toString();
-		if (!value.trim().isEmpty()) {
-			literal(GDMUtil.RDF_value, value.replace('\n', ' '));
-		}
-		valueBuffer = new StringBuilder();
-	}
+		assert !isClosed();
 
-	private void writeAttributes(final Attributes attributes) {
-		final int length = attributes.getLength();
+		// create triple
+		// name = predicate
+		// value = literal or object
+		// TODO: only literals atm, i.e., how to determine other resources?
+		if (value != null && !value.isEmpty()) {
 
-		for (int i = 0; i < length; ++i) {
-			final String name = getTermURI(uri, attributes.getLocalName(i));
-			final String value = attributes.getValue(i);
-			literal(name, value);
+			final Predicate attributeProperty = getPredicate(name);
+			final LiteralNode literalObject = new LiteralNode(value);
+
+			if (null != entityNode) {
+
+				addStatement(entityNode, attributeProperty, literalObject);
+			} else if (null != recordResource) {
+
+				addStatement(recordNode, attributeProperty, literalObject);
+			} else {
+
+				throw new MetafactureException("couldn't get a resource for adding this property");
+			}
 		}
 	}
 
 	public void startRecord(final String identifier) {
-
-		// System.out.println("in start record with: identifier = '" + identifier + "'");
 
 		assert !isClosed();
 
@@ -243,8 +264,6 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 
 	public void endRecord() {
 
-		// System.out.println("in end record");
-
 		assert !isClosed();
 
 		inRecord = false;
@@ -260,10 +279,7 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 		getReceiver().process(gdmModel);
 	}
 
-	@Override
 	public void startEntity(final String name) {
-
-		// System.out.println("in start entity with name = '" + name + "'");
 
 		assert !isClosed();
 
@@ -289,20 +305,14 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 		addStatement(entityNode, rdfType, entityType);
 
 		entityStack.push(new Tuple<>(entityNode, entityPredicate));
-
-		// System.out.println("in start entity with entity stact size: '" + entityStack.size() + "'");
 	}
 
 	public void endEntity() {
-
-		// System.out.println("in end entity");
 
 		assert !isClosed();
 
 		// write sub resource
 		entityStack.pop();
-
-		// System.out.println("in end entity with entity stact size: '" + entityStack.size() + "'");
 
 		// add entity resource to parent entity resource (or to record resource, if there is no parent entity)
 		if (!entityStack.isEmpty()) {
@@ -314,39 +324,14 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 		}
 	}
 
-	public void literal(final String name, final String value) {
-
-		// System.out.println("in literal with name = '" + name + "' :: value = '" + value + "'");
-
-		assert !isClosed();
-
-		// create triple
-		// name = predicate
-		// value = literal or object
-		// TODO: only literals atm, i.e., how to determine other resources?
-		if (value != null && !value.isEmpty()) {
-			final Predicate attributeProperty = getPredicate(name);
-			final LiteralNode literalObject = new LiteralNode(value);
-
-			if (null != entityNode) {
-
-				addStatement(entityNode, attributeProperty, literalObject);
-			} else if (null != recordResource) {
-
-				addStatement(recordNode, attributeProperty, literalObject);
-			} else {
-
-				throw new MetafactureException("couldn't get a resource for adding this property");
-			}
-		}
-	}
-
 	private static Optional<String> init(final Optional<DataModel> dataModel) {
+
 		return dataModel.map(dm -> StringUtils.stripEnd(DataModelUtils.determineDataModelSchemaBaseURI(dm), SchemaUtils.HASH));
 	}
 
 	private String mintDataModelUri(@Nullable final String uri) {
-		if (Strings.isNullOrEmpty(uri)) {
+
+		if (Strings.isNullOrEmpty(uri) || !SchemaUtils.isValidUri(uri)) {
 			if (dataModelUri.isPresent()) {
 
 				return dataModelUri.get();
@@ -360,10 +345,7 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 
 	private long getNewNodeId() {
 
-		final long newNodeId = nodeIdCounter;
-		nodeIdCounter++;
-
-		return newNodeId;
+		return nodeIdCounter.incrementAndGet();
 	}
 
 	private Predicate getPredicate(final String predicateId) {
@@ -431,13 +413,28 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 		return uris.get(id);
 	}
 
+	private Optional<String> getOptionalURI(final String identifier) {
+
+		if (identifier == null) {
+
+			return Optional.empty();
+		}
+
+		return Optional.of(getURI(identifier));
+	}
+
 	private String getRecordTagURI(final String uri, final String localName) {
 
-		final String typedLocalName = localName  + SchemaUtils.TYPE_POSTFIX;
+		if (takeURIAsIs(uri, localName)) {
+
+			return uri;
+		}
+
+		final String typedLocalName = localName + SchemaUtils.TYPE_POSTFIX;
 
 		final String typeRecordTagURI = getTermURI(uri, typedLocalName);
 
-		if(!typeRecordTagURI.endsWith(SchemaUtils.TYPE_POSTFIX)) {
+		if (!typeRecordTagURI.endsWith(SchemaUtils.TYPE_POSTFIX)) {
 
 			return recordTagUri;
 		}
@@ -446,6 +443,10 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 	}
 
 	private String getTermURI(final String uri, final String localName) {
+
+		if (takeURIAsIs(uri, localName))
+
+			return uri;
 
 		if (!optionalSchema.isPresent()) {
 
@@ -489,5 +490,15 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 		final Optional<Map<String, AdvancedDMPJPAObject>> optionalTermMap = Optional.ofNullable(SchemaUtils.generateTermMap(schema));
 
 		return Tuple.tuple(Optional.ofNullable(schema), optionalTermMap);
+	}
+
+	private String determineElementURI(final String name) {
+
+		return getOptionalURI(name).orElseGet(() -> mintDataModelUri(name));
+	}
+
+	private boolean takeURIAsIs(final String uri, final String localName) {
+
+		return uri != null && localName != null && uri.contains(SchemaUtils.HASH) && uri.endsWith(localName);
 	}
 }
