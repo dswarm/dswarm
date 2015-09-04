@@ -80,12 +80,12 @@ public class JSONGDMEncoder extends DefaultJsonPipe<ObjectReceiver<GDMModel>> {
 	private final Optional<Map<String, AdvancedDMPJPAObject>> optionalTermMap;
 	private final Optional<String>                            dataModelUri;
 
-	private       AtomicLong                      nodeIdCounter = new AtomicLong(1);
-	private final Predicate                 rdfType      = new Predicate(GDMUtil.RDF_type);
-	private final Map<String, Predicate>    predicates   = Maps.newHashMap();
-	private final Map<String, ResourceNode> types        = Maps.newHashMap();
-	private final Map<String, AtomicLong>   valueCounter = Maps.newHashMap();
-	private final Map<String, String>       uris         = Maps.newHashMap();
+	private       AtomicLong                nodeIdCounter = new AtomicLong(1);
+	private final Predicate                 rdfType       = new Predicate(GDMUtil.RDF_type);
+	private final Map<String, Predicate>    predicates    = Maps.newHashMap();
+	private final Map<String, ResourceNode> types         = Maps.newHashMap();
+	private final Map<String, AtomicLong>   valueCounter  = Maps.newHashMap();
+	private final Map<String, String>       uris          = Maps.newHashMap();
 
 	public JSONGDMEncoder(final Optional<DataModel> dataModel, final boolean utiliseExistingSchema) {
 
@@ -425,7 +425,7 @@ public class JSONGDMEncoder extends DefaultJsonPipe<ObjectReceiver<GDMModel>> {
 
 	private String getRecordTagURI(final String uri, final String localName) {
 
-		if(takeURIAsIs(uri, localName)) {
+		if (takeURIAsIs(uri, localName)) {
 
 			return uri;
 		}
@@ -494,16 +494,7 @@ public class JSONGDMEncoder extends DefaultJsonPipe<ObjectReceiver<GDMModel>> {
 
 	private String determineElementURI(final String name) {
 
-		String uri = mintDataModelUri(name);
-
-		final Optional<String> optionalURI = getOptionalURI(name);
-
-		if (optionalURI.isPresent()) {
-
-			uri = optionalURI.get();
-		}
-
-		return uri;
+		return getOptionalURI(name).orElseGet(() -> mintDataModelUri(name));
 	}
 
 	private boolean takeURIAsIs(final String uri, final String localName) {

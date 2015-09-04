@@ -5,9 +5,6 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -63,7 +60,7 @@ public class JSONSourceResourceGDMStmtsFlowTest extends GuicedTest {
 	}
 
 	private void testFlow(final JSONSourceResourceGDMStmtsFlow flow, final String fileName, final String expectedResultFileName, final Integer offset)
-			throws DMPConverterException {
+			throws DMPConverterException, IOException {
 
 		final List<GDMModel> gdmModels = flow.applyResource(fileName).toList().toBlocking().first();
 
@@ -82,15 +79,7 @@ public class JSONSourceResourceGDMStmtsFlowTest extends GuicedTest {
 				// serialise model as JSON (pretty print)
 				final ObjectMapper mapper = DMPPersistenceUtil.getJSONObjectMapper().copy().configure(SerializationFeature.INDENT_OUTPUT, true);
 
-				String modelJSON = null;
-
-				try {
-
-					modelJSON = mapper.writeValueAsString(model);
-				} catch (final JsonProcessingException e) {
-
-					Assert.assertTrue("something went wrong while serialising the GDM model to JSON", false);
-				}
+				final String modelJSON = mapper.writeValueAsString(model);
 
 				Assert.assertNotNull("the GDM model JSON shouldn't be null", modelJSON);
 
@@ -98,15 +87,7 @@ public class JSONSourceResourceGDMStmtsFlowTest extends GuicedTest {
 
 				Assert.assertNotNull("the expected result file URL shouldn't be null", expectedResultFileURL);
 
-				String expectedResult = null;
-
-				try {
-
-					expectedResult = Resources.toString(expectedResultFileURL, Charsets.UTF_8);
-				} catch (final IOException e) {
-
-					Assert.assertTrue("something went wrong while reading expected result from file", false);
-				}
+				final String expectedResult = Resources.toString(expectedResultFileURL, Charsets.UTF_8);
 
 				Assert.assertNotNull("the expected result shouldn't be null", expectedResult);
 
@@ -116,29 +97,13 @@ public class JSONSourceResourceGDMStmtsFlowTest extends GuicedTest {
 
 					// TODO http://data.slub-dresden.de/datamodels/
 
-					ArrayNode actualModelJSON = null;
-
-					try {
-
-						actualModelJSON = mapper.readValue(modelJSON, ArrayNode.class);
-					} catch (final JsonParseException e) {
-
-						Assert.assertTrue("something went wrong while deserializing the actual result", false);
-					} catch (final JsonMappingException e) {
-
-						Assert.assertTrue("something went wrong while deserializing the actual result", false);
-					} catch (final IOException e) {
-
-						Assert.assertTrue("something went wrong while deserializing the actual result", false);
-					}
+					final ArrayNode actualModelJSON = mapper.readValue(modelJSON, ArrayNode.class);
 
 					Assert.assertNotNull("the deserialized result shouldn't be null", actualModelJSON);
 
 					final JsonNode firstElementJSON = actualModelJSON.get(0);
 
 					Assert.assertNotNull("the first element of the actual result JSON array shouldn't be null", firstElementJSON);
-					Assert.assertTrue("the first element of the actual result JSON array should be a JSON object",
-							firstElementJSON instanceof ObjectNode);
 
 					final ObjectNode firstElementJSONObject = (ObjectNode) firstElementJSON;
 
@@ -157,9 +122,6 @@ public class JSONSourceResourceGDMStmtsFlowTest extends GuicedTest {
 
 					final String fieldNameWOBaseURI = fieldName.substring(39, fieldName.length());
 
-					Assert.assertNotNull("the cut first field name of the first element of the actual result JSON array shouldn't be null",
-							fieldNameWOBaseURI);
-
 					final int firstSlash = fieldNameWOBaseURI.indexOf("/");
 
 					Assert.assertFalse(
@@ -175,14 +137,7 @@ public class JSONSourceResourceGDMStmtsFlowTest extends GuicedTest {
 						expectedResultLength = expectedResult.length();
 					} else if (dataModelIdString.length() > 1) {
 
-						Long dataModelId = null;
-
-						try {
-							dataModelId = Long.valueOf(dataModelIdString);
-						} catch (final NumberFormatException e) {
-
-							Assert.assertTrue("something went wrong while converting the data model id string to a number", false);
-						}
+						final Long dataModelId = Long.valueOf(dataModelIdString);
 
 						Assert.assertNotNull("the converted data model id should be a number", dataModelId);
 

@@ -139,8 +139,6 @@ public class JsonDecoder extends DefaultObjectPipe<Reader, JsonReceiver> {
 						break;
 					default:
 
-						// TODO: throw an exception (?)
-
 						LOG.debug("unhandled JSON token '{}' found", currentToken);
 				}
 

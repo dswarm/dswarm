@@ -18,7 +18,7 @@ package org.dswarm.converter.flow;
 import org.dswarm.persistence.model.resource.DataModel;
 
 /**
- * @author phorn
+ * @author tgaengler
  */
 public interface JsonResourceFlowFactory {
 
