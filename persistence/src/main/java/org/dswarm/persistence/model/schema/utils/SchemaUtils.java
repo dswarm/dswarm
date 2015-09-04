@@ -19,7 +19,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -28,7 +28,6 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.net.UrlEscapers;
 import com.google.inject.Provider;
@@ -250,7 +249,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 				continue;
 			}
 
-			final LinkedList<String> attributePathFromHelper = attributePathHelper.getAttributePath();
+			final List<String> attributePathFromHelper = attributePathHelper.getAttributePath();
 
 			if (attributePathFromHelper.isEmpty()) {
 
@@ -259,7 +258,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 				continue;
 			}
 
-			final LinkedList<Attribute> attributes = Lists.newLinkedList();
+			final List<Attribute> attributes = new ArrayList<>();
 
 			for (final String attributeString : attributePathFromHelper) {
 
@@ -290,7 +289,8 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 		return true;
 	}
 
-	public static AttributePath addAttributePaths(final Schema schema, final LinkedList<Attribute> attributes, final AttributePathService attributePathService,
+	public static AttributePath addAttributePaths(final Schema schema, final List<Attribute> attributes,
+			final AttributePathService attributePathService,
 			final SchemaAttributePathInstanceService schemaAttributePathInstanceService) throws DMPPersistenceException {
 
 		final SchemaAttributePathInstance schemaAttributePathInstance = createSchemaAttributePathInstance(attributes, attributePathService,
@@ -301,7 +301,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 		return schemaAttributePathInstance.getAttributePath();
 	}
 
-	public static SchemaAttributePathInstance createSchemaAttributePathInstance(final LinkedList<Attribute> attributes,
+	public static SchemaAttributePathInstance createSchemaAttributePathInstance(final List<Attribute> attributes,
 			final AttributePathService attributePathService, final SchemaAttributePathInstanceService schemaAttributePathInstanceService)
 			throws DMPPersistenceException {
 

@@ -284,38 +284,20 @@ public class DataModelsResourceTest2 extends
 	}
 
 	@Test
-	public void testXMLData() throws Exception {
+	public void testMabxmlXMLData() throws Exception {
 
-		DataModelsResourceTest2.LOG.debug("start get XML data test");
-
-		// START DATA MODEL CREATION
+		DataModelsResourceTest2.LOG.debug("start get mabxml XML data test");
 
 		final String dataResourceResourceFileName = "test-mabxml-resource.json";
 		final String dataResourceFileName = "controller_test-mabxml.xml";
 		final String configurationFileName = "xml-configuration.json";
 		final String dataModelName = "mabxml";
 
-		final DataModel dataModel = createDataModel(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName);
+		final Tuple<JsonNode, JsonNode> resultTuple = testXMLDataInternal(dataResourceResourceFileName, dataResourceFileName,
+				configurationFileName, dataModelName);
 
-		// END DATA MODEL CREATION
-
-		final int atMost = 1;
-
-		final Tuple<Optional<Map<String, Model>>, ObjectNode> result = readData(dataModel, Optional.of(atMost));
-
-		final Optional<Map<String, Model>> data = result.v1();
-		final ObjectNode assoziativeJsonArray = result.v2();
-		final String recordId = data.get().keySet().iterator().next();
-
-		Assert.assertThat(assoziativeJsonArray.size(), CoreMatchers.equalTo(atMost));
-
-		final JsonNode json = assoziativeJsonArray.get(recordId);
-
-		final JsonNode expectedJson = data.get().get(recordId).toRawJSON();
-
-		Assert.assertNotNull("the expected data JSON shouldn't be null", expectedJson);
-
-		//		System.out.println("expected JSON = '" + objectMapper.writeValueAsString(expectedJson) + "'");
+		final JsonNode json = resultTuple.v1();
+		final JsonNode expectedJson = resultTuple.v2();
 
 		Assert.assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", json),
 				CoreMatchers.equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", expectedJson)));
@@ -326,7 +308,35 @@ public class DataModelsResourceTest2 extends
 		Assert.assertThat(getValueNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld", json).size(),
 				CoreMatchers.equalTo(getValueNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld", expectedJson).size()));
 
-		DataModelsResourceTest2.LOG.debug("end get XML data test");
+		DataModelsResourceTest2.LOG.debug("end get mabxml XML data test");
+	}
+
+	@Test
+	public void testOaipmhMetsModsXMLData() throws Exception {
+
+		DataModelsResourceTest2.LOG.debug("start get OAI-PMH + Mets + Mods + X XML data test");
+
+		final String dataResourceResourceFileName = "silberman_resource.json";
+		final String dataResourceFileName = "silberman_02.xml";
+		final String configurationFileName = "oai-pmh_mets_mods_config.json";
+		final String dataModelName = "OAI-PMH + Mets + Mods + X";
+
+		final Tuple<JsonNode, JsonNode> resultTuple = testXMLDataInternal(dataResourceResourceFileName, dataResourceFileName,
+				configurationFileName, dataModelName);
+
+		final JsonNode json = resultTuple.v1();
+		final JsonNode expectedJson = resultTuple.v2();
+
+		Assert.assertNotNull("the expected data JSON shouldn't be null", expectedJson);
+
+		Assert.assertThat(getValue("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", json),
+				CoreMatchers.equalTo(getValue("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", expectedJson)));
+		Assert.assertThat(getValueNode("http://www.openarchives.org/OAI/2.0/header", json).size(),
+				CoreMatchers.equalTo(getValueNode("http://www.openarchives.org/OAI/2.0/header", expectedJson).size()));
+		Assert.assertThat(getValueNode("http://www.openarchives.org/OAI/2.0/metadata", json).size(),
+				CoreMatchers.equalTo(getValueNode("http://www.openarchives.org/OAI/2.0/metadata", expectedJson).size()));
+
+		DataModelsResourceTest2.LOG.debug("end get OAI-PMH + Mets + Mods + X XML data test");
 	}
 
 	@Test
@@ -775,5 +785,33 @@ public class DataModelsResourceTest2 extends
 		final ObjectNode assoziativeJsonArray = response.readEntity(ObjectNode.class);
 
 		return Tuple.tuple(data, assoziativeJsonArray);
+	}
+
+	private Tuple<JsonNode, JsonNode> testXMLDataInternal(final String dataResourceResourceFileName, final String dataResourceFileName,
+			final String configurationFileName, final String dataModelName) throws Exception {
+
+		// START DATA MODEL CREATION
+
+		final DataModel dataModel = createDataModel(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName);
+
+		// END DATA MODEL CREATION
+
+		final int atMost = 1;
+
+		final Tuple<Optional<Map<String, Model>>, ObjectNode> result = readData(dataModel, Optional.of(atMost));
+
+		final Optional<Map<String, Model>> data = result.v1();
+		final ObjectNode assoziativeJsonArray = result.v2();
+		final String recordId = data.get().keySet().iterator().next();
+
+		Assert.assertThat(assoziativeJsonArray.size(), CoreMatchers.equalTo(atMost));
+
+		final JsonNode json = assoziativeJsonArray.get(recordId);
+
+		final JsonNode expectedJson = data.get().get(recordId).toRawJSON();
+
+		Assert.assertNotNull("the expected data JSON shouldn't be null", expectedJson);
+
+		return Tuple.tuple(json, expectedJson);
 	}
 }

@@ -16,7 +16,6 @@
 package org.dswarm.persistence.model.internal.helper;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -40,10 +39,9 @@ public class AttributePathHelperHelper {
 	public static AttributePathHelper addAttributePath(final String attribute, final Set<AttributePathHelper> attributePaths,
 			final AttributePathHelper attributePath) {
 
-		final LinkedList<String> currentAttributePath = Lists.newLinkedList(attributePath.getAttributePath());
+		final List<String> currentAttributePath = Lists.newArrayList(attributePath.getAttributePath());
 		currentAttributePath.add(attribute);
-		final AttributePathHelper schemaNormalizerHelper = new AttributePathHelper();
-		schemaNormalizerHelper.setAttributePath(currentAttributePath);
+		final AttributePathHelper schemaNormalizerHelper = new AttributePathHelper(currentAttributePath);
 		attributePaths.add(schemaNormalizerHelper);
 
 		return schemaNormalizerHelper;
@@ -52,10 +50,9 @@ public class AttributePathHelperHelper {
 	public static AttributePathHelper addAttributePath(final AttributePathHelper childAttributePath, final Set<AttributePathHelper> attributePaths,
 			final AttributePathHelper rootAttributePath) {
 
-		final LinkedList<String> currentAttributePath = Lists.newLinkedList(rootAttributePath.getAttributePath());
+		final List<String> currentAttributePath = Lists.newArrayList(rootAttributePath.getAttributePath());
 		currentAttributePath.addAll(childAttributePath.getAttributePath());
-		final AttributePathHelper schemaNormalizerHelper = new AttributePathHelper();
-		schemaNormalizerHelper.setAttributePath(currentAttributePath);
+		final AttributePathHelper schemaNormalizerHelper = new AttributePathHelper(currentAttributePath);
 		attributePaths.add(schemaNormalizerHelper);
 
 		return schemaNormalizerHelper;
