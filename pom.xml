@@ -45,7 +45,7 @@
 		<maxallowedviolations>7000</maxallowedviolations>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<version.apache.commons>3.4</version.apache.commons>
-		<version.commons-csv>1.1</version.commons-csv>
+		<version.commons-csv>1.2</version.commons-csv>
 		<version.commons-io>2.4</version.commons-io>
 		<version.dswarm.common>0.0.2-SNAPSHOT</version.dswarm.common>
 		<version.dswarm.graph.json>0.0.4-SNAPSHOT</version.dswarm.graph.json>
@@ -54,10 +54,10 @@
 		<version.guava-jdk5>14.0.1</version.guava-jdk5>
 		<version.guava>18.0</version.guava>
 		<version.guice>4.0.0.dswarm</version.guice>
-		<version.jackson>2.5.3</version.jackson>
+		<version.jackson>2.5.4</version.jackson>
 		<version.javaee>7.0</version.javaee>
-		<version.jersey>2.17</version.jersey>
-		<version.jersey-client>2.17</version.jersey-client>
+		<version.jersey>2.21</version.jersey>
+		<version.jersey-client>2.21</version.jersey-client>
 		<version.jsonassert>1.2.3</version.jsonassert>
 		<version.junit>4.12</version.junit>
 		<version.logback>1.1.3</version.logback>
@@ -89,10 +89,10 @@
 		<version.maven.plugin.war>2.6</version.maven.plugin.war>
 		<version.metafacture-core>3.1.7-dswarm-SNAPSHOT</version.metafacture-core>
 		<version.metrics>3.1.2</version.metrics>
-		<version.rxjava>1.0.12</version.rxjava>
+		<version.rxjava>1.0.14</version.rxjava>
 		<version.slf4j.api>1.7.12</version.slf4j.api>
 		<version.swagger>1.3.12</version.swagger>
-		<version.tika>1.8</version.tika>
+		<version.tika>1.10</version.tika>
 		<version.typesafe-config>1.3.0</version.typesafe-config>
 		<version.umlgraph-doclet>5.1</version.umlgraph-doclet>
 		<version.xmlunit>2.0.0-SNAPSHOT</version.xmlunit>

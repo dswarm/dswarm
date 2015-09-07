@@ -15,28 +15,28 @@
  */
 package org.dswarm.persistence.model.internal.helper;
 
-import java.util.LinkedList;
+import java.util.Collections;
+import java.util.List;
 
-import com.google.common.collect.Lists;
+import com.google.common.base.Joiner;
 
 import org.dswarm.init.util.DMPStatics;
 
 public class AttributePathHelper {
 
-	private final LinkedList<String>	attributePath	= Lists.newLinkedList();
+	private final List<String> attributePath;
 
-	public void addAttribute(final String attribute) {
+	public AttributePathHelper() {
 
-		attributePath.add(attribute);
+		this.attributePath = Collections.emptyList();
 	}
 
-	public void setAttributePath(final LinkedList<String> attributePathArg) {
+	public AttributePathHelper(final List<String> attributePath) {
 
-		attributePath.clear();
-		attributePath.addAll(attributePathArg);
+		this.attributePath = attributePath;
 	}
 
-	public LinkedList<String> getAttributePath() {
+	public List<String> getAttributePath() {
 
 		return attributePath;
 	}
@@ -49,21 +49,7 @@ public class AttributePathHelper {
 	@Override
 	public String toString() {
 
-		final StringBuilder sb = new StringBuilder();
-
-		for (int i = 0; i < attributePath.size(); i++) {
-
-			final String attribute = attributePath.get(i);
-
-			sb.append(attribute);
-
-			if (i < (attributePath.size() - 1)) {
-
-				sb.append(DMPStatics.ATTRIBUTE_DELIMITER);
-			}
-		}
-
-		return sb.toString();
+		return Joiner.on(DMPStatics.ATTRIBUTE_DELIMITER).join(attributePath);
 	}
 
 	@Override
@@ -75,6 +61,6 @@ public class AttributePathHelper {
 	@Override
 	public boolean equals(final java.lang.Object obj) {
 
-		return obj != null && AttributePathHelper.class.isInstance(obj) && toString().equals(obj.toString());
+		return !(obj == null || !(obj instanceof AttributePathHelper)) && attributePath.equals(((AttributePathHelper) obj).attributePath);
 	}
 }

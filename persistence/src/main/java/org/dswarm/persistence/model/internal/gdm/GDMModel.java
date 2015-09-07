@@ -16,7 +16,7 @@
 package org.dswarm.persistence.model.internal.gdm;
 
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.collect.Lists;
@@ -235,7 +236,7 @@ public class GDMModel implements Model {
 			return null;
 		}
 
-		final Set<AttributePathHelper> attributePaths = Sets.newCopyOnWriteArraySet();
+		final Set<AttributePathHelper> attributePaths = new LinkedHashSet<>();
 
 		// attribute path retrieval from all records
 		for (final String resourceURI : getRecordURIs()) {
@@ -263,7 +264,7 @@ public class GDMModel implements Model {
 
 			final JsonNode result = determineUnnormalizedSchema(recordResource, recordResourceNode, json, json);
 
-			Set<AttributePathHelper> recordAttributePaths = Sets.newCopyOnWriteArraySet();
+			Set<AttributePathHelper> recordAttributePaths = new LinkedHashSet<>();
 
 			recordAttributePaths = determineAttributePaths(result, recordAttributePaths, new AttributePathHelper());
 
@@ -529,37 +530,39 @@ public class GDMModel implements Model {
 		// note: simply copied from RDFModel
 		// TODO: create abstracted class for RDFModel + GDMModel to share methods
 
-		if (ArrayNode.class.isInstance(unnormalizedSchema)) {
+		final JsonNodeType nodeType = unnormalizedSchema.getNodeType();
 
-			final ArrayNode jsonArray = (ArrayNode) unnormalizedSchema;
+		switch (nodeType) {
 
-			for (final JsonNode entryNode : jsonArray) {
+			case ARRAY:
 
-				final Set<AttributePathHelper> newAttributePaths = determineAttributePaths(entryNode, attributePaths, attributePath);
-				attributePaths.addAll(newAttributePaths);
-			}
+				final ArrayNode jsonArray = (ArrayNode) unnormalizedSchema;
 
-		} else if (ObjectNode.class.isInstance(unnormalizedSchema)) {
+				for (final JsonNode entryNode : jsonArray) {
 
-			final ObjectNode jsonObject = (ObjectNode) unnormalizedSchema;
+					determineAttributePaths(entryNode, attributePaths, attributePath);
+				}
 
-			final Iterator<String> fieldNames = jsonObject.fieldNames();
+				break;
+			case OBJECT:
 
-			while (fieldNames.hasNext()) {
+				final ObjectNode jsonObject = (ObjectNode) unnormalizedSchema;
 
-				final String fieldName = fieldNames.next();
+				final Iterator<String> fieldNames = jsonObject.fieldNames();
 
-				final AttributePathHelper newAttributePath = AttributePathHelperHelper.addAttributePath(fieldName, attributePaths, attributePath);
+				fieldNames.forEachRemaining(fieldName -> {
 
-				final JsonNode valueNode = jsonObject.get(fieldName);
+					final AttributePathHelper newAttributePath = AttributePathHelperHelper.addAttributePath(fieldName, attributePaths, attributePath);
 
-				final Set<AttributePathHelper> newAttributePaths = determineAttributePaths(valueNode, attributePaths, newAttributePath);
-				attributePaths.addAll(newAttributePaths);
-			}
+					final JsonNode valueNode = jsonObject.get(fieldName);
 
-		} else if (TextNode.class.isInstance(unnormalizedSchema)) {
+					determineAttributePaths(valueNode, attributePaths, newAttributePath);
+				});
 
-			AttributePathHelperHelper.addAttributePath(unnormalizedSchema, attributePaths, attributePath);
+				break;
+			default:
+
+				AttributePathHelperHelper.addAttributePath(unnormalizedSchema, attributePaths, attributePath);
 		}
 
 		return attributePaths;
@@ -579,7 +582,7 @@ public class GDMModel implements Model {
 
 			if (attributePathHelper.length() > 1) {
 				// only one attribute path
-				final LinkedList<String> attributePath = attributePathHelper.getAttributePath();
+				final List<String> attributePath = attributePathHelper.getAttributePath();
 
 				boolean deepestAttributeTransformed = false;
 
@@ -588,7 +591,8 @@ public class GDMModel implements Model {
 
 				while (!attributePath.isEmpty()) {
 
-					final String attribute = attributePath.getLast();
+					final int lastItem = attributePath.size() - 1;
+					final String attribute = attributePath.get(lastItem);
 
 					if (deepestAttributeTransformed) {
 
@@ -601,7 +605,7 @@ public class GDMModel implements Model {
 						deepestAttributeTransformed = true;
 					}
 
-					attributePath.removeLast();
+					attributePath.remove(lastItem);
 				}
 
 				return currentAttribute;
@@ -664,7 +668,8 @@ public class GDMModel implements Model {
 
 				for (final AttributePathHelper levelRootAttributePath : levelRootAttributePaths.values()) {
 
-					jsonArray.add(levelRootAttributePath.getAttributePath().getLast());
+					final List<String> attributePath = levelRootAttributePath.getAttributePath();
+					jsonArray.add(attributePath.get(attributePath.size() - 1));
 				}
 			}
 
@@ -677,7 +682,8 @@ public class GDMModel implements Model {
 						level);
 			} else {
 
-				return new TextNode(firstAttributePathInLevel.getAttributePath().getLast());
+				final List<String> attributePath = firstAttributePathInLevel.getAttributePath();
+				return new TextNode(attributePath.get(attributePath.size() - 1));
 			}
 		}
 	}
