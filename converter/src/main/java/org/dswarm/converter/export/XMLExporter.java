@@ -31,7 +31,7 @@ import javax.xml.stream.XMLStreamWriter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.google.common.base.Charsets;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDF;
 import org.codehaus.stax2.XMLOutputFactory2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

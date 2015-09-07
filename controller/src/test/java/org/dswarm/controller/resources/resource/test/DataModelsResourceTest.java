@@ -38,7 +38,7 @@ import com.google.common.base.Optional;
 import com.google.common.io.Resources;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpStatus;
 import org.apache.jena.riot.Lang;
@@ -594,14 +594,14 @@ public class DataModelsResourceTest extends
 
 		// read actual model from response body
 		final Lang expectedExportLanguage = RDFLanguages.contentTypeToLang(expectedExportMediaType.toString());
-		final com.hp.hpl.jena.rdf.model.Model actualModel = ModelFactory.createDefaultModel();
+		final org.apache.jena.rdf.model.Model actualModel = ModelFactory.createDefaultModel();
 		RDFDataMgr.read(actualModel, inputStream, expectedExportLanguage);
 
 		Assert.assertNotNull("actual model shouldn't be null", actualModel);
 		LOG.debug("exported '{}' statements", actualModel.size());
 
 		// read expected model from file
-		final com.hp.hpl.jena.rdf.model.Model expectedModel = RDFDataMgr.loadModel(expectedModelFile);
+		final org.apache.jena.rdf.model.Model expectedModel = RDFDataMgr.loadModel(expectedModelFile);
 		Assert.assertNotNull("expected model shouldn't be null", expectedModel);
 
 		// compare models
