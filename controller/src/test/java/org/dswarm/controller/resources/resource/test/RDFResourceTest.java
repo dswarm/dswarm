@@ -27,9 +27,9 @@ import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
-import com.hp.hpl.jena.query.Dataset;
-import com.hp.hpl.jena.query.DatasetFactory;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
+import org.apache.jena.query.Dataset;
+import org.apache.jena.query.DatasetFactory;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpStatus;
 import org.apache.jena.riot.Lang;
@@ -215,7 +215,7 @@ public class RDFResourceTest extends ResourceTest {
 		byte[] bodyBytes = Resources.toByteArray(fileURL);
 		final InputStream expectedStream = new ByteArrayInputStream(bodyBytes);
 
-		final com.hp.hpl.jena.rdf.model.Model modelFromOriginalRDFile = ModelFactory.createDefaultModel();
+		final org.apache.jena.rdf.model.Model modelFromOriginalRDFile = ModelFactory.createDefaultModel();
 		modelFromOriginalRDFile.read(expectedStream, null, "N3");
 
 		return modelFromOriginalRDFile.size();
