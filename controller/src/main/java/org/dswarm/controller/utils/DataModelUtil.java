@@ -40,6 +40,7 @@ import org.dswarm.common.DMPStatics;
 import org.dswarm.common.types.Tuple;
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.eventbus.CSVConverterEventRecorder;
+import org.dswarm.controller.eventbus.JSONConverterEventRecorder;
 import org.dswarm.controller.eventbus.SchemaEvent;
 import org.dswarm.controller.eventbus.SchemaEventRecorder;
 import org.dswarm.controller.eventbus.XMLConverterEventRecorder;
@@ -77,13 +78,15 @@ public class DataModelUtil {
 	private final Provider<SchemaEventRecorder>         schemaEventRecorderProvider;
 	private final Provider<CSVConverterEventRecorder>   csvConverterEventRecorderProvider;
 	private final Provider<XMLConverterEventRecorder>   xmlConvertEventRecorderProvider;
+	private final Provider<JSONConverterEventRecorder>  jsonConvertEventRecorderProvider;
 
 	@Inject
 	public DataModelUtil(final ObjectMapper objectMapper, final Provider<ResourceService> resourceServiceProvider,
 			final Provider<InternalModelServiceFactory> internalServiceFactoryProvider, final Provider<DataModelService> dataModelServiceProvider,
 			final Provider<SchemaEventRecorder> schemaEventRecorderProviderArg,
 			final Provider<CSVConverterEventRecorder> csvConverterEventRecorderProviderArg,
-			final Provider<XMLConverterEventRecorder> xmlConverterEventRecorderProviderArg) {
+			final Provider<XMLConverterEventRecorder> xmlConverterEventRecorderProviderArg,
+			final Provider<JSONConverterEventRecorder> jsonConverterEventRecorderProviderArg) {
 
 		this.objectMapper = objectMapper;
 		this.resourceServiceProvider = resourceServiceProvider;
@@ -92,6 +95,7 @@ public class DataModelUtil {
 		schemaEventRecorderProvider = schemaEventRecorderProviderArg;
 		csvConverterEventRecorderProvider = csvConverterEventRecorderProviderArg;
 		xmlConvertEventRecorderProvider = xmlConverterEventRecorderProviderArg;
+		jsonConvertEventRecorderProvider = jsonConverterEventRecorderProviderArg;
 	}
 
 	/**
@@ -411,6 +415,11 @@ public class DataModelUtil {
 			case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
 
 				modelObservable = xmlConvertEventRecorderProvider.get().doIngest(dataModel, utiliseExistingInputSchema, scheduler);
+
+				break;
+			case ConfigurationStatics.JSON_STORAGE_TYPE:
+
+				modelObservable = jsonConvertEventRecorderProvider.get().doIngest(dataModel, utiliseExistingInputSchema, scheduler);
 
 				break;
 			default:

@@ -1,0 +1,9 @@
+{
+  "name" : "foo json",
+  "description" : "bar json",
+  "parameters" : {
+    "storage_type" : "json",
+    "record_tag" : "record"
+  },
+  "uuid" : "1"
+}

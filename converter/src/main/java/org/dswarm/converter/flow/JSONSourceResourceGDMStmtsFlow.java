@@ -47,6 +47,8 @@ import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 /**
  * Flow that transforms a given JSON source into GDM statements.
  *
+ * TODO: maybe refactor this class and XMLSourceResourceGDMStmtsFlow
+ *
  * @author tgaengler
  */
 public class JSONSourceResourceGDMStmtsFlow {

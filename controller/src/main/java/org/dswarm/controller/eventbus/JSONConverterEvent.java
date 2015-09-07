@@ -13,16 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dswarm.converter.flow;
+package org.dswarm.controller.eventbus;
 
 import org.dswarm.persistence.model.resource.DataModel;
+import org.dswarm.persistence.model.resource.UpdateFormat;
 
 /**
- * TODO: maybe refactor this inferface and XmlResourceFlowFactory
+ * A converter event for JSON data resources that provides a {@link DataModel}.
  *
  * @author tgaengler
  */
-public interface JsonResourceFlowFactory {
+public class JSONConverterEvent extends ConverterEvent {
 
-	JSONSourceResourceGDMStmtsFlow fromDataModel(final DataModel dataModel, final boolean utiliseExistingSchema);
+	public JSONConverterEvent(final DataModel dataModel, final UpdateFormat updateFormat, final boolean enableVersioning) {
+
+		super(dataModel, updateFormat, enableVersioning);
+	}
 }
