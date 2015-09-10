@@ -77,6 +77,12 @@ public class XMLTransformationFlowTest extends GuicedTest {
 	}
 
 	@Test
+	public void testOaipmhMarcxmlOneMappingWithFilterToSelectMultipleValues() throws Exception {
+
+		testXMLTaskWithTuples("filter.task.result.json", "filter.task.json", "oai-pmh_marcxml.tuples.json");
+	}
+
+	@Test
 	public void testMabxmlConcatOneMappingOnFeldValueWithTwoFiltersMorph() throws Exception {
 
 		testXMLMorphWithTuples("dd-530.mabxml.morph.result.json", "dd-530.mabxml.morph.xml", "test-mabxml.tuples.json");
