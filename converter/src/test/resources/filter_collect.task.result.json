@@ -1,0 +1,12 @@
+[
+  {
+    "http://data.slub-dresden.de/datamodels/cd191752-a9a9-2308-6c1d-6c19667c0f05/records/a0f0ee50-d2d8-4fa2-8b73-fd7c36009768": [
+      {
+        "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/imprint": "Frankfurt am MainFischer Taschenbuch1985"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/RecordType"
+      }
+    ]
+  }
+]

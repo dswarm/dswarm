@@ -76,10 +76,26 @@ public class XMLTransformationFlowTest extends GuicedTest {
 		testXMLTaskWithTuples("dd-528.mabxml.task.result.json", "dd-528.mabxml.task.json", "mabxml_dmp.tuples.json");
 	}
 
+	/**
+	 * filter (on top key) + collect
+	 *
+	 * @throws Exception
+	 */
 	@Test
 	public void testOaipmhMarcxmlOneMappingWithFilterToSelectMultipleValues() throws Exception {
 
 		testXMLTaskWithTuples("filter.task.result.json", "filter.task.json", "oai-pmh_marcxml.tuples.json");
+	}
+
+	/**
+	 * filter (on top key + regexed subkey) + collect
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testOaipmhMarcxmlOneMappingWithFilterToSelectMultipleValuesPlusCollect() throws Exception {
+
+		testXMLTaskWithTuples("filter_collect.task.result.json", "filter_collect.task.json", "oai-pmh_marcxml.tuples.json");
 	}
 
 	@Test
