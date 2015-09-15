@@ -548,7 +548,7 @@ public class DataModelsResourceTest2 extends
 
 		final DataModel dataModel = testCSVDataInternal();
 
-		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
+		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel, false);
 
 		Assert.assertNotNull("the data resource schema base uri shouldn't be null", dataResourceSchemaBaseURI);
 
@@ -731,7 +731,7 @@ public class DataModelsResourceTest2 extends
 
 		Assert.assertNotNull("the JSON structure for record '" + recordId + "' shouldn't be null", json);
 
-		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
+		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel, false);
 
 		Assert.assertNotNull("the data resource schema base uri shouldn't be null", dataResourceSchemaBaseURI);
 

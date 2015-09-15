@@ -303,8 +303,8 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 	private Optional<String> init(final Optional<DataModel> dataModel) {
 
 		return Optional.ofNullable(dataModel
-				.map(dm -> StringUtils.stripEnd(DataModelUtils.determineDataModelSchemaBaseURI(dm), SchemaUtils.HASH))
-				.orElseGet(() -> StringUtils.stripEnd(DataModelUtils.determineDataModelSchemaBaseURI(null), SchemaUtils.HASH)));
+				.map(dm -> StringUtils.stripEnd(DataModelUtils.determineDataModelSchemaBaseURI(dm, false), SchemaUtils.HASH))
+				.orElseGet(() -> StringUtils.stripEnd(DataModelUtils.determineDataModelSchemaBaseURI(null, false), SchemaUtils.HASH)));
 	}
 
 	private static String mintEntityUri() {

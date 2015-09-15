@@ -66,9 +66,10 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 	protected final String  inputDataResourceFileName;
 	protected final String  testPostfix;
 	protected final boolean prepareInputDataResource;
+	private final boolean utiliseExistingInputSchema;
 
 	public AbstractTasksResourceTest(final String taskJSONFileNameArg, final String inputDataResourceFileNameArg, final String testPostfixArg,
-			final boolean prepareInputDataResourceArg) {
+			final boolean prepareInputDataResourceArg, final boolean utiliseExistingInputSchemaArg) {
 
 		super("tasks");
 
@@ -76,6 +77,7 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 		inputDataResourceFileName = inputDataResourceFileNameArg;
 		testPostfix = testPostfixArg;
 		prepareInputDataResource = prepareInputDataResourceArg;
+		utiliseExistingInputSchema = utiliseExistingInputSchemaArg;
 	}
 
 	@Override protected void initObjects() {
@@ -141,6 +143,7 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 		requestJSON.put(TasksResource.DO_EXPORT_ON_THE_FLY_IDENTIFIER, Boolean.TRUE);
 		requestJSON.put(TasksResource.DO_VERSIONING_ON_RESULT_IDENTIFIER, Boolean.FALSE);
 		requestJSON.put(TasksResource.RETURN_IDENTIFIER, Boolean.TRUE);
+		requestJSON.put(TasksResource.UTILISE_EXISTING_INPUT_SCHEMA_IDENTIFIER, utiliseExistingInputSchema);
 
 		return requestJSON;
 	}

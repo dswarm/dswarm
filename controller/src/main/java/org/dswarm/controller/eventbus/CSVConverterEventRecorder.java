@@ -88,7 +88,7 @@ public class CSVConverterEventRecorder {
 	private void convertConfiguration(final DataModel dataModel, final UpdateFormat updateFormat, final boolean enableVersioning)
 			throws DMPControllerException {
 
-		final Observable<org.dswarm.persistence.model.internal.Model> models = doIngest(dataModel, Schedulers.newThread());
+		final Observable<org.dswarm.persistence.model.internal.Model> models = doIngest(dataModel, false, Schedulers.newThread());
 
 		try {
 
@@ -111,16 +111,17 @@ public class CSVConverterEventRecorder {
 		}
 	}
 
-	public Observable<org.dswarm.persistence.model.internal.Model> doIngest(final DataModel dataModel, final Scheduler scheduler)
+	public Observable<org.dswarm.persistence.model.internal.Model> doIngest(final DataModel dataModel, final boolean utiliseExistingSchema,
+			final Scheduler scheduler)
 			throws DMPControllerException {
 
-		final Observable<Collection<Triple>> result = doCSVIngest(dataModel, scheduler);
+		final Observable<Collection<Triple>> result = doCSVIngest(dataModel, utiliseExistingSchema, scheduler);
 
 		LOG.debug("transformed CSV data resource to triples for data model '{}'", dataModel.getUuid());
 
 		// convert result to GDM
 
-		final String dataResourceBaseSchemaURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
+		final String dataResourceBaseSchemaURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel, utiliseExistingSchema);
 		final String recordClassURI = dataResourceBaseSchemaURI + RECORD_TYPE_POSTFIX;
 		final ResourceNode recordClassNode = new ResourceNode(recordClassURI);
 
@@ -180,14 +181,15 @@ public class CSVConverterEventRecorder {
 								counter.get(), statementCounter.get()));
 	}
 
-	private Observable<Collection<Triple>> doCSVIngest(final DataModel dataModel, final Scheduler scheduler) throws DMPControllerException {
+	private Observable<Collection<Triple>> doCSVIngest(final DataModel dataModel, final boolean utiliseExistingSchema, final Scheduler scheduler)
+			throws DMPControllerException {
 
 		LOG.debug("try to process csv data resource into data model '{}'", dataModel.getUuid());
 
 		try {
 
 			final CompletableFuture<CSVSourceResourceTriplesFlow> futureFlow = CompletableFuture
-					.supplyAsync(() -> flowFactory.get().fromDataModel(dataModel));
+					.supplyAsync(() -> flowFactory.get().fromDataModel(dataModel, utiliseExistingSchema));
 			final Observable<CSVSourceResourceTriplesFlow> obserableFlow = Observable.from(futureFlow);
 
 			return obserableFlow.subscribeOn(scheduler).flatMap(flow -> {

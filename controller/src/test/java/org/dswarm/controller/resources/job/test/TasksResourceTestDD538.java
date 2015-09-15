@@ -46,7 +46,7 @@ public abstract class TasksResourceTestDD538 extends AbstractXMLTasksResourceTes
 	public TasksResourceTestDD538(final String taskJSONFileNameArg, final String inputDataResourceFileNameArg, final String recordTagArg,
 			final String storageTypeArg, final String expectedResultXMLFileNameArg, final String testPostfixArg) {
 
-		super(taskJSONFileNameArg, inputDataResourceFileNameArg, recordTagArg, storageTypeArg, testPostfixArg, true);
+		super(taskJSONFileNameArg, inputDataResourceFileNameArg, recordTagArg, storageTypeArg, testPostfixArg, true, false);
 
 		expectedResultXMLFileName = expectedResultXMLFileNameArg;
 	}

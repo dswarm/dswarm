@@ -150,7 +150,7 @@ public class TasksCsvResourceTest3 extends ResourceTest {
 		// create configuration
 		Configuration configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
 
-		final String dataModelUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+		final String dataModelUuid = "DataModel-59b8519f-7c17-4a73-80fa-323a8e16617e";
 
 		final DataModel data1 = new DataModel(dataModelUuid);
 		data1.setName("'" + res1.getName() + "' + '" + conf1.getName() + "' data model");
@@ -175,7 +175,8 @@ public class TasksCsvResourceTest3 extends ResourceTest {
 		// manipulate attributes
 		final ObjectNode mappingJSON = (ObjectNode) taskJSON.get("job").get("mappings").get(0);
 
-		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(data1);
+		final boolean utiliseExistingSchema = false;
+		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(data1, utiliseExistingSchema);
 
 		final ObjectNode outputAttributePathAttributeJSON = (ObjectNode) mappingJSON
 				.get("output_attribute_path").get("attribute_path").get("attributes").get(0);
@@ -229,7 +230,8 @@ public class TasksCsvResourceTest3 extends ResourceTest {
 			actualNodes.put(node.get(DMPPersistenceUtil.RECORD_ID).asText(), node);
 		}
 
-		final String actualDataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(data1);
+		final boolean utiliseExistingSchema1 = false;
+		final String actualDataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(data1, utiliseExistingSchema1);
 
 		final String expectedRecordDataFieldNameExample = expectedJSONArray.get(0).get(DMPPersistenceUtil.RECORD_DATA).get(0).fieldNames().next();
 		final String expectedDataResourceSchemaBaseURI = expectedRecordDataFieldNameExample.substring(0,

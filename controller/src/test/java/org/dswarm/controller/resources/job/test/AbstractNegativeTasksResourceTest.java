@@ -37,7 +37,7 @@ public abstract class AbstractNegativeTasksResourceTest extends AbstractXMLTasks
 	public AbstractNegativeTasksResourceTest(final String taskJSONFileNameArg, final String inputDataResourceFileNameArg, final String recordTagArg,
 			final String storageTypeArg, final String testPostfixArg, final String expectedResponseMessageArg, final boolean prepareInputDataResourceArg, final int expectedResponseCodeArg) {
 
-		super(taskJSONFileNameArg, inputDataResourceFileNameArg, recordTagArg, storageTypeArg, testPostfixArg, prepareInputDataResourceArg);
+		super(taskJSONFileNameArg, inputDataResourceFileNameArg, recordTagArg, storageTypeArg, testPostfixArg, prepareInputDataResourceArg, false);
 
 		expectedResponseMessage = expectedResponseMessageArg;
 		expectedResponseCode = expectedResponseCodeArg;

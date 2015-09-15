@@ -170,7 +170,8 @@ public class TasksCsvResourceTest4 extends ResourceTest {
 		// manipulate attributes
 		final ObjectNode mappingJSON = (ObjectNode) taskJSON.get("job").get("mappings").get(0);
 
-		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(data1);
+		final boolean utiliseExistingSchema = false;
+		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(data1, utiliseExistingSchema);
 
 		final ObjectNode outputAttributePathAttributeJSON = (ObjectNode) mappingJSON
 				.get("output_attribute_path").get("attribute_path").get("attributes").get(0);

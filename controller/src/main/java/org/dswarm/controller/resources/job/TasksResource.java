@@ -104,9 +104,9 @@ public class TasksResource {
 	public static final String RETURN_IDENTIFIER                  = "do_not_return_data";
 	public static final String SELECTED_RECORDS_IDENTIFIER        = "selected_records";
 	public static final String DO_INGEST_ON_THE_FLY_IDENTIFIER    = "do_ingest_on_the_fly";
-	public static final String UTILISE_EXISTING_INPUT_IDENTIFIER  = "utilise_existing_input_schema";
-	public static final String DO_EXPORT_ON_THE_FLY_IDENTIFIER    = "do_export_on_the_fly";
-	public static final String DO_VERSIONING_ON_RESULT_IDENTIFIER = "do_versioning_on_result";
+	public static final String UTILISE_EXISTING_INPUT_SCHEMA_IDENTIFIER = "utilise_existing_input_schema";
+	public static final String DO_EXPORT_ON_THE_FLY_IDENTIFIER          = "do_export_on_the_fly";
+	public static final String DO_VERSIONING_ON_RESULT_IDENTIFIER       = "do_versioning_on_result";
 
 	private static final String DSWARM_INGEST_THREAD_NAMING_PATTERN = "dswarm-ingest-%d";
 
@@ -336,7 +336,7 @@ public class TasksResource {
 
 			DataModelUtil.checkDataResource(inputDataModel);
 
-			final boolean utiliseExistingInputSchema = getBooleanValue(TasksResource.UTILISE_EXISTING_INPUT_IDENTIFIER, requestJSON, false);
+			final boolean utiliseExistingInputSchema = getBooleanValue(TasksResource.UTILISE_EXISTING_INPUT_SCHEMA_IDENTIFIER, requestJSON, false);
 
 			inputData = dataModelUtil.doIngest(inputDataModel, utiliseExistingInputSchema, INGEST_SCHEDULER);
 		} else {

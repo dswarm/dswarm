@@ -402,7 +402,7 @@ public class DataModelUtil {
 
 			case ConfigurationStatics.CSV_STORAGE_TYPE:
 
-				modelObservable = csvConverterEventRecorderProvider.get().doIngest(dataModel, scheduler);
+				modelObservable = csvConverterEventRecorderProvider.get().doIngest(dataModel, utiliseExistingInputSchema, scheduler);
 
 				break;
 			case ConfigurationStatics.XML_STORAGE_TYPE:

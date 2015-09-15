@@ -341,7 +341,7 @@ public class JSONGDMEncoder extends DefaultJsonPipe<ObjectReceiver<GDMModel>> {
 
 	private static Optional<String> init(final Optional<DataModel> dataModel) {
 
-		return dataModel.map(dm -> StringUtils.stripEnd(DataModelUtils.determineDataModelSchemaBaseURI(dm), SchemaUtils.HASH));
+		return dataModel.map(dm -> StringUtils.stripEnd(DataModelUtils.determineDataModelSchemaBaseURI(dm, false), SchemaUtils.HASH));
 	}
 
 	private String mintDataModelUri(@Nullable final String uri) {

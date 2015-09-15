@@ -31,9 +31,9 @@ public abstract class AbstractXMLTasksResourceTest extends AbstractTasksResource
 	protected final String storageType;
 
 	public AbstractXMLTasksResourceTest(final String taskJSONFileNameArg, final String inputDataResourceFileNameArg, final String recordTagArg,
-			final String storageTypeArg, final String testPostfixArg, final boolean prepareInputDataResourceArg) {
+			final String storageTypeArg, final String testPostfixArg, final boolean prepareInputDataResourceArg, final boolean utiliseExistingInputSchemaArg) {
 
-		super(taskJSONFileNameArg, inputDataResourceFileNameArg, testPostfixArg, prepareInputDataResourceArg);
+		super(taskJSONFileNameArg, inputDataResourceFileNameArg, testPostfixArg, prepareInputDataResourceArg, utiliseExistingInputSchemaArg);
 
 		recordTag = recordTagArg;
 		storageType = storageTypeArg;
