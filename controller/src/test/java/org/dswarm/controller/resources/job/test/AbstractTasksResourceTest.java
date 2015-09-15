@@ -27,7 +27,6 @@ import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.io.Resources;
 import org.apache.commons.io.FileUtils;
 import org.apache.tika.Tika;
@@ -48,7 +47,6 @@ import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.ResourceType;
-import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
@@ -58,7 +56,7 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 
 	protected String taskJSONString = null;
 
-	protected ResourcesResourceTestUtils resourcesResourceTestUtils;
+	protected ResourcesResourceTestUtils      resourcesResourceTestUtils;
 	protected ConfigurationsResourceTestUtils configurationsResourceTestUtils;
 	protected DataModelsResourceTestUtils     dataModelsResourceTestUtils;
 
@@ -67,19 +65,15 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 	protected final String  taskJSONFileName;
 	protected final String  inputDataResourceFileName;
 	protected final String  testPostfix;
-	protected final String  recordTag;
-	protected final String  storageType;
 	protected final boolean prepareInputDataResource;
 
-	public AbstractTasksResourceTest(final String taskJSONFileNameArg, final String inputDataResourceFileNameArg, final String recordTagArg,
-			final String storageTypeArg, final String testPostfixArg, final boolean prepareInputDataResourceArg) {
+	public AbstractTasksResourceTest(final String taskJSONFileNameArg, final String inputDataResourceFileNameArg, final String testPostfixArg,
+			final boolean prepareInputDataResourceArg) {
 
 		super("tasks");
 
 		taskJSONFileName = taskJSONFileNameArg;
 		inputDataResourceFileName = inputDataResourceFileNameArg;
-		recordTag = recordTagArg;
-		storageType = storageTypeArg;
 		testPostfix = testPostfixArg;
 		prepareInputDataResource = prepareInputDataResourceArg;
 	}
@@ -119,7 +113,7 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 			prepareResource = new PrepareResource(inputDataResource);
 		}
 
-		final PrepareConfiguration prepareConfiguration = new PrepareConfiguration(prepareResource, recordTag, storageType).invoke();
+		final PrepareConfiguration prepareConfiguration = createPrepareConfiguration(prepareResource).invoke();
 		DataModel inputDataModel = prepareDataModel(prepareResource, prepareConfiguration);
 
 		final ObjectNode requestJSON = prepareTask(inputDataModel);
@@ -128,6 +122,8 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 
 		return requestJSON;
 	}
+
+	protected abstract PrepareConfiguration createPrepareConfiguration(final PrepareResource prepareResource);
 
 	private ObjectNode prepareTask(final DataModel inputDataModel) throws Exception {
 
@@ -191,7 +187,7 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 		return inputDataModel;
 	}
 
-	private class PrepareResource {
+	protected class PrepareResource {
 
 		private       Resource res1;
 		private       Resource resource;
@@ -264,19 +260,15 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 		}
 	}
 
-	private class PrepareConfiguration {
+	protected abstract class PrepareConfiguration {
 
-		private       Configuration conf1;
-		private       Configuration configuration;
-		private final Resource      resource;
-		private final String        recordTag;
-		private final String        storageType;
+		protected       Configuration conf1;
+		protected       Configuration configuration;
+		protected final Resource      resource;
 
-		public PrepareConfiguration(final PrepareResource prepareResource, final String recordTagArg, final String storageTypeArg) {
+		public PrepareConfiguration(final PrepareResource prepareResource) {
 
 			this.resource = prepareResource.getResource();
-			recordTag = recordTagArg;
-			storageType = storageTypeArg;
 		}
 
 		public Configuration getConf1() {
@@ -289,29 +281,6 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 			return configuration;
 		}
 
-		public PrepareConfiguration invoke() throws Exception {
-
-			final String configuration1Uuid = UUIDService.getUUID(Configuration.class.getSimpleName());
-
-			// process input data model
-			conf1 = new Configuration(configuration1Uuid);
-
-			conf1.setName("configuration " + testPostfix);
-			conf1.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode(recordTag));
-			conf1.addParameter(ConfigurationStatics.STORAGE_TYPE, new TextNode(storageType));
-
-			final String configurationJSONString = objectMapper.writeValueAsString(conf1);
-
-			if(prepareInputDataResource) {
-
-				// create configuration
-				configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
-			} else {
-
-				configuration = configurationsResourceTestUtils.createObjectWithoutComparison(configurationJSONString);
-			}
-
-			return this;
-		}
+		public abstract PrepareConfiguration invoke() throws Exception;
 	}
 }

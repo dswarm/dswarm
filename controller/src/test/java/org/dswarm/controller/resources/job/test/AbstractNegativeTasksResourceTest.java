@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author tgaengler
  */
-public abstract class AbstractNegativeTasksResourceTest extends AbstractTasksResourceTest {
+public abstract class AbstractNegativeTasksResourceTest extends AbstractXMLTasksResourceTest {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractNegativeTasksResourceTest.class);
 

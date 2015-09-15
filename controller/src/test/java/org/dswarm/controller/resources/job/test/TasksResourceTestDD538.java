@@ -17,12 +17,15 @@ package org.dswarm.controller.resources.job.test;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
+import java.util.List;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +36,7 @@ import org.xmlunit.diff.Difference;
 
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
-public abstract class TasksResourceTestDD538 extends AbstractTasksResourceTest {
+public abstract class TasksResourceTestDD538 extends AbstractXMLTasksResourceTest {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TasksResourceTestDD538.class);
 
@@ -73,8 +76,8 @@ public abstract class TasksResourceTestDD538 extends AbstractTasksResourceTest {
 
 		// do comparison: check for XML similarity
 		final Diff xmlDiff = DiffBuilder
-				.compare(Input.fromString(expectedXML))
-				.withTest(Input.fromStream(bis))
+				.compare(Input.fromString(expectedXML).build())
+				.withTest(Input.fromStream(bis).build())
 				.ignoreWhitespace()
 				.checkForSimilar()
 				.build();
