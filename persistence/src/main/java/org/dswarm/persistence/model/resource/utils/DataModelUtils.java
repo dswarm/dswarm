@@ -168,28 +168,16 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 
 			final StringBuilder sb = new StringBuilder();
 
-			if (dataResource != null && dataResource.getUuid() != null) {
-
-				// create uri from resource id
-
-				sb.append("http://data.slub-dresden.de/resources/").append(dataResource.getUuid());
-			}
-
-			// TODO: this is wrong, or? - "create uri from data resource name" -> this will result in ugly uris ...
-
-			// else if (dataResourceName != null) {
-			//
-			// // create uri from data resource name
-			//
-			// // TODO: (probably) replace whitespaces etc.
-			//
-			// sb.append("http://data.slub-dresden.de/resources/").append(dataResourceName);
-			// }
-			else if (dataModel.getUuid() != null) {
+			if (dataModel.getUuid() != null) {
 
 				// create uri from data model id
 
 				sb.append("http://data.slub-dresden.de/datamodels/").append(dataModel.getUuid());
+			} else if (dataResource != null && dataResource.getUuid() != null) {
+
+				// create uri from resource id
+
+				sb.append("http://data.slub-dresden.de/resources/").append(dataResource.getUuid());
 			} else {
 
 				// create uri with random uuid

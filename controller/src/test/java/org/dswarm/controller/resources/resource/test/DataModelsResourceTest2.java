@@ -350,8 +350,9 @@ public class DataModelsResourceTest2 extends
 		final String dataResourceFileName = "controller_bib-record-marc.json";
 		final String configurationFileName = "json-configuration.json";
 		final String dataModelName = "json-example-datamodel";
+		final String dataModelUuid = "DataModel-62dbf41c-f4b8-4b67-8995-6314d89c658f";
 
-		final DataModel dataModel = createDataModel(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName);
+		final DataModel dataModel = createDataModel2(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName, dataModelUuid);
 
 		// END DATA MODEL CREATION
 
@@ -373,12 +374,12 @@ public class DataModelsResourceTest2 extends
 
 		Assert.assertThat(getValue("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", json),
 				CoreMatchers.equalTo(getValue("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", expectedJson)));
-		Assert.assertThat(getValue("http://data.slub-dresden.de/resources/1/schema#controlNumber", json),
-				CoreMatchers.equalTo(getValue("http://data.slub-dresden.de/resources/1/schema#controlNumber", expectedJson)));
-		Assert.assertThat(getValue("http://data.slub-dresden.de/resources/1/schema#format", json),
-				CoreMatchers.equalTo(getValue("http://data.slub-dresden.de/resources/1/schema#format", expectedJson)));
-		Assert.assertThat(getValueNode("http://data.slub-dresden.de/resources/1/schema#fixedFields", json).size(),
-				CoreMatchers.equalTo(getValueNode("http://data.slub-dresden.de/resources/1/schema#fixedFields", expectedJson).size()));
+		Assert.assertThat(getValue("http://data.slub-dresden.de/datamodels/DataModel-62dbf41c-f4b8-4b67-8995-6314d89c658f/schema#controlNumber", json),
+				CoreMatchers.equalTo(getValue("http://data.slub-dresden.de/datamodels/DataModel-62dbf41c-f4b8-4b67-8995-6314d89c658f/schema#controlNumber", expectedJson)));
+		Assert.assertThat(getValue("http://data.slub-dresden.de/datamodels/DataModel-62dbf41c-f4b8-4b67-8995-6314d89c658f/schema#format", json),
+				CoreMatchers.equalTo(getValue("http://data.slub-dresden.de/datamodels/DataModel-62dbf41c-f4b8-4b67-8995-6314d89c658f/schema#format", expectedJson)));
+		Assert.assertThat(getValueNode("http://data.slub-dresden.de/datamodels/DataModel-62dbf41c-f4b8-4b67-8995-6314d89c658f/schema#fixedFields", json).size(),
+				CoreMatchers.equalTo(getValueNode("http://data.slub-dresden.de/datamodels/DataModel-62dbf41c-f4b8-4b67-8995-6314d89c658f/schema#fixedFields", expectedJson).size()));
 
 		DataModelsResourceTest2.LOG.debug("end get JSON data test");
 	}
@@ -399,8 +400,9 @@ public class DataModelsResourceTest2 extends
 		final String dataResourceFileName = "dd-1024.oai-pmh_marcxml.xml";
 		final String configurationFileName = "oai-pmh_marcxml.configuration.json";
 		final String dataModelName = "oai-pmh+marcxml";
+		final String dataModelUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
 
-		final DataModel dataModel = createDataModel(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName);
+		final DataModel dataModel = createDataModel2(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName, dataModelUuid);
 
 		// END DATA MODEL CREATION
 
@@ -589,10 +591,8 @@ public class DataModelsResourceTest2 extends
 		Assert.assertEquals(expectedResponse, body);
 	}
 
-	private DataModel createDataModel(final String dataResourceResourceFileName, final String dataResourceFileName,
-			final String configurationFileName, final String dataModelName) throws Exception {
-
-		final String dataModelUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+	private DataModel createDataModel2(final String dataResourceResourceFileName, final String dataResourceFileName,
+			final String configurationFileName, final String dataModelName, final String dataModelUuid) throws Exception {
 
 		final String dataModelJSONString = createDataModelInternal(dataResourceResourceFileName, dataResourceFileName, configurationFileName,
 				dataModelName, dataModelUuid);
@@ -710,9 +710,10 @@ public class DataModelsResourceTest2 extends
 		final String dataResourceResourceFileName = "resource.json";
 		final String dataResourceFileName = "test_csv-controller.csv";
 		final String configurationFileName = "controller_configuration.json";
-		final String dataModelName = "mabxml";
+		final String dataModelName = "csv data model";
+		final String dataModelUuid = "DataModel-f8741965-0ba5-4c6b-ac47-ea68b80820cc";
 
-		final DataModel dataModel = createDataModel(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName);
+		final DataModel dataModel = createDataModel2(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName, dataModelUuid);
 
 		// END DATA MODEL CREATION
 
@@ -792,7 +793,9 @@ public class DataModelsResourceTest2 extends
 
 		// START DATA MODEL CREATION
 
-		final DataModel dataModel = createDataModel(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName);
+		final String dataModelUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+
+		final DataModel dataModel = createDataModel2(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName, dataModelUuid);
 
 		// END DATA MODEL CREATION
 

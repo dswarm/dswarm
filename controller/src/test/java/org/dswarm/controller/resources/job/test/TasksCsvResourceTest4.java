@@ -145,7 +145,7 @@ public class TasksCsvResourceTest4 extends ResourceTest {
 		// create configuration
 		Configuration configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
 
-		final String dataModelUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+		final String dataModelUuid = "DataModel-642fa5de-9afc-4f91-ad35-d204c40a11f4";
 
 		final DataModel data1 = new DataModel(dataModelUuid);
 		data1.setName("'" + res1.getName() + "' + '" + conf1.getName() + "' data model");

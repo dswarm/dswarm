@@ -1,134 +1,211 @@
-[{
-    "__record_id": "http://data.slub-dresden.de/datamodels/5/records/80bce00c-a2ad-48d2-9589-0a869b2bee2c",
-    "__record_data": [{
-        "http://data.slub-dresden.de/resources/1/schema#description": "blx blx"
-    }, {
+[
+  {
+    "__record_id": "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/records/030bf238-6081-4d03-8afc-b8550b0fd670",
+    "__record_data": [
+      {
+        "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/schema#description": "blx blx"
+      },
+      {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }]
-}, {
-    "__record_id": "http://data.slub-dresden.de/datamodels/5/records/e9d7b0cf-7202-4985-9f24-b0be41b41b5d",
-    "__record_data": [{
-        "http://data.slub-dresden.de/resources/1/schema#description": "blub blub"
-    }, {
+      }
+    ]
+  },
+  {
+    "__record_id": "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/records/970e27de-2db8-4ea4-9428-0d959d67af4f",
+    "__record_data": [
+      {
+        "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/schema#description": "blub blub"
+      },
+      {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }]
-}, {
-    "__record_id": "http://data.slub-dresden.de/datamodels/5/records/78fba2a9-c008-4289-ae9c-0e9db11a021d",
-    "__record_data": [{
-        "http://data.slub-dresden.de/resources/1/schema#description": "foo foo"
-    }, {
+      }
+    ]
+  },
+  {
+    "__record_id": "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/records/9791a924-4eaf-483f-99b5-6c4318dbeaac",
+    "__record_data": [
+      {
+        "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/schema#description": "foo foo"
+      },
+      {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }]
-}, {
-    "__record_id": "http://data.slub-dresden.de/datamodels/5/records/2c749df4-285e-4468-9232-1b9a4d4755a4",
-    "__record_data": [{
-        "http://data.slub-dresden.de/resources/1/schema#description": "bxr bxr"
-    }, {
+      }
+    ]
+  },
+  {
+    "__record_id": "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/records/c47e7309-f7e0-4364-85d5-1466fd6f20e0",
+    "__record_data": [
+      {
+        "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/schema#description": "bxr bxr"
+      },
+      {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }]
-}, {
-    "__record_id": "http://data.slub-dresden.de/datamodels/5/records/06df88fb-85ed-408d-96a2-5a3811886548",
-    "__record_data": [{
-        "http://data.slub-dresden.de/resources/1/schema#description": "hup hup"
-    }, {
+      }
+    ]
+  },
+  {
+    "__record_id": "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/records/2d9062fe-08e3-49cb-94bb-3c39dd7743e3",
+    "__record_data": [
+      {
+        "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/schema#description": "hup hup"
+      },
+      {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }]
-}, {
-    "__record_id": "http://data.slub-dresden.de/datamodels/5/records/4f6360e8-9d04-403d-b420-b81f563bdd09",
-    "__record_data": [{
-        "http://data.slub-dresden.de/resources/1/schema#description": "möp möp"
-    }, {
+      }
+    ]
+  },
+  {
+    "__record_id": "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/records/357d14a3-3741-4b8b-8b28-370982592e6b",
+    "__record_data": [
+      {
+        "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/schema#description": "möp möp"
+      },
+      {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }]
-}, {
-    "__record_id": "http://data.slub-dresden.de/datamodels/5/records/6eb9446b-111f-4b74-8380-77e775914328",
-    "__record_data": [{
-        "http://data.slub-dresden.de/resources/1/schema#description": "gluck gluck"
-    }, {
+      }
+    ]
+  },
+  {
+    "__record_id": "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/records/29b7c8c1-940b-42ec-9d48-86702b6813e6",
+    "__record_data": [
+      {
+        "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/schema#description": "gluck gluck"
+      },
+      {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }]
-}, {
-    "__record_id": "http://data.slub-dresden.de/datamodels/5/records/7f264333-efed-47d0-b8a0-a841924a7415",
-    "__record_data": [{
-        "http://data.slub-dresden.de/resources/1/schema#description": "quick quick"
-    }, {
+      }
+    ]
+  },
+  {
+    "__record_id": "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/records/ec339aff-616e-4217-81f8-e7cd052f5826",
+    "__record_data": [
+      {
+        "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/schema#description": "quick quick"
+      },
+      {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }]
-}, {
-    "__record_id": "http://data.slub-dresden.de/datamodels/5/records/3272baa9-b8c9-4b07-a5eb-fb10d6bc56ea",
-    "__record_data": [{
-        "http://data.slub-dresden.de/resources/1/schema#description": "quxck quxck"
-    }, {
+      }
+    ]
+  },
+  {
+    "__record_id": "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/records/20452881-38b6-4421-9897-71dedf9146f9",
+    "__record_data": [
+      {
+        "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/schema#description": "quxck quxck"
+      },
+      {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }]
-}, {
-    "__record_id": "http://data.slub-dresden.de/datamodels/5/records/7977cafa-fb70-40ce-a5c1-cb3038a74bef",
-    "__record_data": [{
-        "http://data.slub-dresden.de/resources/1/schema#description": "plök plök"
-    }, {
+      }
+    ]
+  },
+  {
+    "__record_id": "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/records/1205b75f-c263-4744-8aa0-c61145eb8485",
+    "__record_data": [
+      {
+        "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/schema#description": "plök plök"
+      },
+      {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }]
-}, {
-    "__record_id": "http://data.slub-dresden.de/datamodels/5/records/c975f5c5-6078-49fc-b951-28be3c38e298",
-    "__record_data": [{
-        "http://data.slub-dresden.de/resources/1/schema#description": "quietsch quietsch"
-    }, {
+      }
+    ]
+  },
+  {
+    "__record_id": "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/records/c97c6254-65c9-42bc-a266-b427218855ec",
+    "__record_data": [
+      {
+        "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/schema#description": "quietsch quietsch"
+      },
+      {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }]
-}, {
-    "__record_id": "http://data.slub-dresden.de/datamodels/5/records/c7e6b627-c6d3-4a5f-9a9d-32f6b52872af",
-    "__record_data": [{
-        "http://data.slub-dresden.de/resources/1/schema#description": "quäk quäk"
-    }, {
+      }
+    ]
+  },
+  {
+    "__record_id": "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/records/0e763540-cc47-49ed-aa28-8dc989740922",
+    "__record_data": [
+      {
+        "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/schema#description": "quäk quäk"
+      },
+      {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }]
-}, {
-    "__record_id": "http://data.slub-dresden.de/datamodels/5/records/4a73dcec-2d69-4ff9-ac9f-b4298232dd74",
-    "__record_data": [{
-        "http://data.slub-dresden.de/resources/1/schema#description": "piep piep"
-    }, {
+      }
+    ]
+  },
+  {
+    "__record_id": "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/records/bfeaf89b-ac6b-4186-9900-e520893e1c73",
+    "__record_data": [
+      {
+        "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/schema#description": "piep piep"
+      },
+      {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }]
-}, {
-    "__record_id": "http://data.slub-dresden.de/datamodels/5/records/fa873044-5312-423b-aa0e-ab93df63b01e",
-    "__record_data": [{
-        "http://data.slub-dresden.de/resources/1/schema#description": "mäh mäh"
-    }, {
+      }
+    ]
+  },
+  {
+    "__record_id": "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/records/f1ba90df-b53c-4261-aaf5-cbdd06331e39",
+    "__record_data": [
+      {
+        "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/schema#description": "mäh mäh"
+      },
+      {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }]
-}, {
-    "__record_id": "http://data.slub-dresden.de/datamodels/5/records/17588ae7-84d4-4d7f-a8ba-32b3ee846dd3",
-    "__record_data": [{
-        "http://data.slub-dresden.de/resources/1/schema#description": "muh muh"
-    }, {
+      }
+    ]
+  },
+  {
+    "__record_id": "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/records/dd8a5f9d-6ce0-4e50-a6ac-ac712231b8b7",
+    "__record_data": [
+      {
+        "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/schema#description": "muh muh"
+      },
+      {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }]
-}, {
-    "__record_id": "http://data.slub-dresden.de/datamodels/5/records/8465cf3b-e4c0-4ca8-a645-75cd2bcbbffb",
-    "__record_data": [{
-        "http://data.slub-dresden.de/resources/1/schema#description": "mixu mixu"
-    }, {
+      }
+    ]
+  },
+  {
+    "__record_id": "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/records/807e13c8-b6e5-40fc-83c7-ea0422b78958",
+    "__record_data": [
+      {
+        "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/schema#description": "mixu mixu"
+      },
+      {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }]
-}, {
-    "__record_id": "http://data.slub-dresden.de/datamodels/5/records/46c4d8e0-f97b-4e0d-bb0c-c45c4d758423",
-    "__record_data": [{
-        "http://data.slub-dresden.de/resources/1/schema#description": "wxuwxu wxuwxu"
-    }, {
+      }
+    ]
+  },
+  {
+    "__record_id": "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/records/c4050467-80cb-4b87-b791-39b956ff4734",
+    "__record_data": [
+      {
+        "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/schema#description": "wxuwxu wxuwxu"
+      },
+      {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }]
-}, {
-    "__record_id": "http://data.slub-dresden.de/datamodels/5/records/6d7bc96c-7343-4a7b-ae34-424433152310",
-    "__record_data": [{
-        "http://data.slub-dresden.de/resources/1/schema#description": "brumm brumm"
-    }, {
+      }
+    ]
+  },
+  {
+    "__record_id": "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/records/279f6890-9368-43ca-9fa8-b7c7b45b5182",
+    "__record_data": [
+      {
+        "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/schema#description": "brumm brumm"
+      },
+      {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }]
-}, {
-    "__record_id": "http://data.slub-dresden.de/datamodels/5/records/9445d91b-ef30-4eb6-b513-3d712539e2ab",
-    "__record_data": [{
-        "http://data.slub-dresden.de/resources/1/schema#description": "kikeriki kikeriki"
-    }, {
+      }
+    ]
+  },
+  {
+    "__record_id": "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/records/ec4b14ec-e856-4154-8b9d-89300ae3a57a",
+    "__record_data": [
+      {
+        "http://data.slub-dresden.de/datamodels/DataModel-d3de7db9-ffcf-4d3b-836f-5d736fea2f55/schema#description": "kikeriki kikeriki"
+      },
+      {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }]
-}]
+      }
+    ]
+  }
+]
