@@ -15,6 +15,10 @@
  */
 package org.dswarm.controller.resources.job;
 
+import java.util.LinkedHashSet;
+import java.util.Optional;
+import java.util.Set;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.ws.rs.Consumes;
@@ -30,20 +34,31 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.ExtendedBasicDMPResource;
 import org.dswarm.controller.resources.POJOFormat;
+import org.dswarm.init.DMPException;
+import org.dswarm.persistence.DMPPersistenceException;
+import org.dswarm.persistence.model.job.Mapping;
 import org.dswarm.persistence.model.job.Project;
 import org.dswarm.persistence.model.job.proxy.ProxyProject;
+import org.dswarm.persistence.model.resource.DataModel;
+import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.job.ProjectService;
+import org.dswarm.persistence.service.resource.DataModelService;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * A resource (controller service) for {@link Project}s.
@@ -55,6 +70,13 @@ import org.dswarm.persistence.service.job.ProjectService;
 @Path("projects")
 public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, ProxyProject, Project> {
 
+	private static final Logger LOG = LoggerFactory.getLogger(ProjectsResource.class);
+
+	public static final String INPUT_DATA_MODEL  = "input_data_model";
+	public static final String REFERENCE_PROJECT = "reference_project";
+
+	private final Provider<DataModelService> dataModelPersistenceServiceProvider;
+
 	/**
 	 * Creates a new resource (controller service) for {@link Project}s with the provider of the project persistence service, the
 	 * object mapper and metrics registry.
@@ -64,9 +86,12 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	 */
 	@Inject
 	public ProjectsResource(final Provider<ProjectService> persistenceServiceProviderArg,
-			final Provider<ObjectMapper> objectMapperProviderArg) throws DMPControllerException {
+			final Provider<DataModelService> dataModelPersistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg)
+			throws DMPControllerException {
 
 		super(Project.class, persistenceServiceProviderArg, objectMapperProviderArg);
+
+		dataModelPersistenceServiceProvider = dataModelPersistenceServiceProviderArg;
 	}
 
 	/**
@@ -95,14 +120,13 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	/**
 	 * This endpoint consumes a project as JSON representation and persists this project (incl. all its parts, i.e., new sub
 	 * elements, e.g., mappings will be persisted as well) in the database. <br/>
-	 * Note: please utilise negative 'long' values for assigning a dummy id to an object. The same dummy id addresses the same
-	 * object for a certain domain model class.
+	 * Note: please utilise generated uuids for all entity identifier.
 	 *
 	 * @param jsonObjectString a JSON representation of one project
 	 * @return the persisted project as JSON representation
 	 * @throws DMPControllerException
 	 */
-	@ApiOperation(value = "create a new project", notes = "Returns a new Project object. Persists this project (incl. all its parts, i.e., new sub elements, e.g., mappings will be persisted as well). Note: please utilise negative 'long' values for assigning a dummy id to an object. The same dummy id means the same object for a certain domain model class.", response = Project.class)
+	@ApiOperation(value = "create a new project", notes = "Returns a new Project object. Persists this project (incl. all its parts, i.e., new sub elements, e.g., mappings will be persisted as well). Note: please utilise generated uuids for all entity identifier.", response = Project.class)
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "project was successfully persisted"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@POST
@@ -182,6 +206,165 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	}
 
 	/**
+	 * This endpoint consumes a project as JSON representation and persists this project (incl. all its parts, i.e., new sub
+	 * elements, e.g., mappings will be persisted as well) in the database. <br/>
+	 * Note: please utilise generated uuids for all entity identifier.
+	 *
+	 * @param requestJsonObjectString a JSON representation of the request parameters
+	 * @return the persisted project as JSON representation
+	 * @throws DMPControllerException
+	 */
+	@ApiOperation(value = "create a new project by copying parts from existing project and utilising other existing entities", notes = "Returns a new Project object. Persists this project (incl. all its parts, i.e., new sub elements, e.g., mappings will be persisted as well). Note: please utilise generated uuids for all entity identifier.", response = Project.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "project was successfully persisted"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@POST
+	@Path("createprojectwithhelpofexistingentities")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response createProjectWithHelpOfExistingEntities(
+			@ApiParam(value = "project (as JSON)", required = true) final String requestJsonObjectString)
+			throws DMPControllerException {
+
+		if (requestJsonObjectString == null) {
+
+			throw new DMPControllerException(
+					"Cannot create project with help of existing entities. The request JSON string does not exist. Please define one");
+		}
+
+		final ObjectNode requestJSON;
+
+		try {
+
+			requestJSON = DMPPersistenceUtil.getJSON(requestJsonObjectString);
+		} catch (final DMPException e) {
+
+			throw new DMPControllerException(
+					"Cannot create project with help of existing entities. Could not deserialize request JSON string. Please define a valid one.", e);
+		}
+
+		if (requestJSON == null) {
+
+			throw new DMPControllerException(
+					"Cannot create project with help of existing entities. The request JSON object does not exist. Please define one");
+		}
+
+		final Optional<String> optionalInputDataModelId = getStringValue(INPUT_DATA_MODEL, requestJSON);
+		final Optional<String> optionalReferenceProjectId = getStringValue(REFERENCE_PROJECT, requestJSON);
+
+		final Optional<DataModel> optionalInputDataModel = optionalInputDataModelId.flatMap(this::getDataModel);
+		final Optional<Project> optionalReferenceProject = optionalReferenceProjectId.flatMap(this::getProject);
+
+		if (!optionalReferenceProject.isPresent()) {
+
+			final String startMessage = "Cannot create project with help of existing entities.";
+			final String finalMessage;
+
+			if (optionalReferenceProjectId.isPresent()) {
+
+				final String referenceProjectId = optionalReferenceProjectId.get();
+
+				final String message = String
+						.format("Could not retrieve reference project with id '%s' from metadata repository.", referenceProjectId);
+
+				finalMessage = startMessage + message;
+			} else {
+
+				final String message2 = "Could not retrieve reference project, because no project id was given in the request JSON";
+
+				finalMessage = startMessage + message2;
+			}
+
+			LOG.error(finalMessage);
+
+			throw new DMPControllerException(finalMessage);
+		}
+
+		final Project referenceProject = optionalReferenceProject.get();
+
+		final Optional<DataModel> optionalFinalInputDataModel = Optional
+				.ofNullable(optionalInputDataModel.orElseGet(referenceProject::getInputDataModel));
+
+		if (!optionalFinalInputDataModel.isPresent()) {
+
+			final String message = "Cannot create project with help of existing entities. Could not determine an input data model that should be utilised for project creation";
+
+			LOG.error(message);
+
+			throw new DMPControllerException(message);
+		}
+
+		final DataModel inputDataModel = optionalFinalInputDataModel.get();
+
+		// create new project
+		final String newProjectId = UUIDService.getUUID(Project.class.getSimpleName());
+
+		final Project newProject = new Project(newProjectId);
+		newProject.setName("copy of '" + referenceProject.getName() + "'");
+		newProject.setDescription("copy of '" + referenceProject.getDescription() + "'");
+		newProject.setInputDataModel(inputDataModel);
+		// TODO: maybe check output data model?
+		newProject.setOutputDataModel(referenceProject.getOutputDataModel());
+		newProject.setFunctions(referenceProject.getFunctions());
+
+		final Set<Mapping> referenceMappings = referenceProject.getMappings();
+
+		if(referenceMappings != null) {
+
+			final Set<Mapping> newMappings = new LinkedHashSet<>();
+
+			for(final Mapping referenceMapping : referenceMappings) {
+
+				final String newMappingId = UUIDService.getUUID(Mapping.class.getSimpleName());
+
+				final Mapping newMapping = new Mapping(newMappingId);
+
+				newMapping.setName("copy of '" + referenceMapping.getName() + "'");
+				newMapping.setInputAttributePaths(referenceMapping.getInputAttributePaths());
+				newMapping.setOutputAttributePath(referenceMapping.getOutputAttributePath());
+				newMapping.setTransformation(referenceMapping.getTransformation());
+
+				newMappings.add(newMapping);
+			}
+
+			newProject.setMappings(newMappings);
+		}
+
+		// persist project
+		final ProjectService projectService = persistenceServiceProvider.get();
+
+		final ProxyProject newPersistentProxyProject;
+
+		try {
+
+			newPersistentProxyProject = projectService.createObject(newProject);
+		} catch (final DMPPersistenceException e) {
+
+			final String message = String
+					.format("Cannot create project with help of existing entities. Could not persist new project '%s' into metadata repository successfully.",
+							newProjectId);
+
+			LOG.error(message, e);
+
+			throw new DMPControllerException(message);
+		}
+
+		if (newPersistentProxyProject == null || newPersistentProxyProject.getObject() == null) {
+
+			final String message = String
+					.format("Cannot create project with help of existing entities. Could not persist new project '%s' into metadata repository successfully.",
+							newProjectId);
+
+			LOG.error(message);
+
+			throw new DMPControllerException(message);
+		}
+
+		final Project newPersistentProject = newPersistentProxyProject.getObject();
+
+		return createCreateObjectResponse(newPersistentProxyProject, newPersistentProject);
+	}
+
+	/**
 	 * {@inheritDoc}<br/>
 	 * Updates the name, description, (sample) input data model, output data model, mappings and functions of the project.
 	 */
@@ -198,5 +381,39 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 		object.setSelectedRecords(objectFromJSON.getSelectedRecords());
 
 		return object;
+	}
+
+	private Optional<String> getStringValue(final String key, final JsonNode json) {
+
+		final JsonNode node = json.get(key);
+		final Optional<String> optionalValue;
+
+		if (node != null) {
+
+			optionalValue = Optional.ofNullable(node.asText());
+		} else {
+
+			optionalValue = Optional.empty();
+		}
+
+		return optionalValue;
+	}
+
+	private Optional<DataModel> getDataModel(final String dataModelId) {
+
+		final DataModelService dataModelService = dataModelPersistenceServiceProvider.get();
+
+		final DataModel dataModel = dataModelService.getObject(dataModelId);
+
+		return Optional.ofNullable(dataModel);
+	}
+
+	private Optional<Project> getProject(final String projectId) {
+
+		final ProjectService projectService = persistenceServiceProvider.get();
+
+		final Project project = projectService.getObject(projectId);
+
+		return Optional.ofNullable(project);
 	}
 }
