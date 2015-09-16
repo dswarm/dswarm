@@ -15,8 +15,10 @@
  */
 package org.dswarm.controller.resources.job.test;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 import javax.ws.rs.client.Entity;
@@ -35,6 +37,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.builder.Input;
+import org.xmlunit.diff.Diff;
+import org.xmlunit.diff.Difference;
 
 import org.dswarm.controller.resources.job.TasksResource;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
@@ -213,38 +219,31 @@ public class TasksCsvResourceTest4 extends ResourceTest {
 
 		Assert.assertEquals("200 Created was expected", 200, response.getStatus());
 
-		final String actualXMLStream = response.readEntity(String.class);
+		final InputStream actualXMLStream = response.readEntity(InputStream.class);
+		Assert.assertNotNull(actualXMLStream);
 
-		// TODO: we can't do a property result comparison, because the record has always a new id
-//		final InputStream actualXMLStream = response.readEntity(InputStream.class);
-//		Assert.assertNotNull(actualXMLStream);
-//
-//		final BufferedInputStream bis = new BufferedInputStream(actualXMLStream, 1024);
-//
-//		final String expectedXML = DMPPersistenceUtil.getResourceAsString("controller_task-result.csv.xml");
-//
-//		// do comparison: check for XML similarity
-//		final Diff xmlDiff = DiffBuilder
-//				.compare(Input.fromString(expectedXML))
-//				.withTest(Input.fromStream(bis))
-//				.ignoreWhitespace()
-//				.checkForSimilar()
-//				.build();
-//
-//		if (xmlDiff.hasDifferences()) {
-//			final StringBuilder sb = new StringBuilder("Oi chap, there seem to ba a mishap!");
-//			for (final Difference difference : xmlDiff.getDifferences()) {
-//				sb.append('\n').append(difference);
-//			}
-//			Assert.fail(sb.toString());
-//		}
-//
-//		actualXMLStream.close();
-//		bis.close();
+		final BufferedInputStream bis = new BufferedInputStream(actualXMLStream, 1024);
 
 		final String expectedXML = DMPPersistenceUtil.getResourceAsString("controller_task-result.csv.xml");
 
-		Assert.assertEquals(expectedXML.length(), actualXMLStream.length());
+		// do comparison: check for XML similarity
+		final Diff xmlDiff = DiffBuilder
+				.compare(Input.fromString(expectedXML).build())
+				.withTest(Input.fromStream(bis).build())
+				.ignoreWhitespace()
+				.checkForSimilar()
+				.build();
+
+		if (xmlDiff.hasDifferences()) {
+			final StringBuilder sb = new StringBuilder("Oi chap, there seem to ba a mishap!");
+			for (final Difference difference : xmlDiff.getDifferences()) {
+				sb.append('\n').append(difference);
+			}
+			Assert.fail(sb.toString());
+		}
+
+		actualXMLStream.close();
+		bis.close();
 
 		TasksCsvResourceTest4.LOG.debug("end task execution test");
 	}

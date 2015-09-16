@@ -29,7 +29,6 @@ import javax.ws.rs.core.Response;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.TextNode;
-import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -42,12 +41,14 @@ import org.junit.Test;
 
 import org.dswarm.controller.resources.test.ResourceTest;
 import org.dswarm.controller.test.GuicedTest;
+import org.dswarm.persistence.model.AdvancedDMPJPAObject;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.ResourceType;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.schema.Attribute;
+import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.service.UUIDService;
 
@@ -103,17 +104,12 @@ public class SchemaOrderTest extends ResourceTest {
 	}
 
 	private List<String> getExpecteds() {
-		final Resource thisResource = this.resource;
 		final List<String> names = Lists.newArrayList("id", "val1", "val2", "val3", "val4", "val5", "val6", "type");
-		return Lists.transform(names, new Function<String, String>() {
-
-			@Override
-			public String apply(final String input) {
-				if (input.equals("type")) {
-					return "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
-				}
-				return String.format("http://data.slub-dresden.de/resources/%s/schema#%s", thisResource.getUuid(), input);
+		return Lists.transform(names, input -> {
+			if (input.equals("type")) {
+				return "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
 			}
+			return String.format("http://data.slub-dresden.de/schemas/%s#%s", dataModel.getSchema().getUuid(), input);
 		});
 	}
 
@@ -122,13 +118,7 @@ public class SchemaOrderTest extends ResourceTest {
 		final Collection<SchemaAttributePathInstance> attributePaths = dataModel.getSchema().getAttributePaths();
 		for (final SchemaAttributePathInstance attributePath : attributePaths) {
 			final Iterable<Attribute> path = attributePath.getAttributePath().getAttributePath();
-			final Iterable<String> pathUris = Iterables.transform(path, new Function<Attribute, String>() {
-
-				@Override
-				public String apply(final Attribute input) {
-					return input.getUri();
-				}
-			});
+			final Iterable<String> pathUris = Iterables.transform(path, AdvancedDMPJPAObject::getUri);
 			final String actualUri = Joiner.on('\u001E').join(pathUris);
 			actuals.add(actualUri);
 		}
@@ -227,6 +217,13 @@ public class SchemaOrderTest extends ResourceTest {
 		final DataModel dataModel = new DataModel(dataModelUuid);
 		dataModel.setDataResource(resource);
 		dataModel.setConfiguration(configuration);
+
+		final String schemaUuid = "Schema-2f567384-a95b-4dfb-9f71-4699af7b9e40";
+
+		final Schema schema1 = new Schema(schemaUuid);
+
+		dataModel.setSchema(schema1);
+
 		return dataModel;
 	}
 

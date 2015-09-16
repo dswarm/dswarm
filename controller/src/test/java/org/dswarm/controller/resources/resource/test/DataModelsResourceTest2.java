@@ -353,7 +353,8 @@ public class DataModelsResourceTest2 extends
 		final String dataModelUuid = "DataModel-62dbf41c-f4b8-4b67-8995-6314d89c658f";
 		final String schemaUuid = "Schema-65f19a84-1431-453e-a574-eabc8f2cc515";
 
-		final DataModel dataModel = createDataModel2(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName, dataModelUuid, schemaUuid);
+		final DataModel dataModel = createDataModel2(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName,
+				dataModelUuid, schemaUuid);
 
 		// END DATA MODEL CREATION
 
@@ -405,13 +406,12 @@ public class DataModelsResourceTest2 extends
 		// START DATA MODEL CREATION
 
 		final String dataResourceResourceFileName = "dd-1024.oai-pmh_marcxml.resource.json";
-		final String dataResourceFileName = "dd-1024.oai-pmh_marcxml.xml";
+		final String dataResourceFileName = "dd-1024.oai-pmh_marcxml.controller.xml";
 		final String configurationFileName = "oai-pmh_marcxml.configuration.json";
 		final String dataModelName = "oai-pmh+marcxml";
 		final String dataModelUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
-		final String schemaUuid = UUIDService.getUUID(Schema.class.getSimpleName());
 
-		final DataModel dataModel = createDataModel2(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName, dataModelUuid, schemaUuid);
+		final DataModel dataModel = createDataModel2(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName, dataModelUuid, null);
 
 		// END DATA MODEL CREATION
 
@@ -647,9 +647,12 @@ public class DataModelsResourceTest2 extends
 		dataModel1.setDataResource(resource);
 		dataModel1.setConfiguration(configuration);
 
-		final Schema schema1 = new Schema(schemaUuid);
+		if (schemaUuid != null) {
 
-		dataModel1.setSchema(schema1);
+			final Schema schema1 = new Schema(schemaUuid);
+
+			dataModel1.setSchema(schema1);
+		}
 
 		return objectMapper.writeValueAsString(dataModel1);
 	}
