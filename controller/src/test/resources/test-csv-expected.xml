@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<ns4:RecordTypes xmlns:ns4="http://data.slub-dresden.de/datamodels/DataModel-f652c591-78b9-476f-b8c6-2ea029f343d5/schema">
+<ns4:RecordTypes xmlns:ns4="http://data.slub-dresden.de/schemas/Schema-137ae9cb-a3a8-4f25-8233-08388801903e">
 	<ns4:RecordType>
 		<ns4:id><![CDATA[1234]]></ns4:id>
 		<ns4:name><![CDATA[bla]]></ns4:name>

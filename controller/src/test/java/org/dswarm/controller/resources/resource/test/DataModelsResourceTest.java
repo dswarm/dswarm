@@ -209,16 +209,18 @@ public class DataModelsResourceTest extends
 	public void testPNXExport() throws Exception {
 
 		final String dataModel1Uuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+		final String schemaUuid = UUIDService.getUUID(Schema.class.getSimpleName());
 
-		testXMLExport("PNX", "test-pnx-resource.json", "test-pnx2-controller.xml", "pnx-configuration.json", "pnx", "test-pnx2-expected.xml", dataModel1Uuid);
+		testXMLExport("PNX", "test-pnx-resource.json", "test-pnx2-controller.xml", "pnx-configuration.json", "pnx", "test-pnx2-expected.xml", dataModel1Uuid, schemaUuid);
 	}
 
 	@Test
 	public void testCSVXMLExport() throws Exception {
 
 		final String dataModel1Uuid = "DataModel-f652c591-78b9-476f-b8c6-2ea029f343d5";
+		final String schemaUuid = "Schema-137ae9cb-a3a8-4f25-8233-08388801903e";
 
-		testXMLExport("CSV XML", "test-csv-resource.json", "test_csv-controller.csv", "test-csv-configuration.json", "csv", "test-csv-expected.xml", dataModel1Uuid);
+		testXMLExport("CSV XML", "test-csv-resource.json", "test_csv-controller.csv", "test-csv-configuration.json", "csv", "test-csv-expected.xml", dataModel1Uuid, schemaUuid);
 	}
 
 	@Test
@@ -730,7 +732,7 @@ public class DataModelsResourceTest extends
 	}
 
 	private void testXMLExport(final String type, final String resourceJSONFile, final String dataResourceFile, final String configurationJSONFile,
-			final String dataModelType, final String expectedXMLFile, final String dataModelUuid) throws Exception {
+			final String dataModelType, final String expectedXMLFile, final String dataModelUuid, final String schemaUuid) throws Exception {
 
 		DataModelsResourceTest.LOG.debug("start export {} export test", type);
 
@@ -754,6 +756,10 @@ public class DataModelsResourceTest extends
 		dataModel1.setDescription("my " + dataModelType + " data model description");
 		dataModel1.setDataResource(resource);
 		dataModel1.setConfiguration(configuration);
+
+		final Schema schema1 = new Schema(schemaUuid);
+
+		dataModel1.setSchema(schema1);
 
 		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
 

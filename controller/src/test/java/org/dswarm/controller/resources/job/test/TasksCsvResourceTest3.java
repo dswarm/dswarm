@@ -152,14 +152,20 @@ public class TasksCsvResourceTest3 extends ResourceTest {
 
 		final String dataModelUuid = "DataModel-59b8519f-7c17-4a73-80fa-323a8e16617e";
 
-		final DataModel data1 = new DataModel(dataModelUuid);
-		data1.setName("'" + res1.getName() + "' + '" + conf1.getName() + "' data model");
-		data1.setDescription("data model of resource '" + res1.getName() + "' and configuration '" + conf1.getName() + "'");
-		data1.setDataResource(resource);
-		data1.setConfiguration(configuration);
+		final DataModel dataModel1 = new DataModel(dataModelUuid);
+		dataModel1.setName("'" + res1.getName() + "' + '" + conf1.getName() + "' data model");
+		dataModel1.setDescription("data model of resource '" + res1.getName() + "' and configuration '" + conf1.getName() + "'");
+		dataModel1.setDataResource(resource);
+		dataModel1.setConfiguration(configuration);
+
+		final String schemaUuid = "Schema-f7136c87-34f7-42bd-8e21-7ec605f7fc6c";
+
+		final Schema schema1 = new Schema(schemaUuid);
+
+		dataModel1.setSchema(schema1);
 
 		// manipulate input data model
-		final String finalInputDataModelJSONString = objectMapper.writeValueAsString(data1);
+		final String finalInputDataModelJSONString = objectMapper.writeValueAsString(dataModel1);
 		final ObjectNode finalInputDataModelJSON = objectMapper.readValue(finalInputDataModelJSONString, ObjectNode.class);
 
 		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
@@ -175,8 +181,7 @@ public class TasksCsvResourceTest3 extends ResourceTest {
 		// manipulate attributes
 		final ObjectNode mappingJSON = (ObjectNode) taskJSON.get("job").get("mappings").get(0);
 
-		final boolean utiliseExistingSchema = false;
-		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(data1, utiliseExistingSchema);
+		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel1);
 
 		final ObjectNode outputAttributePathAttributeJSON = (ObjectNode) mappingJSON
 				.get("output_attribute_path").get("attribute_path").get("attributes").get(0);
@@ -230,8 +235,7 @@ public class TasksCsvResourceTest3 extends ResourceTest {
 			actualNodes.put(node.get(DMPPersistenceUtil.RECORD_ID).asText(), node);
 		}
 
-		final boolean utiliseExistingSchema1 = false;
-		final String actualDataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(data1, utiliseExistingSchema1);
+		final String actualDataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel1);
 
 		final String expectedRecordDataFieldNameExample = expectedJSONArray.get(0).get(DMPPersistenceUtil.RECORD_DATA).get(0).fieldNames().next();
 		final String expectedDataResourceSchemaBaseURI = expectedRecordDataFieldNameExample.substring(0,
@@ -267,7 +271,7 @@ public class TasksCsvResourceTest3 extends ResourceTest {
 					Matchers.equalTo(expectedRecordData.get(expectedDataResourceSchemaBaseURI + "description").asText()));
 		}
 
-		final String dataModelJSONString = objectMapper.writeValueAsString(data1);
+		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
 
 		// do not compare dataModelJSONString with data1 since the schema is automatically created, comparison would fail.
 		DataModel inputDataModel = dataModelsResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);

@@ -47,6 +47,7 @@ import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.ResourceType;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
+import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
@@ -147,14 +148,20 @@ public class TasksCsvResourceTest4 extends ResourceTest {
 
 		final String dataModelUuid = "DataModel-642fa5de-9afc-4f91-ad35-d204c40a11f4";
 
-		final DataModel data1 = new DataModel(dataModelUuid);
-		data1.setName("'" + res1.getName() + "' + '" + conf1.getName() + "' data model");
-		data1.setDescription("data model of resource '" + res1.getName() + "' and configuration '" + conf1.getName() + "'");
-		data1.setDataResource(resource);
-		data1.setConfiguration(configuration);
+		final DataModel dataModel1 = new DataModel(dataModelUuid);
+		dataModel1.setName("'" + res1.getName() + "' + '" + conf1.getName() + "' data model");
+		dataModel1.setDescription("data model of resource '" + res1.getName() + "' and configuration '" + conf1.getName() + "'");
+		dataModel1.setDataResource(resource);
+		dataModel1.setConfiguration(configuration);
+
+		final String schemaUuid = "Schema-b2db413b-9c14-4724-b7e2-7b03186bf6be";
+
+		final Schema schema1 = new Schema(schemaUuid);
+
+		dataModel1.setSchema(schema1);
 
 		// manipulate input data model
-		final String finalInputDataModelJSONString = objectMapper.writeValueAsString(data1);
+		final String finalInputDataModelJSONString = objectMapper.writeValueAsString(dataModel1);
 		final ObjectNode finalInputDataModelJSON = objectMapper.readValue(finalInputDataModelJSONString, ObjectNode.class);
 
 		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
@@ -170,8 +177,7 @@ public class TasksCsvResourceTest4 extends ResourceTest {
 		// manipulate attributes
 		final ObjectNode mappingJSON = (ObjectNode) taskJSON.get("job").get("mappings").get(0);
 
-		final boolean utiliseExistingSchema = false;
-		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(data1, utiliseExistingSchema);
+		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel1);
 
 		final ObjectNode outputAttributePathAttributeJSON = (ObjectNode) mappingJSON
 				.get("output_attribute_path").get("attribute_path").get("attributes").get(0);

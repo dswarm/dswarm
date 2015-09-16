@@ -64,7 +64,7 @@ public abstract class AbstractCSVResourceFlow<T> {
 	protected final String dataModelBaseURI;
 	protected final String dataModelSchemaBaseURI;
 
-	public AbstractCSVResourceFlow(final DataModel dataModel, final boolean utiliseExistingSchema) throws DMPConverterException {
+	public AbstractCSVResourceFlow(final DataModel dataModel) throws DMPConverterException {
 
 		if (dataModel == null) {
 
@@ -110,7 +110,7 @@ public abstract class AbstractCSVResourceFlow<T> {
 		}
 
 		dataModelBaseURI = DataModelUtils.determineDataModelBaseURI(dataModel);
-		dataModelSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel, utiliseExistingSchema);
+		dataModelSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
 	}
 
 	public AbstractCSVResourceFlow(final String encoding, final Character escapeCharacter, final Character quoteCharacter,

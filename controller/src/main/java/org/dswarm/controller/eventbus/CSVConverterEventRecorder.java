@@ -121,7 +121,7 @@ public class CSVConverterEventRecorder {
 
 		// convert result to GDM
 
-		final String dataResourceBaseSchemaURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel, utiliseExistingSchema);
+		final String dataResourceBaseSchemaURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
 		final String recordClassURI = dataResourceBaseSchemaURI + RECORD_TYPE_POSTFIX;
 		final ResourceNode recordClassNode = new ResourceNode(recordClassURI);
 
@@ -189,7 +189,7 @@ public class CSVConverterEventRecorder {
 		try {
 
 			final CompletableFuture<CSVSourceResourceTriplesFlow> futureFlow = CompletableFuture
-					.supplyAsync(() -> flowFactory.get().fromDataModel(dataModel, utiliseExistingSchema));
+					.supplyAsync(() -> flowFactory.get().fromDataModel(dataModel));
 			final Observable<CSVSourceResourceTriplesFlow> obserableFlow = Observable.from(futureFlow);
 
 			return obserableFlow.subscribeOn(scheduler).flatMap(flow -> {

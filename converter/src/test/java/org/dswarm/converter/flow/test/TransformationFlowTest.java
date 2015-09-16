@@ -118,7 +118,7 @@ public class TransformationFlowTest extends GuicedTest {
 
 		final CSVSourceResourceTriplesFlow flow2 = injector
 				.getInstance(CSVResourceFlowFactory.class)
-				.fromDataModel(updatedInputDataModel, false);
+				.fromDataModel(updatedInputDataModel);
 
 		final Collection<Triple> csvRecordTriples = flow2.applyResource("test_csv.csv").flatMap(Observable::<Triple>from).toList().toBlocking()
 				.first();
@@ -133,7 +133,7 @@ public class TransformationFlowTest extends GuicedTest {
 
 		final org.dswarm.graph.json.Model model = new org.dswarm.graph.json.Model();
 
-		final String dataResourceBaseSchemaURI = DataModelUtils.determineDataModelSchemaBaseURI(inputDataModel, false);
+		final String dataResourceBaseSchemaURI = DataModelUtils.determineDataModelSchemaBaseURI(inputDataModel);
 		final String recordClassURI = dataResourceBaseSchemaURI + "RecordType";
 		final ResourceNode recordClasz = new ResourceNode(recordClassURI);
 
@@ -218,7 +218,7 @@ public class TransformationFlowTest extends GuicedTest {
 		// manipulate attributes
 		final ObjectNode mappingJSON = (ObjectNode) taskJSON.get("job").get("mappings").get(0);
 
-		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(updatedInputDataModel, false);
+		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(updatedInputDataModel);
 
 		final ObjectNode outputAttributePathAttributeJSON = (ObjectNode) mappingJSON
 				.get("output_attribute_path").get("attribute_path").get("attributes").get(0);
@@ -261,7 +261,7 @@ public class TransformationFlowTest extends GuicedTest {
 
 		objectMapper.writeValueAsString(actualNodes);
 
-		final String actualDataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(updatedInputDataModel, false);
+		final String actualDataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(updatedInputDataModel);
 
 		final ObjectNode firstExpectedElement = (ObjectNode) expectedJSONArray.get(0);
 		final String firstExpectedKey = firstExpectedElement.fieldNames().next();

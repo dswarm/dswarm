@@ -52,8 +52,8 @@ public class CSVSourceResourceTriplesFlow extends AbstractCSVResourceFlow<Observ
 		super(configuration);
 	}
 
-	protected CSVSourceResourceTriplesFlow(final DataModel dataModel, final boolean utiliseExistingSchema) throws DMPConverterException {
-		super(dataModel, utiliseExistingSchema);
+	protected CSVSourceResourceTriplesFlow(final DataModel dataModel) throws DMPConverterException {
+		super(dataModel);
 	}
 
 	@Override

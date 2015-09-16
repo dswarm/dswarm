@@ -44,8 +44,8 @@ public class MonitoringCSVSourceResourceTriplesFlow extends CSVSourceResourceTri
 	@Inject
 	private MonitoringCSVSourceResourceTriplesFlow(
 			final TimerBasedFactory timerBasedFactory,
-			@Assisted final DataModel dataModel, @Assisted boolean utiliseExistingSchema) throws DMPConverterException {
-		super(dataModel, utiliseExistingSchema);
+			@Assisted final DataModel dataModel) throws DMPConverterException {
+		super(dataModel);
 		this.timerBasedFactory = timerBasedFactory;
 	}
 

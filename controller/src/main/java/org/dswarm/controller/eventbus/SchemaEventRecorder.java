@@ -149,7 +149,10 @@ public class SchemaEventRecorder {
 			throw new DMPConverterException("could not transform CSV into triples due to missing schema");
 		}
 
-		final String dataResourceBaseSchemaURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel, false);
+		// set schema at data model so that it can be utilised for data model schema base URI determination
+		dataModel.setSchema(schema);
+
+		final String dataResourceBaseSchemaURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
 
 		final Clasz clasz;
 
@@ -220,8 +223,6 @@ public class SchemaEventRecorder {
 
 		schema.setRecordClass(clasz);
 		schema.setName(dataModel.getDataResource().getName() + " schema");
-
-		dataModel.setSchema(schema);
 
 		if (dataModel.getName() == null) {
 

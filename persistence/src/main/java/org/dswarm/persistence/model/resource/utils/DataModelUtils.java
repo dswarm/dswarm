@@ -83,14 +83,16 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 		return dataModelsToInbuiltSchemata;
 	}
 
-	public static String determineDataModelSchemaBaseURI(final DataModel dataModel, final boolean utiliseExistingSchema) {
+	public static String determineDataModelSchemaBaseURI(final DataModel dataModel) {
 
-		if (utiliseExistingSchema && dataModel != null && dataModel.getSchema() != null && dataModel.getSchema().getUuid() != null) {
+		if (dataModel != null && dataModel.getSchema() != null && dataModel.getSchema().getUuid() != null) {
 
 			final String schemaUuid = dataModel.getSchema().getUuid();
 
 			return BASE_URI + SCHEMAS_DIRECTIVE + SLASH + schemaUuid + HASH;
 		} else {
+
+			// for legacy purpose (?)
 
 			final String dataModelBaseURI = DataModelUtils.determineDataModelBaseURI(dataModel);
 
