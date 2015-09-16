@@ -386,14 +386,17 @@ public class DataModelUtil {
 
 		final String storageType = jsStorageType.asText();
 
-		try {
+		if (!utiliseExistingInputSchema) {
 
-			final SchemaEvent.SchemaType type = SchemaEvent.SchemaType.fromString(storageType);
-			final SchemaEvent schemaEvent = new SchemaEvent(dataModel, type, null, false);
-			schemaEventRecorderProvider.get().convertSchema(schemaEvent);
-		} catch (final IllegalArgumentException e) {
+			try {
 
-			DataModelUtil.LOG.warn("could not determine schema type", e);
+				final SchemaEvent.SchemaType type = SchemaEvent.SchemaType.fromString(storageType);
+				final SchemaEvent schemaEvent = new SchemaEvent(dataModel, type, null, false);
+				schemaEventRecorderProvider.get().convertSchema(schemaEvent);
+			} catch (final IllegalArgumentException e) {
+
+				DataModelUtil.LOG.warn("could not determine schema type", e);
+			}
 		}
 
 		final Observable<Model> modelObservable;

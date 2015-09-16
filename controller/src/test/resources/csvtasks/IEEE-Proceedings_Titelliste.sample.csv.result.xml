@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ns1:RecordTypes xmlns:ns1="http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/">
+	<ns1:RecordType>
+		<ns1:access_facet><![CDATA[Electronic Resources]]></ns1:access_facet>
+		<ns1:mega_collection><![CDATA[IEEE Xplore Library]]></ns1:mega_collection>
+		<ns1:format_de14><![CDATA[Article, E-Article]]></ns1:format_de14>
+		<ns1:title_short><![CDATA[100 Years of Radio., Proceedings of the 1995 International Conference on]]></ns1:title_short>
+		<ns1:source_id><![CDATA[ieee_proceedings]]></ns1:source_id>
+		<ns1:institution><![CDATA[DE-14]]></ns1:institution>
+		<ns1:format_de15><![CDATA[Book, E-Book]]></ns1:format_de15>
+		<ns1:record_id><![CDATA[3533]]></ns1:record_id>
+		<ns1:publishDate><![CDATA[1995]]></ns1:publishDate>
+		<ns1:issn><![CDATA[0537-9989]]></ns1:issn>
+		<ns1:isbn><![CDATA[0-85296-649-0]]></ns1:isbn>
+		<ns1:topic><![CDATA[Communication, Networking & Broadcasting]]></ns1:topic>
+		<ns1:url><![CDATA[http://ieeexplore.ieee.org/servlet/opac?punumber=3533]]></ns1:url>
+	</ns1:RecordType>
+	<ns1:RecordType>
+		<ns1:access_facet><![CDATA[Electronic Resources]]></ns1:access_facet>
+		<ns1:mega_collection><![CDATA[IEEE Xplore Library]]></ns1:mega_collection>
+		<ns1:format_de14><![CDATA[Article, E-Article]]></ns1:format_de14>
+		<ns1:title_short><![CDATA[10th Annual Symposium on Frequency Control]]></ns1:title_short>
+		<ns1:source_id><![CDATA[ieee_proceedings]]></ns1:source_id>
+		<ns1:institution><![CDATA[DE-14]]></ns1:institution>
+		<ns1:format_de15><![CDATA[Book, E-Book]]></ns1:format_de15>
+		<ns1:record_id><![CDATA[10292]]></ns1:record_id>
+		<ns1:publishDate><![CDATA[1956]]></ns1:publishDate>
+		<ns1:topic>
+			<![CDATA[Components, Circuits, Devices & Systems, Engineered Materials, Dielectrics & Plasmas, Fields, Waves & Electromagnetics, Signal Processing & Analysis]]></ns1:topic>
+		<ns1:url><![CDATA[http://ieeexplore.ieee.org/servlet/opac?punumber=10292]]></ns1:url>
+	</ns1:RecordType>
+	<ns1:RecordType>
+		<ns1:access_facet><![CDATA[Electronic Resources]]></ns1:access_facet>
+		<ns1:mega_collection><![CDATA[IEEE Xplore Library]]></ns1:mega_collection>
+		<ns1:format_de14><![CDATA[Article, E-Article]]></ns1:format_de14>
+		<ns1:title_short><![CDATA[11th Annual Symposium on Frequency Control]]></ns1:title_short>
+		<ns1:source_id><![CDATA[ieee_proceedings]]></ns1:source_id>
+		<ns1:institution><![CDATA[DE-14]]></ns1:institution>
+		<ns1:format_de15><![CDATA[Book, E-Book]]></ns1:format_de15>
+		<ns1:record_id><![CDATA[10293]]></ns1:record_id>
+		<ns1:publishDate><![CDATA[1957]]></ns1:publishDate>
+		<ns1:topic>
+			<![CDATA[Components, Circuits, Devices & Systems, Engineered Materials, Dielectrics & Plasmas, Fields, Waves & Electromagnetics, Signal Processing & Analysis]]></ns1:topic>
+		<ns1:url><![CDATA[http://ieeexplore.ieee.org/servlet/opac?punumber=10293]]></ns1:url>
+	</ns1:RecordType>
+	<ns1:RecordType>
+		<ns1:access_facet><![CDATA[Electronic Resources]]></ns1:access_facet>
+		<ns1:mega_collection><![CDATA[IEEE Xplore Library]]></ns1:mega_collection>
+		<ns1:format_de14><![CDATA[Article, E-Article]]></ns1:format_de14>
+		<ns1:title_short><![CDATA[12th Annual Symposium on Frequency Control]]></ns1:title_short>
+		<ns1:source_id><![CDATA[ieee_proceedings]]></ns1:source_id>
+		<ns1:institution><![CDATA[DE-14]]></ns1:institution>
+		<ns1:format_de15><![CDATA[Book, E-Book]]></ns1:format_de15>
+		<ns1:record_id><![CDATA[10294]]></ns1:record_id>
+		<ns1:publishDate><![CDATA[1958]]></ns1:publishDate>
+		<ns1:topic>
+			<![CDATA[Components, Circuits, Devices & Systems, Engineered Materials, Dielectrics & Plasmas, Fields, Waves & Electromagnetics, Signal Processing & Analysis]]></ns1:topic>
+		<ns1:url><![CDATA[http://ieeexplore.ieee.org/servlet/opac?punumber=10294]]></ns1:url>
+	</ns1:RecordType>
+	<ns1:RecordType>
+		<ns1:access_facet><![CDATA[Electronic Resources]]></ns1:access_facet>
+		<ns1:mega_collection><![CDATA[IEEE Xplore Library]]></ns1:mega_collection>
+		<ns1:format_de14><![CDATA[Article, E-Article]]></ns1:format_de14>
+		<ns1:title_short><![CDATA[13th Annual Symposium on Frequency Control]]></ns1:title_short>
+		<ns1:source_id><![CDATA[ieee_proceedings]]></ns1:source_id>
+		<ns1:institution><![CDATA[DE-14]]></ns1:institution>
+		<ns1:format_de15><![CDATA[Book, E-Book]]></ns1:format_de15>
+		<ns1:record_id><![CDATA[10295]]></ns1:record_id>
+		<ns1:publishDate><![CDATA[1959]]></ns1:publishDate>
+		<ns1:topic>
+			<![CDATA[Components, Circuits, Devices & Systems, Engineered Materials, Dielectrics & Plasmas, Fields, Waves & Electromagnetics, Signal Processing & Analysis]]></ns1:topic>
+		<ns1:url><![CDATA[http://ieeexplore.ieee.org/servlet/opac?punumber=10295]]></ns1:url>
+	</ns1:RecordType>
+	<ns1:RecordType>
+		<ns1:access_facet><![CDATA[Electronic Resources]]></ns1:access_facet>
+		<ns1:mega_collection><![CDATA[IEEE Xplore Library]]></ns1:mega_collection>
+		<ns1:format_de14><![CDATA[Article, E-Article]]></ns1:format_de14>
+		<ns1:title_short><![CDATA[14th Annual Symposium on Frequency Control. 1960]]></ns1:title_short>
+		<ns1:source_id><![CDATA[ieee_proceedings]]></ns1:source_id>
+		<ns1:institution><![CDATA[DE-14]]></ns1:institution>
+		<ns1:format_de15><![CDATA[Book, E-Book]]></ns1:format_de15>
+		<ns1:record_id><![CDATA[10296]]></ns1:record_id>
+		<ns1:publishDate><![CDATA[1960]]></ns1:publishDate>
+		<ns1:topic>
+			<![CDATA[Components, Circuits, Devices & Systems, Engineered Materials, Dielectrics & Plasmas, Fields, Waves & Electromagnetics, Signal Processing & Analysis]]></ns1:topic>
+		<ns1:url><![CDATA[http://ieeexplore.ieee.org/servlet/opac?punumber=10296]]></ns1:url>
+	</ns1:RecordType>
+	<ns1:RecordType>
+		<ns1:access_facet><![CDATA[Electronic Resources]]></ns1:access_facet>
+		<ns1:mega_collection><![CDATA[IEEE Xplore Library]]></ns1:mega_collection>
+		<ns1:format_de14><![CDATA[Article, E-Article]]></ns1:format_de14>
+		<ns1:title_short><![CDATA[15th Annual Symposium on Frequency Control. 1961]]></ns1:title_short>
+		<ns1:source_id><![CDATA[ieee_proceedings]]></ns1:source_id>
+		<ns1:institution><![CDATA[DE-14]]></ns1:institution>
+		<ns1:format_de15><![CDATA[Book, E-Book]]></ns1:format_de15>
+		<ns1:record_id><![CDATA[10297]]></ns1:record_id>
+		<ns1:publishDate><![CDATA[1961]]></ns1:publishDate>
+		<ns1:topic>
+			<![CDATA[Components, Circuits, Devices & Systems, Engineered Materials, Dielectrics & Plasmas, Fields, Waves & Electromagnetics, Signal Processing & Analysis]]></ns1:topic>
+		<ns1:url><![CDATA[http://ieeexplore.ieee.org/servlet/opac?punumber=10297]]></ns1:url>
+	</ns1:RecordType>
+	<ns1:RecordType>
+		<ns1:access_facet><![CDATA[Electronic Resources]]></ns1:access_facet>
+		<ns1:mega_collection><![CDATA[IEEE Xplore Library]]></ns1:mega_collection>
+		<ns1:format_de14><![CDATA[Article, E-Article]]></ns1:format_de14>
+		<ns1:title_short><![CDATA[16th Annual Symposium on Frequency Control. 1962]]></ns1:title_short>
+		<ns1:source_id><![CDATA[ieee_proceedings]]></ns1:source_id>
+		<ns1:institution><![CDATA[DE-14]]></ns1:institution>
+		<ns1:format_de15><![CDATA[Book, E-Book]]></ns1:format_de15>
+		<ns1:record_id><![CDATA[10298]]></ns1:record_id>
+		<ns1:publishDate><![CDATA[1962]]></ns1:publishDate>
+		<ns1:topic>
+			<![CDATA[Components, Circuits, Devices & Systems, Engineered Materials, Dielectrics & Plasmas, Fields, Waves & Electromagnetics, Signal Processing & Analysis]]></ns1:topic>
+		<ns1:url><![CDATA[http://ieeexplore.ieee.org/servlet/opac?punumber=10298]]></ns1:url>
+	</ns1:RecordType>
+	<ns1:RecordType>
+		<ns1:access_facet><![CDATA[Electronic Resources]]></ns1:access_facet>
+		<ns1:mega_collection><![CDATA[IEEE Xplore Library]]></ns1:mega_collection>
+		<ns1:format_de14><![CDATA[Article, E-Article]]></ns1:format_de14>
+		<ns1:title_short><![CDATA[17th Annual Symposium on Frequency Control. 1963]]></ns1:title_short>
+		<ns1:source_id><![CDATA[ieee_proceedings]]></ns1:source_id>
+		<ns1:institution><![CDATA[DE-14]]></ns1:institution>
+		<ns1:format_de15><![CDATA[Book, E-Book]]></ns1:format_de15>
+		<ns1:record_id><![CDATA[10332]]></ns1:record_id>
+		<ns1:publishDate><![CDATA[1963]]></ns1:publishDate>
+		<ns1:topic>
+			<![CDATA[Components, Circuits, Devices & Systems, Engineered Materials, Dielectrics & Plasmas, Fields, Waves & Electromagnetics, Signal Processing & Analysis]]></ns1:topic>
+		<ns1:url><![CDATA[http://ieeexplore.ieee.org/servlet/opac?punumber=10332]]></ns1:url>
+	</ns1:RecordType>
+</ns1:RecordTypes>

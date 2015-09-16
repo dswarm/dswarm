@@ -47,6 +47,7 @@ import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.ResourceType;
+import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
@@ -66,7 +67,7 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 	protected final String  inputDataResourceFileName;
 	protected final String  testPostfix;
 	protected final boolean prepareInputDataResource;
-	private final boolean utiliseExistingInputSchema;
+	private final   boolean utiliseExistingInputSchema;
 
 	public AbstractTasksResourceTest(final String taskJSONFileNameArg, final String inputDataResourceFileNameArg, final String testPostfixArg,
 			final boolean prepareInputDataResourceArg, final boolean utiliseExistingInputSchemaArg) {
@@ -116,7 +117,7 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 		}
 
 		final PrepareConfiguration prepareConfiguration = createPrepareConfiguration(prepareResource).invoke();
-		DataModel inputDataModel = prepareDataModel(prepareResource, prepareConfiguration);
+		DataModel inputDataModel = prepareDataModel(prepareResource, prepareConfiguration, utiliseExistingInputSchema);
 
 		final ObjectNode requestJSON = prepareTask(inputDataModel);
 
@@ -148,7 +149,8 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 		return requestJSON;
 	}
 
-	private DataModel prepareDataModel(final PrepareResource prepareResource, final PrepareConfiguration prepareConfiguration) throws Exception {
+	private DataModel prepareDataModel(final PrepareResource prepareResource, final PrepareConfiguration prepareConfiguration,
+			final boolean utiliseExistingInputSchema) throws Exception {
 
 		final Resource resource = prepareResource.getResource();
 		final Resource res1 = prepareResource.getRes1();
@@ -157,13 +159,25 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 
 		final String dataModel1Uuid = "DataModel-2e0c9850-6def-4942-abed-b513d3f56eba";
 
-		final DataModel data1 = new DataModel(dataModel1Uuid);
-		data1.setName("'" + res1.getName() + "' + '" + conf1.getName() + "' data model");
-		data1.setDescription("data model of resource '" + res1.getName() + "' and configuration '" + conf1.getName() + "'");
-		data1.setDataResource(resource);
-		data1.setConfiguration(configuration);
+		final DataModel dataModel1 = new DataModel(dataModel1Uuid);
+		dataModel1.setName("'" + res1.getName() + "' + '" + conf1.getName() + "' data model");
+		dataModel1.setDescription("data model of resource '" + res1.getName() + "' and configuration '" + conf1.getName() + "'");
+		dataModel1.setDataResource(resource);
+		dataModel1.setConfiguration(configuration);
 
-		final String inputDataModelJSONString = objectMapper.writeValueAsString(data1);
+		if (utiliseExistingInputSchema) {
+
+			final Task task = objectMapper.readValue(taskJSONString, Task.class);
+
+			if (task != null && task.getInputDataModel() != null && task.getInputDataModel().getSchema() != null) {
+
+				final Schema inputSchema = task.getInputDataModel().getSchema();
+
+				dataModel1.setSchema(inputSchema);
+			}
+		}
+
+		final String inputDataModelJSONString = objectMapper.writeValueAsString(dataModel1);
 
 		final WebTarget resourceTarget = dataModelsResourceTestUtils.getResourceTarget();
 		final WebTarget webTarget = resourceTarget.queryParam(DataModelsResource.DO_INGEST_QUERY_PARAM_IDENTIFIER, Boolean.FALSE);
