@@ -218,7 +218,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "project was successfully persisted"),
 			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
 	@POST
-	@Path("createprojectwithhelpofexistingentities")
+	@Path("/createprojectwithhelpofexistingentities")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createProjectWithHelpOfExistingEntities(
@@ -308,17 +308,17 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 
 		final Set<Mapping> referenceMappings = referenceProject.getMappings();
 
-		if(referenceMappings != null) {
+		if (referenceMappings != null) {
 
 			final Set<Mapping> newMappings = new LinkedHashSet<>();
 
-			for(final Mapping referenceMapping : referenceMappings) {
+			for (final Mapping referenceMapping : referenceMappings) {
 
 				final String newMappingId = UUIDService.getUUID(Mapping.class.getSimpleName());
 
 				final Mapping newMapping = new Mapping(newMappingId);
 
-				newMapping.setName("copy of '" + referenceMapping.getName() + "'");
+				newMapping.setName(referenceMapping.getName());
 				newMapping.setInputAttributePaths(referenceMapping.getInputAttributePaths());
 				newMapping.setOutputAttributePath(referenceMapping.getOutputAttributePath());
 				newMapping.setTransformation(referenceMapping.getTransformation());
