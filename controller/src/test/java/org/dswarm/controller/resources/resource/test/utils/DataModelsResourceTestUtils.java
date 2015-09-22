@@ -51,9 +51,9 @@ public class DataModelsResourceTestUtils extends
 		return response1.readEntity(String.class);
 	}
 
-	public DataModel createObject(final String objectJSONString, final DataModel expectedObject, final boolean doIngest) throws Exception {
+	public DataModel createObject(final String objectJSONString, final DataModel expectedObject, final boolean doIngest, final boolean enhanceDataResource) throws Exception {
 
-		final DataModel actualObject = createObjectWithoutComparison(objectJSONString, doIngest);
+		final DataModel actualObject = createObjectWithoutComparison(objectJSONString, doIngest, enhanceDataResource);
 		compareObjects(expectedObject, actualObject);
 
 		return actualObject;
@@ -67,14 +67,23 @@ public class DataModelsResourceTestUtils extends
 	 * @return the actual object as created in db, never null.
 	 * @throws Exception
 	 */
-	public DataModel createObjectWithoutComparison(final String objectJSONString, final boolean doIngest) throws Exception {
+	public DataModel createObjectWithoutComparison(final String objectJSONString, final boolean doIngest, final boolean enhanceDataResource) throws Exception {
 
 		final Response response;
 
-		if (!doIngest) {
+		if (!doIngest || enhanceDataResource) {
 
 			final Map<String, String> queryParams = new LinkedHashMap<>();
-			queryParams.put(DataModelsResource.DO_INGEST_QUERY_PARAM_IDENTIFIER, Boolean.FALSE.toString());
+
+			if(!doIngest) {
+
+				queryParams.put(DataModelsResource.DO_INGEST_QUERY_PARAM_IDENTIFIER, Boolean.FALSE.toString());
+			}
+
+			if(enhanceDataResource) {
+
+				queryParams.put(DataModelsResource.ENHANCE_DATA_RESOURCE_QUERY_PARAM_IDENTIFIER, Boolean.TRUE.toString());
+			}
 
 			response = executeCreateObject(objectJSONString, Optional.of(queryParams));
 		} else {

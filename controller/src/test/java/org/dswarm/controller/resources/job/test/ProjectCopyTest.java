@@ -197,10 +197,10 @@ public class ProjectCopyTest extends
 		final String newInputDataModelJSONString = objectMapper.writeValueAsString(newInputDataModel);
 
 		final boolean doIngest = true;
-
+		final boolean enhanceDataResource = false;
 		// FINISHED CREATE NEW INPUT DATA MODEL
 
-		return dataModelsResourceTestUtils.createObjectWithoutComparison(newInputDataModelJSONString, doIngest);
+		return dataModelsResourceTestUtils.createObjectWithoutComparison(newInputDataModelJSONString, doIngest, enhanceDataResource);
 	}
 
 	private Resource createNewDataResource(final DataModel referenceInputDataModel) throws Exception {

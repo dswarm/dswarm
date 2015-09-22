@@ -17,7 +17,6 @@ package org.dswarm.controller.resources.resource;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -85,7 +84,6 @@ import org.dswarm.controller.resources.resource.utils.ExportUtils;
 import org.dswarm.controller.utils.DataModelUtil;
 import org.dswarm.controller.utils.JsonUtils;
 import org.dswarm.init.DMPException;
-import org.dswarm.init.util.DMPUtil;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.dto.resource.MediumDataModelDTO;
 import org.dswarm.persistence.model.proxy.RetrievalType;

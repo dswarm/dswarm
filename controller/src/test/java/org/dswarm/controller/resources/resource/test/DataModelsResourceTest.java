@@ -200,9 +200,21 @@ public class DataModelsResourceTest extends
 
 		DataModelsResourceTest.LOG.debug("start get MABXML data test");
 
-		testMABXMLDataInternal();
+		final boolean enhanceDataResource = false;
+		testMABXMLDataInternal(enhanceDataResource);
 
 		DataModelsResourceTest.LOG.debug("end get MABXML data test");
+	}
+
+	@Test
+	public void testMABXMLData2() throws Exception {
+
+		DataModelsResourceTest.LOG.debug("start get MABXML data test 2");
+
+		final boolean enhanceDataResource = true;
+		testMABXMLDataInternal(enhanceDataResource);
+
+		DataModelsResourceTest.LOG.debug("end get MABXML data test 2");
 	}
 
 	@Test
@@ -210,9 +222,10 @@ public class DataModelsResourceTest extends
 
 		final String dataModel1Uuid = UUIDService.getUUID(DataModel.class.getSimpleName());
 		final String schemaUuid = UUIDService.getUUID(Schema.class.getSimpleName());
+		final boolean enhanceDataResource = false;
 
 		testXMLExport("PNX", "test-pnx-resource.json", "test-pnx2-controller.xml", "pnx-configuration.json", "pnx", "test-pnx2-expected.xml",
-				dataModel1Uuid, schemaUuid);
+				dataModel1Uuid, schemaUuid, enhanceDataResource);
 	}
 
 	@Test
@@ -220,15 +233,16 @@ public class DataModelsResourceTest extends
 
 		final String dataModel1Uuid = "DataModel-f652c591-78b9-476f-b8c6-2ea029f343d5";
 		final String schemaUuid = "Schema-137ae9cb-a3a8-4f25-8233-08388801903e";
+		final boolean enhanceDataResource = false;
 
 		testXMLExport("CSV XML", "test-csv-resource.json", "test_csv-controller.csv", "test-csv-configuration.json", "csv", "test-csv-expected.xml",
-				dataModel1Uuid, schemaUuid);
+				dataModel1Uuid, schemaUuid, enhanceDataResource);
 	}
 
 	@Test
 	public void testDeprecateDataModel() throws Exception {
 
-		final String dataModelUuid = testMABXMLDataInternal();
+		final String dataModelUuid = testMABXMLDataInternal(false);
 
 		final WebTarget target = target(dataModelUuid, "deprecate");
 
@@ -265,7 +279,7 @@ public class DataModelsResourceTest extends
 	@Test
 	public void testDeprecateRecords() throws Exception {
 
-		final String dataModelUuid = testMABXMLDataInternal();
+		final String dataModelUuid = testMABXMLDataInternal(false);
 
 		final WebTarget target = target(dataModelUuid, "deprecate", "records");
 
@@ -734,7 +748,7 @@ public class DataModelsResourceTest extends
 	}
 
 	private void testXMLExport(final String type, final String resourceJSONFile, final String dataResourceFile, final String configurationJSONFile,
-			final String dataModelType, final String expectedXMLFile, final String dataModelUuid, final String schemaUuid) throws Exception {
+			final String dataModelType, final String expectedXMLFile, final String dataModelUuid, final String schemaUuid, final boolean enhanceDataResource) throws Exception {
 
 		DataModelsResourceTest.LOG.debug("start export {} export test", type);
 
@@ -766,7 +780,8 @@ public class DataModelsResourceTest extends
 		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
 
 		// create (persist) data model (incl. content)
-		final DataModel dataModel = pojoClassResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
+		final boolean doIngest = true;
+		final DataModel dataModel = pojoClassResourceTestUtils.createObjectWithoutComparison(dataModelJSONString, doIngest, enhanceDataResource);
 
 		final Response response = target(String.valueOf(dataModel.getUuid()), "export").queryParam("format", MediaType.APPLICATION_XML).request()
 				.accept(MediaType.APPLICATION_OCTET_STREAM_TYPE).get(Response.class);
@@ -809,7 +824,9 @@ public class DataModelsResourceTest extends
 		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel);
 
 		// create (persist) data model
-		pojoClassResourceTestUtils.createObjectWithoutComparison(dataModelJSONString, false);
+		final boolean doIngest = false;
+		final boolean enhanceDataResource = false;
+		pojoClassResourceTestUtils.createObjectWithoutComparison(dataModelJSONString, doIngest, enhanceDataResource);
 
 		final Response response = target(dataModelUuid)
 				.queryParam("format", POJOFormat.SHORT.toString())
@@ -881,10 +898,12 @@ public class DataModelsResourceTest extends
 	@Override
 	protected DataModel createObjectInternal() throws Exception {
 
-		return pojoClassResourceTestUtils.createObject(objectJSONString, expectedObject, false);
+		final boolean doIngest = false;
+		final boolean enhanceDataResource = false;
+		return pojoClassResourceTestUtils.createObject(objectJSONString, expectedObject, doIngest, enhanceDataResource);
 	}
 
-	private String testMABXMLDataInternal() throws Exception {
+	private String testMABXMLDataInternal(final boolean enhanceDataResource) throws Exception {
 
 		// prepare resource
 		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString("test-mabxml-resource.json");
@@ -911,7 +930,8 @@ public class DataModelsResourceTest extends
 
 		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
 
-		final DataModel dataModel = pojoClassResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
+		final boolean doIngest = true;
+		final DataModel dataModel = pojoClassResourceTestUtils.createObjectWithoutComparison(dataModelJSONString, doIngest, enhanceDataResource);
 
 		final int atMost = 1;
 
