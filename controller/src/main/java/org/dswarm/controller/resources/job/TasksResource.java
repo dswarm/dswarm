@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
@@ -52,7 +52,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.base.Optional;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -70,6 +69,7 @@ import rx.schedulers.Schedulers;
 import org.dswarm.common.types.Tuple;
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.utils.DataModelUtil;
+import org.dswarm.controller.utils.JsonUtils;
 import org.dswarm.controller.utils.ResourceUtils;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.export.XMLExporter;
@@ -328,7 +328,7 @@ public class TasksResource {
 
 		final Observable<Tuple<String, JsonNode>> inputData;
 
-		final boolean doIngestOnTheFly = getBooleanValue(TasksResource.DO_INGEST_ON_THE_FLY_IDENTIFIER, requestJSON, false);
+		final boolean doIngestOnTheFly = JsonUtils.getBooleanValue(TasksResource.DO_INGEST_ON_THE_FLY_IDENTIFIER, requestJSON, false);
 
 		if (doIngestOnTheFly) {
 
@@ -336,12 +336,13 @@ public class TasksResource {
 
 			DataModelUtil.checkDataResource(inputDataModel);
 
-			final boolean utiliseExistingInputSchema = getBooleanValue(TasksResource.UTILISE_EXISTING_INPUT_SCHEMA_IDENTIFIER, requestJSON, false);
+			final boolean utiliseExistingInputSchema = JsonUtils.getBooleanValue(TasksResource.UTILISE_EXISTING_INPUT_SCHEMA_IDENTIFIER, requestJSON,
+					false);
 
 			inputData = dataModelUtil.doIngest(inputDataModel, utiliseExistingInputSchema, INGEST_SCHEDULER);
 		} else {
 
-			final Optional<Set<String>> optionalSelectedRecords = getStringSetValue(TasksResource.SELECTED_RECORDS_IDENTIFIER, requestJSON);
+			final Optional<Set<String>> optionalSelectedRecords = JsonUtils.getStringSetValue(TasksResource.SELECTED_RECORDS_IDENTIFIER, requestJSON);
 
 			if (optionalSelectedRecords.isPresent()) {
 
@@ -350,19 +351,19 @@ public class TasksResource {
 				inputData = dataModelUtil.getRecordsData(optionalSelectedRecords.get(), inputDataModel.getUuid());
 			} else {
 
-				final Optional<Integer> optionalAtMost = getIntValue(TasksResource.AT_MOST_IDENTIFIER, requestJSON);
+				final Optional<Integer> optionalAtMost = JsonUtils.getIntValue(TasksResource.AT_MOST_IDENTIFIER, requestJSON);
 
 				inputData = dataModelUtil.getData(inputDataModel.getUuid(), optionalAtMost);
 			}
 		}
 
-		final boolean writeResultToDatahub = getBooleanValue(TasksResource.PERSIST_IDENTIFIER, requestJSON, false);
+		final boolean writeResultToDatahub = JsonUtils.getBooleanValue(TasksResource.PERSIST_IDENTIFIER, requestJSON, false);
 
-		final boolean doNotReturnJsonToCaller = getBooleanValue(TasksResource.RETURN_IDENTIFIER, requestJSON, false);
+		final boolean doNotReturnJsonToCaller = JsonUtils.getBooleanValue(TasksResource.RETURN_IDENTIFIER, requestJSON, false);
 
-		final boolean doVersioningOnResult = getBooleanValue(TasksResource.DO_VERSIONING_ON_RESULT_IDENTIFIER, requestJSON, true);
+		final boolean doVersioningOnResult = JsonUtils.getBooleanValue(TasksResource.DO_VERSIONING_ON_RESULT_IDENTIFIER, requestJSON, true);
 
-		final boolean doExportOnTheFly = getBooleanValue(TasksResource.DO_EXPORT_ON_THE_FLY_IDENTIFIER, requestJSON, false);
+		final boolean doExportOnTheFly = JsonUtils.getBooleanValue(TasksResource.DO_EXPORT_ON_THE_FLY_IDENTIFIER, requestJSON, false);
 
 		final boolean doNotReturnJsonToCaller2 = !doExportOnTheFly && doNotReturnJsonToCaller;
 
@@ -432,7 +433,7 @@ public class TasksResource {
 						}
 
 						// record tag
-						final Optional<Configuration> optionalConfiguration = Optional.fromNullable(finalOutputDataModel.getConfiguration());
+						final Optional<Configuration> optionalConfiguration = Optional.ofNullable(finalOutputDataModel.getConfiguration());
 						final Optional<String> optionalRecordTag = DataModelUtil.determineRecordTag(optionalConfiguration);
 						final java.util.Optional<String> java8OptionalRecordTag = guavaOptionalToJava8Optional(optionalRecordTag);
 
@@ -713,66 +714,6 @@ public class TasksResource {
 		recordNode.set(DMPPersistenceUtil.RECORD_DATA, recordContentNode);
 
 		return recordNode;
-	}
-
-	private Optional<Integer> getIntValue(final String key, final JsonNode json) {
-
-		final JsonNode node = json.get(key);
-		final Optional<Integer> optionalValue;
-
-		if (node != null) {
-
-			optionalValue = Optional.fromNullable(node.asInt());
-		} else {
-
-			optionalValue = Optional.absent();
-		}
-
-		return optionalValue;
-	}
-
-	private boolean getBooleanValue(final String key, final JsonNode json, final boolean defaultValue) {
-
-		final JsonNode node = json.get(key);
-
-		if (node != null) {
-
-			final boolean value = node.asBoolean();
-
-			LOG.debug("{} = {}", key, value);
-
-			return value;
-		} else {
-
-			LOG.debug("{} = {} (default value)", key, defaultValue);
-
-			return defaultValue;
-		}
-	}
-
-	private Optional<Set<String>> getStringSetValue(final String key, final JsonNode json) {
-
-		final JsonNode node = json.get(key);
-		final Optional<Set<String>> optionalValue;
-
-		if (node != null) {
-
-			final Set<String> set = new LinkedHashSet<>();
-
-			for (final JsonNode entryNode : node) {
-
-				final String entry = entryNode.asText();
-
-				set.add(entry);
-			}
-
-			optionalValue = Optional.of(set);
-		} else {
-
-			optionalValue = Optional.absent();
-		}
-
-		return optionalValue;
 	}
 
 	private java.util.Optional<String> guavaOptionalToJava8Optional(final Optional<String> optionalString) {

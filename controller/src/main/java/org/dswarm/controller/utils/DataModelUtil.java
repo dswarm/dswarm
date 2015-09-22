@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.ws.rs.core.Response;
@@ -27,7 +28,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -105,7 +105,8 @@ public class DataModelUtil {
 	 * @return the data of the given data model
 	 */
 	public Observable<Tuple<String, JsonNode>> getData(final String dataModelUuid) {
-		return getData(dataModelUuid, Optional.<Integer>absent());
+
+		return getData(dataModelUuid, Optional.<Integer>empty());
 	}
 
 	/**
@@ -243,13 +244,13 @@ public class DataModelUtil {
 
 			DataModelUtil.LOG.error("something went wrong while schema retrieval", e);
 
-			return Optional.absent();
+			return Optional.empty();
 		}
 
 		if (!schemaOptional.isPresent()) {
 
 			DataModelUtil.LOG.debug("couldn't find schema");
-			return Optional.absent();
+			return Optional.empty();
 		}
 
 		final String schemaJSONString;
@@ -260,7 +261,7 @@ public class DataModelUtil {
 
 			DataModelUtil.LOG.error("something went wrong while schema serialization", e);
 
-			return Optional.absent();
+			return Optional.empty();
 		}
 
 		final ObjectNode node;
@@ -270,7 +271,7 @@ public class DataModelUtil {
 
 			DataModelUtil.LOG.error("something went wrong while schema deserialization", e);
 
-			return Optional.absent();
+			return Optional.empty();
 		}
 
 		return Optional.of(node);
@@ -287,7 +288,7 @@ public class DataModelUtil {
 		final ResourceService resourceService = resourceServiceProvider.get();
 		final Resource resource = resourceService.getObject(resourceUuid);
 
-		return Optional.fromNullable(resource);
+		return Optional.ofNullable(resource);
 	}
 
 	/**
@@ -301,7 +302,7 @@ public class DataModelUtil {
 		final DataModelService dataModelService = dataModelServiceProvider.get();
 		final DataModel dataModel = dataModelService.getObject(dataModelUuid);
 
-		return Optional.fromNullable(dataModel);
+		return Optional.ofNullable(dataModel);
 	}
 
 	/**
@@ -317,12 +318,12 @@ public class DataModelUtil {
 		if (!resourceOptional.isPresent()) {
 
 			DataModelUtil.LOG.debug("couldn't find  resource '" + resourceUuid);
-			return Optional.absent();
+			return Optional.empty();
 		}
 
 		final Configuration configuration = resourceOptional.get().getConfiguration(configurationUuid);
 
-		return Optional.fromNullable(configuration);
+		return Optional.ofNullable(configuration);
 	}
 
 	/**
@@ -337,12 +338,12 @@ public class DataModelUtil {
 		if (!dataModelOptional.isPresent()) {
 
 			DataModelUtil.LOG.debug("couldn't find data model '" + dataModelUuid + "'");
-			return Optional.absent();
+			return Optional.empty();
 		}
 
 		final Configuration configuration = dataModelOptional.get().getConfiguration();
 
-		return Optional.fromNullable(configuration);
+		return Optional.ofNullable(configuration);
 	}
 
 	/**
@@ -464,13 +465,13 @@ public class DataModelUtil {
 					final Configuration configuration = optionalConfiguration.get();
 
 					final Optional<JsonNode> optionalStorageTypeNode = Optional
-							.fromNullable(configuration.getParameter(ConfigurationStatics.STORAGE_TYPE));
+							.ofNullable(configuration.getParameter(ConfigurationStatics.STORAGE_TYPE));
 
 					if (optionalStorageTypeNode.isPresent()) {
 
 						final JsonNode storageTypeNode = optionalStorageTypeNode.get();
 
-						final Optional<String> optionalStorageType = Optional.fromNullable(storageTypeNode.asText());
+						final Optional<String> optionalStorageType = Optional.ofNullable(storageTypeNode.asText());
 
 						if (optionalStorageType.isPresent()) {
 
@@ -492,19 +493,19 @@ public class DataModelUtil {
 									break;
 								default:
 
-									optionalOriginalDataModelType = Optional.absent();
+									optionalOriginalDataModelType = Optional.empty();
 							}
 						} else {
 
-							optionalOriginalDataModelType = Optional.absent();
+							optionalOriginalDataModelType = Optional.empty();
 						}
 					} else {
 
-						optionalOriginalDataModelType = Optional.absent();
+						optionalOriginalDataModelType = Optional.empty();
 					}
 				} else {
 
-					optionalOriginalDataModelType = Optional.absent();
+					optionalOriginalDataModelType = Optional.empty();
 				}
 		}
 
@@ -515,15 +516,15 @@ public class DataModelUtil {
 
 		if (!optionalConfiguration.isPresent()) {
 
-			return Optional.absent();
+			return Optional.empty();
 		}
 
-		final Optional<JsonNode> optionalRecordTagNode = Optional.fromNullable(
+		final Optional<JsonNode> optionalRecordTagNode = Optional.ofNullable(
 				optionalConfiguration.get().getParameter(ConfigurationStatics.RECORD_TAG));
 
 		if (!optionalRecordTagNode.isPresent()) {
 
-			return Optional.absent();
+			return Optional.empty();
 		}
 
 		return Optional.of(optionalRecordTagNode.get().asText());
@@ -531,14 +532,14 @@ public class DataModelUtil {
 
 	public static Optional<String> determineRecordClassURI(final DataModel dataModel) {
 
-		final Optional<Schema> optionalSchema = Optional.fromNullable(dataModel.getSchema());
+		final Optional<Schema> optionalSchema = Optional.ofNullable(dataModel.getSchema());
 
 		if (!optionalSchema.isPresent()) {
 
-			Optional.absent();
+			Optional.empty();
 		}
 
-		final Optional<Clasz> optionalRecordClass = Optional.fromNullable(optionalSchema.get().getRecordClass());
+		final Optional<Clasz> optionalRecordClass = Optional.ofNullable(optionalSchema.get().getRecordClass());
 
 		final String recordClassURI;
 

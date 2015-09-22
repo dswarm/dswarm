@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.ws.rs.core.Response;
 
@@ -27,7 +28,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
-import com.google.common.base.Optional;
 import com.google.common.collect.AbstractIterator;
 import com.google.inject.Provider;
 import org.junit.Assert;
@@ -179,9 +179,10 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		Assert.assertNotNull(response);
 
 		final Observable<Map<String, Model>> optionalModelMapObservable = gdmService
-				.getObjects(updatedInputDataModel.getUuid(), Optional.<Integer>absent())
+				.getObjects(updatedInputDataModel.getUuid(), Optional.<Integer>empty())
 				.toMap(Tuple::v1, Tuple::v2);
-		final Optional<Map<String, Model>> optionalModelMap = optionalModelMapObservable.map(Optional::of).toBlocking().firstOrDefault(Optional.absent());
+		final Optional<Map<String, Model>> optionalModelMap = optionalModelMapObservable.map(Optional::of).toBlocking()
+				.firstOrDefault(Optional.empty());
 
 		Assert.assertTrue("there is no map of entry models in the database", optionalModelMap.isPresent());
 

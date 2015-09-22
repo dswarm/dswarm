@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
@@ -34,7 +35,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.base.Optional;
 import com.google.common.io.Resources;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
@@ -211,7 +211,8 @@ public class DataModelsResourceTest extends
 		final String dataModel1Uuid = UUIDService.getUUID(DataModel.class.getSimpleName());
 		final String schemaUuid = UUIDService.getUUID(Schema.class.getSimpleName());
 
-		testXMLExport("PNX", "test-pnx-resource.json", "test-pnx2-controller.xml", "pnx-configuration.json", "pnx", "test-pnx2-expected.xml", dataModel1Uuid, schemaUuid);
+		testXMLExport("PNX", "test-pnx-resource.json", "test-pnx2-controller.xml", "pnx-configuration.json", "pnx", "test-pnx2-expected.xml",
+				dataModel1Uuid, schemaUuid);
 	}
 
 	@Test
@@ -220,7 +221,8 @@ public class DataModelsResourceTest extends
 		final String dataModel1Uuid = "DataModel-f652c591-78b9-476f-b8c6-2ea029f343d5";
 		final String schemaUuid = "Schema-137ae9cb-a3a8-4f25-8233-08388801903e";
 
-		testXMLExport("CSV XML", "test-csv-resource.json", "test_csv-controller.csv", "test-csv-configuration.json", "csv", "test-csv-expected.xml", dataModel1Uuid, schemaUuid);
+		testXMLExport("CSV XML", "test-csv-resource.json", "test_csv-controller.csv", "test-csv-configuration.json", "csv", "test-csv-expected.xml",
+				dataModel1Uuid, schemaUuid);
 	}
 
 	@Test
@@ -918,7 +920,7 @@ public class DataModelsResourceTest extends
 		final Observable<Map<String, Model>> dataObservable = service
 				.getObjects(dataModel.getUuid(), Optional.of(atMost))
 				.toMap(Tuple::v1, Tuple::v2);
-		final Optional<Map<String, Model>> data = dataObservable.map(Optional::of).toBlocking().firstOrDefault(Optional.absent());
+		final Optional<Map<String, Model>> data = dataObservable.map(Optional::of).toBlocking().firstOrDefault(Optional.empty());
 
 		Assert.assertTrue(data.isPresent());
 		Assert.assertFalse(data.get().isEmpty());

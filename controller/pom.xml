@@ -379,6 +379,11 @@
 			<artifactId>commons-csv</artifactId>
 			<version>${version.commons-csv}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.dswarm</groupId>
+			<artifactId>xmlenhancer</artifactId>
+			<version>${version.xmlenhancer}</version>
+		</dependency>
 	</dependencies>
 
 	<profiles>
