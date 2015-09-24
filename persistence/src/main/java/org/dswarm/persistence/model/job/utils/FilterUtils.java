@@ -23,4 +23,6 @@ import org.dswarm.persistence.model.utils.BasicDMPJPAObjectUtils;
  */
 public final class FilterUtils extends BasicDMPJPAObjectUtils<Filter> {
 
+	public static final  String FILTER_EXPRESSION_TYPE_IDENTIFIER = "type";
+	public static final String FILTER_EXPRESSION_EXPRESSION_IDENTIFIER = "expression";
 }
