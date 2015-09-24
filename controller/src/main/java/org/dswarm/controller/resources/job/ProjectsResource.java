@@ -61,9 +61,13 @@ import org.dswarm.controller.resources.POJOFormat;
 import org.dswarm.controller.utils.JsonUtils;
 import org.dswarm.init.DMPException;
 import org.dswarm.persistence.DMPPersistenceException;
+import org.dswarm.persistence.model.job.Component;
 import org.dswarm.persistence.model.job.Filter;
+import org.dswarm.persistence.model.job.Function;
+import org.dswarm.persistence.model.job.FunctionType;
 import org.dswarm.persistence.model.job.Mapping;
 import org.dswarm.persistence.model.job.Project;
+import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.job.proxy.ProxyProject;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.schema.AttributePath;
@@ -469,7 +473,11 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 			// TODO: do we need to check attribute paths by their string representation?
 			newMapping.setInputAttributePaths(referenceMapping.getInputAttributePaths());
 			newMapping.setOutputAttributePath(referenceMapping.getOutputAttributePath());
-			newMapping.setTransformation(referenceMapping.getTransformation());
+
+			final Component referenceMappingTransformationComponent = referenceMapping.getTransformation();
+			final Component newMappingTransformationComponent = createCopyOfComponent(referenceMappingTransformationComponent);
+
+			newMapping.setTransformation(newMappingTransformationComponent);
 
 			newMappings.add(newMapping);
 		}
@@ -662,7 +670,11 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 
 			newMapping.setInputAttributePaths(newInputMAPIs);
 			newMapping.setOutputAttributePath(referenceMapping.getOutputAttributePath());
-			newMapping.setTransformation(referenceMapping.getTransformation());
+
+			final Component referenceMappingTransformationComponent = referenceMapping.getTransformation();
+			final Component newMappingTransformationComponent = createCopyOfComponent(referenceMappingTransformationComponent);
+
+			newMapping.setTransformation(newMappingTransformationComponent);
 
 			newMappings.add(newMapping);
 		}
@@ -795,6 +807,84 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 
 			newInputMAPI.setFilter(newFilter);
 		}
+	}
+
+	private static Component createCopyOfComponent(final Component referenceComponent) {
+
+		final String newComponentUuid = UUIDService.getUUID(Component.class.getSimpleName());
+
+		final Component newComponent = new Component(newComponentUuid);
+		newComponent.setName(referenceComponent.getName());
+		newComponent.setDescription(referenceComponent.getDescription());
+		newComponent.setParameterMappings(referenceComponent.getParameterMappings());
+
+		final Function referenceFunction = referenceComponent.getFunction();
+
+		final Function newFunction;
+
+		final FunctionType referenceFunctionType = referenceFunction.getFunctionType();
+
+		switch (referenceFunctionType) {
+
+			case Transformation:
+
+				newFunction = createCopyOfTransformation((Transformation) referenceFunction);
+
+				break;
+			default:
+
+				// function type = Function
+
+				newFunction = referenceFunction;
+
+		}
+
+		newComponent.setFunction(newFunction);
+
+		final Set<Component> referenceInputComponents = referenceComponent.getInputComponents();
+
+		if (referenceInputComponents != null) {
+
+			final Set<Component> newInputComponents = referenceInputComponents.parallelStream().map(ProjectsResource::createCopyOfComponent)
+					.collect(Collectors.toSet());
+
+			newComponent.setInputComponents(newInputComponents);
+		}
+
+		final Set<Component> referenceOutputComponents = referenceComponent.getOutputComponents();
+
+		if (referenceInputComponents != null) {
+
+			final Set<Component> newOutputComponents = referenceOutputComponents.parallelStream().map(ProjectsResource::createCopyOfComponent)
+					.collect(Collectors.toSet());
+
+			newComponent.setOutputComponents(newOutputComponents);
+		}
+
+		return newComponent;
+	}
+
+	private static Transformation createCopyOfTransformation(final Transformation referenceTransformation) {
+
+		final String newTransformationUuid = UUIDService.getUUID(Transformation.class.getSimpleName());
+
+		final Transformation newTransformation = new Transformation(newTransformationUuid);
+		newTransformation.setName(referenceTransformation.getName());
+		newTransformation.setDescription(referenceTransformation.getDescription());
+		newTransformation.setParameters(referenceTransformation.getParameters());
+		newTransformation.setFunctionDescription(referenceTransformation.getFunctionDescription());
+
+		final Set<Component> referenceComponents = referenceTransformation.getComponents();
+
+		if (referenceComponents != null) {
+
+			final Set<Component> newComponents = referenceComponents.parallelStream().map(ProjectsResource::createCopyOfComponent)
+					.collect(Collectors.toSet());
+
+			newTransformation.setComponents(newComponents);
+		}
+
+		return newTransformation;
 	}
 
 	private Response persistProjectForMigration(final String newProjectId, final Project newProject) throws DMPControllerException {
