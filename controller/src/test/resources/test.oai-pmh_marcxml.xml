@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+	<responseDate>2015-08-24T09:57:42Z</responseDate>
+	<request verb="ListRecords" metadataPrefix="marcxml">http://localhost/marc2oai_marcxml</request>
+	<ListRecords>
+		<record>
+			<header>
+				<identifier>1</identifier>
+				<datestamp>2015-08-24T09:57:42Z</datestamp>
+			</header>
+			<metadata>
+				<record xmlns="http://www.loc.gov/MARC21/slim"
+						xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd"
+						type="Bibliographic">
+					<leader>02557nam a22003973u 4500</leader>
+					<controlfield tag="001">EBL155778</controlfield>
+					<controlfield tag="003">AU-PeEL</controlfield>
+					<controlfield tag="005">20150802134622.0</controlfield>
+					<controlfield tag="006">m d</controlfield>
+					<controlfield tag="007">cr -n---------</controlfield>
+					<controlfield tag="008">150802s2010||||||| s|||||||||||eng|d</controlfield>
+					<datafield tag="020" ind1=" " ind2=" ">
+						<subfield code="a">9780795305122</subfield>
+						<subfield code="c">6.3 (NL)</subfield>
+					</datafield>
+					<datafield tag="035" ind1=" " ind2=" ">
+						<subfield code="a">EBL155778</subfield>
+					</datafield>
+					<datafield tag="035" ind1=" " ind2=" ">
+						<subfield code="a">(OCoLC)52939862</subfield>
+					</datafield>
+					<datafield tag="040" ind1=" " ind2=" ">
+						<subfield code="a">AU-PeEL</subfield>
+						<subfield code="b">eng</subfield>
+						<subfield code="c">AU-PeEL</subfield>
+						<subfield code="d">AU-PeEL</subfield>
+					</datafield>
+					<datafield tag="050" ind1=" " ind2="4">
+						<subfield code="a">PS3563.A3155S26 2002eb</subfield>
+					</datafield>
+					<datafield tag="082" ind1="0" ind2="0">
+						<subfield code="a">813.54</subfield>
+						<subfield code="a">813/.54</subfield>
+					</datafield>
+					<datafield tag="100" ind1="1" ind2=" ">
+						<subfield code="a">McKenna, Richard.</subfield>
+					</datafield>
+					<datafield tag="245" ind1="1" ind2="4">
+						<subfield code="a">The Sand Pebbles</subfield>
+						<subfield code="h">[electronic resource].</subfield>
+					</datafield>
+					<datafield tag="260" ind1=" " ind2=" ">
+						<subfield code="a">New York :</subfield>
+						<subfield code="b">RosettaBooks,</subfield>
+						<subfield code="c">2010.</subfield>
+					</datafield>
+					<datafield tag="300" ind1=" " ind2=" ">
+						<subfield code="a">1 online resource (602 p.)</subfield>
+					</datafield>
+					<datafield tag="490" ind1="1" ind2=" ">
+						<subfield code="a">RosettaBooks into Film</subfield>
+					</datafield>
+					<datafield tag="500" ind1=" " ind2=" ">
+						<subfield code="a">Description based upon print version of record.</subfield>
+					</datafield>
+					<datafield tag="505" ind1="0" ind2=" ">
+						<subfield code="a">Cover; First Page; Title Page; Copyright; Dedication; Contents; Chapter 1; Chapter 2; Chapter 3; Chapter 4;
+							Chapter 5; Chapter 6; Chapter 7; Chapter 8; Chapter 9; Chapter 10; Chapter 11; Chapter 12; Chapter 13; Chapter 14; Chapter
+							15; Chapter 16; Chapter 17; Chapter 18; Chapter 19; Chapter 20; Chapter 21; Chapter 22; Chapter 23; Chapter 24; Chapter
+							25; Chapter 26; Chapter 27; Chapter 28; Chapter 29; Chapter 30; Chapter 31; Chapter 32; Chapter 33; Chapter 34; Chapter
+							35; Chapter 36; Chapter 37; Chapter 38; Chapter 39; Chapter 40; Chapter 41; Chapter 42; Chapter 43; Chapter 44; Chapter 45
+						</subfield>
+					</datafield>
+					<datafield tag="505" ind1="8" ind2=" ">
+						<subfield code="a">Chapter 46Chapter 47; Last Page</subfield>
+					</datafield>
+					<datafield tag="520" ind1=" " ind2=" ">
+						<subfield code="a">As a spirit of nationalism inspired by Chiang Kai-shek's leadership begins to sweep through China, the
+							river gunship San Pablo is ordered to patrol the region and to protect U.S. citizens. The crew of the ship is soon drawn
+							into an international conflict when the Chinese Nationalists begin trying to expel the "foreign devils" from their shores.
+							The conflict not only serves to illustrate the divide between east and west but also causes a rift between the members of
+							the crew.The protagonist of McKenna's novel, Jack Holman, is a machinist aboard the San Pablo who has joined the navy in
+							order to a
+						</subfield>
+					</datafield>
+					<datafield tag="650" ind1=" " ind2="4">
+						<subfield code="a">Americans - China.</subfield>
+					</datafield>
+					<datafield tag="650" ind1=" " ind2="4">
+						<subfield code="a">China - History - 1912-1937.</subfield>
+					</datafield>
+					<datafield tag="650" ind1=" " ind2="4">
+						<subfield code="a">Historical fiction.</subfield>
+					</datafield>
+					<datafield tag="650" ind1=" " ind2="4">
+						<subfield code="a">United States - History, Naval - 20th century.</subfield>
+					</datafield>
+					<datafield tag="650" ind1=" " ind2="4">
+						<subfield code="a">United States-- History, Naval-- 20th century-- Fiction.</subfield>
+					</datafield>
+					<datafield tag="650" ind1=" " ind2="4">
+						<subfield code="a">Yangtze River (China).</subfield>
+					</datafield>
+					<datafield tag="655" ind1=" " ind2="0">
+						<subfield code="a">Electronic books.</subfield>
+					</datafield>
+					<datafield tag="776" ind1="0" ind2="8">
+						<subfield code="i">Print version:</subfield>
+						<subfield code="a">McKenna, Richard</subfield>
+						<subfield code="t">The Sand Pebbles</subfield>
+						<subfield code="d">New York : RosettaBooks,c2010</subfield>
+						<subfield code="z">9781557504463</subfield>
+					</datafield>
+					<datafield tag="830" ind1=" " ind2="0">
+						<subfield code="a">RosettaBooks into Film</subfield>
+					</datafield>
+					<datafield tag="856" ind1="4" ind2="0">
+						<subfield code="z">Click here to view book</subfield>
+						<subfield code="u">http://slub.eblib.com/patron/FullRecord.aspx?p=155778</subfield>
+					</datafield>
+				</record>
+			</metadata>
+		</record>
+		<record>
+			<header>
+				<identifier>2</identifier>
+				<datestamp>2015-08-24T09:57:42Z</datestamp>
+			</header>
+			<metadata>
+				<record xmlns="http://www.loc.gov/MARC21/slim"
+						xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd"
+						type="Bibliographic">
+					<leader>02116nam a22003253u 4500</leader>
+					<controlfield tag="001">EBL180868</controlfield>
+					<controlfield tag="003">AU-PeEL</controlfield>
+					<controlfield tag="005">20150802134622.0</controlfield>
+					<controlfield tag="006">m d</controlfield>
+					<controlfield tag="007">cr -n---------</controlfield>
+					<controlfield tag="008">150802s2008||||||| s|||||||||||eng|d</controlfield>
+					<datafield tag="020" ind1=" " ind2=" ">
+						<subfield code="a">9780203305225</subfield>
+						<subfield code="c">141.83 (NL),118.19 (3U)</subfield>
+					</datafield>
+					<datafield tag="035" ind1=" " ind2=" ">
+						<subfield code="a">EBL180868</subfield>
+					</datafield>
+					<datafield tag="035" ind1=" " ind2=" ">
+						<subfield code="a">(OCoLC)908077007</subfield>
+					</datafield>
+					<datafield tag="040" ind1=" " ind2=" ">
+						<subfield code="a">AU-PeEL</subfield>
+						<subfield code="b">eng</subfield>
+						<subfield code="c">AU-PeEL</subfield>
+						<subfield code="d">AU-PeEL</subfield>
+					</datafield>
+					<datafield tag="050" ind1=" " ind2="4">
+						<subfield code="a">TA595.5 .V36 2008</subfield>
+					</datafield>
+					<datafield tag="082" ind1="0" ind2="0">
+						<subfield code="a">526.9/82</subfield>
+						<subfield code="a">526.982</subfield>
+					</datafield>
+					<datafield tag="100" ind1="1" ind2=" ">
+						<subfield code="a">Van Sickle, Jan.</subfield>
+					</datafield>
+					<datafield tag="245" ind1="1" ind2="0">
+						<subfield code="a">GPS for Land Surveyors, Third Edition</subfield>
+						<subfield code="h">[electronic resource].</subfield>
+					</datafield>
+					<datafield tag="250" ind1=" " ind2=" ">
+						<subfield code="a">3rd ed.</subfield>
+					</datafield>
+					<datafield tag="260" ind1=" " ind2=" ">
+						<subfield code="a">Hoboken :</subfield>
+						<subfield code="b">CRC Press,</subfield>
+						<subfield code="c">2008.</subfield>
+					</datafield>
+					<datafield tag="300" ind1=" " ind2=" ">
+						<subfield code="a">1 online resource (362 p.)</subfield>
+					</datafield>
+					<datafield tag="500" ind1=" " ind2=" ">
+						<subfield code="a">Description based upon print version of record.</subfield>
+					</datafield>
+					<datafield tag="505" ind1="0" ind2=" ">
+						<subfield code="a">Front cover; Contents; Preface to the Third Edition; About the Author; Chapter 1. The GPS Signal; Chapter
+							2. Biases and Solutions; Chapter 3. The Framework; Chapter 4. Receivers and Methods; Chapter 5. Coordinates; Chapter 6.
+							GPS Surveying Techniques; Chapter 7. Observing and Processing; Chapteer 8. GPS Modernization and Global Navigation
+							Satellite System (GNSS); References; Glossary; Index; Back cover
+						</subfield>
+					</datafield>
+					<datafield tag="520" ind1=" " ind2=" ">
+						<subfield code="a">The GPS SignalGlobal Positioning System (GPS) Signal StructureTwo ObservablesPseudorangingCarrier Phase
+							RangingBiases and SolutionsThe Error BudgetDifferencingThe FrameworkTechnological ForerunnersVery Long Baseline
+							InterferometryTransitNavstar GPSGPS Segment OrganizationGPS ConstellationThe Control SegmentReceivers and MethodsCommon
+							Features of GPS ReceiversChoosing a GPS ReceiverSome GPS Surveying MethodsCoordinatesA Few Pertinent Ideas About Geodetic
+							Datums for GPSState Plane CoordinatesHeightsGPS Surveying TechniquesStatic GPS SurveyingReal-Time Kinematic (RTK) and
+							Differential GPS (DGPS)T
+						</subfield>
+					</datafield>
+					<datafield tag="650" ind1=" " ind2="4">
+						<subfield code="a">Artificial satellites in surveying.</subfield>
+					</datafield>
+					<datafield tag="650" ind1=" " ind2="4">
+						<subfield code="a">Global Positioning System.</subfield>
+					</datafield>
+					<datafield tag="655" ind1=" " ind2="0">
+						<subfield code="a">Electronic books.</subfield>
+					</datafield>
+					<datafield tag="776" ind1="0" ind2="8">
+						<subfield code="i">Print version:</subfield>
+						<subfield code="a">Van Sickle, Jan</subfield>
+						<subfield code="t">GPS for Land Surveyors, Third Edition</subfield>
+						<subfield code="d">Hoboken : CRC Press,c2008</subfield>
+						<subfield code="z">9780849391958</subfield>
+					</datafield>
+					<datafield tag="856" ind1="4" ind2="0">
+						<subfield code="z">Click here to view book</subfield>
+						<subfield code="u">http://slub.eblib.com/patron/FullRecord.aspx?p=180868</subfield>
+					</datafield>
+				</record>
+			</metadata>
+		</record>
+		<record>
+			<header>
+				<identifier>3</identifier>
+				<datestamp>2015-08-24T09:57:42Z</datestamp>
+			</header>
+			<metadata>
+				<record xmlns="http://www.loc.gov/MARC21/slim"
+						xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd"
+						type="Bibliographic">
+					<leader>02624nam a22003973u 4500</leader>
+					<controlfield tag="001">EBL196732</controlfield>
+					<controlfield tag="003">AU-PeEL</controlfield>
+					<controlfield tag="005">20150802134622.0</controlfield>
+					<controlfield tag="006">m d</controlfield>
+					<controlfield tag="007">cr -n---------</controlfield>
+					<controlfield tag="008">150802s2008||||||| s|||||||||||eng|d</controlfield>
+					<datafield tag="020" ind1=" " ind2=" ">
+						<subfield code="a">9780306472084</subfield>
+						<subfield code="c">130.63 (NL)</subfield>
+					</datafield>
+					<datafield tag="035" ind1=" " ind2=" ">
+						<subfield code="a">EBL196732</subfield>
+					</datafield>
+					<datafield tag="035" ind1=" " ind2=" ">
+						<subfield code="a">(OCoLC)707917524</subfield>
+					</datafield>
+					<datafield tag="040" ind1=" " ind2=" ">
+						<subfield code="a">AU-PeEL</subfield>
+						<subfield code="b">eng</subfield>
+						<subfield code="c">AU-PeEL</subfield>
+						<subfield code="d">AU-PeEL</subfield>
+					</datafield>
+					<datafield tag="050" ind1=" " ind2="4">
+						<subfield code="a">LB43</subfield>
+					</datafield>
+					<datafield tag="050" ind1=" " ind2="4">
+						<subfield code="a">QA11 .M314 1997eb</subfield>
+					</datafield>
+					<datafield tag="082" ind1="0" ind2="0">
+						<subfield code="a">370</subfield>
+						<subfield code="a">370.9</subfield>
+						<subfield code="a">370116</subfield>
+						<subfield code="a">507.1</subfield>
+						<subfield code="a">510.712</subfield>
+						<subfield code="a">510/.71/2</subfield>
+					</datafield>
+					<datafield tag="100" ind1="1" ind2=" ">
+						<subfield code="a">Schmidt, W.H.</subfield>
+					</datafield>
+					<datafield tag="245" ind1="1" ind2="0">
+						<subfield code="a">Many Visions, Many Aims</subfield>
+						<subfield code="h">[electronic resource] :</subfield>
+						<subfield code="b">Volume 2: A Cross-National Investigation of Curricular Intensions in School Science</subfield>
+					</datafield>
+					<datafield tag="260" ind1=" " ind2=" ">
+						<subfield code="a">Dordrecht :</subfield>
+						<subfield code="b">Springer Netherlands,</subfield>
+						<subfield code="c">2008.</subfield>
+					</datafield>
+					<datafield tag="300" ind1=" " ind2=" ">
+						<subfield code="a">1 online resource (309 p.)</subfield>
+					</datafield>
+					<datafield tag="500" ind1=" " ind2=" ">
+						<subfield code="a">Description based upon print version of record.</subfield>
+					</datafield>
+					<datafield tag="505" ind1="0" ind2=" ">
+						<subfield code="a">Preliminaries; Table of Contents; Chapter 1 Science Curriculum: Investigating Curricular Intentions .;
+							Chapter 2 Overview of Results; Chapter 3 Seeking Shared Visions Among the Many; Chapter 4 Curriculum Guides: Directing
+							Curriculum by Intention; Chapter 5 Intended Flow of Science Curricula; Chapter 6 Milestones in Science Curricula; Chapter
+							7 Emphasized Curriculum Topics; Chapter 8 Other Aspects of the Curriculum: Performance Expectations and Disciplinary
+							Perspectives; Chapter 9 Re-examining Shared Visions: Country Groupings; Chapter 10 Concluding Remarks; Appendices
+						</subfield>
+					</datafield>
+					<datafield tag="520" ind1=" " ind2=" ">
+						<subfield code="a">Preface. I: Characterizing Curriculum: An Overview. 1. Science Curriculum: Investigating Curricular
+							Intentions. 2. Overview of Results. II: Curricular Organization and Control. 3. Seeking Shared Visions Among the Many. 4.
+							Curriculum Guides: Directing Curriculum by Intention. III: Reflections of Curriculum. 5. Intended Flow of Science
+							Curricula. 6. Milestones in Science Curricula. 7. Emphasized Curriculum Topics. 8. Other Aspects of the Curriculum:
+							Performance Expectations and Disciplinary Perspectives. 9. Re-Examining Shared Visions: Country Groupings. IV:
+							Consequences of Curriculum:
+						</subfield>
+					</datafield>
+					<datafield tag="650" ind1=" " ind2="4">
+						<subfield code="a">Education.</subfield>
+					</datafield>
+					<datafield tag="650" ind1=" " ind2="4">
+						<subfield code="a">Mathematics.</subfield>
+					</datafield>
+					<datafield tag="650" ind1=" " ind2="4">
+						<subfield code="a">Mathematics.</subfield>
+					</datafield>
+					<datafield tag="650" ind1=" " ind2="4">
+						<subfield code="a">Science_xStudy and teaching.</subfield>
+					</datafield>
+					<datafield tag="655" ind1=" " ind2="0">
+						<subfield code="a">Electronic books.</subfield>
+					</datafield>
+					<datafield tag="700" ind1="1" ind2=" ">
+						<subfield code="a">Raizen, S.</subfield>
+					</datafield>
+					<datafield tag="700" ind1="1" ind2=" ">
+						<subfield code="a">Britton, E.D.</subfield>
+					</datafield>
+					<datafield tag="700" ind1="1" ind2=" ">
+						<subfield code="a">Bianchi, Leonard J.</subfield>
+					</datafield>
+					<datafield tag="700" ind1="1" ind2=" ">
+						<subfield code="a">Wolfe, Richard.</subfield>
+					</datafield>
+					<datafield tag="776" ind1="0" ind2="8">
+						<subfield code="i">Print version:</subfield>
+						<subfield code="a">Schmidt, W.H.</subfield>
+						<subfield code="t">Many Visions, Many Aims : Volume 2: A Cross-National Investigation of Curricular Intensions in School
+							Science
+						</subfield>
+						<subfield code="d">Dordrecht : Springer Netherlands,c2008</subfield>
+						<subfield code="z">9780792344384</subfield>
+					</datafield>
+					<datafield tag="856" ind1="4" ind2="0">
+						<subfield code="z">Click here to view book</subfield>
+						<subfield code="u">http://slub.eblib.com/patron/FullRecord.aspx?p=196732</subfield>
+					</datafield>
+				</record>
+			</metadata>
+		</record>
+	</ListRecords>
+</OAI-PMH>

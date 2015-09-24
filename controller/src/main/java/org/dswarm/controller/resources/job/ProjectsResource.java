@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -45,7 +44,6 @@ import javax.ws.rs.core.Response;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
@@ -61,18 +59,15 @@ import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.ExtendedBasicDMPResource;
 import org.dswarm.controller.resources.POJOFormat;
 import org.dswarm.controller.utils.JsonUtils;
-import org.dswarm.converter.DMPConverterException;
-import org.dswarm.converter.morph.model.FilterExpression;
-import org.dswarm.converter.morph.model.FilterExpressionType;
 import org.dswarm.init.DMPException;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.job.Filter;
 import org.dswarm.persistence.model.job.Mapping;
 import org.dswarm.persistence.model.job.Project;
 import org.dswarm.persistence.model.job.proxy.ProxyProject;
-import org.dswarm.persistence.model.job.utils.FilterUtils;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.schema.AttributePath;
+import org.dswarm.persistence.model.schema.AttributePathInstance;
 import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
@@ -95,6 +90,28 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 
 	public static final String INPUT_DATA_MODEL  = "input_data_model";
 	public static final String REFERENCE_PROJECT = "reference_project";
+
+	private static final Comparator<String> STRING_LENGTH_COMPARATOR;
+
+	static {
+
+		STRING_LENGTH_COMPARATOR = (o1, o2) -> {
+
+			if (o1.length() < o2.length()) {
+
+				return -1;
+			}
+
+			if (o1.length() == o2.length()) {
+
+				return 0;
+			}
+
+			//if(o1.length() > o2.length())
+
+			return 1;
+		};
+	}
 
 	private final Provider<DataModelService> dataModelPersistenceServiceProvider;
 
@@ -468,7 +485,8 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	 *
 	 * @return a map of attribute paths from the reference schema to matching attribute paths from the new schema
 	 */
-	private static Map<AttributePath, AttributePath> mapAttributePaths(final Schema referenceSchema, final Schema newSchema) throws DMPControllerException {
+	private static Map<AttributePath, AttributePath> mapAttributePaths(final Schema referenceSchema, final Schema newSchema)
+			throws DMPControllerException {
 
 		if (referenceSchema == null) {
 
@@ -516,25 +534,13 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 			throw new DMPControllerException(message);
 		}
 
-		final Map<String, AttributePath> referenceAPs = new ConcurrentHashMap<>();
-		uniqueReferenceSAPIs.parallelStream().flatMap(uniqueReferenceSAPI -> {
+		final Map<String, AttributePath> referenceAPs = uniqueReferenceSAPIs.parallelStream()
+				.collect(Collectors.toMap(uniqueReferenceSAPI -> uniqueReferenceSAPI.getAttributePath().toAttributePath(),
+						AttributePathInstance::getAttributePath));
 
-			final AttributePath referenceAttributePath = uniqueReferenceSAPI.getAttributePath();
-
-			referenceAPs.put(referenceAttributePath.toAttributePath(), referenceAttributePath);
-
-			return null;
-		});
-
-		final Map<String, AttributePath> newAPs = new ConcurrentHashMap<>();
-		uniqueNewSAPIs.parallelStream().flatMap(uniqueNewSAPI -> {
-
-			final AttributePath newAttributePath = uniqueNewSAPI.getAttributePath();
-
-			newAPs.put(newAttributePath.toAttributePath(), newAttributePath);
-
-			return null;
-		});
+		final Map<String, AttributePath> newAPs = uniqueNewSAPIs.parallelStream()
+				.collect(Collectors.toMap(uniqueNewSAPI -> uniqueNewSAPI.getAttributePath().toAttributePath(),
+						AttributePathInstance::getAttributePath));
 
 		final Set<String> newAPStrings = newAPs.keySet();
 
@@ -565,8 +571,9 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 
 					// TODO: no match - > what should we here???
 
-					LOG.debug("couldn't determine the most similar new attribute path from candidates (site = '{}')",
-							mostSimilarMatchCandidates.size());
+					LOG.debug(
+							"couldn't determine the most similar new attribute path from candidates (site = '{}') for reference attribute path '{}'",
+							mostSimilarMatchCandidates.size(), referenceAPString);
 
 					return;
 				}
@@ -576,18 +583,26 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 
 				// matchedNewAttributePaths.size() > 1
 
-				// TODO: what should we do at multiple matches???
+				LOG.debug("found multiple matches ('{}') in new attribute paths for reference attribute path '{}'; try to determine shortest match",
+						matchedNewAttributePaths.size(), referenceAPString);
 
-				LOG.debug("found multiple matches ('{}') in new attribute paths for reference attribute path '{}'", matchedNewAttributePaths.size(),
-						referenceAPString);
+				final Optional<String> optionalMostSimilarAP = determineShortestMatchedAttributePath(matchedNewAttributePaths);
 
-				return;
+				if (!optionalMostSimilarAP.isPresent()) {
+
+					LOG.debug("couldn't determine shortest match for in matched new attribute paths (size = '{}') for reference attribute path '{}'",
+							matchedNewAttributePaths.size(), referenceAPString);
+				}
+
+				matchedNewAPString = optionalMostSimilarAP.get();
 			}
 
 			final AttributePath matchedNewAttributePath = newAPs.get(matchedNewAPString);
 
 			attributePathMap.put(referenceAP, matchedNewAttributePath);
 		});
+
+		// TODO: align result set to smaller collection (this could be the reference attribute paths collection or the new attribute paths collection), otherwise the relationship is not bi-unique (1:1)
 
 		return attributePathMap;
 	}
@@ -604,22 +619,12 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 
 	private static Optional<String> determineLongestMatchedAttributePath(final Collection<String> inputCollection) {
 
-		return inputCollection.parallelStream().max((o1, o2) -> {
+		return inputCollection.parallelStream().max(STRING_LENGTH_COMPARATOR);
+	}
 
-			if (o1.length() < o2.length()) {
+	private static Optional<String> determineShortestMatchedAttributePath(final Collection<String> inputCollection) {
 
-				return -1;
-			}
-
-			if (o1.length() == o2.length()) {
-
-				return 0;
-			}
-
-			//if(o1.length() > o2.length())
-
-			return 1;
-		});
+		return inputCollection.parallelStream().min(STRING_LENGTH_COMPARATOR);
 	}
 
 	/**
@@ -672,19 +677,9 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 			return null;
 		}
 
-		final Map<String, String> attributePathStringsMap = new ConcurrentHashMap<>();
-
-		attributePathMap.entrySet().parallelStream().parallel().map(attributePathEntry -> {
-
-			final AttributePath referenceAP = attributePathEntry.getKey();
-			final AttributePath newAP = attributePathEntry.getValue();
-
-			attributePathStringsMap.put(referenceAP.toAttributePath(), newAP.toAttributePath());
-
-			return null;
-		});
-
-		return attributePathStringsMap;
+		return attributePathMap.entrySet().parallelStream()
+				.collect(Collectors.toMap(attributePathEntry -> attributePathEntry.getKey().toAttributePath(),
+						attributePathEntry1 -> attributePathEntry1.getValue().toAttributePath()));
 	}
 
 	private Set<MappingAttributePathInstance> migrateMappingInputs(final Set<MappingAttributePathInstance> referenceInputMAPIs,
@@ -718,6 +713,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 			final MappingAttributePathInstance newInputMAPI = new MappingAttributePathInstance(newInputMAPIUuid);
 			newInputMAPI.setAttributePath(newAttributePath);
 			newInputMAPI.setOrdinal(referenceInputMAPI.getOrdinal());
+			newInputMAPI.setName(referenceInputMAPI.getName());
 
 			migrateMappingInputFilter(referenceInputMAPI, newInputMAPI, attributePathStringsMap);
 
@@ -778,6 +774,8 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 
 							newFilterExpressionNode.set(newFilterExpressionKey, referenceFilterExpressionValue);
 						}
+
+						newIMAPIFilterExpressionArray.add(newFilterExpressionNode);
 					}
 
 					final String newIMAPIFilterExpression = objectMapperProvider.get().writeValueAsString(newIMAPIFilterExpressionArray);
