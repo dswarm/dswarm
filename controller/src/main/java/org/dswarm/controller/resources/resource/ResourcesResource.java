@@ -61,7 +61,6 @@ import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.tika.Tika;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
@@ -979,12 +978,7 @@ public class ResourcesResource extends AbstractBaseResource {
 
 		try {
 
-			final Tika tika = new Tika();
-
-			final String fileType = tika.detect(file);
-
-			// TODO: check whether we can switch back to this approach (to eleminate Tika dependency)
-			// fileType = java.nio.file.Files.probeContentType(file.toPath());
+			final String fileType = java.nio.file.Files.probeContentType(file.toPath());
 
 			if (fileType != null) {
 
