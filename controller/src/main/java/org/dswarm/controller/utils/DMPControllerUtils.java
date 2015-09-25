@@ -83,7 +83,7 @@ public final class DMPControllerUtils {
 			return file;
 		} catch (final Exception e) {
 
-			DMPControllerUtils.LOG.error("couldn't write input stream to file '{}'", fileName);
+			DMPControllerUtils.LOG.error("couldn't write input stream to file '{}'", fileName, e);
 
 			throw new DMPControllerException(String.format("couldn't write input stream to file '%s'\n%s", fileName, e.getMessage()));
 		}
