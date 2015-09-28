@@ -153,6 +153,12 @@ public class XMLTransformationFlowTest extends GuicedTest {
 	}
 
 	@Test
+	public void testISSNTask() throws Exception {
+
+		testXMLTaskWithTuples("issn.mabxml.task.result.json", "issn.task.json", "issn.mabxml_dmp.tuples.json");
+	}
+
+	@Test
 	public void testCollectTask() throws Exception {
 
 		testXMLTaskWithTuples("dd-1220.mabxml.task.result.json", "dd-1220.mabxml.task.json", "test-mabxml.tuples.json");
