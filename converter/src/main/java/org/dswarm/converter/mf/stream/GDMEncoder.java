@@ -15,14 +15,15 @@
  */
 package org.dswarm.converter.mf.stream;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Stack;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultStreamPipe;
@@ -31,6 +32,10 @@ import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
+import org.culturegraph.mf.morph.functions.model.ValueConverter;
+import org.culturegraph.mf.morph.functions.model.ValueType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.dswarm.common.types.Tuple;
 import org.dswarm.graph.json.LiteralNode;
@@ -57,7 +62,12 @@ import org.dswarm.persistence.util.GDMUtil;
 @Out(GDMModel.class)
 public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>> {
 
-	private static final String RESOURCE_BASE_URI = SchemaUtils.BASE_URI + "resource/";
+	private static final Logger LOG = LoggerFactory.getLogger(GDMEncoder.class);
+
+	private static final  String RESOURCE_IDENTIFIER = "resource";
+	private static final String RESOURCE_BASE_URI   = SchemaUtils.BASE_URI + RESOURCE_IDENTIFIER + SchemaUtils.SLASH;
+	private static final String KEY_PREFIX = "::";
+
 	private       String                                currentId;
 	private       Model                                 internalGDMModel;
 	private       ResourceNode                          recordNode;
@@ -72,10 +82,13 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 	private final Optional<DataModel> dataModel;
 	private final Optional<String>    dataModelUri;
 
-	private final Map<String, Predicate>    predicates   = Maps.newHashMap();
-	private final Map<String, AtomicLong>   valueCounter = Maps.newHashMap();
-	private final Map<String, ResourceNode> types        = Maps.newHashMap();
-	private final Map<String, String>       uris         = Maps.newHashMap();
+	private final Map<String, Predicate>  predicates   = new HashMap<>();
+	private final Map<String, AtomicLong> valueCounter = new HashMap<>();
+	private final Map<String, String>     uris         = new HashMap<>();
+	private Map<String, ResourceNode> resourceNodeCache;
+	private AtomicLong                bnodeCounter;
+	private Map<String, Long>         bnodeMap;
+	private Map<String, Node>         bnodeCache;
 
 	private final AtomicInteger inComingCounter = new AtomicInteger(0);
 	private final AtomicInteger outGoingCounter = new AtomicInteger(0);
@@ -117,6 +130,12 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 	@Override
 	public void startRecord(final String identifier) {
 
+		resourceNodeCache = new ConcurrentHashMap<>();
+		// note: this should be resource-safe in reality (i.e. one counter, cache etc, per resource (not record; i.e. assume a record has multiple sub-resources))
+		bnodeCounter = new AtomicLong(0);
+		bnodeMap = new ConcurrentHashMap<>();
+		bnodeCache = new ConcurrentHashMap<>();
+
 		inComingCounter.incrementAndGet();
 
 		assert !isClosed();
@@ -128,7 +147,7 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 		internalGDMModel = new Model();
 		recordResource = getOrCreateResource(currentId);
 
-		recordNode = new ResourceNode(currentId);
+		recordNode = getOrCreateResourceNode(currentId);
 
 		resourceStack.push(recordResource);
 
@@ -189,7 +208,7 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		final Resource entityResource = getOrCreateResource(entityUri);
 
-		entityNode = new ResourceNode(entityUri);
+		entityNode = getOrCreateResourceNode(entityUri);
 
 		if (entityStack.empty()) {
 
@@ -202,9 +221,6 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 		}
 
 		currentResource = entityResource;
-
-		// TODO: not, this should be done in a different way (i.e. the type should already be assigned from somewhere else and not minted on demand!)
-		// addStatement(entityNode, getPredicate(GDMUtil.RDF_type), getType(name + SchemaUtils.TYPE_POSTFIX));
 
 		entityStack.push(new Tuple<>(entityNode, entityPredicate));
 
@@ -239,12 +255,6 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		assert !isClosed();
 
-		// create triple
-		// name = predicate
-		// value = literal or object
-		// TODO: only literals atm, i.e., how to determine other resources?
-		// => still valid: how to determine other resources!
-		// ==> @phorn proposed to utilise "<" ">" to identify resource ids (uris)
 		if (name == null) {
 
 			return;
@@ -260,44 +270,67 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 			propertyUri = SchemaUtils.mintUri(dataModelUri.get(), name);
 		}
 
-		if (value != null && !value.isEmpty()) {
+		final Node currentNode = entityStack.empty() ? recordNode : entityNode;
+
+		if (null != currentNode) {
 
 			final Predicate attributeProperty = getPredicate(propertyUri);
-			final LiteralNode literalObject = new LiteralNode(value);
 
-			final Node currentNode = entityStack.empty() ? recordNode : entityNode;
+			// note: only non-empty values will be emitted right now
+			if (value != null && !value.isEmpty()) {
 
-			if (null != currentNode) {
+				final Map.Entry<ValueType, String> valueEntry = ValueConverter.decodeTypeInfo(value);
+				final ValueType valueType = valueEntry.getKey();
+				final String realValue = valueEntry.getValue();
 
-				// TODO: this is only a HOTFIX for creating resources from resource type uris
+				final Node objectNode;
 
-				if (!GDMUtil.RDF_type.equals(propertyUri)) {
+				switch (valueType) {
 
-					currentResource.addStatement(currentNode, attributeProperty, literalObject);
-				} else {
+					case Resource:
 
-					// check, whether value is really a URI
-					if (SchemaUtils.isValidUri(value)) {
+						objectNode = getOrCreateResourceNode(realValue);
 
-						final ResourceNode typeResource = new ResourceNode(value);// ResourceFactory.createResource(value);
+						break;
+					case BNode:
 
-						currentResource.addStatement(currentNode, attributeProperty, typeResource);
+						objectNode = getOrCreateBNode(realValue);
 
-						if (currentResource.equals(recordResource)) {
+						break;
+					default:
 
-							recordType = typeResource;
+						// case = Literal
+
+						// TODO: this is only a HOTFIX for creating resources from resource type uris
+						// check, whether value is really a URI
+						if (!(GDMUtil.RDF_type.equals(propertyUri) && SchemaUtils.isValidUri(realValue))) {
+
+							objectNode = new LiteralNode(realValue);
+						} else {
+
+							final ResourceNode resourceTypeNode = getOrCreateResourceNode(realValue);
+							objectNode = resourceTypeNode;
+
+							if (currentResource.equals(recordResource)) {
+
+								recordType = resourceTypeNode;
+							}
 						}
-					} else {
-
-						currentResource.addStatement(currentNode, attributeProperty, literalObject);
-					}
 				}
+
+				currentResource.addStatement(currentNode, attributeProperty, objectNode);
 			} else {
 
-				throw new MetafactureException("couldn't get a resource for adding this property");
-			}
-		}
+				if (LOG.isTraceEnabled()) {
 
+					LOG.trace("won't write statement for subject '{}' + predicate '{}', because the value is not existing or empty", currentNode,
+							attributeProperty);
+				}
+			}
+		} else {
+
+			throw new MetafactureException("couldn't get a resource for adding this property");
+		}
 	}
 
 	private Optional<String> init(final Optional<DataModel> dataModel) {
@@ -316,14 +349,7 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		final String predicateURI = getURI(predicateId);
 
-		if (!predicates.containsKey(predicateURI)) {
-
-			final Predicate predicate = new Predicate(predicateURI);
-
-			predicates.put(predicateURI, predicate);
-		}
-
-		return predicates.get(predicateURI);
+		return predicates.computeIfAbsent(predicateURI, predicateURI1 -> new Predicate(predicateURI));
 	}
 
 	private void addStatement(final Node subject, final Predicate predicate, final Node object) {
@@ -338,43 +364,16 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 			key = subject.getId().toString();
 		}
 
-		key += "::" + predicate.getUri();
+		key += KEY_PREFIX + predicate.getUri();
 
-		if (!valueCounter.containsKey(key)) {
-
-			final AtomicLong valueCounterForKey = new AtomicLong(0);
-			valueCounter.put(key, valueCounterForKey);
-		}
-
-		final Long order = valueCounter.get(key).incrementAndGet();
+		final Long order = valueCounter.computeIfAbsent(key, key1 -> new AtomicLong(0)).incrementAndGet();
 
 		currentResource.addStatement(subject, predicate, object, order);
 	}
 
 	private String getURI(final String id) {
 
-		if (!uris.containsKey(id)) {
-
-			final String uri = SchemaUtils.isValidUri(id) ? id : SchemaUtils.mintTermUri(null, id, dataModelUri);
-
-			uris.put(id, uri);
-		}
-
-		return uris.get(id);
-	}
-
-	private ResourceNode getType(final String typeId) {
-
-		final String typeURI = getURI(typeId);
-
-		if (!types.containsKey(typeURI)) {
-
-			final ResourceNode type = new ResourceNode(typeURI);
-
-			types.put(typeURI, type);
-		}
-
-		return types.get(typeURI);
+		return uris.computeIfAbsent(id, id1 -> SchemaUtils.isValidUri(id) ? id : SchemaUtils.mintTermUri(null, id, dataModelUri));
 	}
 
 	private Resource getOrCreateResource(final String resourceURI) {
@@ -390,6 +389,26 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 		internalGDMModel.addResource(newResource);
 
 		return newResource;
+	}
+
+	private ResourceNode getOrCreateResourceNode(final String resourceURI) {
+
+		return resourceNodeCache.computeIfAbsent(resourceURI, resourceURI1 -> new ResourceNode(resourceURI));
+	}
+
+	private Node getOrCreateBNode(final String bNodeId) {
+
+		return bnodeCache.computeIfAbsent(bNodeId, bNodeId1 -> {
+
+			final Long bNodeLongId = getOrCreateBNodeLongId(bNodeId);
+
+			return new Node(bNodeLongId);
+		});
+	}
+
+	private Long getOrCreateBNodeLongId(final String bnodeStringId) {
+
+		return bnodeMap.computeIfAbsent(bnodeStringId, bnodeStringId1 -> bnodeCounter.incrementAndGet());
 	}
 
 }
