@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author tgaengler
  */
-public abstract class AbstractNegativeTasksResourceTest extends AbstractTasksResourceTest {
+public abstract class AbstractNegativeTasksResourceTest extends AbstractXMLTasksResourceTest {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractNegativeTasksResourceTest.class);
 
@@ -37,7 +37,7 @@ public abstract class AbstractNegativeTasksResourceTest extends AbstractTasksRes
 	public AbstractNegativeTasksResourceTest(final String taskJSONFileNameArg, final String inputDataResourceFileNameArg, final String recordTagArg,
 			final String storageTypeArg, final String testPostfixArg, final String expectedResponseMessageArg, final boolean prepareInputDataResourceArg, final int expectedResponseCodeArg) {
 
-		super(taskJSONFileNameArg, inputDataResourceFileNameArg, recordTagArg, storageTypeArg, testPostfixArg, prepareInputDataResourceArg);
+		super(taskJSONFileNameArg, inputDataResourceFileNameArg, recordTagArg, storageTypeArg, testPostfixArg, prepareInputDataResourceArg, false);
 
 		expectedResponseMessage = expectedResponseMessageArg;
 		expectedResponseCode = expectedResponseCodeArg;

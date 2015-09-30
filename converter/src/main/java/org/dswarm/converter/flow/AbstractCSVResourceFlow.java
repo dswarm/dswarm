@@ -61,8 +61,8 @@ public abstract class AbstractCSVResourceFlow<T> {
 
 	protected Optional<Integer>	atMost;
 
-	protected final String		dataResourceBaseURI;
-	protected final String		dataResourceSchemaBaseURI;
+	protected final String dataModelBaseURI;
+	protected final String dataModelSchemaBaseURI;
 
 	public AbstractCSVResourceFlow(final DataModel dataModel) throws DMPConverterException {
 
@@ -109,8 +109,8 @@ public abstract class AbstractCSVResourceFlow<T> {
 			throw new DMPConverterException(String.format("Unsupported Encoding - [%s]", e.getCharsetName()));
 		}
 
-		dataResourceBaseURI = DataModelUtils.determineDataModelBaseURI(dataModel);
-		dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
+		dataModelBaseURI = DataModelUtils.determineDataModelBaseURI(dataModel);
+		dataModelSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
 	}
 
 	public AbstractCSVResourceFlow(final String encoding, final Character escapeCharacter, final Character quoteCharacter,
@@ -127,8 +127,8 @@ public abstract class AbstractCSVResourceFlow<T> {
 		this.atMost = Optional.absent();
 		this.firstRowIsHeaders = true;
 
-		this.dataResourceBaseURI = null;
-		this.dataResourceSchemaBaseURI = null;
+		this.dataModelBaseURI = null;
+		this.dataModelSchemaBaseURI = null;
 	}
 
 	public AbstractCSVResourceFlow(final Configuration configuration) throws DMPConverterException {
@@ -169,8 +169,8 @@ public abstract class AbstractCSVResourceFlow<T> {
 			throw new DMPConverterException(String.format("Unsupported Encoding - [%s]", e.getCharsetName()));
 		}
 
-		this.dataResourceBaseURI = null;
-		this.dataResourceSchemaBaseURI = null;
+		this.dataModelBaseURI = null;
+		this.dataModelSchemaBaseURI = null;
 	}
 
 	protected AbstractCSVResourceFlow() {
@@ -185,8 +185,8 @@ public abstract class AbstractCSVResourceFlow<T> {
 		this.atMost = Optional.absent();
 		this.firstRowIsHeaders = ConfigurationStatics.DEFAULT_FIRST_ROW_IS_HEADINGS;
 
-		this.dataResourceBaseURI = null;
-		this.dataResourceSchemaBaseURI = null;
+		this.dataModelBaseURI = null;
+		this.dataModelSchemaBaseURI = null;
 	}
 
 	private static JsonNode getParameterValue(final Configuration configuration, final String key) throws DMPConverterException {
@@ -295,7 +295,7 @@ public abstract class AbstractCSVResourceFlow<T> {
 		final CsvReader reader = new CsvReader(escapeCharacter, quoteCharacter, columnDelimiter, rowDelimiter, ignoreLines, discardRows, atMost);
 
 		reader.setHeader(firstRowIsHeaders);
-		reader.setDataResourceSchemaBaseURI(dataResourceSchemaBaseURI);
+		reader.setDataResourceSchemaBaseURI(dataModelSchemaBaseURI);
 
 		final CsvReader pipe = opener.setReceiver(reader);
 

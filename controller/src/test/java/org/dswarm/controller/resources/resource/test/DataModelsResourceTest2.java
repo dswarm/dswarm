@@ -350,8 +350,11 @@ public class DataModelsResourceTest2 extends
 		final String dataResourceFileName = "controller_bib-record-marc.json";
 		final String configurationFileName = "json-configuration.json";
 		final String dataModelName = "json-example-datamodel";
+		final String dataModelUuid = "DataModel-62dbf41c-f4b8-4b67-8995-6314d89c658f";
+		final String schemaUuid = "Schema-65f19a84-1431-453e-a574-eabc8f2cc515";
 
-		final DataModel dataModel = createDataModel(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName);
+		final DataModel dataModel = createDataModel2(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName,
+				dataModelUuid, schemaUuid);
 
 		// END DATA MODEL CREATION
 
@@ -373,12 +376,19 @@ public class DataModelsResourceTest2 extends
 
 		Assert.assertThat(getValue("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", json),
 				CoreMatchers.equalTo(getValue("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", expectedJson)));
-		Assert.assertThat(getValue("http://data.slub-dresden.de/resources/1/schema#controlNumber", json),
-				CoreMatchers.equalTo(getValue("http://data.slub-dresden.de/resources/1/schema#controlNumber", expectedJson)));
-		Assert.assertThat(getValue("http://data.slub-dresden.de/resources/1/schema#format", json),
-				CoreMatchers.equalTo(getValue("http://data.slub-dresden.de/resources/1/schema#format", expectedJson)));
-		Assert.assertThat(getValueNode("http://data.slub-dresden.de/resources/1/schema#fixedFields", json).size(),
-				CoreMatchers.equalTo(getValueNode("http://data.slub-dresden.de/resources/1/schema#fixedFields", expectedJson).size()));
+		Assert.assertThat(
+				getValue("http://data.slub-dresden.de/schemas/Schema-65f19a84-1431-453e-a574-eabc8f2cc515#controlNumber", json),
+				CoreMatchers.equalTo(
+						getValue("http://data.slub-dresden.de/schemas/Schema-65f19a84-1431-453e-a574-eabc8f2cc515#controlNumber",
+								expectedJson)));
+		Assert.assertThat(getValue("http://data.slub-dresden.de/schemas/Schema-65f19a84-1431-453e-a574-eabc8f2cc515#format", json),
+				CoreMatchers.equalTo(getValue("http://data.slub-dresden.de/schemas/Schema-65f19a84-1431-453e-a574-eabc8f2cc515#format",
+						expectedJson)));
+		Assert.assertThat(
+				getValueNode("http://data.slub-dresden.de/schemas/Schema-65f19a84-1431-453e-a574-eabc8f2cc515#fixedFields", json).size(),
+				CoreMatchers.equalTo(
+						getValueNode("http://data.slub-dresden.de/schemas/Schema-65f19a84-1431-453e-a574-eabc8f2cc515#fixedFields",
+								expectedJson).size()));
 
 		DataModelsResourceTest2.LOG.debug("end get JSON data test");
 	}
@@ -396,11 +406,12 @@ public class DataModelsResourceTest2 extends
 		// START DATA MODEL CREATION
 
 		final String dataResourceResourceFileName = "dd-1024.oai-pmh_marcxml.resource.json";
-		final String dataResourceFileName = "dd-1024.oai-pmh_marcxml.xml";
+		final String dataResourceFileName = "dd-1024.oai-pmh_marcxml.controller.xml";
 		final String configurationFileName = "oai-pmh_marcxml.configuration.json";
 		final String dataModelName = "oai-pmh+marcxml";
+		final String dataModelUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
 
-		final DataModel dataModel = createDataModel(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName);
+		final DataModel dataModel = createDataModel2(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName, dataModelUuid, null);
 
 		// END DATA MODEL CREATION
 
@@ -438,10 +449,11 @@ public class DataModelsResourceTest2 extends
 		final String dataResourceFileName = "test-mabxml2-controller.xml";
 		final String configurationFileName = "xml-configuration.json";
 		final String dataModelUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+		final String schemaUuid = UUIDService.getUUID(Schema.class.getSimpleName());
 		final String dataModelName = dataModelUuid + " name";
 		final String expectedResponse = "{\"status\":\"nok\",\"status_code\":500,\"error\":\" 1; XML document structures must start and end within the same entity.\"}";
 
-		doNegativeDataModelTest(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelUuid, dataModelName,
+		doNegativeDataModelTest(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelUuid, schemaUuid, dataModelName,
 				expectedResponse);
 
 		DataModelsResourceTest2.LOG.debug("end throw Exception at XML data test");
@@ -456,10 +468,11 @@ public class DataModelsResourceTest2 extends
 		final String dataResourceFileName = "test_csv-controller.csv";
 		final String configurationFileName = "xml-configuration.json";
 		final String dataModelUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+		final String schemaUuid = UUIDService.getUUID(Schema.class.getSimpleName());
 		final String dataModelName = dataModelUuid + " name";
 		final String expectedResponse = "{\"status\":\"nok\",\"status_code\":500,\"error\":\" 1; Content is not allowed in prolog.\"}";
 
-		doNegativeDataModelTest(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelUuid, dataModelName,
+		doNegativeDataModelTest(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelUuid, schemaUuid, dataModelName,
 				expectedResponse);
 
 		DataModelsResourceTest2.LOG.debug("end wrong data test");
@@ -474,10 +487,11 @@ public class DataModelsResourceTest2 extends
 		final String dataResourceFileName = "test_csv-controller.empty.csv";
 		final String configurationFileName = "xml-configuration.json";
 		final String dataModelUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+		final String schemaUuid = UUIDService.getUUID(Schema.class.getSimpleName());
 		final String dataModelName = dataModelUuid + " name";
 		final String expectedResponse = "{\"status\":\"nok\",\"status_code\":500,\"error\":\"org.xml.sax.SAXParseException; Premature end of file.\"}";
 
-		doNegativeDataModelTest(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelUuid, dataModelName,
+		doNegativeDataModelTest(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelUuid, schemaUuid, dataModelName,
 				expectedResponse);
 
 		DataModelsResourceTest2.LOG.debug("end empty file test");
@@ -530,10 +544,11 @@ public class DataModelsResourceTest2 extends
 		final String dataResourceFileName = "controller_test-mabxml.xml";
 		final String configurationFileName = "xml-configuration.2.json";
 		final String dataModelUuid = "DataModel-e1677fea-9b35-46d0-acb0-8c6c0ff7c0c4";
+		final String schemaUuid = "Schema-b4316dbb-3a4c-4653-b58a-24eed7d76b69";
 		final String dataModelName = dataModelUuid + " name";
 		final String expectedResponse = "{\"status\":\"nok\",\"status_code\":500,\"error\":\"couldn't transform any record from XML data resource at '/home/tgaengler/git/tgaengler/dswarm/tmp/resources/controller_test-mabxml.xml' to GDM for data model 'DataModel-e1677fea-9b35-46d0-acb0-8c6c0ff7c0c4'; maybe you set a wrong record tag (current one = 'record')\"}";
 
-		doNegativeDataModelTest(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelUuid, dataModelName,
+		doNegativeDataModelTest(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelUuid, schemaUuid, dataModelName,
 				expectedResponse);
 
 		DataModelsResourceTest2.LOG.debug("end wrong record tag at XML data test");
@@ -577,10 +592,11 @@ public class DataModelsResourceTest2 extends
 	}
 
 	private void doNegativeDataModelTest(final String dataResourceResourceFileName, final String dataResourceFileName,
-			final String configurationFileName, final String dataModelUuid, final String dataModelName, final String expectedResponse)
+			final String configurationFileName, final String dataModelUuid, final String schemaUuid, final String dataModelName,
+			final String expectedResponse)
 			throws Exception {
 		final Response response = createDataModel(dataResourceResourceFileName, dataResourceFileName, configurationFileName,
-				dataModelName, dataModelUuid);
+				dataModelName, dataModelUuid, schemaUuid);
 
 		Assert.assertEquals("500 was expected", 500, response.getStatus());
 
@@ -589,29 +605,27 @@ public class DataModelsResourceTest2 extends
 		Assert.assertEquals(expectedResponse, body);
 	}
 
-	private DataModel createDataModel(final String dataResourceResourceFileName, final String dataResourceFileName,
-			final String configurationFileName, final String dataModelName) throws Exception {
-
-		final String dataModelUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+	private DataModel createDataModel2(final String dataResourceResourceFileName, final String dataResourceFileName,
+			final String configurationFileName, final String dataModelName, final String dataModelUuid, final String schemaUuid) throws Exception {
 
 		final String dataModelJSONString = createDataModelInternal(dataResourceResourceFileName, dataResourceFileName, configurationFileName,
-				dataModelName, dataModelUuid);
+				dataModelName, dataModelUuid, schemaUuid);
 
 		return pojoClassResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
 	}
 
 	private Response createDataModel(final String dataResourceResourceFileName, final String dataResourceFileName,
-			final String configurationFileName, final String dataModelName, final String dataModelUuid) throws Exception {
+			final String configurationFileName, final String dataModelName, final String dataModelUuid, final String schemaUuid) throws Exception {
 
 		final String dataModelJSONString = createDataModelInternal(dataResourceResourceFileName, dataResourceFileName, configurationFileName,
-				dataModelName, dataModelUuid);
+				dataModelName, dataModelUuid, schemaUuid);
 
 		return target().request(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
 				.post(Entity.json(dataModelJSONString));
 	}
 
 	private String createDataModelInternal(final String dataResourceResourceFileName, final String dataResourceFileName,
-			final String configurationFileName, final String dataModelName, final String dataModelUuid) throws Exception {
+			final String configurationFileName, final String dataModelName, final String dataModelUuid, final String schemaUuid) throws Exception {
 		// prepare resource
 		final String resourceJSONString = DMPPersistenceUtil.getResourceAsString(dataResourceResourceFileName);
 
@@ -632,6 +646,13 @@ public class DataModelsResourceTest2 extends
 		dataModel1.setDescription("my " + dataModelName + " data model description");
 		dataModel1.setDataResource(resource);
 		dataModel1.setConfiguration(configuration);
+
+		if (schemaUuid != null) {
+
+			final Schema schema1 = new Schema(schemaUuid);
+
+			dataModel1.setSchema(schema1);
+		}
 
 		return objectMapper.writeValueAsString(dataModel1);
 	}
@@ -710,9 +731,12 @@ public class DataModelsResourceTest2 extends
 		final String dataResourceResourceFileName = "resource.json";
 		final String dataResourceFileName = "test_csv-controller.csv";
 		final String configurationFileName = "controller_configuration.json";
-		final String dataModelName = "mabxml";
+		final String dataModelName = "csv data model";
+		final String dataModelUuid = "DataModel-f8741965-0ba5-4c6b-ac47-ea68b80820cc";
+		final String schemaUuid = "Schema-55ab9fe2-5fb0-4cfe-bbe4-70bfbef652d8";
 
-		final DataModel dataModel = createDataModel(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName);
+		final DataModel dataModel = createDataModel2(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName,
+				dataModelUuid, schemaUuid);
 
 		// END DATA MODEL CREATION
 
@@ -792,7 +816,11 @@ public class DataModelsResourceTest2 extends
 
 		// START DATA MODEL CREATION
 
-		final DataModel dataModel = createDataModel(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName);
+		final String dataModelUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+		final String schemaUuid = UUIDService.getUUID(Schema.class.getSimpleName());
+
+		final DataModel dataModel = createDataModel2(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName,
+				dataModelUuid, schemaUuid);
 
 		// END DATA MODEL CREATION
 

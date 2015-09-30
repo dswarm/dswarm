@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
@@ -56,6 +57,7 @@ import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.schema.ClaszService;
 import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
 import org.dswarm.persistence.service.schema.SchemaService;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 @Singleton
 public class SchemaEventRecorder {
@@ -149,6 +151,9 @@ public class SchemaEventRecorder {
 			throw new DMPConverterException("could not transform CSV into triples due to missing schema");
 		}
 
+		// set schema at data model so that it can be utilised for data model schema base URI determination
+		dataModel.setSchema(schema);
+
 		final String dataResourceBaseSchemaURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel);
 
 		final Clasz clasz;
@@ -220,8 +225,6 @@ public class SchemaEventRecorder {
 
 		schema.setRecordClass(clasz);
 		schema.setName(dataModel.getDataResource().getName() + " schema");
-
-		dataModel.setSchema(schema);
 
 		if (dataModel.getName() == null) {
 

@@ -15,8 +15,10 @@
  */
 package org.dswarm.controller.resources.job.test;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 import javax.ws.rs.client.Entity;
@@ -35,6 +37,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.builder.Input;
+import org.xmlunit.diff.Diff;
+import org.xmlunit.diff.Difference;
 
 import org.dswarm.controller.resources.job.TasksResource;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
@@ -47,6 +53,7 @@ import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.ResourceType;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
+import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
@@ -145,16 +152,22 @@ public class TasksCsvResourceTest4 extends ResourceTest {
 		// create configuration
 		Configuration configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
 
-		final String dataModelUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+		final String dataModelUuid = "DataModel-642fa5de-9afc-4f91-ad35-d204c40a11f4";
 
-		final DataModel data1 = new DataModel(dataModelUuid);
-		data1.setName("'" + res1.getName() + "' + '" + conf1.getName() + "' data model");
-		data1.setDescription("data model of resource '" + res1.getName() + "' and configuration '" + conf1.getName() + "'");
-		data1.setDataResource(resource);
-		data1.setConfiguration(configuration);
+		final DataModel dataModel1 = new DataModel(dataModelUuid);
+		dataModel1.setName("'" + res1.getName() + "' + '" + conf1.getName() + "' data model");
+		dataModel1.setDescription("data model of resource '" + res1.getName() + "' and configuration '" + conf1.getName() + "'");
+		dataModel1.setDataResource(resource);
+		dataModel1.setConfiguration(configuration);
+
+		final String schemaUuid = "Schema-b2db413b-9c14-4724-b7e2-7b03186bf6be";
+
+		final Schema schema1 = new Schema(schemaUuid);
+
+		dataModel1.setSchema(schema1);
 
 		// manipulate input data model
-		final String finalInputDataModelJSONString = objectMapper.writeValueAsString(data1);
+		final String finalInputDataModelJSONString = objectMapper.writeValueAsString(dataModel1);
 		final ObjectNode finalInputDataModelJSON = objectMapper.readValue(finalInputDataModelJSONString, ObjectNode.class);
 
 		final ObjectNode taskJSON = objectMapper.readValue(taskJSONString, ObjectNode.class);
@@ -170,7 +183,7 @@ public class TasksCsvResourceTest4 extends ResourceTest {
 		// manipulate attributes
 		final ObjectNode mappingJSON = (ObjectNode) taskJSON.get("job").get("mappings").get(0);
 
-		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(data1);
+		final String dataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(dataModel1);
 
 		final ObjectNode outputAttributePathAttributeJSON = (ObjectNode) mappingJSON
 				.get("output_attribute_path").get("attribute_path").get("attributes").get(0);
@@ -206,38 +219,31 @@ public class TasksCsvResourceTest4 extends ResourceTest {
 
 		Assert.assertEquals("200 Created was expected", 200, response.getStatus());
 
-		final String actualXMLStream = response.readEntity(String.class);
+		final InputStream actualXMLStream = response.readEntity(InputStream.class);
+		Assert.assertNotNull(actualXMLStream);
 
-		// TODO: we can't do a property result comparison, because the record has always a new id
-//		final InputStream actualXMLStream = response.readEntity(InputStream.class);
-//		Assert.assertNotNull(actualXMLStream);
-//
-//		final BufferedInputStream bis = new BufferedInputStream(actualXMLStream, 1024);
-//
-//		final String expectedXML = DMPPersistenceUtil.getResourceAsString("controller_task-result.csv.xml");
-//
-//		// do comparison: check for XML similarity
-//		final Diff xmlDiff = DiffBuilder
-//				.compare(Input.fromString(expectedXML))
-//				.withTest(Input.fromStream(bis))
-//				.ignoreWhitespace()
-//				.checkForSimilar()
-//				.build();
-//
-//		if (xmlDiff.hasDifferences()) {
-//			final StringBuilder sb = new StringBuilder("Oi chap, there seem to ba a mishap!");
-//			for (final Difference difference : xmlDiff.getDifferences()) {
-//				sb.append('\n').append(difference);
-//			}
-//			Assert.fail(sb.toString());
-//		}
-//
-//		actualXMLStream.close();
-//		bis.close();
+		final BufferedInputStream bis = new BufferedInputStream(actualXMLStream, 1024);
 
 		final String expectedXML = DMPPersistenceUtil.getResourceAsString("controller_task-result.csv.xml");
 
-		Assert.assertEquals(expectedXML.length(), actualXMLStream.length());
+		// do comparison: check for XML similarity
+		final Diff xmlDiff = DiffBuilder
+				.compare(Input.fromString(expectedXML).build())
+				.withTest(Input.fromStream(bis).build())
+				.ignoreWhitespace()
+				.checkForSimilar()
+				.build();
+
+		if (xmlDiff.hasDifferences()) {
+			final StringBuilder sb = new StringBuilder("Oi chap, there seem to ba a mishap!");
+			for (final Difference difference : xmlDiff.getDifferences()) {
+				sb.append('\n').append(difference);
+			}
+			Assert.fail(sb.toString());
+		}
+
+		actualXMLStream.close();
+		bis.close();
 
 		TasksCsvResourceTest4.LOG.debug("end task execution test");
 	}

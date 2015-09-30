@@ -29,7 +29,7 @@ import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 
 /**
  * Decodes lines of CSV files.
- * 
+ *
  * @author tgaengler
  */
 @Description("Decodes lines of CSV files.")
@@ -37,13 +37,13 @@ import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 @Out(StreamReceiver.class)
 public final class CsvDecoder extends DefaultObjectPipe<CSVRecord, StreamReceiver> {
 
-	private boolean		hasHeader;
-	private boolean		hasHeadersProcessed;
-	private String[]	header	= new String[0];
-	private int			count;
+	private boolean hasHeader;
+	private boolean hasHeadersProcessed;
+	private String[] header = new String[0];
+	private int count;
 
-	private String		dataResourceBaseURI;
-	private String		dataResourceSchemaBaseURI;
+	private String dataResourceBaseURI;
+	private String dataModelSchemaBaseURI;
 
 	@Override
 	public void process(final CSVRecord record) {
@@ -74,9 +74,9 @@ public final class CsvDecoder extends DefaultObjectPipe<CSVRecord, StreamReceive
 
 					final String headerColumnURI;
 
-					if (dataResourceSchemaBaseURI != null) {
+					if (dataModelSchemaBaseURI != null) {
 
-						headerColumnURI = SchemaUtils.mintTermUri(headerColumnName, dataResourceSchemaBaseURI);
+						headerColumnURI = SchemaUtils.mintTermUri(headerColumnName, dataModelSchemaBaseURI);
 					} else {
 
 						headerColumnURI = headerColumnName;
@@ -91,7 +91,7 @@ public final class CsvDecoder extends DefaultObjectPipe<CSVRecord, StreamReceive
 
 				header = new String[size];
 
-				final String schemaPrefix = dataResourceSchemaBaseURI != null ? dataResourceSchemaBaseURI : "";
+				final String schemaPrefix = dataModelSchemaBaseURI != null ? dataModelSchemaBaseURI : "";
 
 				for (int i = 0; i < size; i++) {
 					header[i] = String.format("%s%s%d", schemaPrefix, "column", i + 1);
@@ -130,8 +130,8 @@ public final class CsvDecoder extends DefaultObjectPipe<CSVRecord, StreamReceive
 		hasHeader = hasHeaderArg;
 	}
 
-	public void setDataResourceSchemaBaseURI(final String dataResourceSchemaBaseURIArg) {
+	public void setDataModelSchemaBaseURI(final String dataModelSchemaBaseURIArg) {
 
-		dataResourceSchemaBaseURI = dataResourceSchemaBaseURIArg;
+		dataModelSchemaBaseURI = dataModelSchemaBaseURIArg;
 	}
 }

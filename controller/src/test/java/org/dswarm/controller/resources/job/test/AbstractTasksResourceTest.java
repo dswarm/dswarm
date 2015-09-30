@@ -27,7 +27,6 @@ import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.io.Resources;
 import org.apache.commons.io.FileUtils;
 import org.apache.tika.Tika;
@@ -48,7 +47,7 @@ import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.resource.ResourceType;
-import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
+import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
@@ -58,7 +57,7 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 
 	protected String taskJSONString = null;
 
-	protected ResourcesResourceTestUtils resourcesResourceTestUtils;
+	protected ResourcesResourceTestUtils      resourcesResourceTestUtils;
 	protected ConfigurationsResourceTestUtils configurationsResourceTestUtils;
 	protected DataModelsResourceTestUtils     dataModelsResourceTestUtils;
 
@@ -67,21 +66,19 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 	protected final String  taskJSONFileName;
 	protected final String  inputDataResourceFileName;
 	protected final String  testPostfix;
-	protected final String  recordTag;
-	protected final String  storageType;
 	protected final boolean prepareInputDataResource;
+	private final   boolean utiliseExistingInputSchema;
 
-	public AbstractTasksResourceTest(final String taskJSONFileNameArg, final String inputDataResourceFileNameArg, final String recordTagArg,
-			final String storageTypeArg, final String testPostfixArg, final boolean prepareInputDataResourceArg) {
+	public AbstractTasksResourceTest(final String taskJSONFileNameArg, final String inputDataResourceFileNameArg, final String testPostfixArg,
+			final boolean prepareInputDataResourceArg, final boolean utiliseExistingInputSchemaArg) {
 
 		super("tasks");
 
 		taskJSONFileName = taskJSONFileNameArg;
 		inputDataResourceFileName = inputDataResourceFileNameArg;
-		recordTag = recordTagArg;
-		storageType = storageTypeArg;
 		testPostfix = testPostfixArg;
 		prepareInputDataResource = prepareInputDataResourceArg;
+		utiliseExistingInputSchema = utiliseExistingInputSchemaArg;
 	}
 
 	@Override protected void initObjects() {
@@ -119,8 +116,8 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 			prepareResource = new PrepareResource(inputDataResource);
 		}
 
-		final PrepareConfiguration prepareConfiguration = new PrepareConfiguration(prepareResource, recordTag, storageType).invoke();
-		DataModel inputDataModel = prepareDataModel(prepareResource, prepareConfiguration);
+		final PrepareConfiguration prepareConfiguration = createPrepareConfiguration(prepareResource).invoke();
+		DataModel inputDataModel = prepareDataModel(prepareResource, prepareConfiguration, utiliseExistingInputSchema);
 
 		final ObjectNode requestJSON = prepareTask(inputDataModel);
 
@@ -128,6 +125,8 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 
 		return requestJSON;
 	}
+
+	protected abstract PrepareConfiguration createPrepareConfiguration(final PrepareResource prepareResource);
 
 	private ObjectNode prepareTask(final DataModel inputDataModel) throws Exception {
 
@@ -145,11 +144,13 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 		requestJSON.put(TasksResource.DO_EXPORT_ON_THE_FLY_IDENTIFIER, Boolean.TRUE);
 		requestJSON.put(TasksResource.DO_VERSIONING_ON_RESULT_IDENTIFIER, Boolean.FALSE);
 		requestJSON.put(TasksResource.RETURN_IDENTIFIER, Boolean.TRUE);
+		requestJSON.put(TasksResource.UTILISE_EXISTING_INPUT_SCHEMA_IDENTIFIER, utiliseExistingInputSchema);
 
 		return requestJSON;
 	}
 
-	private DataModel prepareDataModel(final PrepareResource prepareResource, final PrepareConfiguration prepareConfiguration) throws Exception {
+	private DataModel prepareDataModel(final PrepareResource prepareResource, final PrepareConfiguration prepareConfiguration,
+			final boolean utiliseExistingInputSchema) throws Exception {
 
 		final Resource resource = prepareResource.getResource();
 		final Resource res1 = prepareResource.getRes1();
@@ -158,13 +159,25 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 
 		final String dataModel1Uuid = "DataModel-2e0c9850-6def-4942-abed-b513d3f56eba";
 
-		final DataModel data1 = new DataModel(dataModel1Uuid);
-		data1.setName("'" + res1.getName() + "' + '" + conf1.getName() + "' data model");
-		data1.setDescription("data model of resource '" + res1.getName() + "' and configuration '" + conf1.getName() + "'");
-		data1.setDataResource(resource);
-		data1.setConfiguration(configuration);
+		final DataModel dataModel1 = new DataModel(dataModel1Uuid);
+		dataModel1.setName("'" + res1.getName() + "' + '" + conf1.getName() + "' data model");
+		dataModel1.setDescription("data model of resource '" + res1.getName() + "' and configuration '" + conf1.getName() + "'");
+		dataModel1.setDataResource(resource);
+		dataModel1.setConfiguration(configuration);
 
-		final String inputDataModelJSONString = objectMapper.writeValueAsString(data1);
+		if (utiliseExistingInputSchema) {
+
+			final Task task = objectMapper.readValue(taskJSONString, Task.class);
+
+			if (task != null && task.getInputDataModel() != null && task.getInputDataModel().getSchema() != null) {
+
+				final Schema inputSchema = task.getInputDataModel().getSchema();
+
+				dataModel1.setSchema(inputSchema);
+			}
+		}
+
+		final String inputDataModelJSONString = objectMapper.writeValueAsString(dataModel1);
 
 		final WebTarget resourceTarget = dataModelsResourceTestUtils.getResourceTarget();
 		final WebTarget webTarget = resourceTarget.queryParam(DataModelsResource.DO_INGEST_QUERY_PARAM_IDENTIFIER, Boolean.FALSE);
@@ -191,7 +204,7 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 		return inputDataModel;
 	}
 
-	private class PrepareResource {
+	protected class PrepareResource {
 
 		private       Resource res1;
 		private       Resource resource;
@@ -264,19 +277,15 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 		}
 	}
 
-	private class PrepareConfiguration {
+	protected abstract class PrepareConfiguration {
 
-		private       Configuration conf1;
-		private       Configuration configuration;
-		private final Resource      resource;
-		private final String        recordTag;
-		private final String        storageType;
+		protected       Configuration conf1;
+		protected       Configuration configuration;
+		protected final Resource      resource;
 
-		public PrepareConfiguration(final PrepareResource prepareResource, final String recordTagArg, final String storageTypeArg) {
+		public PrepareConfiguration(final PrepareResource prepareResource) {
 
 			this.resource = prepareResource.getResource();
-			recordTag = recordTagArg;
-			storageType = storageTypeArg;
 		}
 
 		public Configuration getConf1() {
@@ -289,29 +298,6 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 			return configuration;
 		}
 
-		public PrepareConfiguration invoke() throws Exception {
-
-			final String configuration1Uuid = UUIDService.getUUID(Configuration.class.getSimpleName());
-
-			// process input data model
-			conf1 = new Configuration(configuration1Uuid);
-
-			conf1.setName("configuration " + testPostfix);
-			conf1.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode(recordTag));
-			conf1.addParameter(ConfigurationStatics.STORAGE_TYPE, new TextNode(storageType));
-
-			final String configurationJSONString = objectMapper.writeValueAsString(conf1);
-
-			if(prepareInputDataResource) {
-
-				// create configuration
-				configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
-			} else {
-
-				configuration = configurationsResourceTestUtils.createObjectWithoutComparison(configurationJSONString);
-			}
-
-			return this;
-		}
+		public abstract PrepareConfiguration invoke() throws Exception;
 	}
 }

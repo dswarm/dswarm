@@ -1,9 +1,9 @@
 {
-  "name": "dd-1024.oai-pmh_marcxml.xml",
+  "name": "dd-1024.oai-pmh_marcxml.controller.xml",
   "type": "FILE",
   "description": "this is a description",
   "resource_attributes": {
-    "path": "dummy/path/to/dd-1024.oai-pmh_marcxml.xml",
+    "path": "dummy/path/to/dd-1024.oai-pmh_marcxml.controller.xml",
     "filesize": 2279,
     "filetype": "application/xml"
   },

@@ -19,18 +19,14 @@ import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map;
 import java.util.UUID;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.dswarm.graph.json.Predicate;
-import org.dswarm.graph.json.ResourceNode;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.utils.ExtendedBasicDMPJPAObjectUtils;
-import org.dswarm.persistence.util.GDMUtil;
 
 /**
  * A utility class for {@link DataModel}s and related entities.
@@ -41,16 +37,16 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 
 	private static final Logger LOG = LoggerFactory.getLogger(DataModelUtils.class);
 
-	public static final String BIBRM_CONTRACT_DATA_MODEL_UUID      = "DataModel-7e170c22-1371-4836-9a09-515524a1a8d5";
-	public static final String BIBO_DOCUMENT_DATA_MODEL_UUID       = "DataModel-cf998267-392a-4d87-a33a-88dd1bffb016";
-	public static final String MABXML_DATA_MODEL_UUID              = "DataModel-4f399d11-81ae-45af-b2f4-645aa177ab85";
-	public static final String FOAF_PERSON_DATA_MODEL_UUID         = "DataModel-23451d9d-adf6-4352-90f8-4f17cccf5d36";
-	public static final String PNX_DATA_MODEL_UUID                 = "DataModel-a65018b1-d27b-4125-9eff-5f6fd860079d";
-	public static final String MARC21_DATA_MODEL_UUID              = "DataModel-326d3380-258e-43fd-83d2-6a87daa8480a";
-	public static final String FINC_SOLR_DATA_MODEL_UUID           = "5fddf2c5-916b-49dc-a07d-af04020c17f7";
-	public static final String OAI_PMH_DC_ELEMENTS_DATA_MODEL_UUID = "DataModel-fbf2e242-0a6b-4306-9264-d0ff420398b1";
-	public static final String OAI_PMH_DC_TERMS_DATA_MODEL_UUID    = "DataModel-324e9d95-d06d-4bee-9a7e-a492ad8f0880";
-	public static final String OAI_PMH_MARCXML_DATA_MODEL_UUID     = "DataModel-2ee8ce76-8f17-49b7-a63c-596f88a30ee5";
+	public static final String BIBRM_CONTRACT_DATA_MODEL_UUID              = "DataModel-7e170c22-1371-4836-9a09-515524a1a8d5";
+	public static final String BIBO_DOCUMENT_DATA_MODEL_UUID               = "DataModel-cf998267-392a-4d87-a33a-88dd1bffb016";
+	public static final String MABXML_DATA_MODEL_UUID                      = "DataModel-4f399d11-81ae-45af-b2f4-645aa177ab85";
+	public static final String FOAF_PERSON_DATA_MODEL_UUID                 = "DataModel-23451d9d-adf6-4352-90f8-4f17cccf5d36";
+	public static final String PNX_DATA_MODEL_UUID                         = "DataModel-a65018b1-d27b-4125-9eff-5f6fd860079d";
+	public static final String MARC21_DATA_MODEL_UUID                      = "DataModel-326d3380-258e-43fd-83d2-6a87daa8480a";
+	public static final String FINC_SOLR_DATA_MODEL_UUID                   = "5fddf2c5-916b-49dc-a07d-af04020c17f7";
+	public static final String OAI_PMH_DC_ELEMENTS_DATA_MODEL_UUID         = "DataModel-fbf2e242-0a6b-4306-9264-d0ff420398b1";
+	public static final String OAI_PMH_DC_TERMS_DATA_MODEL_UUID            = "DataModel-324e9d95-d06d-4bee-9a7e-a492ad8f0880";
+	public static final String OAI_PMH_MARCXML_DATA_MODEL_UUID             = "DataModel-2ee8ce76-8f17-49b7-a63c-596f88a30ee5";
 	public static final String OAI_PMH_DC_ELEMENTS_AND_EDM_DATA_MODEL_UUID = "DataModel-502401d8-7293-4f12-9e31-4ce2943c222c";
 
 	private static final Collection<String> dataModelsToInbuiltSchemata = new ArrayList<>();
@@ -70,6 +66,18 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 		dataModelsToInbuiltSchemata.add(OAI_PMH_DC_ELEMENTS_AND_EDM_DATA_MODEL_UUID);
 	}
 
+	private static final String BASE_URI = "http://data.slub-dresden.de/";
+
+	private static final String SLASH = "/";
+	private static final String HASH  = "#";
+
+	private static final String DATAMODELS_DIRECTIVE = "datamodels";
+	private static final String RESOURCES_DIRECTIVE  = "resources";
+	private static final String RECORDS_DIRECTIVE    = "records";
+	private static final String SCHEMAS_DIRECTIVE    = "schemas";
+
+	private static final String SCHEMA_IDENTIFIER = "schema";
+
 	public static Collection<String> getDataModelsToInbuiltSchemata() {
 
 		return dataModelsToInbuiltSchemata;
@@ -77,19 +85,29 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 
 	public static String determineDataModelSchemaBaseURI(final DataModel dataModel) {
 
-		final String dataResourceBaseURI = DataModelUtils.determineDataModelBaseURI(dataModel);
+		if (dataModel != null && dataModel.getSchema() != null && dataModel.getSchema().getUuid() != null) {
 
-		if (dataResourceBaseURI == null) {
+			final String schemaUuid = dataModel.getSchema().getUuid();
 
-			return null;
+			return BASE_URI + SCHEMAS_DIRECTIVE + SLASH + schemaUuid + HASH;
+		} else {
+
+			// for legacy purpose (?)
+
+			final String dataModelBaseURI = DataModelUtils.determineDataModelBaseURI(dataModel);
+
+			if (dataModelBaseURI == null) {
+
+				return null;
+			}
+
+			if (dataModelBaseURI.endsWith(SLASH)) {
+
+				return dataModelBaseURI + SCHEMA_IDENTIFIER + HASH;
+			}
+
+			return dataModelBaseURI + SLASH + SCHEMA_IDENTIFIER + HASH;
 		}
-
-		if (dataResourceBaseURI.endsWith("/")) {
-
-			return dataResourceBaseURI + "schema#";
-		}
-
-		return dataResourceBaseURI + "/schema#";
 	}
 
 	public static String determineDataModelBaseURI(final DataModel dataModel) {
@@ -103,7 +121,7 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 
 			// create uri with random uuid
 
-			sb.append("http://data.slub-dresden.de/datamodels/").append(UUID.randomUUID());
+			sb.append(BASE_URI + DATAMODELS_DIRECTIVE + SLASH).append(UUID.randomUUID());
 
 			return sb.toString();
 		}
@@ -116,7 +134,7 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 
 		if (dataResource != null) {
 
-			final JsonNode pathNode = dataResource.getAttribute("path");
+			final JsonNode pathNode = dataResource.getAttribute(ResourceStatics.PATH);
 
 			if (pathNode != null) {
 
@@ -128,11 +146,11 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 
 						// e.g. C:\DMP\datamanagement-platform\converter\target\test-classes\test_csv.csv
 						// return /test_csv.csv
-						dataResourceName = "/" + path.substring(path.lastIndexOf(File.separator) + 1, path.length());
+						dataResourceName = SLASH + path.substring(path.lastIndexOf(File.separator) + 1, path.length());
 
 					} else {
 
-						dataResourceName = path.substring(path.lastIndexOf("/"), path.length());
+						dataResourceName = path.substring(path.lastIndexOf(SLASH), path.length());
 					}
 
 					try {
@@ -144,15 +162,15 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 					}
 				} else {
 
-					DataModelUtils.LOG.warn("The data model [" + dataModel.getUuid() + "] is missing the data resource path string");
+					DataModelUtils.LOG.warn("The data model [{}] is missing the data resource path string", dataModel.getUuid());
 				}
 			} else {
 
-				DataModelUtils.LOG.warn("The data model [" + dataModel.getUuid() + "] is missing the data resource path");
+				DataModelUtils.LOG.warn("The data model [{}] is missing the data resource path", dataModel.getUuid());
 			}
 		} else {
 
-			DataModelUtils.LOG.warn("The data model [" + dataModel.getUuid() + "] is missing the data resource");
+			DataModelUtils.LOG.warn("The data model [{}] is missing the data resource", dataModel.getUuid());
 		}
 
 		final String dataResourceBaseURI;
@@ -168,33 +186,21 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 
 			final StringBuilder sb = new StringBuilder();
 
-			if (dataResource != null && dataResource.getUuid() != null) {
-
-				// create uri from resource id
-
-				sb.append("http://data.slub-dresden.de/resources/").append(dataResource.getUuid());
-			}
-
-			// TODO: this is wrong, or? - "create uri from data resource name" -> this will result in ugly uris ...
-
-			// else if (dataResourceName != null) {
-			//
-			// // create uri from data resource name
-			//
-			// // TODO: (probably) replace whitespaces etc.
-			//
-			// sb.append("http://data.slub-dresden.de/resources/").append(dataResourceName);
-			// }
-			else if (dataModel.getUuid() != null) {
+			if (dataModel.getUuid() != null) {
 
 				// create uri from data model id
 
-				sb.append("http://data.slub-dresden.de/datamodels/").append(dataModel.getUuid());
+				sb.append(BASE_URI + DATAMODELS_DIRECTIVE + SLASH).append(dataModel.getUuid());
+			} else if (dataResource != null && dataResource.getUuid() != null) {
+
+				// create uri from resource id
+
+				sb.append(BASE_URI + RESOURCES_DIRECTIVE + SLASH).append(dataResource.getUuid());
 			} else {
 
 				// create uri with random uuid
 
-				sb.append("http://data.slub-dresden.de/datamodels/").append(UUID.randomUUID());
+				sb.append(BASE_URI + DATAMODELS_DIRECTIVE + SLASH).append(UUID.randomUUID());
 			}
 
 			dataResourceBaseURI = sb.toString();
@@ -213,12 +219,12 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 
 			// create uri from resource id and configuration id and random uuid
 
-			sb.append("http://data.slub-dresden.de/datamodels/").append(dataModel.getUuid()).append("/records/");
+			sb.append(BASE_URI + DATAMODELS_DIRECTIVE + SLASH).append(dataModel.getUuid()).append(SLASH + RECORDS_DIRECTIVE + SLASH);
 		} else {
 
 			// create uri from random uuid
 
-			sb.append("http://data.slub-dresden.de/records/");
+			sb.append(BASE_URI + RECORDS_DIRECTIVE + SLASH);
 		}
 
 		final String recordURI = sb.append(UUID.randomUUID()).toString();
