@@ -589,6 +589,11 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 			BasicResource.LOG.trace(" = '{}'", ToStringBuilder.reflectionToString(object));
 		}
 
+		return createCreateObjectResponse(proxyObject, object);
+	}
+
+	protected Response createCreateObjectResponse(final PROXYPOJOCLASS proxyObject, final POJOCLASS object) throws DMPControllerException {
+
 		final String objectJSON = serializeObject(object);
 
 		final URI objectURI = createObjectURI(object);
