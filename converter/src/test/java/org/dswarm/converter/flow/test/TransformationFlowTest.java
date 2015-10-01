@@ -20,8 +20,8 @@ import java.io.StringWriter;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.ws.rs.core.Response;
@@ -32,7 +32,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.base.Charsets;
-import com.google.common.base.Optional;
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Maps;
 import com.google.common.io.Resources;
@@ -177,10 +176,10 @@ public class TransformationFlowTest extends GuicedTest {
 		final Schema schema = freshInputDataModel.getSchema();
 
 		final Observable<Map<String, Model>> optionalModelMapObservable = gdmService
-				.getObjects(updatedInputDataModel.getUuid(), Optional.<Integer>absent())
+				.getObjects(updatedInputDataModel.getUuid(), Optional.<Integer>empty())
 				.toMap(Tuple::v1, Tuple::v2);
 		final Optional<Map<String, Model>> optionalModelMap = optionalModelMapObservable.map(Optional::of).toBlocking()
-				.firstOrDefault(Optional.absent());
+				.firstOrDefault(Optional.empty());
 
 		Assert.assertNotNull("CSV record model map optional shouldn't be null", optionalModelMap);
 		Assert.assertTrue("CSV record model map should be present", optionalModelMap.isPresent());

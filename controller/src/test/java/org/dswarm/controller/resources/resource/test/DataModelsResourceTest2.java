@@ -19,6 +19,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.ws.rs.client.Entity;
@@ -28,7 +29,6 @@ import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.base.Optional;
 import com.google.common.io.Resources;
 import com.google.inject.Key;
 import org.apache.commons.io.FileUtils;
@@ -215,7 +215,7 @@ public class DataModelsResourceTest2 extends
 
 		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
 
-		final Tuple<Optional<Map<String, Model>>, ObjectNode> result = readData(updateDataModel, Optional.<Integer>absent());
+		final Tuple<Optional<Map<String, Model>>, ObjectNode> result = readData(updateDataModel, Optional.<Integer>empty());
 
 		final Optional<Map<String, Model>> data = result.v1();
 		final ObjectNode assoziativeJsonArray = result.v2();
@@ -266,7 +266,7 @@ public class DataModelsResourceTest2 extends
 
 		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
 
-		final Tuple<Optional<Map<String, Model>>, ObjectNode> result = readData(updateDataModel, Optional.<Integer>absent());
+		final Tuple<Optional<Map<String, Model>>, ObjectNode> result = readData(updateDataModel, Optional.<Integer>empty());
 
 		final Optional<Map<String, Model>> data = result.v1();
 		final ObjectNode assoziativeJsonArray = result.v2();
@@ -411,7 +411,8 @@ public class DataModelsResourceTest2 extends
 		final String dataModelName = "oai-pmh+marcxml";
 		final String dataModelUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
 
-		final DataModel dataModel = createDataModel2(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName, dataModelUuid, null);
+		final DataModel dataModel = createDataModel2(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName,
+				dataModelUuid, null);
 
 		// END DATA MODEL CREATION
 
@@ -780,7 +781,7 @@ public class DataModelsResourceTest2 extends
 		final Observable<Map<String, Model>> dataObservable = service
 				.getObjects(dataModel.getUuid(), optionalAtMost)
 				.toMap(Tuple::v1, Tuple::v2);
-		final Optional<Map<String, Model>> data = dataObservable.map(Optional::of).toBlocking().firstOrDefault(Optional.absent());
+		final Optional<Map<String, Model>> data = dataObservable.map(Optional::of).toBlocking().firstOrDefault(Optional.empty());
 
 		Assert.assertTrue(data.isPresent());
 		Assert.assertFalse(data.get().isEmpty());

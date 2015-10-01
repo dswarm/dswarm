@@ -25,6 +25,7 @@ import java.io.PipedOutputStream;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -47,7 +48,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.base.Optional;
 import com.google.common.net.HttpHeaders;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -410,7 +410,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 			InternalGDMGraphService.LOG.debug("couldn't find schema in data model '{}'", dataModelUuid);
 
-			return Optional.absent();
+			return Optional.empty();
 		}
 
 		return Optional.of(schema);
@@ -1336,9 +1336,9 @@ public class InternalGDMGraphService implements InternalModelService {
 							final DataModel finalDataModel = schemaDeterminatorProvider.get()
 									.optionallyEnhancedDataModel(dataModel, gdm, realModel, isSchemaAnInBuiltSchema);
 							final Optional<ContentSchema> optionalContentSchema = Optional
-									.fromNullable(finalDataModel.getSchema().getContentSchema());
+									.ofNullable(finalDataModel.getSchema().getContentSchema());
 							final Optional<String> optionalRecordClassUri = Optional
-									.fromNullable(finalDataModel.getSchema().getRecordClass().getUri());
+									.ofNullable(finalDataModel.getSchema().getRecordClass().getUri());
 
 							final String metadata = getMetadata(dataModelURI, optionalContentSchema, optionalDeprecateMissingRecords,
 									optionalRecordClassUri,

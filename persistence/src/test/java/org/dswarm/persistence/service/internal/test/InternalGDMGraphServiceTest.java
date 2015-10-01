@@ -18,12 +18,12 @@ package org.dswarm.persistence.service.internal.test;
 import java.io.File;
 import java.net.URL;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.databind.node.TextNode;
-import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import com.google.common.io.Resources;
 import org.apache.commons.io.FileUtils;
@@ -121,9 +121,10 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 		final InternalGDMGraphService gdmGraphService = GuicedTest.injector.getInstance(InternalGDMGraphService.class);
 
 		final Observable<Map<String, Model>> optionalModelMapObservable = gdmGraphService
-				.getObjects(updatedDataModel.getUuid(), Optional.<Integer>absent())
+				.getObjects(updatedDataModel.getUuid(), Optional.<Integer>empty())
 				.toMap(Tuple::v1, Tuple::v2);
-		final Optional<Map<String, Model>> optionalModelMap = optionalModelMapObservable.map(Optional::of).toBlocking().firstOrDefault(Optional.absent());
+		final Optional<Map<String, Model>> optionalModelMap = optionalModelMapObservable.map(Optional::of).toBlocking()
+				.firstOrDefault(Optional.empty());
 
 		Assert.assertNotNull("Ralf's MABXML record model map optional shouldn't be null", optionalModelMap);
 		Assert.assertTrue("Ralf's MABXML record model map should be present", optionalModelMap.isPresent());

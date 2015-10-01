@@ -15,11 +15,14 @@
  */
 package org.dswarm.controller.resources.resource;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -48,7 +51,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
 import com.wordnik.swagger.annotations.Api;
@@ -80,7 +82,7 @@ import org.dswarm.controller.resources.ExtendedMediumBasicDMPResource;
 import org.dswarm.controller.resources.POJOFormat;
 import org.dswarm.controller.resources.resource.utils.ExportUtils;
 import org.dswarm.controller.utils.DataModelUtil;
-import org.dswarm.controller.utils.ResourceUtils;
+import org.dswarm.controller.utils.JsonUtils;
 import org.dswarm.init.DMPException;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.dto.resource.MediumDataModelDTO;
@@ -96,6 +98,7 @@ import org.dswarm.persistence.service.internal.graph.util.SchemaDeterminator;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.dswarm.persistence.util.GDMUtil;
+import org.dswarm.xmlenhancer.XMLEnhancer;
 
 /**
  * A resource (controller service) for {@link DataModel}s.
@@ -109,18 +112,23 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 	private static final Logger LOG = LoggerFactory.getLogger(DataModelsResource.class);
 
-	public static final String DO_INGEST_IDENTIFIER             = "do_ingest";
-	public static final String DO_INGEST_QUERY_PARAM_IDENTIFIER = "doIngest";
+	private static final String JAVA_IO_TMPDIR = "java.io.tmpdir";
+	private static final String OS_TEMP_DIR    = System.getProperty(JAVA_IO_TMPDIR);
+
+	public static final String DO_INGEST_IDENTIFIER                         = "do_ingest";
+	public static final String DO_INGEST_QUERY_PARAM_IDENTIFIER             = "doIngest";
+	public static final String ENHANCE_DATA_RESOURCE                        = "enhance_data_resource";
+	public static final String ENHANCE_DATA_RESOURCE_QUERY_PARAM_IDENTIFIER = "enhanceDataResource";
 
 	/**
 	 * The data model util
 	 */
 	private final DataModelUtil dataModelUtil;
 
-	private final Provider<SchemaEventRecorder>       schemaEventRecorderProvider;
-	private final Provider<XMLSchemaEventRecorder>    xmlSchemaEventRecorderProvider;
-	private final Provider<CSVConverterEventRecorder> csvConverterEventRecorderProvider;
-	private final Provider<XMLConverterEventRecorder> xmlConvertEventRecorderProvider;
+	private final Provider<SchemaEventRecorder>        schemaEventRecorderProvider;
+	private final Provider<XMLSchemaEventRecorder>     xmlSchemaEventRecorderProvider;
+	private final Provider<CSVConverterEventRecorder>  csvConverterEventRecorderProvider;
+	private final Provider<XMLConverterEventRecorder>  xmlConvertEventRecorderProvider;
 	private final Provider<JSONConverterEventRecorder> jsonConvertEventRecorderProvider;
 	private final Provider<SchemaDeterminator>         schemaDeterminatorProvider;
 
@@ -198,6 +206,8 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	 * schema of the data will be created as well.
 	 *
 	 * @param jsonObjectString a JSON representation of one data model
+	 * @param  doIngest flag that triggers data ingest (if true)
+	 * @param enhanceDataResource flag that triggers data resource enhancement (if true)
 	 * @return the persisted data model as JSON representation
 	 * @throws DMPControllerException
 	 */
@@ -208,18 +218,28 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createObject2(@ApiParam(value = "data model (as JSON)", required = true) final String jsonObjectString,
-			@ApiParam("do ingest") @QueryParam("doIngest") final Boolean doIngest)
+			@ApiParam("do ingest") @QueryParam("doIngest") final Boolean doIngest,
+			@ApiParam("enhance data resource") @QueryParam("enhanceDataResource") final Boolean enhanceDataResource)
 			throws DMPControllerException {
 
 		final ObjectNode contextNode;
 
-		if (doIngest != null) {
-
-			contextNode = objectMapperProvider.get().createObjectNode();
-			contextNode.put(DataModelsResource.DO_INGEST_IDENTIFIER, doIngest);
-		} else {
+		if (doIngest == null && enhanceDataResource == null) {
 
 			contextNode = null;
+		} else {
+
+			contextNode = objectMapperProvider.get().createObjectNode();
+
+			if (doIngest != null) {
+
+				contextNode.put(DataModelsResource.DO_INGEST_IDENTIFIER, doIngest);
+			}
+
+			if (enhanceDataResource != null) {
+
+				contextNode.put(DataModelsResource.ENHANCE_DATA_RESOURCE, enhanceDataResource);
+			}
 		}
 
 		return super.createObject2(jsonObjectString, contextNode);
@@ -387,8 +407,8 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			throw new DMPControllerException(message);
 		}
 
-		final Optional<String> optionalKeyAttributePathString = getStringValue(DMPStatics.KEY_ATTRIBUTE_PATH_IDENTIFIER, requestJSON);
-		final Optional<String> optionalSearchValue = getStringValue(DMPStatics.SEARCH_VALUE_IDENTIFIER, requestJSON);
+		final Optional<String> optionalKeyAttributePathString = JsonUtils.getStringValue(DMPStatics.KEY_ATTRIBUTE_PATH_IDENTIFIER, requestJSON);
+		final Optional<String> optionalSearchValue = JsonUtils.getStringValue(DMPStatics.SEARCH_VALUE_IDENTIFIER, requestJSON);
 
 		if (!optionalKeyAttributePathString.isPresent() || !optionalSearchValue.isPresent()) {
 
@@ -406,7 +426,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 				keyAttributePathString, searchValue, uuid);
 
 		final Observable<Tuple<String, JsonNode>> data = dataModelUtil.searchRecords(
-				keyAttributePathString, searchValue, uuid, Optional.fromNullable(atMost));
+				keyAttributePathString, searchValue, uuid, Optional.ofNullable(atMost));
 
 		data.subscribe(new StreamingDataObserver(uuid, objectMapperProvider.get(), pojoClassName, asyncResponse));
 	}
@@ -495,7 +515,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			// TODO
 
 			// record tag
-			final Optional<Configuration> optionalConfiguration = Optional.fromNullable(freshDataModel.getConfiguration());
+			final Optional<Configuration> optionalConfiguration = Optional.ofNullable(freshDataModel.getConfiguration());
 			final Optional<String> optionalRecordTag = DataModelUtil.determineRecordTag(optionalConfiguration);
 
 			if (optionalRecordTag.isPresent()) {
@@ -662,24 +682,12 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 			// versioning is disabled at data model creation, since there should be any data for this data model in the data hub
 			final boolean enableVersioning = false;
-
-			if (contextJSON == null) {
-
-				return updateDataModel(freshProxyDataModel, freshDataModel, enableVersioning);
-			}
-
-			final JsonNode doIngestNode = contextJSON.get(DO_INGEST_IDENTIFIER);
-
-			if (doIngestNode == null) {
-
-				return updateDataModel(freshProxyDataModel, freshDataModel, enableVersioning);
-			}
-
-			final boolean doIngest = doIngestNode.asBoolean();
+			final boolean enhanceDataResource = JsonUtils.getBooleanValue(ENHANCE_DATA_RESOURCE, contextJSON, false);
+			final boolean doIngest = JsonUtils.getBooleanValue(DO_INGEST_IDENTIFIER, contextJSON, true);
 
 			if (doIngest) {
 
-				return updateDataModel(freshProxyDataModel, freshDataModel, enableVersioning);
+				return updateDataModel(freshProxyDataModel, freshDataModel, enableVersioning, enhanceDataResource);
 			} else {
 
 				DataModelsResource.LOG.debug("skip ingest for data model '{}'", dataModel.getUuid());
@@ -724,7 +732,8 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	 * @return
 	 * @throws DMPControllerException
 	 */
-	private ProxyDataModel updateDataModel(final ProxyDataModel proxyDataModel, final DataModel dataModel, final boolean enableVersioning)
+	private ProxyDataModel updateDataModel(final ProxyDataModel proxyDataModel, final DataModel dataModel, final boolean enableVersioning,
+			final boolean enhanceDataResource)
 			throws DMPControllerException {
 
 		final ProxyDataModel newProxyDataModel = addConfigurationToDataResource(proxyDataModel, dataModel);
@@ -736,13 +745,31 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			return proxyDataModel;
 		}
 
+		if (enhanceDataResource) {
+
+			try {
+
+				enhanceDataResource(newDataModel);
+			} catch (final IOException e) {
+
+				final String message = String
+						.format("something went wrong at data resource enhancement for data model '%s' (see logs for details)", dataModel.getUuid());
+
+				LOG.error(message, e);
+
+				throw new DMPControllerException(message);
+			}
+		}
+
 		return updateDataModelContent(newProxyDataModel, newDataModel, UpdateFormat.FULL, enableVersioning);
 	}
 
 	private ProxyDataModel addConfigurationToDataResource(final ProxyDataModel proxyDataModel, final DataModel dataModel)
 			throws DMPControllerException {
 
-		if (dataModel.getConfiguration() == null) {
+		final Configuration configuration = dataModel.getConfiguration();
+
+		if (configuration == null) {
 
 			final String message = String
 					.format("could not add configuration to data resource, because the data model '%s' has no configuration", dataModel.getUuid());
@@ -752,7 +779,9 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			return proxyDataModel;
 		}
 
-		if (dataModel.getDataResource() == null) {
+		final Resource dataResource = dataModel.getDataResource();
+
+		if (dataResource == null) {
 
 			final String message = String
 					.format("could not add configuration to data resource, because the data model '%s' has no resource", dataModel.getUuid());
@@ -763,7 +792,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 		}
 
 		// add configuration to data resource
-		dataModel.getDataResource().addConfiguration(dataModel.getConfiguration());
+		dataResource.addConfiguration(configuration);
 
 		try {
 
@@ -773,7 +802,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 				final String message = String
 						.format("something went wrong, when trying to add configuration '%s' to data resource '%s' of data model '%s'",
-								dataModel.getConfiguration().getUuid(), dataModel.getDataResource().getUuid(), dataModel.getUuid());
+								configuration.getUuid(), dataResource.getUuid(), dataModel.getUuid());
 
 				DataModelsResource.LOG.error(message);
 
@@ -788,7 +817,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 			final String message = String
 					.format("something went wrong, when trying to add configuration '%s' to data resource '%s' of data model '%s'",
-							dataModel.getConfiguration().getUuid(), dataModel.getDataResource().getUuid(), dataModel.getUuid());
+							configuration.getUuid(), dataResource.getUuid(), dataModel.getUuid());
 
 			DataModelsResource.LOG.error(message, e);
 
@@ -911,10 +940,10 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 		if (atMost != null) {
 			data = dataModelUtil
-					.getData(uuid, Optional.fromNullable(atMost))
+					.getData(uuid, Optional.ofNullable(atMost))
 					.limit(atMost);
 		} else {
-			data = dataModelUtil.getData(uuid, Optional.absent());
+			data = dataModelUtil.getData(uuid, Optional.empty());
 		}
 
 		data.subscribe(new StreamingDataObserver(uuid, objectMapperProvider.get(), pojoClassName, asyncResponse));
@@ -949,20 +978,97 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 		return target;
 	}
 
-	private Optional<String> getStringValue(final String key, final JsonNode json) {
+	private void enhanceDataResource(final DataModel dataModel) throws IOException {
 
-		final JsonNode node = json.get(key);
-		final Optional<String> optionalValue;
+		if (dataModel == null) {
 
-		if (node != null) {
+			LOG.debug("cannot enhance data resource, because there is no data model");
 
-			optionalValue = Optional.fromNullable(node.asText());
-		} else {
-
-			optionalValue = Optional.absent();
+			return;
 		}
 
-		return optionalValue;
+		final Configuration configuration = dataModel.getConfiguration();
+
+		if (configuration == null) {
+
+			LOG.debug("cannot enhance data resource, because there is no configuration at data model '{}'", dataModel.getUuid());
+
+			return;
+		}
+
+		final Resource dataResource = dataModel.getDataResource();
+
+		if (dataResource == null) {
+
+			LOG.debug("cannot enhance data resource, because there is no data resource at data model '{}'", dataModel.getUuid());
+
+			return;
+		}
+
+		final JsonNode pathAttributeJSON = dataResource.getAttribute(ResourceStatics.PATH);
+
+		if (pathAttributeJSON == null) {
+
+			LOG.debug("cannot enhance data resource '{}', because there is no path given.", dataResource.getUuid());
+
+			return;
+		}
+
+		final String path = pathAttributeJSON.asText();
+
+		if (path == null || path.trim().isEmpty()) {
+
+			LOG.debug("cannot enhance data resource '{}', because there is no path given.", dataResource.getUuid());
+
+			return;
+		}
+
+		final JsonNode storageTypeParameterJSON = configuration.getParameter(ConfigurationStatics.STORAGE_TYPE);
+
+		if (storageTypeParameterJSON == null) {
+
+			LOG.debug("cannot enhance data resource '{}', because there is no storage type given.", dataResource.getUuid());
+
+			return;
+		}
+
+		final String storageTypeString = storageTypeParameterJSON.asText();
+
+		switch (storageTypeString) {
+
+			case ConfigurationStatics.XML_STORAGE_TYPE:
+			case ConfigurationStatics.MABXML_STORAGE_TYPE:
+			case ConfigurationStatics.MARCXML_STORAGE_TYPE:
+			case ConfigurationStatics.PNX_STORAGE_TYPE:
+			case ConfigurationStatics.OAI_PMH_DC_ELEMENTS_STORAGE_TYPE:
+			case ConfigurationStatics.OAI_PMH_DCE_AND_EDM_ELEMENTS_STORAGE_TYPE:
+			case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:
+			case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
+
+				break;
+			default:
+
+				LOG.debug("storage type '{}' is currently not support for data resource enhancement", storageTypeString);
+
+				return;
+		}
+
+		LOG.debug("try to enhance data resource '{}'", dataResource.getUuid());
+
+		final java.nio.file.Path dataResourcePath = Paths.get(path);
+		final java.nio.file.Path dataResourceFileNamePath = dataResourcePath.getFileName();
+		final String dataResourceFileName = dataResourceFileNamePath.toString();
+
+		final String newDataResourcePathString = OS_TEMP_DIR + File.separator + dataResourceFileName;
+
+		XMLEnhancer.enhanceXML(path, newDataResourcePathString);
+
+		final java.nio.file.Path newDataResourcePath = Paths.get(newDataResourcePathString);
+
+		// move enhanced content to original place
+		Files.copy(newDataResourcePath, dataResourcePath, StandardCopyOption.REPLACE_EXISTING);
+
+		LOG.debug("enhanced data resource '{}'", dataResource.getUuid());
 	}
 
 	private static final class StreamingDataObserver implements Observer<Tuple<String, JsonNode>> {
@@ -977,6 +1083,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 		public StreamingDataObserver(final String uuid, final ObjectMapper objectMapper, final String pojoClassName,
 				final AsyncResponse asyncResponse) {
+
 			this.uuid = uuid;
 			this.objectMapper = objectMapper;
 			this.pojoClassName = pojoClassName;

@@ -16,13 +16,11 @@
 package org.dswarm.persistence.service;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.Future;
-import java.util.function.Supplier;
 
 import javax.ws.rs.core.Response;
 
-import com.google.common.base.Optional;
 import rx.Observable;
 
 import org.dswarm.common.types.Tuple;
