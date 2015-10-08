@@ -66,6 +66,7 @@ import org.dswarm.converter.morph.model.FilterExpressionType;
 import org.dswarm.init.util.DMPStatics;
 import org.dswarm.persistence.model.job.Filter;
 import org.dswarm.persistence.model.job.Task;
+import org.dswarm.persistence.model.job.utils.FilterUtils;
 
 /**
  * @author tgaengler
@@ -81,8 +82,6 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 	private static final String TRANSFORMER_FACTORY_CLASS = "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl";
 
 	private static final String SCHEMA_PATH                       = "schemata/metamorph.xsd";
-	public static final  String FILTER_EXPRESSION_TYPE_IDENTIFIER = "type";
-	public static final String FILTER_EXPRESSION_EXPRESSION_IDENTIFIER = "expression";
 
 	protected Document doc;
 
@@ -458,10 +457,10 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 							break;
 						case OBJECT:
 
-							final String filterExpressionTypeString = filterExpressionValue.get(FILTER_EXPRESSION_TYPE_IDENTIFIER).asText();
+							final String filterExpressionTypeString = filterExpressionValue.get(FilterUtils.FILTER_EXPRESSION_TYPE_IDENTIFIER).asText();
 							final FilterExpressionType filterExpressionType = FilterExpressionType.valueOf(filterExpressionTypeString);
 
-							final String filterExpressionText = filterExpressionValue.get(FILTER_EXPRESSION_EXPRESSION_IDENTIFIER).asText();
+							final String filterExpressionText = filterExpressionValue.get(FilterUtils.FILTER_EXPRESSION_EXPRESSION_IDENTIFIER).asText();
 
 							filterExpression = new FilterExpression(filterExpressionText, filterExpressionType);
 

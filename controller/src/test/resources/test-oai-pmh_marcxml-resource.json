@@ -1,0 +1,11 @@
+{
+  "name" : "test.oai-pmh_marcxml.xml",
+  "type" : "FILE",
+  "description" : "this is a description",
+  "resource_attributes" : {
+    "path" : "dummy/path/to/test.oai-pmh_marcxml.xml",
+    "filesize" : 2279,
+    "filetype" : "application/xml"
+  },
+  "uuid" : "1"
+}
