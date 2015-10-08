@@ -62,6 +62,8 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 	private static final Logger LOG = LoggerFactory.getLogger(MorphScriptBuilder.class);
 
+	private static final String UNDERSCORE = "_";
+
 	private static final String MAPPING_PREFIX = "mapping";
 
 	private static final String METAMORPH_ELEMENT_SINGLE_MAP = "map";
@@ -127,7 +129,9 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 	private static final String MF_CONCAT_FUNCTION_PREFIX_ATTRIBUTE_IDENTIFIER = "prefix";
 
 	private static final String                     MF_CONCAT_FUNCTION_POSTFIX_ATTRIBUTE_IDENTIFIER = "postfix";
+
 	private static final String                     DUMMY_VARIABLE_IDENTIFIER                       = "var1000";
+
 	private static final Map<String, AtomicInteger> mapiVarCounters                                 = new HashMap<>();
 
 	@Override
@@ -252,6 +256,13 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 				switch (functionName) {
 
 					case METAMORPH_FUNCTION_SQLMAP:
+
+						if(parameterMappings.containsKey(INPUT_VARIABLE_IDENTIFIER)) {
+
+							// input variable mapping won't be needed at the processing here
+
+							parameterMappings.remove(INPUT_VARIABLE_IDENTIFIER);
+						}
 
 						createSqlMap(functionName, componentName, parameterMappings, maps);
 
@@ -432,9 +443,9 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 		final Element data = doc.createElement(METAMORPH_ELEMENT_DATA);
 
-		data.setAttribute(METAMORPH_DATA_SOURCE, "@" + dataSourceAttribute);
+		data.setAttribute(METAMORPH_DATA_SOURCE, MF_VARIABLE_PREFIX + dataSourceAttribute);
 
-		data.setAttribute(METAMORPH_DATA_TARGET, "@" + dataNameAttribute);
+		data.setAttribute(METAMORPH_DATA_TARGET, MF_VARIABLE_PREFIX + dataNameAttribute);
 
 		final Element comp = doc.createElement(getComponentFunctionName(singleInputComponent));
 
@@ -495,7 +506,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 			final Element data = doc.createElement(METAMORPH_ELEMENT_DATA);
 			data.setAttribute(METAMORPH_DATA_SOURCE, inputAttributePathStringXMLEscaped);
 
-			data.setAttribute(METAMORPH_DATA_TARGET, "@" + mappingInput.getName());
+			data.setAttribute(METAMORPH_DATA_TARGET, MF_VARIABLE_PREFIX + mappingInput.getName());
 
 			rules.appendChild(data);
 		} else {
@@ -535,7 +546,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 			}
 
 			final Element dataOutput = doc.createElement(METAMORPH_ELEMENT_DATA);
-			dataOutput.setAttribute(METAMORPH_DATA_SOURCE, "@" + variable);
+			dataOutput.setAttribute(METAMORPH_DATA_SOURCE, MF_VARIABLE_PREFIX + variable);
 			dataOutput.setAttribute(METAMORPH_DATA_TARGET, outputAttributePathStringXMLEscaped);
 			rules.appendChild(dataOutput);
 		}
@@ -573,7 +584,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 		final String mapiIdentifier = getMAPIIdentifier(inputMappingAttributePathInstance);
 		final int mapiVarCount = getMAPICount(mapiIdentifier);
-		String var1000 = DUMMY_VARIABLE_IDENTIFIER + "_" + mapiIdentifier + "_" + mapiVarCount;
+		String var1000 = DUMMY_VARIABLE_IDENTIFIER + UNDERSCORE + mapiIdentifier + UNDERSCORE + mapiVarCount;
 		boolean takeVariable = false;
 
 		if (isOrdinalValid) {
@@ -593,7 +604,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 			inputVariable = inputAttributePathStringXMLEscaped;
 		} else {
 
-			inputVariable = "@" + var1000;
+			inputVariable = MF_VARIABLE_PREFIX + var1000;
 		}
 
 		final Element data = doc.createElement(METAMORPH_ELEMENT_DATA);
@@ -657,9 +668,9 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 						final Element data = doc.createElement(METAMORPH_ELEMENT_DATA);
 
-						data.setAttribute(METAMORPH_DATA_SOURCE, "@" + dataSourceAttribute);
+						data.setAttribute(METAMORPH_DATA_SOURCE, MF_VARIABLE_PREFIX + dataSourceAttribute);
 
-						data.setAttribute(METAMORPH_DATA_TARGET, "@" + transformationOutputVariableIdentifier);
+						data.setAttribute(METAMORPH_DATA_TARGET, MF_VARIABLE_PREFIX + transformationOutputVariableIdentifier);
 
 						rules.appendChild(data);
 					}
@@ -681,9 +692,12 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 		String[] inputStrings = {};
 
+		final String functionName = component.getFunction().getName();
+
 		final Map<String, String> componentParameterMapping = component.getParameterMappings();
 
-		if (componentParameterMapping != null) {
+		// input variable don't need to be processed @ sqlmap function
+		if (!METAMORPH_FUNCTION_SQLMAP.equals(functionName) && componentParameterMapping != null) {
 
 			for (final Entry<String, String> parameterMapping : componentParameterMapping.entrySet()) {
 
@@ -705,8 +719,6 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 			return;
 		}
-
-		final String functionName = component.getFunction().getName();
 
 		if (sourceAttributes.size() > 1 || DSWARM_FUNCTION_COLLECT.equals(functionName)) {
 
@@ -827,7 +839,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 		createParameters(multipleInputComponent, collection);
 
-		collection.setAttribute(METAMORPH_DATA_TARGET, "@" + collectionNameAttribute);
+		collection.setAttribute(METAMORPH_DATA_TARGET, MF_VARIABLE_PREFIX + collectionNameAttribute);
 
 		for (final String sourceAttribute : collectionSourceAttributes) {
 
@@ -921,11 +933,11 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 		final Element occurrenceData = doc.createElement(METAMORPH_ELEMENT_DATA);
 
-		occurrenceData.setAttribute(METAMORPH_DATA_TARGET, "@" + variable);
+		occurrenceData.setAttribute(METAMORPH_DATA_TARGET, MF_VARIABLE_PREFIX + variable);
 
 		final String manipulatedVariable = variable + MorphScriptBuilder.OCCURRENCE_VARIABLE_POSTFIX;
 
-		occurrenceData.setAttribute(METAMORPH_DATA_SOURCE, "@" + manipulatedVariable);
+		occurrenceData.setAttribute(METAMORPH_DATA_SOURCE, MF_VARIABLE_PREFIX + manipulatedVariable);
 
 		final Element occurrenceFunction = doc.createElement(METAMORPH_FUNCTION_OCCURRENCE);
 
@@ -1011,9 +1023,9 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 			final String sourceAttribute = iter.next();
 
-			valueStringBuilder.append("${")
+			valueStringBuilder.append(MF_VALUE_VARIABLE_PREFIX)
 					.append(sourceAttribute)
-					.append("}");
+					.append(MF_VALUE_VARIABLE_POSTFIX);
 
 			if ((i++ + 1) < collectionSourceAttributes.size()) {
 
@@ -1076,7 +1088,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 		final String ifElseComponentID = multipleInputComponent.getUuid();
 		final String ifElseComponentName = IF_ELSE_COMPONENT_NAME_PREFIX + ifElseComponentID;
 
-		collection.setAttribute(METAMORPH_DATA_TARGET, "@" + collectionNameAttribute);
+		collection.setAttribute(METAMORPH_DATA_TARGET, MF_VARIABLE_PREFIX + collectionNameAttribute);
 
 		createDataElement(collection, ifBranchComponentVariableName, ifElseComponentName + IF_BRANCH_POSTFIX);
 		createDataElement(collection, elseBranchComponentVariableName, ifElseComponentName + ELSE_BRANCH_POSTFIX);
@@ -1088,7 +1100,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 		final Element collectionData = doc.createElement(METAMORPH_ELEMENT_DATA);
 
-		collectionData.setAttribute(METAMORPH_DATA_SOURCE, "@" + sourceAttribute);
+		collectionData.setAttribute(METAMORPH_DATA_SOURCE, MF_VARIABLE_PREFIX + sourceAttribute);
 
 		collectionData.setAttribute(METAMORPH_DATA_TARGET, targetName);
 

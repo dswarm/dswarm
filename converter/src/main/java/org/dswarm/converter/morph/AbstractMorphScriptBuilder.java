@@ -81,7 +81,7 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 
 	private static final String TRANSFORMER_FACTORY_CLASS = "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl";
 
-	private static final String SCHEMA_PATH                       = "schemata/metamorph.xsd";
+	private static final String SCHEMA_PATH = "schemata/metamorph.xsd";
 
 	protected Document doc;
 
@@ -127,6 +127,12 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 			AbstractMorphScriptBuilder.LOG.error("couldn't read schema resource", e1);
 		}
 	}
+
+	protected static final String MF_VARIABLE_PREFIX = "@";
+
+	protected static final String MF_VALUE_VARIABLE_PREFIX = "${";
+
+	protected static final String MF_VALUE_VARIABLE_POSTFIX = "}";
 
 	protected static final String METAMORPH_IDENTIFIER = "metamorph";
 
@@ -322,14 +328,15 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 
 		if (resultNameAsVariable) {
 
-			resultName = "@" + variable;
+			resultName = MF_VARIABLE_PREFIX + variable;
 		} else {
 
 			resultName = variable;
 		}
 
 		combineAsFilter.setAttribute(METAMORPH_DATA_TARGET, resultName);
-		combineAsFilter.setAttribute(MF_ELEMENT_VALUE_ATTRIBUTE_IDENTIFIER, "${" + combineValueVariable + "}");
+		combineAsFilter
+				.setAttribute(MF_ELEMENT_VALUE_ATTRIBUTE_IDENTIFIER, MF_VALUE_VARIABLE_PREFIX + combineValueVariable + MF_VALUE_VARIABLE_POSTFIX);
 
 		final String commonAttributePath = validateCommonAttributePath(inputAttributePathStringXMLEscaped, filterExpressionMap.keySet());
 
@@ -444,7 +451,7 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 
 					final FilterExpression filterExpression;
 
-					switch(nodeType) {
+					switch (nodeType) {
 
 						case STRING:
 
@@ -457,17 +464,20 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 							break;
 						case OBJECT:
 
-							final String filterExpressionTypeString = filterExpressionValue.get(FilterUtils.FILTER_EXPRESSION_TYPE_IDENTIFIER).asText();
+							final String filterExpressionTypeString = filterExpressionValue.get(FilterUtils.FILTER_EXPRESSION_TYPE_IDENTIFIER)
+									.asText();
 							final FilterExpressionType filterExpressionType = FilterExpressionType.valueOf(filterExpressionTypeString);
 
-							final String filterExpressionText = filterExpressionValue.get(FilterUtils.FILTER_EXPRESSION_EXPRESSION_IDENTIFIER).asText();
+							final String filterExpressionText = filterExpressionValue.get(FilterUtils.FILTER_EXPRESSION_EXPRESSION_IDENTIFIER)
+									.asText();
 
 							filterExpression = new FilterExpression(filterExpressionText, filterExpressionType);
 
 							break;
 						default:
 
-							throw new DMPConverterException(String.format("unknown filter expression value type for filter key '%s'", filterExpressionKey));
+							throw new DMPConverterException(
+									String.format("unknown filter expression value type for filter key '%s'", filterExpressionKey));
 					}
 
 					filterExpressionMap.put(filterExpressionKey, filterExpression);
