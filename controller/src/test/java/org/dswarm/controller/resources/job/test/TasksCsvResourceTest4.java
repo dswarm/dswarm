@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
@@ -32,7 +33,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.io.Resources;
 import org.apache.commons.io.FileUtils;
-import org.apache.tika.Tika;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -116,10 +116,8 @@ public class TasksCsvResourceTest4 extends ResourceTest {
 
 		String fileType = null;
 
-		final Tika tika = new Tika();
 		try {
-			fileType = tika.detect(resourceFile);
-			// fileType = Files.probeContentType(resourceFile.toPath());
+			fileType = Files.probeContentType(resourceFile.toPath());
 		} catch (final IOException e1) {
 
 			TasksCsvResourceTest4.LOG.debug("couldn't determine file type from file '" + resourceFile.getAbsolutePath() + "'");

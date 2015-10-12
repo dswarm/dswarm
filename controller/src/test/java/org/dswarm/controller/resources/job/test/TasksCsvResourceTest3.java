@@ -18,6 +18,7 @@ package org.dswarm.controller.resources.job.test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +33,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.io.Resources;
 import org.apache.commons.io.FileUtils;
-import org.apache.tika.Tika;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
@@ -114,10 +114,8 @@ public class TasksCsvResourceTest3 extends ResourceTest {
 
 		String fileType = null;
 
-		final Tika tika = new Tika();
 		try {
-			fileType = tika.detect(resourceFile);
-			// fileType = Files.probeContentType(resourceFile.toPath());
+			fileType = Files.probeContentType(resourceFile.toPath());
 		} catch (final IOException e1) {
 
 			TasksCsvResourceTest3.LOG.debug("couldn't determine file type from file '" + resourceFile.getAbsolutePath() + "'");
