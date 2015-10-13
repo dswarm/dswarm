@@ -144,7 +144,13 @@ public class MorphScriptBuilderTest extends GuicedTest {
 
 		compareTaskGeneratedMorphscript("convertvalue.task.json", "convertvalue.morph.xml");
 	}
-	
+
+	@Test
+	public void testISSNTask() throws Exception {
+
+		compareTaskGeneratedMorphscript("issn.task.json", "issn.morph.xml");
+	}
+
 	@Test
 	public void testRegexLookupMap() throws Exception {
 
