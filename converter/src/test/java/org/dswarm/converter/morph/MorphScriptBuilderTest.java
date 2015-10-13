@@ -138,6 +138,12 @@ public class MorphScriptBuilderTest extends GuicedTest {
 
 		compareTaskGeneratedMorphscript("sqlmap.lookup.task.json", "sqlmap.lookup.morph.xml");
 	}
+
+	@Test
+	public void testConvertValueTask() throws Exception {
+
+		compareTaskGeneratedMorphscript("convertvalue.task.json", "convertvalue.morph.xml");
+	}
 	
 	@Test
 	public void testRegexLookupMap() throws Exception {

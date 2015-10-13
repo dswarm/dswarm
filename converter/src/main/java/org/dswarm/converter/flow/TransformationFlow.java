@@ -23,8 +23,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
@@ -101,7 +103,10 @@ public class TransformationFlow {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TransformationFlow.class);
 
-	private static final String TRANSFORMATION_ENGINE_IDENTIFIER = "transformation engine";
+	private static final String    TRANSFORMATION_ENGINE_IDENTIFIER = "transformation engine";
+	private static final Predicate RDF_TYPE_PREDICATE               = new Predicate(GDMUtil.RDF_type);
+
+	private final Map<String, ResourceNode> resourceNodeCache = new ConcurrentHashMap<>();
 
 	private final Metamorph transformer;
 
@@ -126,6 +131,7 @@ public class TransformationFlow {
 			@Assisted final String scriptArg,
 			@Assisted final Optional<DataModel> outputDataModelArg,
 			@Assisted final Optional<Filter> optionalSkipFilterArg) {
+
 		this.timerBasedFactory = timerBasedFactory;
 		this.transformer = transformer;
 		script = scriptArg == null ? "" : scriptArg;
@@ -297,8 +303,8 @@ public class TransformationFlow {
 				if (recordResource != null) {
 
 					// TODO check this: subject OK?
-					recordResource.addStatement(new ResourceNode(recordResource.getUri()), new Predicate(GDMUtil.RDF_type),
-							new ResourceNode(defaultRecordClassURI));
+					recordResource.addStatement(getOrCreateResourceNode(recordResource.getUri()), RDF_TYPE_PREDICATE,
+							getOrCreateResourceNode(defaultRecordClassURI));
 				}
 
 				// re-write GDM model
@@ -467,6 +473,11 @@ public class TransformationFlow {
 				Optional.ofNullable(dataModel.getSchema()).flatMap(schema ->
 						Optional.ofNullable(schema.getRecordClass())
 								.map(Clasz::getUri)));
+	}
+
+	private ResourceNode getOrCreateResourceNode(final String resourceURI) {
+
+		return resourceNodeCache.computeIfAbsent(resourceURI, resourceURI1 -> new ResourceNode(resourceURI));
 	}
 
 	private static <T> boolean exists(final Optional<T> optional, final java.util.function.Predicate<T> predicate) {

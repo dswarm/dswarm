@@ -147,6 +147,12 @@ public class XMLTransformationFlowTest extends GuicedTest {
 	}
 
 	@Test
+	public void testConvertValueTask() throws Exception {
+
+		testXMLTaskWithTuples("convertvalue.mabxml.task.result.json", "convertvalue.task.json", "convertvalue.mabxml_dmp.tuples.json");
+	}
+
+	@Test
 	public void testCollectTask() throws Exception {
 
 		testXMLTaskWithTuples("dd-1220.mabxml.task.result.json", "dd-1220.mabxml.task.json", "test-mabxml.tuples.json");
