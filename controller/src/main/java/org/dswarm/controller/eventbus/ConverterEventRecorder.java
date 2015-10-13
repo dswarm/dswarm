@@ -17,7 +17,6 @@ package org.dswarm.controller.eventbus;
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -113,10 +112,10 @@ public abstract class ConverterEventRecorder<CONVERTER_EVENT_IMPL extends Conver
 			//LOG.debug("before to blocking");
 
 			// TODO: delegate observable
-			writeResponse.timeout(100, TimeUnit.SECONDS).toBlocking().firstOrDefault(null);
+			writeResponse.toBlocking().firstOrDefault(null);
 
 			LOG.debug("processed {} data resource into data model '{}'", type, dataModel.getUuid());
-		} catch (final Exception e) {
+		} catch (final DMPPersistenceException e) {
 
 			final String message = String.format("couldn't persist the converted data of data model '%s'", dataModel.getUuid());
 
