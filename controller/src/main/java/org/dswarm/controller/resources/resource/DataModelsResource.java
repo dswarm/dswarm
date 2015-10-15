@@ -21,8 +21,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -427,6 +429,70 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 		final Observable<Tuple<String, JsonNode>> data = dataModelUtil.searchRecords(
 				keyAttributePathString, searchValue, uuid, Optional.ofNullable(atMost));
+
+		data.subscribe(new StreamingDataObserver(uuid, objectMapperProvider.get(), pojoClassName, asyncResponse));
+	}
+
+	/**
+	 * Returns the data for given record identifiers of a given data model.
+	 *
+	 * @param uuid             a data model identifier
+	 * @param selectRequestJSONString the select request as JSON string
+	 * @return the data for selected records of a given data model
+	 * @throws DMPControllerException
+	 */
+	@ApiOperation(value = "get the data of records that matches the given record identifiers and of the data model that matches the given data model uuid", notes = "Returns the data for selected records of a given data model.")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "could retrieve the data successfully for the data for selected records of a given data model"),
+			@ApiResponse(code = 404, message = "could not find a data model for the given uuid"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@Timed
+	@POST
+	@Path("/{uuid}/records/select")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public void selectRecords(
+			@ApiParam(value = "data model identifier", required = true) @PathParam("uuid") final String uuid,
+			@ApiParam(value = "search request (as JSON)", required = true) final String selectRequestJSONString,
+			@Suspended final AsyncResponse asyncResponse) throws DMPControllerException {
+
+		if (selectRequestJSONString == null) {
+
+			final String message = "couldn't select records, because the request JSON string is null";
+
+			DataModelsResource.LOG.error(message);
+
+			throw new DMPControllerException(message);
+		}
+
+		final Set<String> selectedRecordURIs;
+
+		try {
+
+			selectedRecordURIs = DMPPersistenceUtil.getJSONObjectMapper().readValue(selectRequestJSONString, new TypeReference<HashSet<String>>() {
+
+			});
+		} catch (final IOException e) {
+
+			final String message = "couldn't select records, because the request JSON string couldn't be deserialized";
+
+			DataModelsResource.LOG.error(message, e);
+
+			throw new DMPControllerException(message, e);
+		}
+
+		if (selectedRecordURIs == null) {
+
+			final String message = "couldn't select records, because the request set is null";
+
+			DataModelsResource.LOG.error(message);
+
+			throw new DMPControllerException(message);
+		}
+
+		DataModelsResource.LOG.debug("try to select {} records in data model with uuid '{}'", selectedRecordURIs.size(), uuid);
+
+		final Observable<Tuple<String, JsonNode>> data = dataModelUtil.getRecordsData(selectedRecordURIs, uuid);
 
 		data.subscribe(new StreamingDataObserver(uuid, objectMapperProvider.get(), pojoClassName, asyncResponse));
 	}
