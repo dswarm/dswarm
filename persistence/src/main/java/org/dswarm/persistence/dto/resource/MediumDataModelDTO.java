@@ -24,12 +24,15 @@ import org.dswarm.persistence.dto.BasicDMPDTO;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
+import org.dswarm.persistence.model.schema.Schema;
 
 public final class MediumDataModelDTO extends BasicDMPDTO<MediumDataModelDTO> {
 
 	private final Resource resource;
 
 	private final Configuration configuration;
+
+	private final Schema schema;
 
 	@JsonCreator
 	public MediumDataModelDTO(
@@ -44,10 +47,13 @@ public final class MediumDataModelDTO extends BasicDMPDTO<MediumDataModelDTO> {
 			@JsonProperty("data_resource")
 			final Resource resource,
 			@JsonProperty("configuration")
-			final Configuration configuration) {
+			final Configuration configuration,
+			@JsonProperty("schema")
+			final Schema schema) {
 		super(uuid, name, description, href);
 		this.resource = resource;
 		this.configuration = configuration;
+		this.schema = schema;
 	}
 
 	@JsonProperty("data_resource")
@@ -60,19 +66,32 @@ public final class MediumDataModelDTO extends BasicDMPDTO<MediumDataModelDTO> {
 		return configuration;
 	}
 
+	@JsonProperty("schema")
+	public Schema getSchema() {
+		return schema;
+	}
+
 	@Override
 	protected MediumDataModelDTO copyWithHref(final String objectURI) {
-		return new MediumDataModelDTO(uuid, name, description, objectURI, resource, configuration);
+		return new MediumDataModelDTO(uuid, name, description, objectURI, resource, configuration, schema);
 	}
 
 	public static MediumDataModelDTO of(final DataModel dataModel, final URI objectURI) {
 		final String uriString = objectURI == null ? null : objectURI.toString();
+		final Schema shortSchema = dataModel.getSchema() == null ? null : new Schema(dataModel.getSchema().getUuid());
+
+		if (shortSchema != null) {
+
+			shortSchema.setName(dataModel.getSchema().getName());
+		}
+
 		return new MediumDataModelDTO(
 				dataModel.getUuid(),
 				dataModel.getName(),
 				dataModel.getDescription(),
 				uriString,
 				dataModel.getDataResource(),
-				dataModel.getConfiguration());
+				dataModel.getConfiguration(),
+				shortSchema);
 	}
 }
