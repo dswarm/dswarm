@@ -269,14 +269,20 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	public Response createProjectWithHelpOfExistingEntities(
 			@ApiParam(value = "project (as JSON)", required = true) final String requestJsonObjectString) throws DMPControllerException {
 
+		LOG.debug("try to create new project (copy mappings) with help of existing entities");
+
 		final Tuple<DataModel, Project> migrationInput = getMigrationInput(requestJsonObjectString);
 		final DataModel inputDataModel = migrationInput.v1();
 		final Project referenceProject = migrationInput.v2();
+
+		LOG.debug("try to create new project (copy mappings) with help of input data model '{}' and reference project '{}", inputDataModel.getUuid(), referenceProject.getUuid());
 
 		final String newProjectId = UUIDService.getUUID(Project.class.getSimpleName());
 		final Project newProject = createNewProjectForMigration(inputDataModel, referenceProject, newProjectId);
 
 		migrateMappingsToVerySimilarInputAttributePaths(referenceProject, newProject);
+
+		LOG.debug("successfully created new project '{}' ('{}') incl. copied mappings with help of input data model '{}' and reference project '{}", newProject.getUuid(), newProject.getName(), inputDataModel.getUuid(), referenceProject.getUuid());
 
 		return persistProjectForMigration(newProjectId, newProject);
 	}
@@ -303,9 +309,13 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	public Response migrateProjectToNewInputSchema(
 			@ApiParam(value = "project (as JSON)", required = true) final String requestJsonObjectString) throws DMPControllerException {
 
+		LOG.debug("try to create new project (migrate mappings) with help of existing entities");
+
 		final Tuple<DataModel, Project> migrationInput = getMigrationInput(requestJsonObjectString);
 		final DataModel inputDataModel = migrationInput.v1();
 		final Project referenceProject = migrationInput.v2();
+
+		LOG.debug("try to create new project (migrate mappings) with help of input data model '{}' and reference project '{}", inputDataModel.getUuid(), referenceProject.getUuid());
 
 		final String newProjectId = UUIDService.getUUID(Project.class.getSimpleName());
 		final Project newProject = createNewProjectForMigration(inputDataModel, referenceProject, newProjectId);
@@ -316,6 +326,8 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 		final Map<AttributePath, AttributePath> attributePathMap = mapAttributePaths(referenceInputSchema, newInputSchema);
 
 		migrateMappingsToSomehowSimilarInputAttributePaths(referenceProject, newProject, attributePathMap);
+
+		LOG.debug("successfully created new project '{}' ('{}') incl. migrated mappings with help of input data model '{}' and reference project '{}", newProject.getUuid(), newProject.getName(), inputDataModel.getUuid(), referenceProject.getUuid());
 
 		return persistProjectForMigration(newProjectId, newProject);
 	}
@@ -811,6 +823,11 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 
 	private static Component createCopyOfComponent(final Component referenceComponent) {
 
+		if(referenceComponent == null) {
+
+			return null;
+		}
+
 		final String newComponentUuid = UUIDService.getUUID(Component.class.getSimpleName());
 
 		final Component newComponent = new Component(newComponentUuid);
@@ -889,6 +906,8 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 
 	private Response persistProjectForMigration(final String newProjectId, final Project newProject) throws DMPControllerException {
 
+		LOG.debug("try to persist new project '{}' from mappings copying/migration", newProjectId);
+
 		// persist project
 		final ProjectService projectService = persistenceServiceProvider.get();
 
@@ -896,7 +915,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 
 		try {
 
-			newPersistentProxyProject = projectService.createObject(newProject);
+			newPersistentProxyProject = projectService.createObjectTransactional(newProject);
 		} catch (final DMPPersistenceException e) {
 
 			final String message = String
@@ -920,6 +939,8 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 		}
 
 		final Project newPersistentProject = newPersistentProxyProject.getObject();
+
+		LOG.debug("successfully persisted new project '{}' from mappings copying/migration", newProjectId);
 
 		return createCreateObjectResponse(newPersistentProxyProject, newPersistentProject);
 	}

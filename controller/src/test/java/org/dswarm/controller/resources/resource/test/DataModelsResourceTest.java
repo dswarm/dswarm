@@ -862,6 +862,9 @@ public class DataModelsResourceTest extends
 		final Resource resource = resourcesResourceTestUtils.uploadResource(resourceFile, expectedResource);
 		final Configuration configuration = resourcesResourceTestUtils.addResourceConfiguration(resource, configurationJSONString);
 
+		final Schema schema = new Schema(SchemaUtils.PNX_SCHEMA_UUID);
+		schema.setName("pnx schema");
+
 		final String expectedJson =
 				objectMapper.writeValueAsString(
 						new MediumDataModelDTO(
@@ -870,7 +873,8 @@ public class DataModelsResourceTest extends
 								dataModelDescription,
 								target(dataModelUuid).getUri().toString(),
 								resource,
-								configuration
+								configuration,
+								schema
 						)
 				);
 
