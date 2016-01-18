@@ -870,7 +870,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 
 		final Set<Component> referenceOutputComponents = referenceComponent.getOutputComponents();
 
-		if (referenceInputComponents != null) {
+		if (referenceOutputComponents != null) {
 
 			final Set<Component> newOutputComponents = referenceOutputComponents.parallelStream().map(ProjectsResource::createCopyOfComponent)
 					.collect(Collectors.toSet());
