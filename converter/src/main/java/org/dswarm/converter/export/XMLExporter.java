@@ -240,7 +240,7 @@ public class XMLExporter {
 
 							startXML();
 
-							LOG.debug("start writing first record for XML export");
+							LOG.info("start writing first record for XML export");
 
 							startNodeHandler.handleNode(null, optionalFirstSingleRecordGDM.get());
 
@@ -255,7 +255,7 @@ public class XMLExporter {
 							endXML();
 						}
 
-						LOG.debug("finished writing '{}' records for XML export", counter.get());
+						LOG.info("finished writing '{}' records for XML export", counter.get());
 
 						subscriber.onCompleted();
 					} catch (final DMPConverterException e) {

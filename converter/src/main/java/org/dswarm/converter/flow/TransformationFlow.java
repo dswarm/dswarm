@@ -318,12 +318,12 @@ public class TransformationFlow {
 
 			if (counter2.incrementAndGet() == 1) {
 
-				LOG.debug("processed first record with '{}' statements in transformation engine", statementCounter.get());
+				LOG.info("processed first record with '{}' statements in transformation engine", statementCounter.get());
 			}
 
 			return finalGDMModel;
 		}).cast(org.dswarm.persistence.model.internal.Model.class).doOnCompleted(
-				() -> LOG.debug("processed '{}' records (from '{}') with '{}' statements in transformation engine", counter2.get(), counter.get(),
+				() -> LOG.info("processed '{}' records (from '{}') with '{}' statements in transformation engine", counter2.get(), counter.get(),
 						statementCounter.get()));
 
 		final Observable<JsonNode> resultObservable;
@@ -396,8 +396,8 @@ public class TransformationFlow {
 						LOG.debug("received first record in transformation engine");
 					}
 				}).doOnCompleted(opener::closeStream)
-						.doOnCompleted(() -> LOG.debug("received '{}' records in transformation engine", counter.get()))
-						.subscribe(opener::process, writer::propagateError, () -> LOG.info("DONE"));
+						.doOnCompleted(() -> LOG.info("received '{}' records in transformation engine", counter.get()))
+						.subscribe(opener::process, writer::propagateError, () -> LOG.debug("DONE"));
 			}
 		}).doOnCompleted(() -> {
 

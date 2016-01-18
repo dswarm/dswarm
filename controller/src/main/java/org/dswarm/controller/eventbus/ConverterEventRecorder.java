@@ -234,7 +234,7 @@ public abstract class ConverterEventRecorder<CONVERTER_EVENT_IMPL extends Conver
 							throw new RuntimeException(messageSB.toString());
 						}
 
-						LOG.debug(
+						LOG.info(
 								"transformed {} data resource at to GDM for data model '{}' - transformed '{}' records with '{}' statements (data resource at '{}')",
 								type, dataModel.getUuid(), recordCount, statementCounter.get(), path);
 					}).doOnSubscribe(
