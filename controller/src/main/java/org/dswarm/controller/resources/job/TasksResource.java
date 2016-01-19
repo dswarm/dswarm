@@ -478,7 +478,7 @@ public class TasksResource {
 											countDownLatch.countDown();
 										}
 
-										LOG.info("finished transforming GDM to XML");
+										LOG.debug("finished transforming GDM to XML");
 									}
 
 									@Override public void onError(final Throwable throwable) {

@@ -71,7 +71,7 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 	@Override
 	public void closeStream() {
 
-		LOG.debug("close {} writer stream; received '{}' records + emitted '{}' (left '{}'; discarded '{}') records", type, inComingCounter.get(),
+		LOG.info("close {} writer stream; received '{}' records + emitted '{}' (left '{}'; discarded '{}') records", type, inComingCounter.get(),
 				outGoingCounter.get(), inComingCounter.get() - outGoingCounter.get(), getNonOutGoingCounter().get());
 
 		afterClosedStream.compareAndSet(false, true);
@@ -104,7 +104,7 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 
 			return false;
 		}).doOnCompleted(() -> LOG
-				.debug("complete {} writer observable; received '{}' records + emitted '{}' (left '{}'; discarded '{}'; polled '{}') records", type,
+				.info("complete {} writer observable; received '{}' records + emitted '{}' (left '{}'; discarded '{}'; polled '{}') records", type,
 						inComingCounter.get(),
 						outGoingCounter.get(), inComingCounter.get() - outGoingCounter.get(), getNonOutGoingCounter().get(),
 						dequePolledCounter.get()));
