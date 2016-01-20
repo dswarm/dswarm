@@ -141,10 +141,10 @@ public class ProjectInputSchemaMigrationTest extends
 
 		Assert.assertNotEquals(referenceProject.getInputDataModel(), newProject.getInputDataModel());
 		Assert.assertEquals(newPersistentInputDataModel, newProject.getInputDataModel());
-		Assert.assertTrue(newProject.getInputDataModel().getName().startsWith("copy"));
-		Assert.assertTrue(newProject.getInputDataModel().getDescription().startsWith("copy"));
-		Assert.assertTrue(newProject.getInputDataModel().getName().endsWith(" but with MARCXML schema"));
-		Assert.assertTrue(newProject.getInputDataModel().getDescription().endsWith(" but with MARCXML schema"));
+		Assert.assertTrue(newProject.getInputDataModel().getName().startsWith("migration"));
+		Assert.assertTrue(newProject.getInputDataModel().getDescription().startsWith("migration"));
+		Assert.assertTrue(newProject.getInputDataModel().getName().endsWith(" to MARCXML schema"));
+		Assert.assertTrue(newProject.getInputDataModel().getDescription().endsWith(" to MARCXML schema"));
 
 		ProjectInputSchemaMigrationTest.LOG.debug("end migrate-project-to-new-input-schema test");
 	}
@@ -158,8 +158,8 @@ public class ProjectInputSchemaMigrationTest extends
 		final String newInputDataModelUuid = "DataModel-9b1f1249-617e-4369-acd0-81f2c89d2b25";
 
 		final DataModel newInputDataModel = new DataModel(newInputDataModelUuid);
-		newInputDataModel.setName("copy of '" + referenceInputDataModel.getName() + "' but with MARCXML schema");
-		newInputDataModel.setDescription("copy of '" + referenceInputDataModel.getDescription() + "' but with MARCXML schema");
+		newInputDataModel.setName("migration of '" + referenceInputDataModel.getName() + "' to MARCXML schema");
+		newInputDataModel.setDescription("migration of '" + referenceInputDataModel.getDescription() + "' to MARCXML schema");
 
 		final Configuration newConfiguration = createNewConfiguration(referenceInputDataModel);
 		final Resource newPersistentDataResource = createNewDataResource(referenceInputDataModel);
@@ -189,7 +189,7 @@ public class ProjectInputSchemaMigrationTest extends
 
 		final Resource newDataResource = new Resource(newDataResourceUuid);
 		newDataResource.setName(resourceName);
-		newDataResource.setDescription("copy of '" + referenceDataResource.getDescription() + "' but MARCXML data resource");
+		newDataResource.setDescription("migration of '" + referenceDataResource.getDescription() + "' to MARCXML data resource");
 		newDataResource.setAttributes(referenceDataResource.getAttributes());
 		newDataResource.setType(referenceDataResource.getType());
 
@@ -210,8 +210,8 @@ public class ProjectInputSchemaMigrationTest extends
 		final String newConfigurationUuid = "Configuration-83356b7a-4c0d-48be-8832-6732a120c8b8";
 
 		final Configuration newConfiguration = new Configuration(newConfigurationUuid);
-		newConfiguration.setName("copy of '" + referenceConfiguration.getName() + "' but with MARCXML storage type");
-		newConfiguration.setDescription("copy of '" + referenceConfiguration.getDescription() + "' but with MARCXML storage type");
+		newConfiguration.setName("migration of '" + referenceConfiguration.getName() + "' to MARCXML storage type");
+		newConfiguration.setDescription("migration of '" + referenceConfiguration.getDescription() + "' to MARCXML storage type");
 		newConfiguration.setParameters(referenceConfiguration.getParameters());
 		newConfiguration.addParameter(ConfigurationStatics.STORAGE_TYPE, new TextNode(ConfigurationStatics.MARCXML_STORAGE_TYPE));
 
@@ -239,8 +239,8 @@ public class ProjectInputSchemaMigrationTest extends
 		Assert.assertNotNull(referenceProject.getMappings());
 		Assert.assertNotNull(newProject.getMappings());
 		Assert.assertEquals(referenceProject.getMappings().size(), newProject.getMappings().size());
-		Assert.assertTrue(newProject.getName().startsWith("copy"));
-		Assert.assertTrue(newProject.getDescription().startsWith("copy"));
+		Assert.assertTrue(newProject.getName().startsWith("migration"));
+		Assert.assertTrue(newProject.getDescription().startsWith("migration"));
 		Assert.assertEquals(referenceProject.getOutputDataModel(), newProject.getOutputDataModel());
 
 		return newProject;

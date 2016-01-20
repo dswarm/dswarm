@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2013 – 2015 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,13 +16,7 @@
 package org.dswarm.controller.resources.job;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -92,10 +86,12 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 
 	private static final Logger LOG = LoggerFactory.getLogger(ProjectsResource.class);
 
-	public static final String INPUT_DATA_MODEL  = "input_data_model";
+	public static final String INPUT_DATA_MODEL = "input_data_model";
 	public static final String REFERENCE_PROJECT = "reference_project";
 
 	private static final Comparator<String> STRING_LENGTH_COMPARATOR;
+	public static final String COPY = "copy";
+	public static final String MIGRATION = "migration";
 
 	static {
 
@@ -128,7 +124,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	 */
 	@Inject
 	public ProjectsResource(final Provider<ProjectService> persistenceServiceProviderArg,
-			final Provider<DataModelService> dataModelPersistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg)
+							final Provider<DataModelService> dataModelPersistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg)
 			throws DMPControllerException {
 
 		super(Project.class, persistenceServiceProviderArg, objectMapperProviderArg);
@@ -143,9 +139,9 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	 * @return a JSON representation of a project
 	 */
 	@ApiOperation(value = "get the project that matches the given id", notes = "Returns the Project object that matches the given id.")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "returns the project (as JSON) that matches the given id"),
+	@ApiResponses(value = {@ApiResponse(code = 200, message = "returns the project (as JSON) that matches the given id"),
 			@ApiResponse(code = 404, message = "could not find a project for the given id"),
-			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)")})
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -169,8 +165,8 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "create a new project", notes = "Returns a new Project object. Persists this project (incl. all its parts, i.e., new sub elements, e.g., mappings will be persisted as well). Note: please utilise generated uuids for all entity identifier.", response = Project.class)
-	@ApiResponses(value = { @ApiResponse(code = 201, message = "project was successfully persisted"),
-			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@ApiResponses(value = {@ApiResponse(code = 201, message = "project was successfully persisted"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)")})
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -188,9 +184,9 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "get all projects ", notes = "Returns a list of Project objects.")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "returns all available projects (as JSON)"),
+	@ApiResponses(value = {@ApiResponse(code = 200, message = "returns all available projects (as JSON)"),
 			@ApiResponse(code = 404, message = "could not find any project, i.e., there are no projects available"),
-			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)")})
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -212,15 +208,15 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	 */
 	@Override
 	@ApiOperation(value = "update project with given id ", notes = "Returns an updated Project object.")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "project was successfully updated"),
+	@ApiResponses(value = {@ApiResponse(code = 200, message = "project was successfully updated"),
 			@ApiResponse(code = 404, message = "could not find a project for the given id"),
-			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)")})
 	@PUT
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateObject(@ApiParam(value = "project (as JSON)", required = true) final String jsonObjectString,
-			@ApiParam(value = "project identifier", required = true) @PathParam("id") final String uuid) throws DMPControllerException {
+								 @ApiParam(value = "project identifier", required = true) @PathParam("id") final String uuid) throws DMPControllerException {
 
 		return super.updateObject(jsonObjectString, uuid);
 	}
@@ -234,10 +230,10 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "delete project that matches the given id", notes = "Returns status 204 if removal was successful, 404 if id not found, 409 if it couldn't be removed, or 500 if something else went wrong.")
-	@ApiResponses(value = { @ApiResponse(code = 204, message = "project was successfully deleted"),
+	@ApiResponses(value = {@ApiResponse(code = 204, message = "project was successfully deleted"),
 			@ApiResponse(code = 404, message = "could not find a project for the given id"),
 			@ApiResponse(code = 409, message = "project couldn't be deleted (maybe there are some existing constraints to related objects)"),
-			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)")})
 	@DELETE
 	@Path("/{id}")
 	@Override
@@ -260,8 +256,8 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "create a new project by copying parts from existing project and utilising other existing entities", notes = "Returns a new Project object. Persists this project (incl. all its parts, i.e., new sub elements, e.g., mappings will be persisted as well).", response = Project.class)
-	@ApiResponses(value = { @ApiResponse(code = 201, message = "project was successfully persisted"),
-			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@ApiResponses(value = {@ApiResponse(code = 201, message = "project was successfully persisted"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)")})
 	@POST
 	@Path("/createprojectwithhelpofexistingentities")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -278,7 +274,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 		LOG.debug("try to create new project (copy mappings) with help of input data model '{}' and reference project '{}", inputDataModel.getUuid(), referenceProject.getUuid());
 
 		final String newProjectId = UUIDService.getUUID(Project.class.getSimpleName());
-		final Project newProject = createNewProjectForMigration(inputDataModel, referenceProject, newProjectId);
+		final Project newProject = createNewProjectForMigration(inputDataModel, referenceProject, newProjectId, COPY);
 
 		migrateMappingsToVerySimilarInputAttributePaths(referenceProject, newProject);
 
@@ -300,8 +296,8 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "migrates a project by applying a similar input schema to the mappings", notes = "Returns a new Project object. Persists this project (incl. all its parts, i.e., new sub elements, e.g., mappings will be persisted as well).", response = Project.class)
-	@ApiResponses(value = { @ApiResponse(code = 201, message = "project was successfully persisted"),
-			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@ApiResponses(value = {@ApiResponse(code = 201, message = "project was successfully persisted"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)")})
 	@POST
 	@Path("migrateprojecttonewinputschema")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -318,7 +314,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 		LOG.debug("try to create new project (migrate mappings) with help of input data model '{}' and reference project '{}", inputDataModel.getUuid(), referenceProject.getUuid());
 
 		final String newProjectId = UUIDService.getUUID(Project.class.getSimpleName());
-		final Project newProject = createNewProjectForMigration(inputDataModel, referenceProject, newProjectId);
+		final Project newProject = createNewProjectForMigration(inputDataModel, referenceProject, newProjectId, MIGRATION);
 
 		final Schema referenceInputSchema = referenceProject.getInputDataModel().getSchema();
 		final Schema newInputSchema = inputDataModel.getSchema();
@@ -444,12 +440,12 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 		return Tuple.tuple(inputDataModel, referenceProject);
 	}
 
-	private static Project createNewProjectForMigration(final DataModel inputDataModel, final Project referenceProject, final String newProjectId) {
+	private static Project createNewProjectForMigration(final DataModel inputDataModel, final Project referenceProject, final String newProjectId, final String type) {
 
 		// create new project
 		final Project newProject = new Project(newProjectId);
-		newProject.setName("copy of '" + referenceProject.getName() + "'");
-		newProject.setDescription("copy of '" + referenceProject.getDescription() + "'");
+		newProject.setName(type + " of '" + referenceProject.getName() + "'");
+		newProject.setDescription(type + " of '" + referenceProject.getDescription() + "'");
 		newProject.setInputDataModel(inputDataModel);
 		// TODO: maybe check output data model?
 		newProject.setOutputDataModel(referenceProject.getOutputDataModel());
@@ -487,9 +483,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 			newMapping.setOutputAttributePath(referenceMapping.getOutputAttributePath());
 
 			final Component referenceMappingTransformationComponent = referenceMapping.getTransformation();
-			final Component newMappingTransformationComponent = createCopyOfComponent(referenceMappingTransformationComponent);
-
-			newMapping.setTransformation(newMappingTransformationComponent);
+			createCopyOfComponent(referenceMappingTransformationComponent).ifPresent(referenceAndNewComponentTuple -> newMapping.setTransformation(referenceAndNewComponentTuple.v2()));
 
 			newMappings.add(newMapping);
 		}
@@ -501,8 +495,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	 * Maps attribute paths from a reference schema to matching attribute paths from a new schema. Returns a map of attribute paths from the reference schema to matching attribute paths from the new schema.
 	 *
 	 * @param referenceSchema the reference schema
-	 * @param newSchema the new schema
-	 *
+	 * @param newSchema       the new schema
 	 * @return a map of attribute paths from the reference schema to matching attribute paths from the new schema
 	 */
 	private static Map<AttributePath, AttributePath> mapAttributePaths(final Schema referenceSchema, final Schema newSchema)
@@ -654,7 +647,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	 * @param newProject
 	 */
 	private void migrateMappingsToSomehowSimilarInputAttributePaths(final Project referenceProject, final Project newProject,
-			final Map<AttributePath, AttributePath> attributePathMap)
+																	final Map<AttributePath, AttributePath> attributePathMap)
 			throws DMPControllerException {
 
 		final Set<Mapping> referenceMappings = referenceProject.getMappings();
@@ -684,9 +677,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 			newMapping.setOutputAttributePath(referenceMapping.getOutputAttributePath());
 
 			final Component referenceMappingTransformationComponent = referenceMapping.getTransformation();
-			final Component newMappingTransformationComponent = createCopyOfComponent(referenceMappingTransformationComponent);
-
-			newMapping.setTransformation(newMappingTransformationComponent);
+			createCopyOfComponent(referenceMappingTransformationComponent).ifPresent(referenceAndNewComponentTuple -> newMapping.setTransformation(referenceAndNewComponentTuple.v2()));
 
 			newMappings.add(newMapping);
 		}
@@ -707,7 +698,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	}
 
 	private Set<MappingAttributePathInstance> migrateMappingInputs(final Set<MappingAttributePathInstance> referenceInputMAPIs,
-			final Map<AttributePath, AttributePath> attributePathAttributePathMap, final Map<String, String> attributePathStringsMap)
+																   final Map<AttributePath, AttributePath> attributePathAttributePathMap, final Map<String, String> attributePathStringsMap)
 			throws DMPControllerException {
 
 		if (referenceInputMAPIs == null) {
@@ -748,7 +739,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	}
 
 	private void migrateMappingInputFilter(final MappingAttributePathInstance referenceInputMAPI, final MappingAttributePathInstance newInputMAPI,
-			final Map<String, String> attributePathStringsMap)
+										   final Map<String, String> attributePathStringsMap)
 			throws DMPControllerException {
 
 		final Filter referenceIMAPIFilter = referenceInputMAPI.getFilter();
@@ -821,11 +812,17 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 		}
 	}
 
-	private static Component createCopyOfComponent(final Component referenceComponent) {
+	/**
+	 * Creates a copy of a component without wiring them together
+	 *
+	 * @param referenceComponent the references component where the copy should be created from
+	 * @return a tuple with the reference component as first part and the new component as second part
+	 */
+	private static Optional<Tuple<Component, Component>> createCopyOfComponent(final Component referenceComponent) {
 
-		if(referenceComponent == null) {
+		if (referenceComponent == null) {
 
-			return null;
+			return Optional.empty();
 		}
 
 		final String newComponentUuid = UUIDService.getUUID(Component.class.getSimpleName());
@@ -858,27 +855,26 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 
 		newComponent.setFunction(newFunction);
 
-		final Set<Component> referenceInputComponents = referenceComponent.getInputComponents();
+		return Optional.of(Tuple.tuple(referenceComponent, newComponent));
+	}
 
-		if (referenceInputComponents != null) {
+	private static Optional<Component> wireNewComponents(final Component referenceComponent, final Map<String, String> componentUUIDs, final Map<String, Component> newComponentsMaps) {
 
-			final Set<Component> newInputComponents = referenceInputComponents.parallelStream().map(ProjectsResource::createCopyOfComponent)
-					.collect(Collectors.toSet());
+		if (referenceComponent == null || referenceComponent.getUuid() == null) {
 
-			newComponent.setInputComponents(newInputComponents);
+			return Optional.empty();
 		}
 
-		final Set<Component> referenceOutputComponents = referenceComponent.getOutputComponents();
+		final String newComponentUUID = componentUUIDs.get(referenceComponent.getUuid());
 
-		if (referenceOutputComponents != null) {
+		if (newComponentUUID == null) {
 
-			final Set<Component> newOutputComponents = referenceOutputComponents.parallelStream().map(ProjectsResource::createCopyOfComponent)
-					.collect(Collectors.toSet());
+			LOG.error("couldn't find a new component UUID for reference component UUID {}", referenceComponent.getUuid());
 
-			newComponent.setOutputComponents(newOutputComponents);
+			return Optional.empty();
 		}
 
-		return newComponent;
+		return Optional.ofNullable(newComponentsMaps.get(newComponentUUID));
 	}
 
 	private static Transformation createCopyOfTransformation(final Transformation referenceTransformation) {
@@ -895,8 +891,53 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 
 		if (referenceComponents != null) {
 
-			final Set<Component> newComponents = referenceComponents.parallelStream().map(ProjectsResource::createCopyOfComponent)
-					.collect(Collectors.toSet());
+			final List<Tuple<Component, Component>> referenceAndNewComponents = referenceComponents.parallelStream()
+					.map(ProjectsResource::createCopyOfComponent)
+					.filter(Optional::isPresent)
+					.map(Optional::get)
+					.collect(Collectors.toList());
+
+			final Map<String, String> componentUUIDs = referenceAndNewComponents.parallelStream()
+					.collect(Collectors.toMap(referenceAndNewComponentTuple -> referenceAndNewComponentTuple.v1().getUuid(),
+							referenceAndNewComponentTuple -> referenceAndNewComponentTuple.v2().getUuid()));
+
+			final Map<String, Component> newComponentsMap = referenceAndNewComponents.parallelStream()
+					.map(referenceAndNewComponentTuple -> referenceAndNewComponentTuple.v2())
+					.collect(Collectors.toMap(newComponent -> newComponent.getUuid(), newComponent -> newComponent));
+
+			final Set<Component> newComponents = referenceAndNewComponents.parallelStream().map(referenceAndNewComponentTuple -> {
+
+				final Component referenceComponent = referenceAndNewComponentTuple.v1();
+				final Component newComponent = referenceAndNewComponentTuple.v2();
+
+				final Set<Component> referenceInputComponents = referenceComponent.getInputComponents();
+
+				if (referenceInputComponents != null) {
+
+					final Set<Component> newInputComponents = referenceInputComponents.parallelStream()
+							.map(referenceInputComponent -> wireNewComponents(referenceInputComponent, componentUUIDs, newComponentsMap))
+							.filter(Optional::isPresent)
+							.map(Optional::get)
+							.collect(Collectors.toSet());
+
+					newComponent.setInputComponents(newInputComponents);
+				}
+
+				final Set<Component> referenceOutputComponents = referenceComponent.getOutputComponents();
+
+				if (referenceOutputComponents != null) {
+
+					final Set<Component> newOutputComponents = referenceOutputComponents.parallelStream()
+							.map(referenceOutputComponent -> wireNewComponents(referenceOutputComponent, componentUUIDs, newComponentsMap))
+							.filter(Optional::isPresent)
+							.map(Optional::get)
+							.collect(Collectors.toSet());
+
+					newComponent.setOutputComponents(newOutputComponents);
+				}
+
+				return newComponent;
+			}).collect(Collectors.toSet());
 
 			newTransformation.setComponents(newComponents);
 		}
