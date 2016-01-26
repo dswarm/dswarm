@@ -247,6 +247,16 @@ public class XMLTransformationFlowTest extends GuicedTest {
 		testXMLTaskWithTuples("not-equals.filter.function.task.result.json", "not-equals.filter.function.task.json", "test-mabxml.tuples.json");
 	}
 
+	/**
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testFincRVKBeanShellScriptTask() throws Exception {
+
+		testXMLTaskWithTuples("dd-1298.task.result.json", "dd-1298.task.json", "fincmarc_small2.tuples.json");
+	}
+
 	@Test
 	public void testSqlMapTask() throws Exception {
 
