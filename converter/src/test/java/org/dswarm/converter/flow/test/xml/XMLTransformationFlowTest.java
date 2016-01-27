@@ -257,6 +257,26 @@ public class XMLTransformationFlowTest extends GuicedTest {
 		testXMLTaskWithTuples("dd-1298.task.result.json", "dd-1298.task.json", "fincmarc_small2.tuples.json");
 	}
 
+	/**
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testFincMiscDel152BeanShellScriptTask() throws Exception {
+
+		testXMLTaskWithTuples("misc_del152.task.result.json", "misc_del152.task.plain.json", "fincmarc_small2.tuples.json");
+	}
+
+	/**
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testFincMiscDel152BeanShellScriptTask2() throws Exception {
+
+		testXMLMorphWithTuples("misc_del152.task.result.json", "misc_del152.task.morph.xml", "fincmarc_small2.tuples.json");
+	}
+
 	@Test
 	public void testSqlMapTask() throws Exception {
 
