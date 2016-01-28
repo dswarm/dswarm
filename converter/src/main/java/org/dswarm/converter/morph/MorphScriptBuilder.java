@@ -186,11 +186,37 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 	}
 
 	@Override
-	protected Element createFilterDataElement(final String variable, final String attributePathString) {
+	protected Tuple<Map<String, FilterExpression>, Optional<FilterExpression>> determineCombineAsFilterDataOutFilter(final Map<String, FilterExpression> filterExpressionMap, final String inputAttributePathStringXMLEscaped) {
+
+		final Optional<Map<String, FilterExpression>> mappingInputIsUtilisedInFilterExpression = Optional.ofNullable(filterExpressionMap)
+				.filter(filterExpressionMap1 -> !filterExpressionMap1.isEmpty())
+				.filter(filterExpressionMap2 -> filterExpressionMap2.containsKey(inputAttributePathStringXMLEscaped));
+
+		if (mappingInputIsUtilisedInFilterExpression.isPresent()) {
+
+			final FilterExpression mappingInputFilter = filterExpressionMap.remove(inputAttributePathStringXMLEscaped);
+
+			return Tuple.tuple(filterExpressionMap, Optional.of(mappingInputFilter));
+		}
+
+		return super.determineCombineAsFilterDataOutFilter(filterExpressionMap, inputAttributePathStringXMLEscaped);
+	}
+
+	@Override
+	protected Element createFilterDataElement(final String variable, final String attributePathString, final Optional<FilterExpression> optionalCombineAsFilterDataOutFilter) throws DMPConverterException {
 
 		final Element combineAsFilterDataOut = doc.createElement(METAMORPH_ELEMENT_DATA);
 		combineAsFilterDataOut.setAttribute(METAMORPH_DATA_TARGET, variable);
 		combineAsFilterDataOut.setAttribute(METAMORPH_DATA_SOURCE, attributePathString);
+
+		if (optionalCombineAsFilterDataOutFilter.isPresent()) {
+
+			FilterExpression combineAsFilterDataOutFilter = optionalCombineAsFilterDataOutFilter.get();
+
+			final Element combineAsFilterDataFunction = createFilterFunction(combineAsFilterDataOutFilter);
+
+			combineAsFilterDataOut.appendChild(combineAsFilterDataFunction);
+		}
 
 		return combineAsFilterDataOut;
 	}
