@@ -16,24 +16,23 @@
 package org.dswarm.converter.morph;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.google.common.base.Joiner;
+import com.google.common.base.*;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.dswarm.common.DMPStatics;
+import org.dswarm.common.model.Attribute;
+import org.dswarm.common.model.util.AttributePathUtil;
+import org.dswarm.common.types.Tuple;
+import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.model.schema.utils.AttributePathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
@@ -117,8 +116,8 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 	private static final String OCCURRENCE_VARIABLE_POSTFIX = ".occurrence";
 
 	private static final Set<String> LOOKUP_FUNCTIONS = new HashSet<>(Arrays.asList(
-			new String[] { METAMORPH_FUNCTION_LOOKUP, METAMORPH_FUNCTION_SETREPLACE, METAMORPH_FUNCTION_BLACKLIST, METAMORPH_FUNCTION_WHITELIST,
-					METAMORPH_FUNCTION_REGEXLOOKUP, METAMORPH_FUNCTION_SQLMAP }));
+			new String[]{METAMORPH_FUNCTION_LOOKUP, METAMORPH_FUNCTION_SETREPLACE, METAMORPH_FUNCTION_BLACKLIST, METAMORPH_FUNCTION_WHITELIST,
+					METAMORPH_FUNCTION_REGEXLOOKUP, METAMORPH_FUNCTION_SQLMAP}));
 
 	private static final String LOOKUP_MAP_DEFINITION = "lookupString";
 
@@ -128,11 +127,38 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 	private static final String MF_CONCAT_FUNCTION_PREFIX_ATTRIBUTE_IDENTIFIER = "prefix";
 
-	private static final String                     MF_CONCAT_FUNCTION_POSTFIX_ATTRIBUTE_IDENTIFIER = "postfix";
+	private static final String MF_CONCAT_FUNCTION_POSTFIX_ATTRIBUTE_IDENTIFIER = "postfix";
 
-	private static final String                     DUMMY_VARIABLE_IDENTIFIER                       = "var1000";
+	private static final String DUMMY_VARIABLE_IDENTIFIER = "var1000";
 
-	private static final Map<String, AtomicInteger> mapiVarCounters                                 = new HashMap<>();
+	private static final Map<String, AtomicInteger> mapiVarCounters = new HashMap<>();
+
+	private static Optional<Map<String, Integer>> generateSchemaMap(final Schema schema) {
+
+		final AtomicInteger counter = new AtomicInteger(0);
+
+		return Optional.ofNullable(schema.getAttributePaths())
+				.filter(attributePaths -> !attributePaths.isEmpty())
+				.map(attributePaths -> attributePaths.stream()
+						.filter(schemaAttributePathInstance -> Optional.ofNullable(schemaAttributePathInstance.getAttributePath()).isPresent())
+						.filter(schemaAttributePathInstance1 -> Optional.ofNullable(schemaAttributePathInstance1.getAttributePath().toAttributePath()).isPresent())
+						.map(schemaAttributePathInstance2 -> Tuple.tuple(StringEscapeUtils.escapeXml(schemaAttributePathInstance2.getAttributePath().toAttributePath()), counter.getAndIncrement()))
+						.collect(Collectors.toMap(Tuple::v1, Tuple::v2))
+				);
+	}
+
+	private static Optional<Map<String, Integer>> generateInputSchemaMap(final Task task) {
+
+		if (task == null) {
+
+			return Optional.empty();
+		}
+
+		final Optional<Schema> optionalInputSchema = Optional.ofNullable(task.getInputDataModel())
+				.flatMap(inputDataModel -> Optional.ofNullable(inputDataModel.getSchema()));
+
+		return optionalInputSchema.flatMap(inputSchema -> generateSchemaMap(inputSchema));
+	}
 
 	@Override
 	public MorphScriptBuilder apply(final Task task) throws DMPConverterException {
@@ -141,11 +167,15 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 		final List<String> metas = Lists.newArrayList();
 
+		Optional<Map<String, Integer>> optionalInputSchemaMap = generateInputSchemaMap(task);
+
 		for (final Mapping mapping : task.getJob().getMappings()) {
 
 			metas.add(MorphScriptBuilder.MAPPING_PREFIX + mapping.getUuid());
 
-			createTransformation(rules, mapping);
+			final Optional<String> optionalDeepestMappingInput = determineDeepestMappingInputAttributePath(mapping, optionalInputSchemaMap);
+
+			createTransformation(rules, mapping, optionalDeepestMappingInput);
 
 			createLookupTable(maps, mapping.getTransformation());
 		}
@@ -155,7 +185,8 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 		return this;
 	}
 
-	@Override protected Element createFilterDataElement(final String variable, final String attributePathString) {
+	@Override
+	protected Element createFilterDataElement(final String variable, final String attributePathString) {
 
 		final Element combineAsFilterDataOut = doc.createElement(METAMORPH_ELEMENT_DATA);
 		combineAsFilterDataOut.setAttribute(METAMORPH_DATA_TARGET, variable);
@@ -164,7 +195,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 		return combineAsFilterDataOut;
 	}
 
-	private void createTransformation(final Element rules, final Mapping mapping) throws DMPConverterException {
+	private void createTransformation(final Element rules, final Mapping mapping, final Optional<String> optionalDeepestMappingInput) throws DMPConverterException {
 
 		// first handle the parameter mapping from the attribute paths of the mapping to the transformation component
 
@@ -191,7 +222,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 			// delegate input attribute path to output attribute path + add possible transformations (components)
 
 			mapMappingInputToMappingOutput(mapping, rules);
-			processTransformationComponentFunction(transformationComponent, mapping, null, rules);
+			processTransformationComponentFunction(transformationComponent, mapping, null, optionalDeepestMappingInput, rules);
 
 			return;
 		}
@@ -221,7 +252,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 		addMappingOutputMapping(variablesFromMappingOutput, mapping.getOutputAttributePath(), rules);
 
-		processTransformationComponentFunction(transformationComponent, mapping, mappingInputsVariablesMap, rules);
+		processTransformationComponentFunction(transformationComponent, mapping, mappingInputsVariablesMap, optionalDeepestMappingInput, rules);
 	}
 
 	private void createLookupTable(final Element maps, final Component transformationComponent) throws DMPConverterException {
@@ -257,7 +288,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 					case METAMORPH_FUNCTION_SQLMAP:
 
-						if(parameterMappings.containsKey(INPUT_VARIABLE_IDENTIFIER)) {
+						if (parameterMappings.containsKey(INPUT_VARIABLE_IDENTIFIER)) {
 
 							// input variable mapping won't be needed at the processing here
 
@@ -479,8 +510,8 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 	}
 
 	private void addMappingInputsVars(final List<String> variables, final MappingAttributePathInstance mappingInput, final Element rules,
-			final Map<String, List<String>> mappingInputsVariablesMap, final String filterExpressionString,
-			final Integer ordinal) throws DMPConverterException {
+	                                  final Map<String, List<String>> mappingInputsVariablesMap, final String filterExpressionString,
+	                                  final Integer ordinal) throws DMPConverterException {
 
 		if (variables == null || variables.isEmpty()) {
 
@@ -617,7 +648,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 	}
 
 	private void processTransformationComponentFunction(final Component transformationComponent, final Mapping mapping,
-			final Map<String, List<String>> mappingInputsVariablesMap, final Element rules) throws DMPConverterException {
+	                                                    final Map<String, List<String>> mappingInputsVariablesMap, final Optional<String> optionalDeepestMappingInput, final Element rules) throws DMPConverterException {
 
 		final String transformationOutputVariableIdentifier = determineTransformationOutputVariable(transformationComponent);
 		final String finalTransformationOutputVariableIdentifier =
@@ -680,7 +711,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 				for (final Component component : components) {
 
-					processComponent(component, mappingInputsVariablesMap, finalTransformationOutputVariableIdentifier, rules);
+					processComponent(component, mappingInputsVariablesMap, finalTransformationOutputVariableIdentifier, optionalDeepestMappingInput, rules);
 				}
 
 				break;
@@ -688,7 +719,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 	}
 
 	private void processComponent(final Component component, final Map<String, List<String>> mappingInputsVariablesMap,
-			final String transformationOutputVariableIdentifier, final Element rules) throws DMPConverterException {
+	                              final String transformationOutputVariableIdentifier, final Optional<String> optionalDeepestMappingInput, final Element rules) throws DMPConverterException {
 
 		String[] inputStrings = {};
 
@@ -737,7 +768,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 				collectionNameAttribute = getComponentName(component);
 			}
 
-			final Element collection = createCollectionTag(component, collectionNameAttribute, sourceAttributes);
+			final Element collection = createCollectionTag(component, collectionNameAttribute, sourceAttributes, optionalDeepestMappingInput);
 
 			rules.appendChild(collection);
 
@@ -760,7 +791,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 	}
 
 	private Set<String> determineSourceAttributes(final Component component, final Map<String, List<String>> mappingInputsVariablesMap,
-			final String[] inputStrings)
+	                                              final String[] inputStrings)
 			throws DMPConverterException {
 
 		// this is a list of input variable names related to current component, which should be unique and ordered
@@ -798,8 +829,102 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 		return sourceAttributes;
 	}
 
+	private static int determineAttributePathLength(final String attributePath) {
+
+		final String[] attributes = attributePath.split(DMPStatics.ATTRIBUTE_DELIMITER.toString());
+
+		if (attributes.length <= 0) {
+
+			if (attributePath.length() > 0) {
+
+				return 1;
+			}
+
+			return 0;
+		}
+
+		return attributes.length;
+	}
+
+	private static Optional<String> determineDeepestMappingInputAttributePath(final Mapping mapping, final Optional<Map<String, Integer>> optionalInputSchemaMap) {
+
+		final Optional<Set<MappingAttributePathInstance>> optionalMappingInputAttributePathInstances = Optional.ofNullable(mapping.getInputAttributePaths());
+
+		return optionalMappingInputAttributePathInstances.filter(mappingInputAttributePathInstances -> !mappingInputAttributePathInstances.isEmpty())
+				.flatMap(mappingInputAttributePathInstances -> {
+
+					final Set<String> uniqueInputAttributePaths = mappingInputAttributePathInstances.stream()
+							.map(mappingInputAttributePathInstance -> StringEscapeUtils.escapeXml(mappingInputAttributePathInstance.getAttributePath().toAttributePath()))
+							.collect(Collectors.toSet());
+
+					final Optional<String> optionalDeepestMappingInputAttributePath;
+
+					if (!uniqueInputAttributePaths.isEmpty()) {
+
+						if (optionalInputSchemaMap.isPresent()) {
+
+							// note: this algorithm might not be working as expected, i.e., maybe we need to compare the length (number of attributes) of the attribute path as well
+
+							final Map<String, Integer> inputSchemaMap = optionalInputSchemaMap.get();
+
+							int highestOrder = 0;
+							String tempDeepestMappingInputAttributePath = uniqueInputAttributePaths.iterator().next();
+
+							for (final String inputAttributePath : uniqueInputAttributePaths) {
+
+								final Integer attributePathOrder = inputSchemaMap.getOrDefault(inputAttributePath, 0);
+
+								if (attributePathOrder > highestOrder) {
+
+									highestOrder = attributePathOrder;
+									tempDeepestMappingInputAttributePath = inputAttributePath;
+								}
+							}
+
+							optionalDeepestMappingInputAttributePath = Optional.of(tempDeepestMappingInputAttributePath);
+						} else {
+
+							// try to determine deepest mapping input attribute path without given input schema
+
+							if (uniqueInputAttributePaths.size() == 1) {
+
+								// simply take this one
+
+								optionalDeepestMappingInputAttributePath = Optional.of(uniqueInputAttributePaths.iterator().next());
+							} else {
+
+								// take the longest attribute path
+
+								int biggestLength = 0;
+								String longestAttributePath = uniqueInputAttributePaths.iterator().next();
+
+								for (final String inputAttributePath : uniqueInputAttributePaths) {
+
+									int attributePathSize = determineAttributePathLength(inputAttributePath);
+
+									if (attributePathSize >= biggestLength) {
+
+										biggestLength = attributePathSize;
+										longestAttributePath = inputAttributePath;
+									}
+								}
+
+								optionalDeepestMappingInputAttributePath = Optional.of(longestAttributePath);
+							}
+						}
+					} else {
+
+						// deepest mapping input attribute path cannot be calculated
+
+						optionalDeepestMappingInputAttributePath = Optional.empty();
+					}
+
+					return optionalDeepestMappingInputAttributePath;
+				});
+	}
+
 	private Element createCollectionTag(final Component multipleInputComponent, final String collectionNameAttribute,
-			final Set<String> collectionSourceAttributes) throws DMPConverterException {
+	                                    final Set<String> collectionSourceAttributes, final Optional<String> optionalDeepestMappingInput) throws DMPConverterException {
 
 		final Element collection;
 
@@ -826,6 +951,24 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 				collection = doc.createElement(METAMORPH_FUNCTION_CHOOSE);
 
 				return convertIfElseFunction(multipleInputComponent, collectionNameAttribute, collection);
+			case METAMORPH_FUNCTION_ALL:
+
+				collection = doc.createElement(functionName);
+
+				final Element collectionElement = convertCollectionFunction(multipleInputComponent, collectionNameAttribute, collectionSourceAttributes, collection);
+
+				collectionElement.setAttribute(MF_COLLECTOR_RESET_ATTRIBUTE_IDENTIFIER, BOOLEAN_VALUE_TRUE);
+
+				if (!optionalDeepestMappingInput.isPresent()) {
+
+					throw new DMPConverterException("deepest mapping input is not available for parametrizing 'all' collector properly");
+				}
+
+				final String deepestMappingInputAttributePath = optionalDeepestMappingInput.get();
+
+				collectionElement.setAttribute(MF_FLUSH_WITH_ATTRIBUTE_IDENTIFIER, deepestMappingInputAttributePath);
+
+				return collectionElement;
 			default:
 
 				collection = doc.createElement(functionName);
@@ -834,8 +977,9 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 		}
 	}
 
+
 	private Element convertCollectionFunction(final Component multipleInputComponent, final String collectionNameAttribute,
-			final Set<String> collectionSourceAttributes, final Element collection) {
+	                                          final Set<String> collectionSourceAttributes, final Element collection) {
 
 		createParameters(multipleInputComponent, collection);
 
@@ -982,7 +1126,6 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 	}
 
 	/**
-	 *
 	 * convert concat function to combine function because concat concatenates the
 	 * values in the order they appear in the input and not in the order of the <data> sources.
 	 *
@@ -1050,7 +1193,6 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 	}
 
 	/**
-	 *
 	 * convert collect function to concat function to allow concatenating of field that occur multiple times in a record
 	 *
 	 * @param multipleInputComponent

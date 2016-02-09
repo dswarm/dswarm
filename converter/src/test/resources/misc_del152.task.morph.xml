@@ -1,0 +1,43 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+    <meta>
+        <name>mapping1f230521-42bf-e97b-0736-1d70481cac21</name>
+    </meta>
+    <rules>
+        <combine flushWith="http://www.loc.gov/MARC21/slim#datafield" includeSubEntities="true" name="@datafield_subfield_value__b8b79456-73c5-c575-f61f-71a4f02ee707__0__" reset="true" sameEntity="true" value="${datafield_subfield_value__b8b79456-73c5-c575-f61f-71a4f02ee707__0__.filtered}">
+            <if>
+                <all flushWith="http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#subfield&#30;http://www.loc.gov/MARC21/slim#code" includeSubEntities="true" name="CONDITION_ALL" reset="true">
+                    <data source="http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#tag">
+                        <regexp match="590"/>
+                    </data>
+                    <data source="http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#subfield&#30;http://www.loc.gov/MARC21/slim#code">
+                        <regexp match="a|b"/>
+                    </data>
+                </all>
+            </if>
+            <data name="datafield_subfield_value__b8b79456-73c5-c575-f61f-71a4f02ee707__0__.filtered" source="http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#subfield&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+        </combine>
+        <combine flushWith="http://www.loc.gov/MARC21/slim#datafield" includeSubEntities="true" name="@datafield_subfield_value__10042913-dc92-be08-141e-0d2cb6714e2d__0__" reset="true" sameEntity="true" value="${datafield_subfield_value__10042913-dc92-be08-141e-0d2cb6714e2d__0__.filtered}">
+            <if>
+                <all flushWith="http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#subfield&#30;http://www.loc.gov/MARC21/slim#code" includeSubEntities="true" name="CONDITION_ALL" reset="true">
+                    <data source="http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#tag">
+                        <regexp match="980"/>
+                    </data>
+                    <data source="http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#subfield&#30;http://www.loc.gov/MARC21/slim#code">
+                        <regexp match="b"/>
+                    </data>
+                </all>
+            </if>
+            <data name="datafield_subfield_value__10042913-dc92-be08-141e-0d2cb6714e2d__0__.filtered" source="http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#subfield&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+        </combine>
+        <data name="http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/misc_del152" source="@__TRANSFORMATION_OUTPUT_VARIABLE__0d94c710-0c3c-13ea-fc4e-6e49db7ba5de__3"/>
+        <data name="@componente4a30dfd-6f9d-e74f-1ca6-f2f7f803a621" source="@datafield_subfield_value__10042913-dc92-be08-141e-0d2cb6714e2d__0__">
+            <equals string="15"/>
+        </data>
+        <all flushWith="record" name="@__TRANSFORMATION_OUTPUT_VARIABLE__0d94c710-0c3c-13ea-fc4e-6e49db7ba5de__3" reset="true" value="${datafield_subfield_value__b8b79456-73c5-c575-f61f-71a4f02ee707__0__}">
+            <data name="componente4a30dfd-6f9d-e74f-1ca6-f2f7f803a621" source="@componente4a30dfd-6f9d-e74f-1ca6-f2f7f803a621"/>
+            <data name="datafield_subfield_value__b8b79456-73c5-c575-f61f-71a4f02ee707__0__" source="@datafield_subfield_value__b8b79456-73c5-c575-f61f-71a4f02ee707__0__"/>
+        </all>
+    </rules>
+    <maps/>
+</metamorph>
