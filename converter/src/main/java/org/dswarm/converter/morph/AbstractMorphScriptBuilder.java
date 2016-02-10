@@ -315,9 +315,9 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 		return (MORPHSCRIPTBUILDERIMPL) this;
 	}
 
-	protected Tuple<Map<String, FilterExpression>, Optional<FilterExpression>> determineCombineAsFilterDataOutFilter(final Map<String, FilterExpression> filterExpressionMap, final String inputAttributePathStringXMLEscaped) {
+	protected Tuple<Optional<Map<String, FilterExpression>>, Optional<FilterExpression>> determineCombineAsFilterDataOutFilter(final Map<String, FilterExpression> filterExpressionMap, final String inputAttributePathStringXMLEscaped) {
 
-		return Tuple.tuple(filterExpressionMap, Optional.empty());
+		return Tuple.tuple(Optional.ofNullable(filterExpressionMap).filter(filterExpressionMap2 -> !filterExpressionMap2.isEmpty()), Optional.empty());
 	}
 
 	protected Element createFilterFunction(FilterExpression filterExpression) throws DMPConverterException {
@@ -387,10 +387,36 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 		combineAsFilter
 				.setAttribute(MF_ELEMENT_VALUE_ATTRIBUTE_IDENTIFIER, MF_VALUE_VARIABLE_PREFIX + combineValueVariable + MF_VALUE_VARIABLE_POSTFIX);
 
-		final Tuple<Map<String, FilterExpression>, Optional<FilterExpression>> result = determineCombineAsFilterDataOutFilter(filterExpressionMap, inputAttributePathStringXMLEscaped);
+		final Tuple<Optional<Map<String, FilterExpression>>, Optional<FilterExpression>> result = determineCombineAsFilterDataOutFilter(filterExpressionMap, inputAttributePathStringXMLEscaped);
 
-		final Map<String, FilterExpression> newFilterExpressionMap = result.v1();
+		final Optional<Map<String, FilterExpression>> optionalNewFilterExpressionMap = result.v1();
 		final Optional<FilterExpression> optionalCombineAsFilterDataOutFilter = result.v2();
+
+		if(optionalNewFilterExpressionMap.isPresent()) {
+
+			final Map<String, FilterExpression> newFilterExpressionMap = optionalNewFilterExpressionMap.get();
+
+			createFilterIfElement(inputAttributePathStringXMLEscaped, combineAsFilter, newFilterExpressionMap);
+		} else {
+
+			combineAsFilter.setAttribute(MF_FLUSH_WITH_ATTRIBUTE_IDENTIFIER, inputAttributePathStringXMLEscaped);
+		}
+
+		final Element combineAsFilterDataOut = createFilterDataElement(combineValueVariable, inputAttributePathStringXMLEscaped, optionalCombineAsFilterDataOutFilter);
+
+		combineAsFilter.appendChild(combineAsFilterDataOut);
+
+		rules.appendChild(combineAsFilter);
+	}
+
+	private void createFilterIfElement(final String inputAttributePathStringXMLEscaped, final Element combineAsFilter, final Map<String, FilterExpression> newFilterExpressionMap) throws DMPConverterException {
+
+		if(newFilterExpressionMap == null || newFilterExpressionMap.isEmpty()) {
+
+			// nothing to do here, because no filters are left to create the filter if element
+
+			return;
+		}
 
 		Set<String> filterAttributePaths = newFilterExpressionMap.keySet();
 
@@ -422,12 +448,6 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 
 		filterIf.appendChild(filterAll);
 		combineAsFilter.appendChild(filterIf);
-
-		final Element combineAsFilterDataOut = createFilterDataElement(combineValueVariable, inputAttributePathStringXMLEscaped, optionalCombineAsFilterDataOutFilter);
-
-		combineAsFilter.appendChild(combineAsFilterDataOut);
-
-		rules.appendChild(combineAsFilter);
 	}
 
 	protected abstract Element createFilterDataElement(final String variable, final String attributePathString, final Optional<FilterExpression> optionalCombineAsFilterDataOutFilter) throws DMPConverterException;

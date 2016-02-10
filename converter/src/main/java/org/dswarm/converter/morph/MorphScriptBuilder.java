@@ -186,7 +186,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 	}
 
 	@Override
-	protected Tuple<Map<String, FilterExpression>, Optional<FilterExpression>> determineCombineAsFilterDataOutFilter(final Map<String, FilterExpression> filterExpressionMap, final String inputAttributePathStringXMLEscaped) {
+	protected Tuple<Optional<Map<String, FilterExpression>>, Optional<FilterExpression>> determineCombineAsFilterDataOutFilter(final Map<String, FilterExpression> filterExpressionMap, final String inputAttributePathStringXMLEscaped) {
 
 		final Optional<Map<String, FilterExpression>> mappingInputIsUtilisedInFilterExpression = Optional.ofNullable(filterExpressionMap)
 				.filter(filterExpressionMap1 -> !filterExpressionMap1.isEmpty())
@@ -196,7 +196,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 			final FilterExpression mappingInputFilter = filterExpressionMap.remove(inputAttributePathStringXMLEscaped);
 
-			return Tuple.tuple(filterExpressionMap, Optional.of(mappingInputFilter));
+			return Tuple.tuple(Optional.ofNullable(filterExpressionMap).filter(filterExpressionMap2 -> !filterExpressionMap2.isEmpty()), Optional.of(mappingInputFilter));
 		}
 
 		return super.determineCombineAsFilterDataOutFilter(filterExpressionMap, inputAttributePathStringXMLEscaped);
