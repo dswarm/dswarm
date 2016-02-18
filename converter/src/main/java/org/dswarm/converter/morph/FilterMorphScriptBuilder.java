@@ -86,7 +86,8 @@ public class FilterMorphScriptBuilder extends AbstractMorphScriptBuilder<FilterM
 		return this;
 	}
 
-	@Override protected Element createFilterDataElement(final String variable, final String attributePathString) {
+	@Override
+	protected Element createFilterDataElement(final String variable, final String attributePathString, final Optional<FilterExpression> optionalCombineAsFilterDataOutFilter) {
 
 		final Element combineAsFilterDataOut = doc.createElement(METAMORPH_ELEMENT_DATA);
 		combineAsFilterDataOut.setAttribute(METAMORPH_DATA_TARGET, variable);
