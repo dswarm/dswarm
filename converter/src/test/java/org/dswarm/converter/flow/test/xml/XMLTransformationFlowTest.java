@@ -264,7 +264,7 @@ public class XMLTransformationFlowTest extends GuicedTest {
 	@Test
 	public void testFincMiscDel152BeanShellScriptTask() throws Exception {
 
-		testXMLTaskWithTuples("misc_del152.task.result.json", "misc_del152.task.plain.json", "fincmarc_small2.tuples.json");
+		testXMLTaskWithTuples("misc_del152.task.result.2.json", "misc_del152.task.plain.json", "fincmarc_small2.tuples.json");
 	}
 
 	/**
