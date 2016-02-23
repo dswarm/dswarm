@@ -34,10 +34,11 @@
         <data name="@componente4a30dfd-6f9d-e74f-1ca6-f2f7f803a621" source="@datafield_subfield_value__10042913-dc92-be08-141e-0d2cb6714e2d__0__">
             <equals string="15"/>
         </data>
-        <all flushWith="record" name="@__TRANSFORMATION_OUTPUT_VARIABLE__0d94c710-0c3c-13ea-fc4e-6e49db7ba5de__3" reset="true" value="${datafield_subfield_value__b8b79456-73c5-c575-f61f-71a4f02ee707__0__}">
+        <all flushWith="record" name="@__TRANSFORMATION_OUTPUT_VARIABLE__0d94c710-0c3c-13ea-fc4e-6e49db7ba5de__3" reset="true" includeSubEntities="true" value="${datafield_subfield_value__b8b79456-73c5-c575-f61f-71a4f02ee707__0__}">
             <data name="componente4a30dfd-6f9d-e74f-1ca6-f2f7f803a621" source="@componente4a30dfd-6f9d-e74f-1ca6-f2f7f803a621"/>
             <data name="datafield_subfield_value__b8b79456-73c5-c575-f61f-71a4f02ee707__0__" source="@datafield_subfield_value__b8b79456-73c5-c575-f61f-71a4f02ee707__0__"/>
         </all>
+        <!--<data name="@__TRANSFORMATION_OUTPUT_VARIABLE__0d94c710-0c3c-13ea-fc4e-6e49db7ba5de__3" source="@datafield_subfield_value__b8b79456-73c5-c575-f61f-71a4f02ee707__0__"/>-->
     </rules>
     <maps/>
 </metamorph>

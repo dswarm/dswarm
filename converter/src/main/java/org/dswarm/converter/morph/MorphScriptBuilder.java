@@ -31,6 +31,10 @@ import org.dswarm.common.DMPStatics;
 import org.dswarm.common.model.Attribute;
 import org.dswarm.common.model.util.AttributePathUtil;
 import org.dswarm.common.types.Tuple;
+import org.dswarm.persistence.model.job.*;
+import org.dswarm.persistence.model.job.Function;
+import org.dswarm.persistence.model.schema.AttributePath;
+import org.dswarm.persistence.model.schema.ContentSchema;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.utils.AttributePathUtils;
 import org.slf4j.Logger;
@@ -41,12 +45,6 @@ import org.w3c.dom.Element;
 import org.dswarm.common.xml.utils.XMLUtils;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.morph.model.FilterExpression;
-import org.dswarm.persistence.model.job.Component;
-import org.dswarm.persistence.model.job.Function;
-import org.dswarm.persistence.model.job.FunctionType;
-import org.dswarm.persistence.model.job.Mapping;
-import org.dswarm.persistence.model.job.Task;
-import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
@@ -168,14 +166,18 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 		final List<String> metas = Lists.newArrayList();
 
 		Optional<Map<String, Integer>> optionalInputSchemaMap = generateInputSchemaMap(task);
+		Optional<Schema> optionalInputSchema = Optional.ofNullable(task)
+														.flatMap(task2 -> Optional.ofNullable(task2.getInputDataModel()))
+														.flatMap(inputDataModel -> Optional.ofNullable(inputDataModel.getSchema()));
 
 		for (final Mapping mapping : task.getJob().getMappings()) {
 
 			metas.add(MorphScriptBuilder.MAPPING_PREFIX + mapping.getUuid());
 
 			final Optional<String> optionalDeepestMappingInput = determineDeepestMappingInputAttributePath(mapping, optionalInputSchemaMap);
+			final Optional<Boolean> optionalSelectValueFromSameSubEntity = determineFilterUseCase(mapping, optionalInputSchema);
 
-			createTransformation(rules, mapping, optionalDeepestMappingInput);
+			createTransformation(rules, mapping, optionalDeepestMappingInput, optionalSelectValueFromSameSubEntity);
 
 			createLookupTable(maps, mapping.getTransformation());
 		}
@@ -183,6 +185,163 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 		metaName.setTextContent(Joiner.on(", ").join(metas));
 
 		return this;
+	}
+
+	/**
+	 * determines the filter use case, i.e., when multiple mapping inputs are reduced (collected) via a collector (especially all ("and") or any ("or") collector)
+	 * whether the select value of the mapping input needs to be taken from the the same sub entity or not.
+	 *
+	 * @param mapping the mapping
+	 * @param optionalInputSchema the optional input schema
+	 * @return true, if the select value should be taken from the same sub entity; otherwise, false (i.e. the mapping inputs filter for different sub entities)
+	 */
+	private Optional<Boolean> determineFilterUseCase(final Mapping mapping, final Optional<Schema> optionalInputSchema) throws DMPConverterException {
+
+		if(mapping == null) {
+
+			// no mapping available
+
+			return Optional.empty();
+		}
+
+		final Set<MappingAttributePathInstance> mappingInputAttributePaths = mapping.getInputAttributePaths();
+
+		if(mappingInputAttributePaths == null || mappingInputAttributePaths.size() < 2) {
+
+			// no mapping inputs available or only one mapping input is available
+
+			return Optional.empty();
+		}
+
+		if(!optionalInputSchema.isPresent()) {
+
+			// no input schema available
+
+			return Optional.empty();
+		}
+
+		// determine use case:
+
+		final Schema inputSchema = optionalInputSchema.get();
+		final ContentSchema inputSchemaContentSchema = inputSchema.getContentSchema();
+
+		// 1. check input schema, whether it contains a content schema
+
+		if(inputSchemaContentSchema == null) {
+
+			// no input content schema available
+
+			return Optional.empty();
+		}
+
+		final LinkedList<AttributePath> keyAttributePaths = inputSchemaContentSchema.getKeyAttributePaths();
+
+		// 1.1 if input schema has a content schema, check whether it contains key attribute paths
+
+		if(keyAttributePaths == null || keyAttributePaths.isEmpty()) {
+
+			// no key attribute path available
+
+			return Optional.empty();
+		}
+
+		final AttributePath valueAttributePath = inputSchemaContentSchema.getValueAttributePath();
+
+		if(valueAttributePath == null) {
+
+			// no value attribute path available
+
+			return Optional.empty();
+		}
+
+		// 1.2 determine number of mapping inputs that make use of the value attribute path of the content schema
+
+		final List<MappingAttributePathInstance> mapiCandidates1 = new ArrayList<>();
+
+		for(final MappingAttributePathInstance mapi : mappingInputAttributePaths) {
+
+			final AttributePath attributePath = mapi.getAttributePath();
+
+			if(valueAttributePath.equals(attributePath)) {
+
+				mapiCandidates1.add(mapi);
+			}
+		}
+
+		if(mapiCandidates1.size() < 2) {
+
+			// no more then max. 1 mapping input make use of the value attribute path
+
+			return Optional.empty();
+		}
+
+		// 1.3 if content schema contains key attribute paths, determine lowest key attribute path (i.e. this one that builds the outer closure of the subentity)
+
+		final Iterator<AttributePath> keyAttributePathsIterator = keyAttributePaths.iterator();
+		AttributePath lowestKeyAttributePath = keyAttributePathsIterator.next();
+
+		while(keyAttributePathsIterator.hasNext()) {
+
+			final AttributePath nextKeyAttributePath = keyAttributePathsIterator.next();
+
+			if(nextKeyAttributePath.getAttributePath().size() < lowestKeyAttributePath.getAttributePath().size()) {
+
+				lowestKeyAttributePath = nextKeyAttributePath;
+			}
+		}
+
+		// 2. determine filters of mapping input candidates
+		// 3. check whether filters of mapping intput candidates, make use of lowest key attribute path + value attribute path
+
+		final Map<MappingAttributePathInstance, FilterExpression> mapiCandidates = new LinkedHashMap<>();
+		final String lowestKeyAttributePathString = lowestKeyAttributePath.toAttributePath();
+
+		for(final MappingAttributePathInstance mapi : mapiCandidates1) {
+
+			final String filterExpression = getFilterExpression(mapi);
+			final Map<String, FilterExpression> filterExpressionMap = extractFilterExpressions(filterExpression);
+
+			if(filterExpressionMap == null || filterExpressionMap.isEmpty()) {
+
+				continue;
+			}
+
+			if(!filterExpressionMap.containsKey(lowestKeyAttributePathString)) {
+
+				// filter does not contain lowest key attribute path
+
+				continue;
+			}
+
+			mapiCandidates.put(mapi, filterExpressionMap.get(lowestKeyAttributePathString));
+		}
+
+		if(mapiCandidates.size() < 2) {
+
+			// there are no more then one mapping input candidate available, cannot do comparison
+
+			return Optional.empty();
+		}
+
+		// 3.1 if filters of mapping input candidates make use of lowest key attribute path, then
+		//     compare the values of the filter expression for the lowest key attribute path
+
+		boolean selectValueFromSameSubEntity = true;
+		final String filterExpressionCompareValue = mapiCandidates.values().iterator().next().getExpression();
+
+		for(final FilterExpression filterExpression : mapiCandidates.values()) {
+
+			if(!filterExpressionCompareValue.equals(filterExpression.getExpression())) {
+
+				// filter expressions for lowest key attribute path differ
+
+				selectValueFromSameSubEntity = false;
+
+				break;
+			}
+		}
+
+		return Optional.of(selectValueFromSameSubEntity);
 	}
 
 	@Override
@@ -221,7 +380,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 		return combineAsFilterDataOut;
 	}
 
-	private void createTransformation(final Element rules, final Mapping mapping, final Optional<String> optionalDeepestMappingInput) throws DMPConverterException {
+	private void createTransformation(final Element rules, final Mapping mapping, final Optional<String> optionalDeepestMappingInput, final Optional<Boolean> optionalSelectValueFromSameSubEntity) throws DMPConverterException {
 
 		// first handle the parameter mapping from the attribute paths of the mapping to the transformation component
 
@@ -248,7 +407,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 			// delegate input attribute path to output attribute path + add possible transformations (components)
 
 			mapMappingInputToMappingOutput(mapping, rules);
-			processTransformationComponentFunction(transformationComponent, mapping, null, optionalDeepestMappingInput, rules);
+			processTransformationComponentFunction(transformationComponent, mapping, null, optionalDeepestMappingInput, optionalSelectValueFromSameSubEntity, rules);
 
 			return;
 		}
@@ -278,7 +437,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 		addMappingOutputMapping(variablesFromMappingOutput, mapping.getOutputAttributePath(), rules);
 
-		processTransformationComponentFunction(transformationComponent, mapping, mappingInputsVariablesMap, optionalDeepestMappingInput, rules);
+		processTransformationComponentFunction(transformationComponent, mapping, mappingInputsVariablesMap, optionalDeepestMappingInput, optionalSelectValueFromSameSubEntity, rules);
 	}
 
 	private void createLookupTable(final Element maps, final Component transformationComponent) throws DMPConverterException {
@@ -674,7 +833,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 	}
 
 	private void processTransformationComponentFunction(final Component transformationComponent, final Mapping mapping,
-	                                                    final Map<String, List<String>> mappingInputsVariablesMap, final Optional<String> optionalDeepestMappingInput, final Element rules) throws DMPConverterException {
+	                                                    final Map<String, List<String>> mappingInputsVariablesMap, final Optional<String> optionalDeepestMappingInput, final Optional<Boolean> optionalSelectValueFromSameSubEntity, final Element rules) throws DMPConverterException {
 
 		final String transformationOutputVariableIdentifier = determineTransformationOutputVariable(transformationComponent);
 		final String finalTransformationOutputVariableIdentifier =
@@ -737,7 +896,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 				for (final Component component : components) {
 
-					processComponent(component, mappingInputsVariablesMap, finalTransformationOutputVariableIdentifier, optionalDeepestMappingInput, rules);
+					processComponent(component, mappingInputsVariablesMap, finalTransformationOutputVariableIdentifier, optionalDeepestMappingInput, optionalSelectValueFromSameSubEntity, rules);
 				}
 
 				break;
@@ -745,7 +904,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 	}
 
 	private void processComponent(final Component component, final Map<String, List<String>> mappingInputsVariablesMap,
-	                              final String transformationOutputVariableIdentifier, final Optional<String> optionalDeepestMappingInput, final Element rules) throws DMPConverterException {
+	                              final String transformationOutputVariableIdentifier, final Optional<String> optionalDeepestMappingInput, final Optional<Boolean> optionalSelectValueFromSameSubEntity, final Element rules) throws DMPConverterException {
 
 		String[] inputStrings = {};
 
@@ -794,7 +953,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 				collectionNameAttribute = getComponentName(component);
 			}
 
-			final Element collection = createCollectionTag(component, collectionNameAttribute, sourceAttributes, optionalDeepestMappingInput);
+			final Element collection = createCollectionTag(component, collectionNameAttribute, sourceAttributes, optionalDeepestMappingInput, optionalSelectValueFromSameSubEntity);
 
 			rules.appendChild(collection);
 
@@ -950,7 +1109,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 	}
 
 	private Element createCollectionTag(final Component multipleInputComponent, final String collectionNameAttribute,
-	                                    final Set<String> collectionSourceAttributes, final Optional<String> optionalDeepestMappingInput) throws DMPConverterException {
+	                                    final Set<String> collectionSourceAttributes, final Optional<String> optionalDeepestMappingInput, final Optional<Boolean> optionalSelectValueFromSameSubEntity) throws DMPConverterException {
 
 		final Element collection;
 
@@ -985,14 +1144,24 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 				collectionElement.setAttribute(MF_COLLECTOR_RESET_ATTRIBUTE_IDENTIFIER, BOOLEAN_VALUE_TRUE);
 
-				if (!optionalDeepestMappingInput.isPresent()) {
+				if(!optionalSelectValueFromSameSubEntity.isPresent() || optionalSelectValueFromSameSubEntity.get()) {
 
-					throw new DMPConverterException("deepest mapping input is not available for parametrizing 'all' collector properly");
+					// 3.2 if the key attribute paths of the filter expressions are all equal, then the select value will be selected from the same sub entity
+
+					if (!optionalDeepestMappingInput.isPresent()) {
+
+						throw new DMPConverterException("deepest mapping input is not available for parametrizing 'all' collector properly");
+					}
+
+					final String deepestMappingInputAttributePath = optionalDeepestMappingInput.get();
+
+					collectionElement.setAttribute(MF_FLUSH_WITH_ATTRIBUTE_IDENTIFIER, deepestMappingInputAttributePath);
+				} else {
+					// 3.3 if the key attribute paths of the filter expressions differ, then the select value will taken from another sub entity
+
+					collectionElement.setAttribute(MF_FLUSH_WITH_ATTRIBUTE_IDENTIFIER, METAFACTURE_RECORD_IDENTIFIER);
+					collectionElement.setAttribute(MF_COLLECTOR_INCLUDE_SUB_ENTITIES_ATTRIBUTE_IDENTIFIER, BOOLEAN_VALUE_TRUE);
 				}
-
-				final String deepestMappingInputAttributePath = optionalDeepestMappingInput.get();
-
-				collectionElement.setAttribute(MF_FLUSH_WITH_ATTRIBUTE_IDENTIFIER, deepestMappingInputAttributePath);
 
 				return collectionElement;
 			default:

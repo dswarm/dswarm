@@ -86,7 +86,7 @@
             "filter": {
               "uuid": "27fd2436-2637-3e22-00fe-a35adb9d6960",
               "name": null,
-              "expression": "[{\"http://www.loc.gov/MARC21/slim#datafield\\u001ehttp://www.loc.gov/MARC21/slim#tag\":{\"type\":\"REGEXP\",\"expression\":\"980\"}},{\"http://www.loc.gov/MARC21/slim#datafield\\u001ehttp://www.loc.gov/MARC21/slim#subfield\\u001ehttp://www.loc.gov/MARC21/slim#code\":{\"type\":\"REGEXP\",\"expression\":\"b\"}}]"
+              "expression": "[{\"http://www.loc.gov/MARC21/slim#datafield\\u001ehttp://www.loc.gov/MARC21/slim#tag\":{\"type\":\"REGEXP\",\"expression\":\"980\"}},{\"http://www.loc.gov/MARC21/slim#datafield\\u001ehttp://www.loc.gov/MARC21/slim#subfield\\u001ehttp://www.loc.gov/MARC21/slim#code\":{\"type\":\"REGEXP\",\"expression\":\"b\"}},{\"http://www.loc.gov/MARC21/slim#datafield\\u001ehttp://www.loc.gov/MARC21/slim#subfield\\u001ehttp://www.w3.org/1999/02/22-rdf-syntax-ns#value\":{\"type\":\"REGEXP\",\"expression\":\"15\"}}]"
             }
           },
           {
@@ -116,7 +116,7 @@
             "filter": {
               "uuid": "8b517de6-7d92-aecb-7784-0f40cd7623e7",
               "name": null,
-              "expression": "[{\"http://www.loc.gov/MARC21/slim#datafield\\u001ehttp://www.loc.gov/MARC21/slim#tag\":{\"type\":\"REGEXP\",\"expression\":\"590\"}}]"
+              "expression": "[{\"http://www.loc.gov/MARC21/slim#datafield\\u001ehttp://www.loc.gov/MARC21/slim#tag\":{\"type\":\"REGEXP\",\"expression\":\"590\"}},{\"http://www.loc.gov/MARC21/slim#datafield\\u001ehttp://www.loc.gov/MARC21/slim#subfield\\u001ehttp://www.loc.gov/MARC21/slim#code\":{\"type\":\"REGEXP\",\"expression\":\"a|b\"}}]"
             }
           }
         ],
