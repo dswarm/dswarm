@@ -36,7 +36,7 @@
 		<version.grizzly-http>2.3.22</version.grizzly-http>
 		<version.h2k>2.4.0-b31</version.h2k>
 		<version.javax.servlet-api>3.1.0</version.javax.servlet-api>
-		<version.jcl-over-slf4j>1.7.12</version.jcl-over-slf4j>
+		<version.jcl-over-slf4j>1.7.16</version.jcl-over-slf4j>
 		<version.jena>3.0.0</version.jena>
 		<version.maven.plugin.jetty>9.2.6.v20141205</version.maven.plugin.jetty>
 		<version.maven.plugin.tomcat>2.2</version.maven.plugin.tomcat>

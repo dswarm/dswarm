@@ -36,7 +36,7 @@
 		<version.xalan>2.7.2</version.xalan>
 		<version.xerces>2.11.0</version.xerces>
 		<version.xsd2jsonschema>0.0.3-SNAPSHOT</version.xsd2jsonschema>
-		<fasterxml.version>0.9.11</fasterxml.version>
+		<fasterxml.version>1.0.0</fasterxml.version>
 	</properties>
 
 	<repositories>
