@@ -40,6 +40,7 @@
 		<version.jena>3.0.1</version.jena>
 		<version.maven.plugin.jetty>9.2.6.v20141205</version.maven.plugin.jetty>
 		<version.maven.plugin.tomcat>2.2</version.maven.plugin.tomcat>
+		<version.httpcomponents>4.4.4</version.httpcomponents>
 	</properties>
 
 	<build>
@@ -382,6 +383,11 @@
 			<groupId>org.dswarm</groupId>
 			<artifactId>xmlenhancer</artifactId>
 			<version>${version.xmlenhancer}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcomponents-core</artifactId>
+			<version>${version.httpcomponents}</version>
 		</dependency>
 	</dependencies>
 
