@@ -365,7 +365,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.jena</groupId>
-			<artifactId>ena-arq</artifactId>
+			<artifactId>jena-arq</artifactId>
 			<version>${version.jena}</version>
 			<exclusions>
 				<exclusion>
