@@ -386,7 +386,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpcomponents-core</artifactId>
+			<artifactId>httpcore</artifactId>
 			<version>${version.httpcomponents}</version>
 		</dependency>
 	</dependencies>
