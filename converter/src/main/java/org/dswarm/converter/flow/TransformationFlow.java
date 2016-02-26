@@ -411,11 +411,20 @@ public class TransformationFlow {
 			}
 
 			LOG.debug("received '{}' ('{}') records + emitted '{}' ('{}') records in converter in transformation engine",
-					converter.getInComingCounter().get(), converter.getInComingCounter2().get(), converter.getOutGoingCounter().get(),
-					converter.getOutGoingCounter2().get());
+					converter.getInComingCounter(), converter.getInComingCounter2(), converter.getOutGoingCounter(),
+					converter.getOutGoingCounter2());
+
+			final int outGoingCounter;
+
+			if(writeResultToDatahub) {
+
+				outGoingCounter = writer.getOutGoingCounter()/2;
+			} else {
+				outGoingCounter = writer.getOutGoingCounter();
+			}
 
 			LOG.debug("received '{}' records + emitted '{}' (discarded '{}') records in writer in transformation engine",
-					writer.getInComingCounter(), writer.getOutGoingCounter(), writer.getNonOutGoingCounter());
+					writer.getInComingCounter(), outGoingCounter, writer.getNonOutGoingCounter());
 		}).subscribeOn(scheduler);
 	}
 
