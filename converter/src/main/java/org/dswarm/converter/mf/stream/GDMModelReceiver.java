@@ -141,13 +141,13 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 				@Override
 				public void onCompleted() {
 
-					if (!gdmModelDeque.isEmpty() && inComingCounter.get() > outGoingCounter.get()) {
+					if (!gdmModelDeque.isEmpty()) {
 
 						LOG.debug("need to emit buffer @ onCompleted with buffer size = '{}', received records = '{}' and emitted records = '{}'", gdmModelDeque.size(), inComingCounter.get(), outGoingCounter.get());
 					}
 
 					// note: don't emit to much, i.e., outgoing counter can't be larger then ingoing counter
-					while (!gdmModelDeque.isEmpty() && inComingCounter.get() > outGoingCounter.get()) {
+					while (!gdmModelDeque.isEmpty()) {
 
 						subscriber.onNext(gdmModelDeque.removeLast());
 
