@@ -138,7 +138,8 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 
 				@Override public void onCompleted() {
 
-					while (!gdmModelDeque.isEmpty()) {
+					// note: don't emit to much, i.e., outgoing counter can't be larger then ingoing counter
+					while (!gdmModelDeque.isEmpty() && inComingCounter.get() > outGoingCounter.get()) {
 
 						subscriber.onNext(gdmModelDeque.removeLast());
 
