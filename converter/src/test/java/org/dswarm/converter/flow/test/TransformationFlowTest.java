@@ -258,6 +258,10 @@ public class TransformationFlowTest extends GuicedTest {
 
 		final ArrayNode expectedJSONArray = objectMapper.readValue(expected, ArrayNode.class);
 
+		Assert.assertThat(actualNodes, CoreMatchers.is(Matchers.notNullValue()));
+		Assert.assertThat(expectedJSONArray, CoreMatchers.is(Matchers.notNullValue()));
+		Assert.assertThat(actualNodes.size(), Matchers.equalTo(expectedJSONArray.size()));
+
 		objectMapper.writeValueAsString(actualNodes);
 
 		final String actualDataResourceSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(updatedInputDataModel);
