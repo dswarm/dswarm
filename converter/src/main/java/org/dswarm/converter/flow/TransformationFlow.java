@@ -346,6 +346,8 @@ public class TransformationFlow {
 
 		if (writeResultToDatahub) {
 
+			LOG.debug("write transformation result to datahub");
+
 			if (hasDefined(outputDataModel, DMPObject::getUuid)) {
 
 				// write result to graph db
