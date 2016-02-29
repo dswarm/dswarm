@@ -28,6 +28,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -573,9 +574,7 @@ public class TasksResource {
 
 				throw new DMPControllerException(message, e);
 			}
-		} else
-
-		{
+		} else {
 
 			if (doNotReturnJsonToCaller) {
 
@@ -608,8 +607,9 @@ public class TasksResource {
 
 			// transform model json to fe friendly json
 			final ArrayNode feFriendlyJSON = objectMapper.createArrayNode();
+			final AtomicInteger counter = new AtomicInteger(0);
 
-			result.subscribe(new Observer<JsonNode>() {
+			result.doOnSubscribe(() -> TasksResource.LOG.debug("subscribed to JSON export on task resource")).subscribe(new Observer<JsonNode>() {
 
 				@Override public void onCompleted() {
 
@@ -617,7 +617,7 @@ public class TasksResource {
 					try {
 						resultString = objectMapper.writeValueAsString(feFriendlyJSON);
 
-						TasksResource.LOG.debug("processed task successfully, return data to caller");
+						TasksResource.LOG.debug("processed task successfully, return data to caller; received '{}' records overall", counter.get());
 
 						asyncResponse.resume(buildResponse(resultString, MediaType.APPLICATION_JSON_TYPE));
 					} catch (JsonProcessingException e) {
@@ -636,6 +636,13 @@ public class TasksResource {
 				}
 
 				@Override public void onNext(final JsonNode jsonNode) {
+
+					counter.incrementAndGet();
+
+					if(counter.get() == 1) {
+
+						TasksResource.LOG.debug("recieved first record for JSON export in task resource");
+					}
 
 					feFriendlyJSON.add(transformModelJSONtoFEFriendlyJSON(jsonNode));
 				}

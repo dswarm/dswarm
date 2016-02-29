@@ -340,7 +340,7 @@ public class TransformationFlow {
 				Iterators.addAll(nodeList, nodes.elements());
 
 				return nodeList;
-			});
+			}).onBackpressureBuffer(10000);
 		}
 		final Observable<Response> writeResponse;
 
