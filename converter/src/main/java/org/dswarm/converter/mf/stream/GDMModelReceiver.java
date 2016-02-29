@@ -89,8 +89,6 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 
 			if (!afterClosedStream.get() && !gdmModelDeque.isEmpty()) {
 
-				LOG.debug("clean buffer for some reason, buffer size = '{}'", gdmModelDeque.size());
-
 				gdmModelDeque.removeLast();
 			}
 
