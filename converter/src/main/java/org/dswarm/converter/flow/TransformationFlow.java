@@ -255,7 +255,10 @@ public class TransformationFlow {
 		final AtomicInteger counter2 = new AtomicInteger(0);
 		final AtomicLong statementCounter = new AtomicLong(0);
 
-		final Observable<org.dswarm.persistence.model.internal.Model> model = writer.getObservable().filter(gdmModel -> {
+		final Observable<org.dswarm.persistence.model.internal.Model> model = writer.getObservable()
+				.doOnSubscribe(() -> TransformationFlow.LOG.debug("subscribed on transformation result observable"))
+				.onBackpressureBuffer(10000)
+				.filter(gdmModel -> {
 
 			if (counter.incrementAndGet() == 1) {
 
