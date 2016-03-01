@@ -103,8 +103,8 @@ public class TransformationFlow {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TransformationFlow.class);
 
-	private static final String    TRANSFORMATION_ENGINE_IDENTIFIER = "transformation engine";
-	private static final Predicate RDF_TYPE_PREDICATE               = new Predicate(GDMUtil.RDF_type);
+	private static final String TRANSFORMATION_ENGINE_IDENTIFIER = "transformation engine";
+	private static final Predicate RDF_TYPE_PREDICATE = new Predicate(GDMUtil.RDF_type);
 
 	private final Map<String, ResourceNode> resourceNodeCache = new ConcurrentHashMap<>();
 
@@ -333,14 +333,26 @@ public class TransformationFlow {
 			resultObservable = Observable.empty();
 		} else {
 
-			resultObservable = model.onBackpressureBuffer(10000).map(org.dswarm.persistence.model.internal.Model::toJSON).flatMapIterable(nodes -> {
+			final AtomicInteger resultCounter = new AtomicInteger(0);
 
-				final ArrayList<JsonNode> nodeList = new ArrayList<>();
+			resultObservable = model.onBackpressureBuffer(10000).doOnSubscribe(() -> TransformationFlow.LOG.debug("subscribed to results observable in transformation engine"))
+					.doOnNext(resultObj -> {
 
-				Iterators.addAll(nodeList, nodes.elements());
+						resultCounter.incrementAndGet();
 
-				return nodeList;
-			}).onBackpressureBuffer(10000);
+						if (resultCounter.get() == 1) {
+
+							TransformationFlow.LOG.debug("received first result in transformation engine");
+						}
+					}).doOnCompleted(() -> TransformationFlow.LOG.debug("received '{}' results in transformation engine overall", resultCounter.get()))
+					.map(org.dswarm.persistence.model.internal.Model::toJSON).flatMapIterable(nodes -> {
+
+						final ArrayList<JsonNode> nodeList = new ArrayList<>();
+
+						Iterators.addAll(nodeList, nodes.elements());
+
+						return nodeList;
+					}).onBackpressureBuffer(10000);
 		}
 		final Observable<Response> writeResponse;
 
@@ -380,7 +392,8 @@ public class TransformationFlow {
 
 		return Observable.create(new Observable.OnSubscribe<JsonNode>() {
 
-			@Override public void call(final Subscriber<? super JsonNode> subscriber) {
+			@Override
+			public void call(final Subscriber<? super JsonNode> subscriber) {
 
 				resultObservable.subscribeOn(scheduler)
 						.compose(new AndThenWaitFor<>(writeResponse, DMPPersistenceUtil.getJSONObjectMapper()::createArrayNode))
@@ -416,9 +429,9 @@ public class TransformationFlow {
 
 			final int outGoingCounter;
 
-			if(writeResultToDatahub) {
+			if (writeResultToDatahub) {
 
-				outGoingCounter = writer.getOutGoingCounter()/2;
+				outGoingCounter = writer.getOutGoingCounter() / 2;
 			} else {
 				outGoingCounter = writer.getOutGoingCounter();
 			}
@@ -429,7 +442,7 @@ public class TransformationFlow {
 	}
 
 	public Observable<JsonNode> apply(final Observable<Tuple<String, JsonNode>> tuples, final boolean writeResultToDatahub,
-			final boolean doNotReturnJsonToCaller, final boolean enableVersioning, final Scheduler scheduler) throws DMPConverterException {
+	                                  final boolean doNotReturnJsonToCaller, final boolean enableVersioning, final Scheduler scheduler) throws DMPConverterException {
 
 		final JsonNodeReader opener = new JsonNodeReader();
 
@@ -502,7 +515,7 @@ public class TransformationFlow {
 	private static class AndThenWaitFor<T, U> implements Observable.Transformer<T, T> {
 
 		private final Observable<U> other;
-		private final Supplier<T>   emptyResultValue;
+		private final Supplier<T> emptyResultValue;
 
 		public AndThenWaitFor(final Observable<U> other, final Supplier<T> emptyResultValue) {
 			this.other = other;
