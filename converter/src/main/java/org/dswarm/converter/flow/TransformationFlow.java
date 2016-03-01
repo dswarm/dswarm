@@ -27,6 +27,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
@@ -50,6 +52,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.culturegraph.mf.exceptions.MorphDefException;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.StreamPipe;
@@ -121,6 +124,14 @@ public class TransformationFlow {
 	private final TimerBasedFactory timerBasedFactory;
 
 	private final Timer morphTimer;
+
+	private static final String DSWARM_GDM_THREAD_NAMING_PATTERN = "dswarm-gdm-%d";
+
+	private static final ExecutorService GDM_EXECUTOR_SERVICE = Executors
+			.newCachedThreadPool(
+					new BasicThreadFactory.Builder().daemon(false).namingPattern(DSWARM_GDM_THREAD_NAMING_PATTERN).build());
+	private static final Scheduler GDM_SCHEDULER = Schedulers.from(GDM_EXECUTOR_SERVICE);
+
 
 	@Inject
 	private TransformationFlow(
@@ -370,7 +381,7 @@ public class TransformationFlow {
 
 				try {
 
-					writeResponse = internalModelService.updateObject(outputDataModel.get().getUuid(), model.onBackpressureBuffer(10000), UpdateFormat.DELTA, enableVersioning);
+					writeResponse = internalModelService.updateObject(outputDataModel.get().getUuid(), model.observeOn(GDM_SCHEDULER).onBackpressureBuffer(10000), UpdateFormat.DELTA, enableVersioning);
 				} catch (final DMPPersistenceException e) {
 
 					final String message = "couldn't persist the result of the transformation: " + e.getMessage();
