@@ -268,7 +268,6 @@ public class TransformationFlow {
 		final AtomicLong statementCounter = new AtomicLong(0);
 
 		final ConnectableObservable<GDMModel> modelConnectableObservable = writer.getObservable().onBackpressureBuffer(10000).publish();
-		modelConnectableObservable.connect();
 		final ConnectableObservable<org.dswarm.persistence.model.internal.Model> model = modelConnectableObservable
 				.doOnSubscribe(() -> TransformationFlow.LOG.debug("subscribed on transformation result observable"))
 				.filter(gdmModel -> {
@@ -341,6 +340,8 @@ public class TransformationFlow {
 		}).cast(org.dswarm.persistence.model.internal.Model.class).doOnCompleted(
 				() -> LOG.info("processed '{}' records (from '{}') with '{}' statements in transformation engine", counter2.get(), counter.get(),
 						statementCounter.get())).publish();
+
+		modelConnectableObservable.connect();
 
 		final Observable<JsonNode> resultObservable;
 		final ConnectableObservable<JsonNode> connectableResultObservable;
