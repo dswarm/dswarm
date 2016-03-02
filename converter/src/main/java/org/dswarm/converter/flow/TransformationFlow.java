@@ -64,6 +64,7 @@ import org.slf4j.LoggerFactory;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscriber;
+import rx.observables.ConnectableObservable;
 import rx.schedulers.Schedulers;
 
 import org.dswarm.common.types.Tuple;
@@ -266,7 +267,9 @@ public class TransformationFlow {
 		final AtomicInteger counter2 = new AtomicInteger(0);
 		final AtomicLong statementCounter = new AtomicLong(0);
 
-		final Observable<org.dswarm.persistence.model.internal.Model> model = writer.getObservable()
+		final ConnectableObservable<GDMModel> modelConnectableObservable = writer.getObservable().publish();
+		modelConnectableObservable.connect();
+		final ConnectableObservable<org.dswarm.persistence.model.internal.Model> model = modelConnectableObservable
 				.doOnSubscribe(() -> TransformationFlow.LOG.debug("subscribed on transformation result observable"))
 				.onBackpressureBuffer(10000)
 				.filter(gdmModel -> {
@@ -338,7 +341,7 @@ public class TransformationFlow {
 			return finalGDMModel;
 		}).cast(org.dswarm.persistence.model.internal.Model.class).doOnCompleted(
 				() -> LOG.info("processed '{}' records (from '{}') with '{}' statements in transformation engine", counter2.get(), counter.get(),
-						statementCounter.get()));
+						statementCounter.get())).publish();
 
 		final Observable<JsonNode> resultObservable;
 
@@ -368,6 +371,9 @@ public class TransformationFlow {
 						return nodeList;
 					}).onBackpressureBuffer(10000);
 		}
+
+		ConnectableObservable<JsonNode> connectableResultObservable = resultObservable.publish();
+
 		final Observable<Response> writeResponse;
 
 		if (writeResultToDatahub) {
@@ -404,15 +410,19 @@ public class TransformationFlow {
 			writeResponse = Observable.empty();
 		}
 
+		model.connect();
+
 		return Observable.create(new Observable.OnSubscribe<JsonNode>() {
 
 			@Override
 			public void call(final Subscriber<? super JsonNode> subscriber) {
 
-				resultObservable.subscribeOn(scheduler)
+				connectableResultObservable.subscribeOn(scheduler)
 						.compose(new AndThenWaitFor<>(writeResponse, DMPPersistenceUtil.getJSONObjectMapper()::createArrayNode))
 						.doOnCompleted(morphContext::stop)
 						.subscribe(subscriber);
+
+				connectableResultObservable.connect();
 
 				final AtomicInteger counter = new AtomicInteger(0);
 
