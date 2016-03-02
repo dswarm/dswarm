@@ -267,11 +267,10 @@ public class TransformationFlow {
 		final AtomicInteger counter2 = new AtomicInteger(0);
 		final AtomicLong statementCounter = new AtomicLong(0);
 
-		final ConnectableObservable<GDMModel> modelConnectableObservable = writer.getObservable().publish();
+		final ConnectableObservable<GDMModel> modelConnectableObservable = writer.getObservable().onBackpressureBuffer(10000).publish();
 		modelConnectableObservable.connect();
 		final ConnectableObservable<org.dswarm.persistence.model.internal.Model> model = modelConnectableObservable
 				.doOnSubscribe(() -> TransformationFlow.LOG.debug("subscribed on transformation result observable"))
-				.onBackpressureBuffer(10000)
 				.filter(gdmModel -> {
 
 			if (counter.incrementAndGet() == 1) {
@@ -344,10 +343,12 @@ public class TransformationFlow {
 						statementCounter.get())).publish();
 
 		final Observable<JsonNode> resultObservable;
+		final ConnectableObservable<JsonNode> connectableResultObservable;
 
 		if (doNotReturnJsonToCaller) {
 
 			resultObservable = Observable.empty();
+			connectableResultObservable = null;
 		} else {
 
 			final AtomicInteger resultCounter = new AtomicInteger(0);
@@ -370,9 +371,9 @@ public class TransformationFlow {
 
 						return nodeList;
 					}).onBackpressureBuffer(10000);
-		}
 
-		ConnectableObservable<JsonNode> connectableResultObservable = resultObservable.publish();
+			connectableResultObservable = resultObservable.publish();
+		}
 
 		final Observable<Response> writeResponse;
 
@@ -417,12 +418,25 @@ public class TransformationFlow {
 			@Override
 			public void call(final Subscriber<? super JsonNode> subscriber) {
 
-				connectableResultObservable.subscribeOn(scheduler)
+				final Observable<JsonNode> finalResultObservable;
+
+				if(doNotReturnJsonToCaller) {
+
+					finalResultObservable = resultObservable;
+				} else {
+
+					finalResultObservable = connectableResultObservable;
+				}
+
+				finalResultObservable.subscribeOn(scheduler)
 						.compose(new AndThenWaitFor<>(writeResponse, DMPPersistenceUtil.getJSONObjectMapper()::createArrayNode))
 						.doOnCompleted(morphContext::stop)
 						.subscribe(subscriber);
 
-				connectableResultObservable.connect();
+				if(!doNotReturnJsonToCaller) {
+
+					connectableResultObservable.connect();
+				}
 
 				final AtomicInteger counter = new AtomicInteger(0);
 
