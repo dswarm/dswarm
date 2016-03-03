@@ -32,6 +32,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.ws.rs.client.Client;
@@ -618,7 +619,9 @@ public class InternalGDMGraphService implements InternalModelService {
 				optionalDeprecateMissingRecords,
 				enableVersioning);
 
-		final Observable<Resource> resourceObservable = modelObservable.lift(operator).flatMapIterable(gdm -> {
+		final Observable<Resource> resourceObservable = modelObservable.lift(operator)
+				.doOnSubscribe(() -> InternalGDMGraphService.LOG.debug("subscribed to GDM writer"))
+				.flatMapIterable(gdm -> {
 
 			try {
 
@@ -1280,6 +1283,8 @@ public class InternalGDMGraphService implements InternalModelService {
 		private final AsyncSubject<Response>   responseAsyncSubject   = AsyncSubject.create();
 		private final PublishSubject<Resource> resourcePublishSubject = PublishSubject.create();
 
+		private final AtomicInteger counter = new AtomicInteger(0);
+
 		private GDMWriteRequestOperator(final DataModel dataModel, final boolean isSchemaAnInBuiltSchema, final String dataModelURI,
 				final Optional<Boolean> optionalDeprecateMissingRecords, final boolean enableVersioning) {
 			this.dataModel = dataModel;
@@ -1306,6 +1311,8 @@ public class InternalGDMGraphService implements InternalModelService {
 
 				@Override public void onCompleted() {
 
+					InternalGDMGraphService.LOG.debug("received '{}' records in GDM writer overall", counter.get());
+
 					if (!seenFirstModel.get()) {
 
 						responseAsyncSubject.onCompleted();
@@ -1326,6 +1333,13 @@ public class InternalGDMGraphService implements InternalModelService {
 				}
 
 				@Override public void onNext(final GDMModel gdm) {
+
+					counter.incrementAndGet();
+
+					if(counter.get() == 1) {
+
+						InternalGDMGraphService.LOG.debug("received first record in GDM writer");
+					}
 
 					if (seenFirstModel.compareAndSet(false, true)) {
 
