@@ -333,7 +333,7 @@ public class TransformationFlow {
 			resultObservable = Observable.empty();
 		} else {
 
-			resultObservable = model.map(org.dswarm.persistence.model.internal.Model::toJSON).flatMapIterable(nodes -> {
+			resultObservable = model.onBackpressureBuffer(10000).map(org.dswarm.persistence.model.internal.Model::toJSON).flatMapIterable(nodes -> {
 
 				final ArrayList<JsonNode> nodeList = new ArrayList<>();
 
@@ -346,6 +346,8 @@ public class TransformationFlow {
 
 		if (writeResultToDatahub) {
 
+			LOG.debug("write transformation result to datahub");
+
 			if (hasDefined(outputDataModel, DMPObject::getUuid)) {
 
 				// write result to graph db
@@ -353,7 +355,7 @@ public class TransformationFlow {
 
 				try {
 
-					writeResponse = internalModelService.updateObject(outputDataModel.get().getUuid(), model, UpdateFormat.DELTA, enableVersioning);
+					writeResponse = internalModelService.updateObject(outputDataModel.get().getUuid(), model.onBackpressureBuffer(10000), UpdateFormat.DELTA, enableVersioning);
 				} catch (final DMPPersistenceException e) {
 
 					final String message = "couldn't persist the result of the transformation: " + e.getMessage();
@@ -409,11 +411,20 @@ public class TransformationFlow {
 			}
 
 			LOG.debug("received '{}' ('{}') records + emitted '{}' ('{}') records in converter in transformation engine",
-					converter.getInComingCounter().get(), converter.getInComingCounter2().get(), converter.getOutGoingCounter().get(),
-					converter.getOutGoingCounter2().get());
+					converter.getInComingCounter(), converter.getInComingCounter2(), converter.getOutGoingCounter(),
+					converter.getOutGoingCounter2());
+
+			final int outGoingCounter;
+
+			if(writeResultToDatahub) {
+
+				outGoingCounter = writer.getOutGoingCounter()/2;
+			} else {
+				outGoingCounter = writer.getOutGoingCounter();
+			}
 
 			LOG.debug("received '{}' records + emitted '{}' (discarded '{}') records in writer in transformation engine",
-					writer.getInComingCounter().get(), writer.getOutGoingCounter().get(), writer.getNonOutGoingCounter().get());
+					writer.getInComingCounter(), outGoingCounter, writer.getNonOutGoingCounter());
 		}).subscribeOn(scheduler);
 	}
 

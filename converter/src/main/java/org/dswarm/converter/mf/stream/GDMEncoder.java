@@ -107,24 +107,24 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 	}
 
-	public AtomicInteger getInComingCounter() {
+	public int getInComingCounter() {
 
-		return inComingCounter;
+		return inComingCounter.get();
 	}
 
-	public AtomicInteger getOutGoingCounter() {
+	public int getOutGoingCounter() {
 
-		return outGoingCounter;
+		return outGoingCounter.get();
 	}
 
-	public AtomicInteger getInComingCounter2() {
+	public int getInComingCounter2() {
 
-		return inComingCounter2;
+		return inComingCounter2.get();
 	}
 
-	public AtomicInteger getOutGoingCounter2() {
+	public int getOutGoingCounter2() {
 
-		return outGoingCounter2;
+		return outGoingCounter2.get();
 	}
 
 	@Override

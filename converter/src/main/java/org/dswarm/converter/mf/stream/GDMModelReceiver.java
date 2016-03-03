@@ -15,12 +15,8 @@
  */
 package org.dswarm.converter.mf.stream;
 
-import java.util.Deque;
-import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import org.culturegraph.mf.framework.ObjectReceiver;
+import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
@@ -28,7 +24,10 @@ import rx.Subscriber;
 import rx.subjects.PublishSubject;
 import rx.subjects.Subject;
 
-import org.dswarm.persistence.model.internal.gdm.GDMModel;
+import java.util.Deque;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author tgaengler
@@ -39,13 +38,13 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 
 	private final Subject<GDMModel, GDMModel> modelSubject = PublishSubject.create();
 
-	private final AtomicInteger inComingCounter    = new AtomicInteger(0);
-	private final AtomicInteger outGoingCounter    = new AtomicInteger(0);
+	private final AtomicInteger inComingCounter = new AtomicInteger(0);
+	private final AtomicInteger outGoingCounter = new AtomicInteger(0);
 	private final AtomicInteger nonOutGoingCounter = new AtomicInteger(0);
 	private final AtomicInteger dequePolledCounter = new AtomicInteger(0);
 
-	private final Deque<GDMModel> gdmModelDeque     = new ConcurrentLinkedDeque<>();
-	private final AtomicBoolean   afterClosedStream = new AtomicBoolean();
+	private final Deque<GDMModel> gdmModelDeque = new ConcurrentLinkedDeque<>();
+	private final AtomicBoolean afterClosedStream = new AtomicBoolean();
 
 	private final String type;
 
@@ -72,7 +71,7 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 	public void closeStream() {
 
 		LOG.info("close {} writer stream; received '{}' records + emitted '{}' (left '{}'; discarded '{}') records", type, inComingCounter.get(),
-				outGoingCounter.get(), inComingCounter.get() - outGoingCounter.get(), getNonOutGoingCounter().get());
+				outGoingCounter.get(), inComingCounter.get() - outGoingCounter.get(), nonOutGoingCounter.get());
 
 		afterClosedStream.compareAndSet(false, true);
 
@@ -106,37 +105,44 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 		}).doOnCompleted(() -> LOG
 				.info("complete {} writer observable; received '{}' records + emitted '{}' (left '{}'; discarded '{}'; polled '{}') records", type,
 						inComingCounter.get(),
-						outGoingCounter.get(), inComingCounter.get() - outGoingCounter.get(), getNonOutGoingCounter().get(),
+						outGoingCounter.get(), inComingCounter.get() - outGoingCounter.get(), nonOutGoingCounter.get(),
 						dequePolledCounter.get()));
 	}
 
-	public AtomicInteger getInComingCounter() {
+	public int getInComingCounter() {
 
-		return inComingCounter;
+		return inComingCounter.get();
 	}
 
-	public AtomicInteger getOutGoingCounter() {
+	public int getOutGoingCounter() {
 
-		return outGoingCounter;
+		return outGoingCounter.get();
 	}
 
-	public AtomicInteger getNonOutGoingCounter() {
+	public int getNonOutGoingCounter() {
 
-		return nonOutGoingCounter;
+		return nonOutGoingCounter.get();
 	}
 
-	public AtomicInteger getDequePolledCounter() {
+	public int getDequePolledCounter() {
 
-		return dequePolledCounter;
+		return dequePolledCounter.get();
 	}
 
 	private class BufferOperator implements Observable.Operator<GDMModel, GDMModel> {
 
-		@Override public Subscriber<? super GDMModel> call(final Subscriber<? super GDMModel> subscriber) {
+		@Override
+		public Subscriber<? super GDMModel> call(final Subscriber<? super GDMModel> subscriber) {
 
 			return new Subscriber<GDMModel>() {
 
-				@Override public void onCompleted() {
+				@Override
+				public void onCompleted() {
+
+					if (!gdmModelDeque.isEmpty()) {
+
+						LOG.debug("need to emit buffer @ onCompleted with buffer size = '{}', received records = '{}' and emitted records = '{}'", gdmModelDeque.size(), inComingCounter.get(), outGoingCounter.get());
+					}
 
 					while (!gdmModelDeque.isEmpty()) {
 
@@ -148,12 +154,14 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 					subscriber.onCompleted();
 				}
 
-				@Override public void onError(final Throwable e) {
+				@Override
+				public void onError(final Throwable e) {
 
 					subscriber.onError(e);
 				}
 
-				@Override public void onNext(final GDMModel gdmModel) {
+				@Override
+				public void onNext(final GDMModel gdmModel) {
 
 					subscriber.onNext(gdmModel);
 				}

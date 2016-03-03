@@ -32,14 +32,15 @@
 	<url>http://dswarm.org/</url>
 
 	<properties>
-		<version.es-metrics-reporter>2.0</version.es-metrics-reporter>
-		<version.grizzly-http>2.3.22</version.grizzly-http>
-		<version.h2k>2.4.0-b31</version.h2k>
+		<version.es-metrics-reporter>2.2.0</version.es-metrics-reporter>
+		<version.grizzly-http>2.3.23</version.grizzly-http>
+		<version.h2k>2.4.0-b34</version.h2k>
 		<version.javax.servlet-api>3.1.0</version.javax.servlet-api>
-		<version.jcl-over-slf4j>1.7.12</version.jcl-over-slf4j>
-		<version.jena>3.0.0</version.jena>
+		<version.jcl-over-slf4j>1.7.16</version.jcl-over-slf4j>
+		<version.jena>3.0.1</version.jena>
 		<version.maven.plugin.jetty>9.2.6.v20141205</version.maven.plugin.jetty>
 		<version.maven.plugin.tomcat>2.2</version.maven.plugin.tomcat>
+		<version.httpcomponents>4.4.4</version.httpcomponents>
 	</properties>
 
 	<build>
@@ -186,6 +187,14 @@
 				<exclusion>
 					<artifactId>jackson-jaxrs-base</artifactId>
 					<groupId>com.fasterxml.jackson.jaxrs</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jackson-jaxrs-json-provider</artifactId>
+					<groupId>com.fasterxml.jackson.jaxrs</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jackson-annotations</artifactId>
+					<groupId>com.fasterxml.jackson.core</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -337,12 +346,24 @@
 					<groupId>com.codahale.metrics</groupId>
 					<artifactId>metrics-core</artifactId>
 				</exclusion>
+				<exclusion>
+					<artifactId>jackson-annotations</artifactId>
+					<groupId>com.fasterxml.jackson.core</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jackson-core</artifactId>
+					<groupId>com.fasterxml.jackson.core</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jackson-databind</artifactId>
+					<groupId>com.fasterxml.jackson.core</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.jena</groupId>
-			<artifactId>apache-jena-libs</artifactId>
-			<type>pom</type>
+			<artifactId>jena-core</artifactId>
+			<version>${version.jena}</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
@@ -360,8 +381,58 @@
 					<artifactId>jcl-over-slf4j</artifactId>
 					<groupId>org.slf4j</groupId>
 				</exclusion>
+				<exclusion>
+					<groupId>org.apache.commons</groupId>
+					<artifactId>commons-csv</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.commons</groupId>
+					<artifactId>commons-lang3</artifactId>
+				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jena</groupId>
+			<artifactId>jena-arq</artifactId>
 			<version>${version.jena}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-log4j12</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jcl-over-slf4j</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jackson-core</artifactId>
+					<groupId>com.fasterxml.jackson.core</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jackson-databind</artifactId>
+					<groupId>com.fasterxml.jackson.core</groupId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.commons</groupId>
+					<artifactId>commons-csv</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.commons</groupId>
+					<artifactId>commons-lang3</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.httpcomponents</groupId>
+					<artifactId>httpcore</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -383,6 +454,11 @@
 			<groupId>org.dswarm</groupId>
 			<artifactId>xmlenhancer</artifactId>
 			<version>${version.xmlenhancer}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>${version.httpcomponents}</version>
 		</dependency>
 	</dependencies>
 
