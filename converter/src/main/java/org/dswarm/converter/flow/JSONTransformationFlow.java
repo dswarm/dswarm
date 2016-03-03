@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2013 – 2016 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,6 @@
 package org.dswarm.converter.flow;
 
 import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.Timer.Context;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -28,13 +27,10 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
-import org.culturegraph.mf.framework.ObjectPipe;
-import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.stream.pipe.Filter;
 import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.DMPConverterException;
-import org.dswarm.converter.mf.stream.GDMModelReceiver;
 import org.dswarm.converter.pipe.timing.TimerBasedFactory;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
@@ -42,7 +38,6 @@ import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
-import rx.Scheduler;
 import rx.observables.ConnectableObservable;
 import rx.schedulers.Schedulers;
 
@@ -64,7 +59,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class JSONTransformationFlow extends TransformationFlow<JsonNode> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(JSONTransformationFlow.class);
-
 
 	@Inject
 	private JSONTransformationFlow(
@@ -124,41 +118,11 @@ public class JSONTransformationFlow extends TransformationFlow<JsonNode> {
 		});
 	}
 
-	public Observable<JsonNode> apply(
-			final Observable<Tuple<String, JsonNode>> tuples,
-			final ObjectPipe<Tuple<String, JsonNode>, StreamReceiver> opener,
-			final boolean writeResultToDatahub, final boolean doNotReturnJsonToCaller, final boolean enableVersioning, final Scheduler scheduler)
-			throws DMPConverterException {
-
-		final MorphTask morphTask = new MorphTask(morphTimer, timerBasedFactory, outputDataModel, TRANSFORMATION_ENGINE_IDENTIFIER, optionalSkipFilter, opener, transformer);
-
-		final ConnectableObservable<org.dswarm.persistence.model.internal.Model> model = doPostProcessingOfResultModel(morphTask.getWriter());
-
-		final Optional<Observable<JsonNode>> optionalResultObservable;
-		final Optional<ConnectableObservable<JsonNode>> optionalConnectableResultObservable;
-
-		if (doNotReturnJsonToCaller) {
-
-			optionalResultObservable = Optional.of(Observable.empty());
-			optionalConnectableResultObservable = Optional.empty();
-		} else {
-
-			optionalResultObservable = Optional.empty();
-
-			// transform to FE friendly JSON => or use Model#toJSON() ;)
-			optionalConnectableResultObservable = Optional.ofNullable(transformResultModel(model));
-		}
-
-		final Observable<Response> writeResponse = writeResultToDatahub(writeResultToDatahub, enableVersioning, model);
-
-		return Observable.create(wireTransformationFlowMorphConnector(doNotReturnJsonToCaller, optionalResultObservable, optionalConnectableResultObservable, scheduler, writeResponse, morphTask.getMorphContext(), tuples, opener, morphTask.getWriter()))
-				.doOnCompleted(() -> logTransformationFlowEnd(opener, morphTask.getConverter(), morphTask.getWriter(), writeResultToDatahub))
-				.subscribeOn(scheduler);
-	}
-
-	private ConnectableObservable<JsonNode> transformResultModel(final Observable<org.dswarm.persistence.model.internal.Model> model) {
+	protected ConnectableObservable<JsonNode> transformResultModel(final Observable<org.dswarm.persistence.model.internal.Model> model) {
 
 		final AtomicInteger resultCounter = new AtomicInteger(0);
+
+		// transform to FE friendly JSON => or use Model#toJSON() ;)
 
 		return model.onBackpressureBuffer(10000).doOnSubscribe(() -> JSONTransformationFlow.LOG.debug("subscribed to results observable in transformation engine"))
 				.doOnNext(resultObj -> {
@@ -180,43 +144,9 @@ public class JSONTransformationFlow extends TransformationFlow<JsonNode> {
 				}).onBackpressureBuffer(10000).publish();
 	}
 
-	protected Observable.OnSubscribe<JsonNode> wireTransformationFlowMorphConnector(final boolean doNotReturnJsonToCaller, final Optional<Observable<JsonNode>> optionalResultObservable, final Optional<ConnectableObservable<JsonNode>> optionalConnectableResultObservable, final Scheduler scheduler, final Observable<Response> writeResponse, final Context morphContext, final Observable<Tuple<String, JsonNode>> tuples, final ObjectPipe<Tuple<String, JsonNode>, StreamReceiver> opener, final GDMModelReceiver writer) {
+	@Override
+	protected AndThenWaitFor<JsonNode, Response> concatStreams(final Observable<Response> writeResponse) {
 
-		return subscriber -> {
-
-			final Observable<JsonNode> finalResultObservable;
-
-			if (doNotReturnJsonToCaller) {
-
-				finalResultObservable = optionalResultObservable.get();
-			} else {
-
-				finalResultObservable = optionalConnectableResultObservable.get();
-			}
-
-			finalResultObservable.subscribeOn(scheduler)
-					.compose(new AndThenWaitFor<>(writeResponse, DMPPersistenceUtil.getJSONObjectMapper()::createArrayNode))
-					.doOnCompleted(morphContext::stop)
-					.subscribe(subscriber);
-
-			if (!doNotReturnJsonToCaller) {
-
-				optionalConnectableResultObservable.get().connect();
-			}
-
-			final AtomicInteger counter = new AtomicInteger(0);
-
-			final Observable<Tuple<String, JsonNode>> tupleObservable = tuples.subscribeOn(scheduler);
-
-			tupleObservable.doOnNext(tuple -> {
-
-				if (counter.incrementAndGet() == 1) {
-
-					LOG.debug("received first record in transformation engine");
-				}
-			}).doOnCompleted(opener::closeStream)
-					.doOnCompleted(() -> LOG.info("received '{}' records in transformation engine", counter.get()))
-					.subscribe(opener::process, writer::propagateError, () -> LOG.debug("DONE"));
-		};
+		return new AndThenWaitFor<>(writeResponse, DMPPersistenceUtil.getJSONObjectMapper()::createArrayNode);
 	}
 }

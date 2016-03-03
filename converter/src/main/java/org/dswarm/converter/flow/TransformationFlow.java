@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2013 – 2016 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -150,13 +150,37 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 		}
 	}
 
-	public abstract Observable<RESULTFORMAT> apply(
+	public Observable<RESULTFORMAT> apply(
 			final Observable<Tuple<String, JsonNode>> tuples,
 			final ObjectPipe<Tuple<String, JsonNode>, StreamReceiver> opener,
-			final boolean writeResultToDatahub,
-			final boolean doNotReturnJsonToCaller,
-			final boolean enableVersioning,
-			final Scheduler scheduler) throws DMPConverterException;
+			final boolean writeResultToDatahub, final boolean doNotReturnJsonToCaller, final boolean enableVersioning, final Scheduler scheduler)
+			throws DMPConverterException {
+
+		final MorphTask morphTask = new MorphTask(morphTimer, timerBasedFactory, outputDataModel, TRANSFORMATION_ENGINE_IDENTIFIER, optionalSkipFilter, opener, transformer);
+
+		final ConnectableObservable<org.dswarm.persistence.model.internal.Model> model = doPostProcessingOfResultModel(morphTask.getWriter());
+
+		final Optional<Observable<RESULTFORMAT>> optionalResultObservable;
+		final Optional<ConnectableObservable<RESULTFORMAT>> optionalConnectableResultObservable;
+
+		if (doNotReturnJsonToCaller) {
+
+			optionalResultObservable = Optional.of(Observable.empty());
+			optionalConnectableResultObservable = Optional.empty();
+		} else {
+
+			optionalResultObservable = Optional.empty();
+
+			// transform to FE friendly JSON => or use Model#toJSON() ;)
+			optionalConnectableResultObservable = Optional.ofNullable(transformResultModel(model));
+		}
+
+		final Observable<Response> writeResponse = writeResultToDatahub(writeResultToDatahub, enableVersioning, model);
+
+		return Observable.create(wireTransformationFlowMorphConnector(doNotReturnJsonToCaller, optionalResultObservable, optionalConnectableResultObservable, scheduler, writeResponse, morphTask.getMorphContext(), tuples, opener, morphTask.getWriter()))
+				.doOnCompleted(() -> logTransformationFlowEnd(opener, morphTask.getConverter(), morphTask.getWriter(), writeResultToDatahub))
+				.subscribeOn(scheduler);
+	}
 
 	public Observable<RESULTFORMAT> apply(final Observable<Tuple<String, JsonNode>> tuples, final boolean writeResultToDatahub,
 	                                      final boolean doNotReturnJsonToCaller, final boolean enableVersioning, final Scheduler scheduler) throws DMPConverterException {
@@ -364,7 +388,49 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 		return writeResponse;
 	}
 
-	protected abstract Observable.OnSubscribe<RESULTFORMAT> wireTransformationFlowMorphConnector(final boolean doNotReturnJsonToCaller, final Optional<Observable<JsonNode>> optionalResultObservable, final Optional<ConnectableObservable<JsonNode>> optionalConnectableResultObservable, final Scheduler scheduler, final Observable<Response> writeResponse, final Context morphContext, final Observable<Tuple<String, JsonNode>> tuples, final ObjectPipe<Tuple<String, JsonNode>, StreamReceiver> opener, final GDMModelReceiver writer);
+	protected abstract ConnectableObservable<RESULTFORMAT> transformResultModel(final Observable<org.dswarm.persistence.model.internal.Model> model);
+
+	protected Observable.OnSubscribe<RESULTFORMAT> wireTransformationFlowMorphConnector(final boolean doNotReturnJsonToCaller, final Optional<Observable<RESULTFORMAT>> optionalResultObservable, final Optional<ConnectableObservable<RESULTFORMAT>> optionalConnectableResultObservable, final Scheduler scheduler, final Observable<Response> writeResponse, final Context morphContext, final Observable<Tuple<String, JsonNode>> tuples, final ObjectPipe<Tuple<String, JsonNode>, StreamReceiver> opener, final GDMModelReceiver writer) {
+
+		return subscriber -> {
+
+			final Observable<RESULTFORMAT> finalResultObservable;
+
+			if (doNotReturnJsonToCaller) {
+
+				finalResultObservable = optionalResultObservable.get();
+			} else {
+
+				finalResultObservable = optionalConnectableResultObservable.get();
+			}
+
+			finalResultObservable.subscribeOn(scheduler)
+					.compose(concatStreams(writeResponse))
+					.doOnCompleted(morphContext::stop)
+					.subscribe(subscriber);
+
+			if (!doNotReturnJsonToCaller) {
+
+				optionalConnectableResultObservable.get().connect();
+			}
+
+			final AtomicInteger counter = new AtomicInteger(0);
+
+			final Observable<Tuple<String, JsonNode>> tupleObservable = tuples.subscribeOn(scheduler);
+
+			tupleObservable.doOnNext(tuple -> {
+
+				if (counter.incrementAndGet() == 1) {
+
+					LOG.debug("received first record in transformation engine");
+				}
+			}).doOnCompleted(opener::closeStream)
+					.doOnCompleted(() -> LOG.info("received '{}' records in transformation engine", counter.get()))
+					.subscribe(opener::process, writer::propagateError, () -> LOG.debug("DONE"));
+		};
+	}
+
+	protected abstract AndThenWaitFor<RESULTFORMAT, Response> concatStreams(final Observable<Response> writeResponse);
 
 	protected static void logTransformationFlowEnd(final ObjectPipe<Tuple<String, JsonNode>, StreamReceiver> opener, final GDMEncoder converter, final GDMModelReceiver writer, final boolean writeResultToDatahub) {
 
