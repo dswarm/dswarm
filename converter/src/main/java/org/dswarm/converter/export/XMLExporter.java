@@ -52,7 +52,7 @@ import org.dswarm.converter.DMPConverterException;
  *
  * @author tgaengler
  */
-public class XMLExporter {
+public class XMLExporter implements Exporter {
 
 	private static final Logger LOG = LoggerFactory.getLogger(XMLExporter.class);
 

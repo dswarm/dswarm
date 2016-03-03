@@ -33,26 +33,26 @@ import org.dswarm.converter.morph.MorphScriptBuilder;
 import org.dswarm.persistence.model.job.Task;
 import org.dswarm.persistence.model.resource.DataModel;
 
-import static org.dswarm.converter.flow.TransformationFlow.createFilter;
-import static org.dswarm.converter.flow.TransformationFlow.createMorph;
-import static org.dswarm.converter.flow.TransformationFlow.readFile;
-import static org.dswarm.converter.flow.TransformationFlow.readResource;
-import static org.dswarm.converter.flow.TransformationFlow.readString;
+import static org.dswarm.converter.flow.JSONTransformationFlow.createFilter;
+import static org.dswarm.converter.flow.JSONTransformationFlow.createMorph;
+import static org.dswarm.converter.flow.JSONTransformationFlow.readFile;
+import static org.dswarm.converter.flow.JSONTransformationFlow.readResource;
+import static org.dswarm.converter.flow.JSONTransformationFlow.readString;
 
 public interface TransformationFlowFactory {
-	TransformationFlow create(
+	JSONTransformationFlow create(
 			final Metamorph transformer,
 			final String scriptArg,
 			final Optional<DataModel> outputDataModelArg,
 			final Optional<Filter> optionalSkipFilterArg);
 
-	default TransformationFlow fromString(
+	default JSONTransformationFlow fromString(
 			final String morphScriptString) throws DMPConverterException {
 
 		return fromAnything(readString(morphScriptString));
 	}
 
-	default TransformationFlow fromString(
+	default JSONTransformationFlow fromString(
 			final String morphScriptString,
 			final String filterScriptString) throws DMPConverterException {
 
@@ -61,7 +61,7 @@ public interface TransformationFlowFactory {
 				readString(filterScriptString));
 	}
 
-	default TransformationFlow fromString(
+	default JSONTransformationFlow fromString(
 			final String morphScriptString,
 			final DataModel outputDataModel) throws DMPConverterException {
 
@@ -70,7 +70,7 @@ public interface TransformationFlowFactory {
 				outputDataModel);
 	}
 
-	default TransformationFlow fromString(
+	default JSONTransformationFlow fromString(
 			final String morphScriptString,
 			final String filterScriptString,
 			final DataModel outputDataModel) throws DMPConverterException {
@@ -81,31 +81,31 @@ public interface TransformationFlowFactory {
 				outputDataModel);
 	}
 
-	default TransformationFlow fromFile(final File morphFile) throws DMPConverterException {
+	default JSONTransformationFlow fromFile(final File morphFile) throws DMPConverterException {
 
 		return fromAnything(readFile(morphFile));
 	}
 
-	default TransformationFlow fromFile(final File morphFile, final File filterFile) throws DMPConverterException {
+	default JSONTransformationFlow fromFile(final File morphFile, final File filterFile) throws DMPConverterException {
 
 		return fromAnything(
 				readFile(morphFile),
 				readFile(filterFile));
 	}
 
-	default TransformationFlow fromFile(final String morphResource) throws DMPConverterException {
+	default JSONTransformationFlow fromFile(final String morphResource) throws DMPConverterException {
 
 		return fromAnything(readResource(morphResource));
 	}
 
-	default TransformationFlow fromFile(final String morphResource, final String filterResource) throws DMPConverterException {
+	default JSONTransformationFlow fromFile(final String morphResource, final String filterResource) throws DMPConverterException {
 
 		return fromAnything(
 				readResource(morphResource),
 				readResource(filterResource));
 	}
 
-	default TransformationFlow fromTask(final Task task) throws DMPConverterException {
+	default JSONTransformationFlow fromTask(final Task task) throws DMPConverterException {
 
 		final String morphScriptString = new MorphScriptBuilder().apply(task).toString();
 		final Optional<String> maybeFilterScript = Optional.ofNullable(
@@ -119,31 +119,31 @@ public interface TransformationFlowFactory {
 
 	// private-ish
 
-	default TransformationFlow fromAnything(
+	default JSONTransformationFlow fromAnything(
 			final Reader morphScript) throws DMPMorphDefException {
 		return fromAnything(morphScript, Optional.empty(), Optional.empty());
 	}
 
-	default TransformationFlow fromAnything(
+	default JSONTransformationFlow fromAnything(
 			final Reader morphScript,
 			final Reader filterScript) throws DMPMorphDefException {
 		return fromAnything(morphScript, Optional.of(filterScript), Optional.empty());
 	}
 
-	default TransformationFlow fromAnything(
+	default JSONTransformationFlow fromAnything(
 			final Reader morphScript,
 			final DataModel dataModel) throws DMPMorphDefException {
 		return fromAnything(morphScript, Optional.empty(), Optional.of(dataModel));
 	}
 
-	default TransformationFlow fromAnything(
+	default JSONTransformationFlow fromAnything(
 			final Reader morphScript,
 			final Reader filterScript,
 			final DataModel dataModel) throws DMPMorphDefException {
 		return fromAnything(morphScript, Optional.of(filterScript), Optional.of(dataModel));
 	}
 
-	default TransformationFlow fromAnything(
+	default JSONTransformationFlow fromAnything(
 			final Reader morphScript,
 			final Optional<Reader> filterScript,
 			final Optional<DataModel> outputDataModel) throws DMPMorphDefException {

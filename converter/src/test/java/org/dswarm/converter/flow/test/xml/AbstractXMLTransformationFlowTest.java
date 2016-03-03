@@ -37,7 +37,7 @@ import rx.schedulers.Schedulers;
 
 import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.GuicedTest;
-import org.dswarm.converter.flow.TransformationFlow;
+import org.dswarm.converter.flow.JSONTransformationFlow;
 import org.dswarm.converter.flow.TransformationFlowFactory;
 import org.dswarm.converter.flow.XMLSourceResourceGDMStmtsFlow;
 import org.dswarm.converter.flow.XmlResourceFlowFactory;
@@ -227,7 +227,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		final TransformationFlowFactory flowFactory = GuicedTest.injector
 				.getInstance(TransformationFlowFactory.class);
 
-		final TransformationFlow flow = flowFactory.fromTask(task);
+		final JSONTransformationFlow flow = flowFactory.fromTask(task);
 
 		flow.getScript();
 

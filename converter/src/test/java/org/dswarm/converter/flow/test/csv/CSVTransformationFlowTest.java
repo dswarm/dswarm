@@ -21,11 +21,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import org.dswarm.converter.flow.JSONTransformationFlow;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import org.dswarm.converter.GuicedTest;
-import org.dswarm.converter.flow.TransformationFlow;
 import org.dswarm.converter.flow.TransformationFlowFactory;
 import org.dswarm.persistence.model.job.Task;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
@@ -139,7 +139,7 @@ public class CSVTransformationFlowTest extends GuicedTest {
 
 		final Task task = objectMapper.readValue(finalTaskJSONString, Task.class);
 
-		final TransformationFlow flow = flowFactory.fromTask(task);
+		final JSONTransformationFlow flow = flowFactory.fromTask(task);
 
 		flow.getScript();
 
@@ -169,7 +169,7 @@ public class CSVTransformationFlowTest extends GuicedTest {
 
 		// final Task task = objectMapper.readValue(finalTaskJSONString, Task.class);
 
-		final TransformationFlow flow;
+		final JSONTransformationFlow flow;
 
 		if (optionalSkipFilterMorphXMLFileName.isPresent()) {
 

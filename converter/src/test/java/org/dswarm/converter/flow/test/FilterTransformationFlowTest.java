@@ -25,12 +25,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.dswarm.converter.flow.JSONTransformationFlow;
 import org.junit.Assert;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import org.dswarm.converter.GuicedTest;
-import org.dswarm.converter.flow.TransformationFlow;
 import org.dswarm.converter.flow.TransformationFlowFactory;
 import org.dswarm.converter.flow.utils.DMPConverterUtils;
 import org.dswarm.converter.morph.MorphScriptBuilder;
@@ -215,7 +215,7 @@ public class FilterTransformationFlowTest extends GuicedTest {
 
 		final String morphScriptString = new MorphScriptBuilder().apply(task).toString();
 
-		final TransformationFlow flow = flowFactory.fromString(morphScriptString);
+		final JSONTransformationFlow flow = flowFactory.fromString(morphScriptString);
 
 		flow.getScript();
 
@@ -240,7 +240,7 @@ public class FilterTransformationFlowTest extends GuicedTest {
 		final TransformationFlowFactory flowFactory = GuicedTest.injector
 				.getInstance(TransformationFlowFactory.class);
 
-		final TransformationFlow flow;
+		final JSONTransformationFlow flow;
 
 		if (optionalSkipFilterMorphScriptFileName.isPresent()) {
 

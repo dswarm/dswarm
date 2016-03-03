@@ -24,17 +24,16 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import org.dswarm.converter.flow.JSONTransformationFlow;
 import org.json.JSONException;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.GuicedTest;
-import org.dswarm.converter.flow.TransformationFlow;
 import org.dswarm.converter.flow.TransformationFlowFactory;
 import org.dswarm.converter.flow.utils.DMPConverterUtils;
 import org.dswarm.persistence.model.job.Component;
-import org.dswarm.persistence.model.job.Function;
 import org.dswarm.persistence.model.job.Job;
 import org.dswarm.persistence.model.job.Mapping;
 import org.dswarm.persistence.model.job.Task;
@@ -366,7 +365,7 @@ public class XMLTransformationFlowTest extends GuicedTest {
 		final TransformationFlowFactory flowFactory = GuicedTest.injector
 				.getInstance(TransformationFlowFactory.class);
 
-		final TransformationFlow flow = flowFactory.fromTask(task);
+		final JSONTransformationFlow flow = flowFactory.fromTask(task);
 
 		flow.getScript();
 
@@ -401,7 +400,7 @@ public class XMLTransformationFlowTest extends GuicedTest {
 
 		// final Task task = objectMapper.readValue(finalTaskJSONString, Task.class);
 
-		final TransformationFlow flow = flowFactory.fromString(finalMorphXmlString);
+		final JSONTransformationFlow flow = flowFactory.fromString(finalMorphXmlString);
 
 		flow.getScript();
 

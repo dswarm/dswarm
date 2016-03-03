@@ -23,7 +23,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import org.dswarm.converter.GuicedTest;
-import org.dswarm.converter.flow.TransformationFlow;
+import org.dswarm.converter.flow.JSONTransformationFlow;
 import org.dswarm.converter.flow.TransformationFlowFactory;
 import org.dswarm.persistence.model.job.Task;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
@@ -51,7 +51,7 @@ public class CSVTransformationFlowTestSorted extends GuicedTest {
 
 		final Task task = objectMapper.readValue(finalTaskJSONString, Task.class);
 
-		final TransformationFlow flow = flowFactory.fromTask(task);
+		final JSONTransformationFlow flow = flowFactory.fromTask(task);
 
 		flow.getScript();
 

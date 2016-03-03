@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -60,6 +61,9 @@ import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
+import org.dswarm.common.MediaTypeUtil;
+import org.dswarm.converter.export.Exporter;
+import org.dswarm.converter.export.RDFExporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
@@ -74,7 +78,7 @@ import org.dswarm.controller.utils.JsonUtils;
 import org.dswarm.controller.utils.ResourceUtils;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.export.XMLExporter;
-import org.dswarm.converter.flow.TransformationFlow;
+import org.dswarm.converter.flow.JSONTransformationFlow;
 import org.dswarm.converter.flow.TransformationFlowFactory;
 import org.dswarm.converter.morph.MorphScriptBuilder;
 import org.dswarm.persistence.model.job.Job;
@@ -99,39 +103,41 @@ public class TasksResource {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TasksResource.class);
 
-	public static final String TASK_IDENTIFIER                    = "task";
-	public static final String AT_MOST_IDENTIFIER                 = "at_most";
-	public static final String PERSIST_IDENTIFIER                 = "persist";
-	public static final String RETURN_IDENTIFIER                  = "do_not_return_data";
-	public static final String SELECTED_RECORDS_IDENTIFIER        = "selected_records";
-	public static final String DO_INGEST_ON_THE_FLY_IDENTIFIER    = "do_ingest_on_the_fly";
+	private static final MediaType N_TRIPLES_MEDIA_TYPE = new MediaType("application", "n-triples");
+
+	public static final String TASK_IDENTIFIER = "task";
+	public static final String AT_MOST_IDENTIFIER = "at_most";
+	public static final String PERSIST_IDENTIFIER = "persist";
+	public static final String RETURN_IDENTIFIER = "do_not_return_data";
+	public static final String SELECTED_RECORDS_IDENTIFIER = "selected_records";
+	public static final String DO_INGEST_ON_THE_FLY_IDENTIFIER = "do_ingest_on_the_fly";
 	public static final String UTILISE_EXISTING_INPUT_SCHEMA_IDENTIFIER = "utilise_existing_input_schema";
-	public static final String DO_EXPORT_ON_THE_FLY_IDENTIFIER          = "do_export_on_the_fly";
-	public static final String DO_VERSIONING_ON_RESULT_IDENTIFIER       = "do_versioning_on_result";
+	public static final String DO_EXPORT_ON_THE_FLY_IDENTIFIER = "do_export_on_the_fly";
+	public static final String DO_VERSIONING_ON_RESULT_IDENTIFIER = "do_versioning_on_result";
 
 	private static final String DSWARM_INGEST_THREAD_NAMING_PATTERN = "dswarm-ingest-%d";
 
 	private static final ExecutorService INGEST_EXECUTOR_SERVICE = Executors
 			.newCachedThreadPool(
 					new BasicThreadFactory.Builder().daemon(false).namingPattern(DSWARM_INGEST_THREAD_NAMING_PATTERN).build());
-	private static final Scheduler       INGEST_SCHEDULER        = Schedulers.from(INGEST_EXECUTOR_SERVICE);
+	private static final Scheduler INGEST_SCHEDULER = Schedulers.from(INGEST_EXECUTOR_SERVICE);
 
 	private static final String DSWARM_TRANSFORMATION_ENGINE_THREAD_NAMING_PATTERN = "dswarm-transformation-engine-%d";
 
 	private static final ExecutorService TRANSFORMATION_ENGINE_EXECUTOR_SERVICE = Executors
 			.newCachedThreadPool(
 					new BasicThreadFactory.Builder().daemon(false).namingPattern(DSWARM_TRANSFORMATION_ENGINE_THREAD_NAMING_PATTERN).build());
-	private static final Scheduler       TRANSFORMATION_ENGINE_SCHEDULER        = Schedulers.from(TRANSFORMATION_ENGINE_EXECUTOR_SERVICE);
+	private static final Scheduler TRANSFORMATION_ENGINE_SCHEDULER = Schedulers.from(TRANSFORMATION_ENGINE_EXECUTOR_SERVICE);
 
 	private static final String DSWARM_EXPORT_THREAD_NAMING_PATTERN = "dswarm-export-%d";
 
 	private static final ExecutorService EXPORT_EXECUTOR_SERVICE = Executors
 			.newCachedThreadPool(
 					new BasicThreadFactory.Builder().daemon(false).namingPattern(DSWARM_EXPORT_THREAD_NAMING_PATTERN).build());
-	private static final Scheduler       EXPORT_SCHEDULER        = Schedulers.from(EXPORT_EXECUTOR_SERVICE);
-	public static final  String          ERROR_IDENTIFIER        = "error";
-	public static final  String          MESSAGE_IDENTIFIER      = "message";
-	public static final  String          STACKTRACE_IDENTIFIER   = "stacktrace";
+	private static final Scheduler EXPORT_SCHEDULER = Schedulers.from(EXPORT_EXECUTOR_SERVICE);
+	public static final String ERROR_IDENTIFIER = "error";
+	public static final String MESSAGE_IDENTIFIER = "message";
+	public static final String STACKTRACE_IDENTIFIER = "stacktrace";
 
 	/**
 	 * The base URI of this resource.
@@ -149,7 +155,7 @@ public class TasksResource {
 	 */
 	private final ObjectMapper objectMapper;
 
-	private final TransformationFlowFactory  transformationFlowFactory;
+	private final TransformationFlowFactory transformationFlowFactory;
 	private final Provider<MonitoringLogger> monitoringLogger;
 
 	/**
@@ -204,14 +210,14 @@ public class TasksResource {
 	 * @throws DMPControllerException
 	 */
 	@ApiOperation(value = "execute the given task", notes = "Returns the result data (as JSON) for this task execution.")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "task was successfully executed"),
-			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@ApiResponses(value = {@ApiResponse(code = 200, message = "task was successfully executed"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)")})
 	@Timed
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaTypeUtil.N_TRIPLES})
 	public void executeTask(@ApiParam(value = "task execution request (as JSON)", required = true) final String jsonObjectString,
-			@Context final HttpHeaders requestHeaders, @Suspended final AsyncResponse asyncResponse)
+	                        @Context final HttpHeaders requestHeaders, @Suspended final AsyncResponse asyncResponse)
 			throws IOException,
 			DMPConverterException, DMPControllerException {
 
@@ -377,7 +383,7 @@ public class TasksResource {
 
 		try (final MonitoringHelper ignore = monitoringLogger.get().startExecution(task)) {
 
-			final TransformationFlow flow = transformationFlowFactory.fromTask(task);
+			final JSONTransformationFlow flow = transformationFlowFactory.fromTask(task);
 			result = flow.apply(inputData, writeResultToDatahub, doNotReturnJsonToCaller2, doVersioningOnResult, TRANSFORMATION_ENGINE_SCHEDULER)
 					.subscribeOn(TRANSFORMATION_ENGINE_SCHEDULER);
 		}
@@ -396,6 +402,39 @@ public class TasksResource {
 
 			LOG.debug("do export on-the-fly for task execution of task '{}'", task.getUuid());
 
+			final List<MediaType> acceptableMediaTypes = requestHeaders.getAcceptableMediaTypes();
+
+			final MediaType responseMediaType;
+
+			if (acceptableMediaTypes == null || acceptableMediaTypes.isEmpty()) {
+
+				// default media type is application/xml
+				responseMediaType = MediaType.APPLICATION_XML_TYPE;
+			} else {
+
+				final Optional<MediaType> mediaTypeOptional = acceptableMediaTypes.stream()
+						.filter(mediaType -> {
+
+							if (MediaType.APPLICATION_XML_TYPE.equals(mediaType) || MediaTypeUtil.N_TRIPLES_TYPE.equals(mediaType)) {
+
+								return true;
+							}
+
+							return false;
+						}).findFirst();
+
+				if (mediaTypeOptional.isPresent()) {
+
+					responseMediaType = mediaTypeOptional.get();
+				} else {
+
+					// media type is not supported
+					asyncResponse.resume(Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build());
+
+					return;
+				}
+			}
+
 			final Future<StreamingOutput> futureStream = CompletableFuture.supplyAsync(() -> {
 
 				final CountDownLatch countDownLatch = new CountDownLatch(1);
@@ -404,7 +443,7 @@ public class TasksResource {
 
 					try {
 
-						LOG.debug("start preparing XML export");
+						LOG.debug("start preparing {} export", responseMediaType.toString());
 
 						final BufferedOutputStream bos = new BufferedOutputStream(os, 1024);
 
@@ -449,21 +488,43 @@ public class TasksResource {
 
 						final String recordClassUri = optionalRecordClassURI.get();
 
-						LOG.debug("create XML exporter with: record tag = '{}' :: record class URI = '{}' :: original data model type = '{}'",
-								optionalRecordTag, recordClassUri, java8OptionalOriginalDataModelType);
+						LOG.debug("create {} exporter with: record tag = '{}' :: record class URI = '{}' :: original data model type = '{}'",
+								responseMediaType.toString(), optionalRecordTag, recordClassUri, java8OptionalOriginalDataModelType);
 
-						final XMLExporter xmlExporter = new XMLExporter(java8OptionalRecordTag, recordClassUri,
-								java.util.Optional.<String>empty(), java8OptionalOriginalDataModelType);
+						final Exporter exporter;
 
-						LOG.debug("trigger XML export");
+						switch (responseMediaType.toString()) {
 
-						final Observable<JsonNode> resultObservable = xmlExporter.generate(result.subscribeOn(EXPORT_SCHEDULER), bos);
+							case MediaType.APPLICATION_XML:
+
+								exporter = new XMLExporter(java8OptionalRecordTag, recordClassUri, java.util.Optional.<String>empty(), java8OptionalOriginalDataModelType);
+
+								break;
+							case MediaTypeUtil.N_TRIPLES:
+
+								exporter = new RDFExporter(responseMediaType);
+
+								break;
+							default:
+
+								// media type is not supported
+								asyncResponse.resume(Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build());
+
+								countDownLatch.countDown();
+
+								return;
+						}
+
+						LOG.debug("trigger {} export", responseMediaType.toString());
+
+						final Observable<JsonNode> resultObservable = exporter.generate(result.subscribeOn(EXPORT_SCHEDULER), bos);
 
 						resultObservable.subscribeOn(EXPORT_SCHEDULER)
-								.doOnSubscribe(() -> LOG.debug("subscribed to XML export in task resource"))
+								.doOnSubscribe(() -> LOG.debug("subscribed to {} export in task resource", responseMediaType.toString()))
 								.subscribe(new Observer<JsonNode>() {
 
-									@Override public void onCompleted() {
+									@Override
+									public void onCompleted() {
 
 										try {
 
@@ -479,12 +540,13 @@ public class TasksResource {
 											countDownLatch.countDown();
 										}
 
-										LOG.debug("finished transforming GDM to XML");
+										LOG.debug("finished transforming GDM to {}", responseMediaType.toString());
 									}
 
-									@Override public void onError(final Throwable throwable) {
+									@Override
+									public void onError(final Throwable throwable) {
 
-										final String message = "couldn't process task (maybe XML export) successfully";
+										final String message = String.format("couldn't process task (maybe %s export) successfully", responseMediaType.toString());
 
 										TasksResource.LOG.error(message, throwable);
 
@@ -512,7 +574,7 @@ public class TasksResource {
 											os.close();
 										} catch (IOException e) {
 
-											final String message2 = "couldn't process task (maybe XML export) successfully";
+											final String message2 = String.format("couldn't process task (maybe %s export) successfully", responseMediaType.toString());
 
 											TasksResource.LOG.error(message2, e);
 
@@ -523,7 +585,8 @@ public class TasksResource {
 										}
 									}
 
-									@Override public void onNext(final JsonNode result) {
+									@Override
+									public void onNext(final JsonNode result) {
 
 										// nothing to do
 									}
@@ -541,7 +604,7 @@ public class TasksResource {
 						}
 					} catch (final XMLStreamException | DMPConverterException e) {
 
-						final String message = "couldn't process task (maybe XML export) successfully";
+						final String message = String.format("couldn't process task (maybe %s export) successfully", responseMediaType.toString());
 
 						TasksResource.LOG.error(message, e);
 
@@ -558,7 +621,7 @@ public class TasksResource {
 
 						LOG.debug("do async task execution response");
 
-						asyncResponse.resume(Response.ok(futureStream.get(), MediaType.APPLICATION_XML_TYPE).build());
+						asyncResponse.resume(Response.ok(futureStream.get(), responseMediaType).build());
 					} catch (final InterruptedException | ExecutionException e) {
 
 						final String message = "something went wrong";
@@ -580,14 +643,16 @@ public class TasksResource {
 
 				result.subscribe(new Observer<JsonNode>() {
 
-					@Override public void onCompleted() {
+					@Override
+					public void onCompleted() {
 
 						TasksResource.LOG.debug("processed task successfully, don't return data to caller");
 
 						asyncResponse.resume(Response.noContent().build());
 					}
 
-					@Override public void onError(final Throwable e) {
+					@Override
+					public void onError(final Throwable e) {
 
 						final String message = "couldn't process task successfully";
 
@@ -596,7 +661,8 @@ public class TasksResource {
 						asyncResponse.resume(new DMPControllerException(message, e));
 					}
 
-					@Override public void onNext(final JsonNode jsonNode) {
+					@Override
+					public void onNext(final JsonNode jsonNode) {
 
 						// nothing to do here
 					}
@@ -611,7 +677,8 @@ public class TasksResource {
 
 			result.doOnSubscribe(() -> TasksResource.LOG.debug("subscribed to JSON export on task resource")).subscribe(new Observer<JsonNode>() {
 
-				@Override public void onCompleted() {
+				@Override
+				public void onCompleted() {
 
 					final String resultString;
 					try {
@@ -626,7 +693,8 @@ public class TasksResource {
 					}
 				}
 
-				@Override public void onError(final Throwable e) {
+				@Override
+				public void onError(final Throwable e) {
 
 					final String message = "couldn't deserialize result JSON from string";
 
@@ -635,11 +703,12 @@ public class TasksResource {
 					asyncResponse.resume(new DMPControllerException(message, e));
 				}
 
-				@Override public void onNext(final JsonNode jsonNode) {
+				@Override
+				public void onNext(final JsonNode jsonNode) {
 
 					counter.incrementAndGet();
 
-					if(counter.get() == 1) {
+					if (counter.get() == 1) {
 
 						TasksResource.LOG.debug("recieved first record for JSON export in task resource");
 					}
@@ -660,8 +729,8 @@ public class TasksResource {
 	 * @throws DMPConverterException
 	 */
 	@ApiOperation(value = "get the metamorph script of the given task", notes = "Returns the Metamorph as XML.")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "metamorph could be built successfully"),
-			@ApiResponse(code = 500, message = "internal processing error (see body for details)") })
+	@ApiResponses(value = {@ApiResponse(code = 200, message = "metamorph could be built successfully"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)")})
 	@Timed
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)

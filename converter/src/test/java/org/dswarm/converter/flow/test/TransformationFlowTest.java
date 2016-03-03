@@ -40,6 +40,7 @@ import org.culturegraph.mf.stream.converter.JsonEncoder;
 import org.culturegraph.mf.stream.sink.ObjectJavaIoWriter;
 import org.culturegraph.mf.stream.source.FileOpener;
 import org.culturegraph.mf.types.Triple;
+import org.dswarm.converter.flow.JSONTransformationFlow;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
@@ -51,7 +52,6 @@ import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.flow.CSVResourceFlowFactory;
 import org.dswarm.converter.flow.CSVSourceResourceTriplesFlow;
-import org.dswarm.converter.flow.TransformationFlow;
 import org.dswarm.converter.flow.TransformationFlowFactory;
 import org.dswarm.converter.mf.stream.reader.CsvReader;
 import org.dswarm.graph.json.LiteralNode;
@@ -247,7 +247,7 @@ public class TransformationFlowTest extends GuicedTest {
 		final TransformationFlowFactory flowFactory = GuicedTest.injector
 				.getInstance(TransformationFlowFactory.class);
 
-		final TransformationFlow flow = flowFactory.fromTask(task);
+		final JSONTransformationFlow flow = flowFactory.fromTask(task);
 
 		flow.getScript();
 

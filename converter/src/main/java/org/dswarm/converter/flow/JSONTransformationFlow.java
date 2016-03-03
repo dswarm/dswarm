@@ -1,0 +1,222 @@
+/**
+ * Copyright (C) 2013 – 2016 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.dswarm.converter.flow;
+
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Timer.Context;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.google.common.collect.Iterators;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.name.Named;
+import org.culturegraph.mf.framework.ObjectPipe;
+import org.culturegraph.mf.framework.StreamReceiver;
+import org.culturegraph.mf.morph.Metamorph;
+import org.culturegraph.mf.stream.pipe.Filter;
+import org.dswarm.common.types.Tuple;
+import org.dswarm.converter.DMPConverterException;
+import org.dswarm.converter.mf.stream.GDMModelReceiver;
+import org.dswarm.converter.pipe.timing.TimerBasedFactory;
+import org.dswarm.persistence.model.resource.DataModel;
+import org.dswarm.persistence.service.InternalModelServiceFactory;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import rx.Observable;
+import rx.Scheduler;
+import rx.observables.ConnectableObservable;
+import rx.schedulers.Schedulers;
+
+import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+
+/**
+ * Flow that executes a given set of transformations on data of a given data model.
+ *
+ * @author phorn
+ * @author tgaengler
+ * @author sreichert
+ * @author polowins
+ */
+public class JSONTransformationFlow extends TransformationFlow<JsonNode> {
+
+	private static final Logger LOG = LoggerFactory.getLogger(JSONTransformationFlow.class);
+
+
+	@Inject
+	private JSONTransformationFlow(
+			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg,
+			@Named("Monitoring") final MetricRegistry registry,
+			final TimerBasedFactory timerBasedFactory,
+			@Assisted final Metamorph transformer,
+			@Assisted final String scriptArg,
+			@Assisted final Optional<DataModel> outputDataModelArg,
+			@Assisted final Optional<Filter> optionalSkipFilterArg) {
+
+		super(internalModelServiceFactoryProviderArg, registry, timerBasedFactory, transformer, scriptArg, outputDataModelArg, optionalSkipFilterArg);
+	}
+
+	public Observable<String> applyRecord(final String record) throws DMPConverterException {
+
+		// TODO: convert JSON string to Iterator with tuples of string + JsonNode pairs
+		List<Tuple<String, JsonNode>> tuplesList = null;
+
+		try {
+
+			tuplesList = DMPPersistenceUtil.getJSONObjectMapper().readValue(record, new TypeReference<List<Tuple<String, JsonNode>>>() {
+
+			});
+		} catch (final JsonParseException e) {
+
+			JSONTransformationFlow.LOG.debug("couldn't parse the transformation result tuples to a JSON string");
+		} catch (final JsonMappingException e) {
+
+			JSONTransformationFlow.LOG.debug("couldn't map the transformation result tuples to a JSON string");
+		} catch (final IOException e) {
+
+			JSONTransformationFlow.LOG.debug("something went wrong while processing the transformation result tuples to a JSON string");
+		}
+
+		if (tuplesList == null) {
+
+			final String msg = "couldn't process the transformation result tuples to a JSON string";
+			JSONTransformationFlow.LOG.debug(msg);
+
+			return Observable.error(new DMPConverterException(msg));
+		}
+
+		final boolean writeResultToDatahub = false;
+		final boolean doNotReturnJsonToCaller = false;
+		final boolean enableVersioning = true;
+
+		return apply(Observable.from(tuplesList), writeResultToDatahub, doNotReturnJsonToCaller, enableVersioning, Schedulers.newThread()).reduce(
+				DMPPersistenceUtil.getJSONObjectMapper().createArrayNode(),
+				ArrayNode::add
+		).map(arrayNode -> {
+			try {
+				return DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(arrayNode);
+			} catch (JsonProcessingException e) {
+				throw new RuntimeException(e);
+			}
+		});
+	}
+
+	public Observable<JsonNode> apply(
+			final Observable<Tuple<String, JsonNode>> tuples,
+			final ObjectPipe<Tuple<String, JsonNode>, StreamReceiver> opener,
+			final boolean writeResultToDatahub, final boolean doNotReturnJsonToCaller, final boolean enableVersioning, final Scheduler scheduler)
+			throws DMPConverterException {
+
+		final MorphTask morphTask = new MorphTask(morphTimer, timerBasedFactory, outputDataModel, TRANSFORMATION_ENGINE_IDENTIFIER, optionalSkipFilter, opener, transformer);
+
+		final ConnectableObservable<org.dswarm.persistence.model.internal.Model> model = doPostProcessingOfResultModel(morphTask.getWriter());
+
+		final Optional<Observable<JsonNode>> optionalResultObservable;
+		final Optional<ConnectableObservable<JsonNode>> optionalConnectableResultObservable;
+
+		if (doNotReturnJsonToCaller) {
+
+			optionalResultObservable = Optional.of(Observable.empty());
+			optionalConnectableResultObservable = Optional.empty();
+		} else {
+
+			optionalResultObservable = Optional.empty();
+
+			// transform to FE friendly JSON => or use Model#toJSON() ;)
+			optionalConnectableResultObservable = Optional.ofNullable(transformResultModel(model));
+		}
+
+		final Observable<Response> writeResponse = writeResultToDatahub(writeResultToDatahub, enableVersioning, model);
+
+		return Observable.create(wireTransformationFlowMorphConnector(doNotReturnJsonToCaller, optionalResultObservable, optionalConnectableResultObservable, scheduler, writeResponse, morphTask.getMorphContext(), tuples, opener, morphTask.getWriter()))
+				.doOnCompleted(() -> logTransformationFlowEnd(opener, morphTask.getConverter(), morphTask.getWriter(), writeResultToDatahub))
+				.subscribeOn(scheduler);
+	}
+
+	private ConnectableObservable<JsonNode> transformResultModel(final Observable<org.dswarm.persistence.model.internal.Model> model) {
+
+		final AtomicInteger resultCounter = new AtomicInteger(0);
+
+		return model.onBackpressureBuffer(10000).doOnSubscribe(() -> JSONTransformationFlow.LOG.debug("subscribed to results observable in transformation engine"))
+				.doOnNext(resultObj -> {
+
+					resultCounter.incrementAndGet();
+
+					if (resultCounter.get() == 1) {
+
+						JSONTransformationFlow.LOG.debug("received first result in transformation engine");
+					}
+				}).doOnCompleted(() -> JSONTransformationFlow.LOG.debug("received '{}' results in transformation engine overall", resultCounter.get()))
+				.map(org.dswarm.persistence.model.internal.Model::toJSON).flatMapIterable(nodes -> {
+
+					final ArrayList<JsonNode> nodeList = new ArrayList<>();
+
+					Iterators.addAll(nodeList, nodes.elements());
+
+					return nodeList;
+				}).onBackpressureBuffer(10000).publish();
+	}
+
+	protected Observable.OnSubscribe<JsonNode> wireTransformationFlowMorphConnector(final boolean doNotReturnJsonToCaller, final Optional<Observable<JsonNode>> optionalResultObservable, final Optional<ConnectableObservable<JsonNode>> optionalConnectableResultObservable, final Scheduler scheduler, final Observable<Response> writeResponse, final Context morphContext, final Observable<Tuple<String, JsonNode>> tuples, final ObjectPipe<Tuple<String, JsonNode>, StreamReceiver> opener, final GDMModelReceiver writer) {
+
+		return subscriber -> {
+
+			final Observable<JsonNode> finalResultObservable;
+
+			if (doNotReturnJsonToCaller) {
+
+				finalResultObservable = optionalResultObservable.get();
+			} else {
+
+				finalResultObservable = optionalConnectableResultObservable.get();
+			}
+
+			finalResultObservable.subscribeOn(scheduler)
+					.compose(new AndThenWaitFor<>(writeResponse, DMPPersistenceUtil.getJSONObjectMapper()::createArrayNode))
+					.doOnCompleted(morphContext::stop)
+					.subscribe(subscriber);
+
+			if (!doNotReturnJsonToCaller) {
+
+				optionalConnectableResultObservable.get().connect();
+			}
+
+			final AtomicInteger counter = new AtomicInteger(0);
+
+			final Observable<Tuple<String, JsonNode>> tupleObservable = tuples.subscribeOn(scheduler);
+
+			tupleObservable.doOnNext(tuple -> {
+
+				if (counter.incrementAndGet() == 1) {
+
+					LOG.debug("received first record in transformation engine");
+				}
+			}).doOnCompleted(opener::closeStream)
+					.doOnCompleted(() -> LOG.info("received '{}' records in transformation engine", counter.get()))
+					.subscribe(opener::process, writer::propagateError, () -> LOG.debug("DONE"));
+		};
+	}
+}
