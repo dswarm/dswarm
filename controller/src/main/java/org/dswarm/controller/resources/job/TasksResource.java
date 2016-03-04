@@ -32,7 +32,6 @@ import org.dswarm.controller.utils.DataModelUtil;
 import org.dswarm.controller.utils.JsonUtils;
 import org.dswarm.controller.utils.ResourceUtils;
 import org.dswarm.converter.DMPConverterException;
-import org.dswarm.converter.export.Exporter;
 import org.dswarm.converter.export.RDFExporter;
 import org.dswarm.converter.export.XMLExporter;
 import org.dswarm.converter.flow.GDMModelTransformationFlow;
@@ -83,8 +82,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TasksResource {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TasksResource.class);
-
-	private static final MediaType N_TRIPLES_MEDIA_TYPE = new MediaType("application", "n-triples");
 
 	public static final String TASK_IDENTIFIER = "task";
 	public static final String AT_MOST_IDENTIFIER = "at_most";
@@ -184,9 +181,10 @@ public class TasksResource {
 	 * - selected_records: a set of selected record identifiers, i.e., the task will only be executed on these records
 	 * - at_most: the number of result records that should be returned at most (optional)
 	 * - persist: flag that indicates whether the result should be persisted in the datahub or not (optional)
+	 * <p>
+	 * returns the result of the task execution
 	 *
 	 * @param jsonObjectString a JSON representation of the request JSON (incl. task)
-	 * @return the result of the task execution
 	 * @throws IOException
 	 * @throws DMPConverterException
 	 * @throws DMPControllerException
@@ -497,7 +495,8 @@ public class TasksResource {
 	}
 
 	private void generateResponseOutputStream(final AsyncResponse asyncResponse,
-	                                          final Task task, Observable<GDMModel> result,
+	                                          final Task task,
+	                                          final Observable<GDMModel> result,
 	                                          final MediaType responseMediaType,
 	                                          final CountDownLatch countDownLatch,
 	                                          final OutputStream os) {
@@ -508,41 +507,18 @@ public class TasksResource {
 
 			final BufferedOutputStream bos = new BufferedOutputStream(os, 1024);
 
-			// collect input parameter for exporter
-
-			final DataModel finalOutputDataModel = getOutputDataModel(task);
-
-			// record tag
-			final Optional<Configuration> optionalConfiguration = Optional.ofNullable(finalOutputDataModel.getConfiguration());
-			final Optional<String> optionalRecordTag = DataModelUtil.determineRecordTag(optionalConfiguration);
-			final Optional<String> java8OptionalRecordTag = guavaOptionalToJava8Optional(optionalRecordTag);
-
-			// record class uri
-			final Optional<String> optionalRecordClassURI = DataModelUtil.determineRecordClassURI(finalOutputDataModel);
-
-			// original data model type
-			final Optional<String> optionalOriginalDataModelType = DataModelUtil.determineOriginalDataModelType(finalOutputDataModel,
-					optionalConfiguration);
-			final Optional<String> java8OptionalOriginalDataModelType = guavaOptionalToJava8Optional(
-					optionalOriginalDataModelType);
-
-			final String recordClassUri = optionalRecordClassURI.get();
-
-			LOG.debug("create {} exporter with: record tag = '{}' :: record class URI = '{}' :: original data model type = '{}'",
-					responseMediaType.toString(), optionalRecordTag, recordClassUri, java8OptionalOriginalDataModelType);
-
-			final Exporter exporter;
+			final Observable<Void> resultObservable;
 
 			switch (responseMediaType.toString()) {
 
 				case MediaType.APPLICATION_XML:
 
-					exporter = new XMLExporter(java8OptionalRecordTag, recordClassUri, Optional.<String>empty(), java8OptionalOriginalDataModelType);
+					resultObservable = doXMLExport(result, responseMediaType, bos, task);
 
 					break;
 				case MediaTypeUtil.N_TRIPLES:
 
-					exporter = new RDFExporter(responseMediaType);
+					resultObservable = doRDFExport(result, responseMediaType, bos);
 
 					break;
 				default:
@@ -555,86 +531,66 @@ public class TasksResource {
 					return;
 			}
 
-			LOG.debug("trigger {} export", responseMediaType.toString());
-
-			final ConnectableObservable<JsonNode> jsonResult = generateJSONResult(result);
-
-			final Observable<JsonNode> resultObservable = exporter.generate(jsonResult.subscribeOn(EXPORT_SCHEDULER), bos);
-
-			jsonResult.connect();
-
 			resultObservable.subscribeOn(EXPORT_SCHEDULER)
 					.doOnSubscribe(() -> LOG.debug("subscribed to {} export in task resource", responseMediaType.toString()))
-					.subscribe(new Observer<JsonNode>() {
+					.doOnCompleted(() -> {
 
-						@Override
-						public void onCompleted() {
+						try {
 
-							try {
+							bos.flush();
+							os.flush();
+							bos.close();
+							os.close();
+						} catch (final IOException e) {
 
-								bos.flush();
-								os.flush();
-								bos.close();
-								os.close();
-							} catch (final IOException e) {
+							asyncResponse.resume(e);
+						} finally {
 
-								asyncResponse.resume(e);
-							} finally {
-
-								countDownLatch.countDown();
-							}
-
-							LOG.debug("finished transforming GDM to {}", responseMediaType.toString());
+							countDownLatch.countDown();
 						}
 
-						@Override
-						public void onError(final Throwable throwable) {
+						LOG.debug("finished transforming GDM to {}", responseMediaType.toString());
+					})
+					.doOnError(throwable -> {
 
-							final String message = String.format("couldn't process task (maybe %s export) successfully", responseMediaType.toString());
+						final String message = String.format("couldn't process task (maybe %s export) successfully", responseMediaType.toString());
 
-							TasksResource.LOG.error(message, throwable);
+						TasksResource.LOG.error(message, throwable);
 
-							try {
+						try {
 
-								// write error to output stream
+							// write error to output stream
 
-								final StringWriter stringWriter = new StringWriter();
-								final PrintWriter printWriter = new PrintWriter(stringWriter);
-								throwable.printStackTrace(printWriter);
+							final StringWriter stringWriter = new StringWriter();
+							final PrintWriter printWriter = new PrintWriter(stringWriter);
+							throwable.printStackTrace(printWriter);
 
-								final ObjectNode errorJSON = objectMapper.createObjectNode();
-								final ObjectNode innerErrorJSON = objectMapper.createObjectNode();
+							final ObjectNode errorJSON = objectMapper.createObjectNode();
+							final ObjectNode innerErrorJSON = objectMapper.createObjectNode();
 
-								errorJSON.set(ERROR_IDENTIFIER, innerErrorJSON);
-								innerErrorJSON.put(MESSAGE_IDENTIFIER, message);
-								innerErrorJSON.put(STACKTRACE_IDENTIFIER, stringWriter.toString());
+							errorJSON.set(ERROR_IDENTIFIER, innerErrorJSON);
+							innerErrorJSON.put(MESSAGE_IDENTIFIER, message);
+							innerErrorJSON.put(STACKTRACE_IDENTIFIER, stringWriter.toString());
 
-								stringWriter.close();
-								printWriter.close();
+							stringWriter.close();
+							printWriter.close();
 
-								bos.write(objectMapper.writeValueAsBytes(errorJSON));
+							bos.write(objectMapper.writeValueAsBytes(errorJSON));
 
-								bos.close();
-								os.close();
-							} catch (IOException e) {
+							bos.close();
+							os.close();
+						} catch (IOException e) {
 
-								final String message2 = String.format("couldn't process task (maybe %s export) successfully", responseMediaType.toString());
+							final String message2 = String.format("couldn't process task (maybe %s export) successfully", responseMediaType.toString());
 
-								TasksResource.LOG.error(message2, e);
+							TasksResource.LOG.error(message2, e);
 
-								asyncResponse.resume(new DMPControllerException(message, throwable));
-							} finally {
+							asyncResponse.resume(new DMPControllerException(message, throwable));
+						} finally {
 
-								countDownLatch.countDown();
-							}
+							countDownLatch.countDown();
 						}
-
-						@Override
-						public void onNext(final JsonNode result) {
-
-							// nothing to do
-						}
-					});
+					}).subscribe();
 
 			// just for count down latch, taken from http://christopher-batey.blogspot.de/2014/12/streaming-large-payloads-over-http-from.html
 			try {
@@ -654,6 +610,56 @@ public class TasksResource {
 
 			asyncResponse.resume(new DMPControllerException(message, e));
 		}
+	}
+
+	private Observable<Void> doXMLExport(final Observable<GDMModel> result,
+	                                     final MediaType responseMediaType,
+	                                     final BufferedOutputStream bos,
+	                                     final Task task) throws XMLStreamException, DMPConverterException {
+
+		// collect input parameter for exporter
+
+		final DataModel finalOutputDataModel = getOutputDataModel(task);
+
+		// record tag
+		final Optional<Configuration> optionalConfiguration = Optional.ofNullable(finalOutputDataModel.getConfiguration());
+		final Optional<String> optionalRecordTag = DataModelUtil.determineRecordTag(optionalConfiguration);
+		final Optional<String> java8OptionalRecordTag = guavaOptionalToJava8Optional(optionalRecordTag);
+
+		// record class uri
+		final Optional<String> optionalRecordClassURI = DataModelUtil.determineRecordClassURI(finalOutputDataModel);
+
+		// original data model type
+		final Optional<String> optionalOriginalDataModelType = DataModelUtil.determineOriginalDataModelType(finalOutputDataModel,
+				optionalConfiguration);
+		final Optional<String> java8OptionalOriginalDataModelType = guavaOptionalToJava8Optional(
+				optionalOriginalDataModelType);
+
+		final String recordClassUri = optionalRecordClassURI.get();
+
+		LOG.debug("create {} exporter with: record tag = '{}' :: record class URI = '{}' :: original data model type = '{}'",
+				responseMediaType.toString(), optionalRecordTag, recordClassUri, java8OptionalOriginalDataModelType);
+
+		final XMLExporter xmlExporter = new XMLExporter(java8OptionalRecordTag, recordClassUri, Optional.<String>empty(), java8OptionalOriginalDataModelType);
+
+		LOG.debug("trigger {} export", responseMediaType.toString());
+
+		final ConnectableObservable<JsonNode> jsonResult = generateJSONResult(result);
+
+		final Observable<Void> resultObservable = xmlExporter.generate(jsonResult.subscribeOn(EXPORT_SCHEDULER), bos).ignoreElements().cast(Void.class);
+
+		jsonResult.connect();
+
+		return resultObservable;
+	}
+
+	private Observable<Void> doRDFExport(final Observable<GDMModel> result,
+	                                     final MediaType responseMediaType,
+	                                     final BufferedOutputStream bos) throws XMLStreamException {
+
+		final RDFExporter rdfExporter = new RDFExporter(responseMediaType);
+
+		return rdfExporter.generate(result, bos).ignoreElements().cast(Void.class);
 	}
 
 	private DataModel getOutputDataModel(final Task task) throws DMPConverterException {
@@ -695,15 +701,7 @@ public class TasksResource {
 		}
 
 		final Optional<MediaType> mediaTypeOptional = acceptableMediaTypes.stream()
-				.filter(mediaType -> {
-
-					if (MediaType.APPLICATION_XML_TYPE.equals(mediaType) || MediaTypeUtil.N_TRIPLES_TYPE.equals(mediaType)) {
-
-						return true;
-					}
-
-					return false;
-				})
+				.filter(mediaType -> MediaType.APPLICATION_XML_TYPE.equals(mediaType) || MediaTypeUtil.N_TRIPLES_TYPE.equals(mediaType))
 				.findFirst();
 
 		if (mediaTypeOptional.isPresent()) {
