@@ -233,11 +233,12 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		flow.getScript();
 
 		final ConnectableObservable<JsonNode> apply = flow.apply(tuples, true, false, true, Schedulers.newThread());
-		final ArrayNode actual = apply.reduce(
+		final Observable<ArrayNode> reduce = apply.reduce(
 				DMPPersistenceUtil.getJSONObjectMapper().createArrayNode(),
 				ArrayNode::add
-		).toBlocking().first();
+		);
 		apply.connect();
+		final ArrayNode actual = reduce.toBlocking().first();
 
 		compareResults(expected, actual);
 

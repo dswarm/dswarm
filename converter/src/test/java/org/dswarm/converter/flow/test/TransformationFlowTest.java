@@ -253,11 +253,13 @@ public class TransformationFlowTest extends GuicedTest {
 		flow.getScript();
 
 		final ConnectableObservable<JsonNode> apply = flow.apply(tuples, true, false, true, Schedulers.newThread());
-		final ArrayNode actualNodes = apply.reduce(
+		final Observable<ArrayNode> reduce = apply.reduce(
 				DMPPersistenceUtil.getJSONObjectMapper().createArrayNode(),
 				ArrayNode::add
-		).toBlocking().first();
+		);
 		apply.connect();
+		final ArrayNode actualNodes = reduce.toBlocking().first();
+
 
 		final ArrayNode expectedJSONArray = objectMapper.readValue(expected, ArrayNode.class);
 
