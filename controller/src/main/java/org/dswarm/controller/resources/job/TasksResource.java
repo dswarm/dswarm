@@ -384,8 +384,6 @@ public class TasksResource {
 
 			doExportOnTheFly(requestHeaders, asyncResponse, task, result);
 
-			result.connect();
-
 			return;
 		}
 
@@ -454,7 +452,7 @@ public class TasksResource {
 	private void doExportOnTheFly(final HttpHeaders requestHeaders,
 	                              final AsyncResponse asyncResponse,
 	                              final Task task,
-	                              final Observable<GDMModel> result) throws DMPControllerException {
+	                              final ConnectableObservable<GDMModel> result) throws DMPControllerException {
 
 		LOG.debug("do export on-the-fly for task execution of task '{}'", task.getUuid());
 
@@ -505,7 +503,7 @@ public class TasksResource {
 
 	private void generateResponseOutputStream(final AsyncResponse asyncResponse,
 	                                          final Task task,
-	                                          final Observable<GDMModel> result,
+	                                          final ConnectableObservable<GDMModel> result,
 	                                          final MediaType responseMediaType,
 	                                          final CountDownLatch countDownLatch,
 	                                          final OutputStream os) {
@@ -539,6 +537,8 @@ public class TasksResource {
 
 					return;
 			}
+
+			result.connect();
 
 			resultObservable.subscribeOn(EXPORT_SCHEDULER)
 					.doOnSubscribe(() -> LOG.debug("subscribed to {} export in task resource", responseMediaType.toString()))
@@ -655,7 +655,7 @@ public class TasksResource {
 
 		final ConnectableObservable<JsonNode> jsonResult = generateJSONResult(result);
 
-		final Observable<Void> resultObservable = xmlExporter.generate(jsonResult.subscribeOn(EXPORT_SCHEDULER), bos).ignoreElements().cast(Void.class);
+		final Observable<Void> resultObservable = xmlExporter.generate(jsonResult, bos).ignoreElements().cast(Void.class);
 
 		jsonResult.connect();
 
@@ -668,7 +668,11 @@ public class TasksResource {
 
 		final RDFExporter rdfExporter = new RDFExporter(responseMediaType);
 
-		return rdfExporter.generate(result, bos).ignoreElements().cast(Void.class);
+		final ConnectableObservable<GDMModel> publish = result.publish();
+		final Observable<JsonNode> generate = rdfExporter.generate(result, bos);
+		publish.connect();
+
+		return generate.ignoreElements().cast(Void.class);
 	}
 
 	private DataModel getOutputDataModel(final Task task) throws DMPConverterException {

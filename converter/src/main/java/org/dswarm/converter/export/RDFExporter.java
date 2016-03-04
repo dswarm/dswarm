@@ -27,6 +27,8 @@ import org.dswarm.converter.DMPConverterException;
 import org.dswarm.graph.json.*;
 import org.dswarm.graph.json.Node;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import rx.Observable;
 
 import javax.ws.rs.core.MediaType;
@@ -43,6 +45,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * TODO: maybe, go with a cache impl that is more performing than concurrent hash map, e.g., that one from hppc
  */
 public class RDFExporter implements Exporter<GDMModel> {
+
+	private static final Logger LOG = LoggerFactory.getLogger(RDFExporter.class);
 
 	private final MediaType mediaType;
 	private final Lang rdfSerializationFormat;
@@ -69,7 +73,10 @@ public class RDFExporter implements Exporter<GDMModel> {
 		final ConcurrentHashMap<String, org.apache.jena.graph.Node> resourceNodeCache = new ConcurrentHashMap<>();
 		final ConcurrentHashMap<String, org.apache.jena.graph.Node> predicateCache = new ConcurrentHashMap<>();
 
-		return recordGDM.map(recordGDMModel -> processRecordGDMModel(writer, resourceNodeCache, predicateCache, recordGDMModel))
+		return recordGDM
+				.doOnSubscribe(() -> LOG.debug("subscribed to RDF export; will return data as '{}'", mediaType.toString()))
+				.onBackpressureBuffer(10000)
+				.map(recordGDMModel -> processRecordGDMModel(writer, resourceNodeCache, predicateCache, recordGDMModel))
 				.map(org.dswarm.persistence.model.internal.Model::toJSON)
 				.flatMapIterable(nodes -> {
 
@@ -79,7 +86,8 @@ public class RDFExporter implements Exporter<GDMModel> {
 
 					return nodeList;
 				})
-				.doOnCompleted(() -> writer.finish());
+				.doOnCompleted(() -> writer.finish())
+				.doOnCompleted(() -> LOG.debug("finished RDF export; return data as '{}'", mediaType.toString()));
 	}
 
 	private static GDMModel processRecordGDMModel(final StreamRDF writer,
@@ -201,7 +209,7 @@ public class RDFExporter implements Exporter<GDMModel> {
 
 				final LiteralNode literalNode = (LiteralNode) gdmNode;
 
-				node = NodeFactory.createBlankNode(literalNode.getValue());
+				node = NodeFactory.createLiteral(literalNode.getValue());
 
 				break;
 			default:
