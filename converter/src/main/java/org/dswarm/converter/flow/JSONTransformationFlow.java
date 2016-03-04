@@ -105,7 +105,9 @@ public class JSONTransformationFlow extends TransformationFlow<JsonNode> {
 		final boolean doNotReturnJsonToCaller = false;
 		final boolean enableVersioning = true;
 
-		return apply(Observable.from(tuplesList), writeResultToDatahub, doNotReturnJsonToCaller, enableVersioning, Schedulers.newThread()).reduce(
+		final ConnectableObservable<JsonNode> observable = apply(Observable.from(tuplesList), writeResultToDatahub, doNotReturnJsonToCaller, enableVersioning, Schedulers.newThread());
+
+		final Observable<String> result = observable.reduce(
 				DMPPersistenceUtil.getJSONObjectMapper().createArrayNode(),
 				ArrayNode::add
 		).map(arrayNode -> {
@@ -115,6 +117,10 @@ public class JSONTransformationFlow extends TransformationFlow<JsonNode> {
 				throw new RuntimeException(e);
 			}
 		});
+
+		observable.connect();
+
+		return result;
 	}
 
 	protected ConnectableObservable<JsonNode> transformResultModel(final Observable<org.dswarm.persistence.model.internal.Model> model) {

@@ -34,6 +34,7 @@ import org.dswarm.converter.flow.JSONTransformationFlowFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import rx.Observable;
+import rx.observables.ConnectableObservable;
 import rx.schedulers.Schedulers;
 
 import org.dswarm.common.types.Tuple;
@@ -231,10 +232,12 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		flow.getScript();
 
-		final ArrayNode actual = flow.apply(tuples, true, false, true, Schedulers.newThread()).reduce(
+		final ConnectableObservable<JsonNode> apply = flow.apply(tuples, true, false, true, Schedulers.newThread());
+		final ArrayNode actual = apply.reduce(
 				DMPPersistenceUtil.getJSONObjectMapper().createArrayNode(),
 				ArrayNode::add
 		).toBlocking().first();
+		apply.connect();
 
 		compareResults(expected, actual);
 

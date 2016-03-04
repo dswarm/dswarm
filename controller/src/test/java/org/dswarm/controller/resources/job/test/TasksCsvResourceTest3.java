@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2013 – 2016 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,17 +15,6 @@
  */
 package org.dswarm.controller.resources.job.test;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -33,14 +22,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.io.Resources;
 import org.apache.commons.io.FileUtils;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matchers;
-import org.junit.Assert;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.dswarm.controller.resources.job.TasksResource;
+import org.dswarm.controller.resources.job.test.utils.TasksResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
 import org.dswarm.controller.resources.test.ResourceTest;
@@ -54,6 +37,21 @@ import org.dswarm.persistence.model.resource.utils.DataModelUtils;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
+import org.hamcrest.Matchers;
+import org.junit.Assert;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TasksCsvResourceTest3 extends ResourceTest {
 
@@ -72,7 +70,8 @@ public class TasksCsvResourceTest3 extends ResourceTest {
 		super("tasks");
 	}
 
-	@Override protected void initObjects() {
+	@Override
+	protected void initObjects() {
 		super.initObjects();
 
 		resourcesResourceTestUtils = new ResourcesResourceTestUtils();
@@ -239,35 +238,7 @@ public class TasksCsvResourceTest3 extends ResourceTest {
 		final String expectedDataResourceSchemaBaseURI = expectedRecordDataFieldNameExample.substring(0,
 				expectedRecordDataFieldNameExample.lastIndexOf('#') + 1);
 
-		for (final JsonNode expectedNode : expectedJSONArray) {
-
-			final String recordData = expectedNode.get(DMPPersistenceUtil.RECORD_DATA).get(0).get(expectedDataResourceSchemaBaseURI + "description")
-					.asText();
-			final JsonNode actualNode = getRecordData(recordData, actualJSONArray, actualDataResourceSchemaBaseURI + "description");
-
-			// SR TODO use Assert.assertNotNull here?
-			Assert.assertThat(actualNode, CoreMatchers.is(Matchers.notNullValue()));
-
-			final ObjectNode expectedRecordData = (ObjectNode) expectedNode.get(DMPPersistenceUtil.RECORD_DATA).get(0);
-
-			final ObjectNode actualElement = (ObjectNode) actualNode;
-			ObjectNode actualRecordData = null;
-
-			for (final JsonNode actualRecordDataCandidate : actualElement.get(DMPPersistenceUtil.RECORD_DATA)) {
-
-				if (actualRecordDataCandidate.get(actualDataResourceSchemaBaseURI + "description") != null) {
-
-					actualRecordData = (ObjectNode) actualRecordDataCandidate;
-
-					break;
-				}
-			}
-
-			Assert.assertThat(actualRecordData, CoreMatchers.is(Matchers.notNullValue()));
-
-			Assert.assertThat(actualRecordData.get(actualDataResourceSchemaBaseURI + "description").asText(),
-					Matchers.equalTo(expectedRecordData.get(expectedDataResourceSchemaBaseURI + "description").asText()));
-		}
+		TasksResourceTestUtils.compareCSVTaskResultJSON(expectedJSONArray, expectedDataResourceSchemaBaseURI, actualJSONArray, actualDataResourceSchemaBaseURI);
 
 		final String dataModelJSONString = objectMapper.writeValueAsString(dataModel1);
 
@@ -296,28 +267,5 @@ public class TasksCsvResourceTest3 extends ResourceTest {
 		Assert.assertNotNull("the data model schema record class shouldn't be null", schema.getRecordClass());
 
 		TasksCsvResourceTest3.LOG.debug("end task execution test");
-	}
-
-	private JsonNode getRecordData(final String recordData, final ArrayNode jsonArray, final String key) {
-
-		for (final JsonNode jsonEntry : jsonArray) {
-
-			final ArrayNode actualRecordDataArray = (ArrayNode) jsonEntry.get(DMPPersistenceUtil.RECORD_DATA);
-
-			for (final JsonNode actualRecordData : actualRecordDataArray) {
-
-				if (actualRecordData.get(key) == null) {
-
-					continue;
-				}
-
-				if (recordData.equals(actualRecordData.get(key).asText())) {
-
-					return jsonEntry;
-				}
-			}
-		}
-
-		return null;
 	}
 }

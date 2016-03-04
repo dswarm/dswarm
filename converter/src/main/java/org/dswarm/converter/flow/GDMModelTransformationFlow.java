@@ -71,7 +71,9 @@ public class GDMModelTransformationFlow extends TransformationFlow<GDMModel> {
 
 		final AtomicInteger resultCounter = new AtomicInteger(0);
 
-		return model.doOnSubscribe(() -> GDMModelTransformationFlow.LOG.debug("subscribed to results observable in transformation engine"))
+		return model
+				.onBackpressureBuffer(10000)
+				.doOnSubscribe(() -> GDMModelTransformationFlow.LOG.debug("subscribed to results observable in transformation engine"))
 				.doOnNext(resultObj -> {
 
 					resultCounter.incrementAndGet();
@@ -83,6 +85,7 @@ public class GDMModelTransformationFlow extends TransformationFlow<GDMModel> {
 				})
 				.doOnCompleted(() -> GDMModelTransformationFlow.LOG.debug("received '{}' results in transformation engine overall", resultCounter.get()))
 				.cast(org.dswarm.persistence.model.internal.gdm.GDMModel.class)
+				.onBackpressureBuffer(10000)
 				.publish();
 	}
 

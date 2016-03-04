@@ -150,7 +150,7 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 		}
 	}
 
-	public Observable<RESULTFORMAT> apply(final Observable<Tuple<String, JsonNode>> tuples,
+	public ConnectableObservable<RESULTFORMAT> apply(final Observable<Tuple<String, JsonNode>> tuples,
 	                                      final ObjectPipe<Tuple<String, JsonNode>, StreamReceiver> opener,
 	                                      final boolean writeResultToDatahub,
 	                                      final boolean doNotReturnJsonToCaller,
@@ -172,18 +172,22 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 
 			optionalResultObservable = Optional.empty();
 
-			// transform to FE friendly JSON => or use Model#toJSON() ;)
 			optionalConnectableResultObservable = Optional.ofNullable(transformResultModel(model));
 		}
 
 		final Observable<Response> writeResponse = writeResultToDatahub(writeResultToDatahub, enableVersioning, model);
 
-		return Observable.create(wireTransformationFlowMorphConnector(doNotReturnJsonToCaller, optionalResultObservable, optionalConnectableResultObservable, scheduler, writeResponse, morphTask.getMorphContext(), tuples, opener, morphTask.getWriter()))
+		final ConnectableObservable<RESULTFORMAT> resultformatObservable = Observable.create(wireTransformationFlowMorphConnector(doNotReturnJsonToCaller, optionalResultObservable, optionalConnectableResultObservable, scheduler, writeResponse, morphTask.getMorphContext(), tuples, opener, morphTask.getWriter()))
 				.doOnCompleted(() -> logTransformationFlowEnd(opener, morphTask.getConverter(), morphTask.getWriter(), writeResultToDatahub))
-				.subscribeOn(scheduler);
+				.subscribeOn(scheduler)
+				.publish();
+
+		model.connect();
+
+		return resultformatObservable;
 	}
 
-	public Observable<RESULTFORMAT> apply(final Observable<Tuple<String, JsonNode>> tuples,
+	public ConnectableObservable<RESULTFORMAT> apply(final Observable<Tuple<String, JsonNode>> tuples,
 	                                      final boolean writeResultToDatahub,
 	                                      final boolean doNotReturnJsonToCaller,
 	                                      final boolean enableVersioning,
@@ -347,11 +351,9 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 
 	protected Observable<Response> writeResultToDatahub(boolean writeResultToDatahub,
 	                                                    boolean enableVersioning,
-	                                                    final ConnectableObservable<org.dswarm.persistence.model.internal.Model> model) {
+	                                                    final Observable<org.dswarm.persistence.model.internal.Model> model) {
 
 		final Observable<Response> writeResponse = writeResultToDatahubInternal(writeResultToDatahub, enableVersioning, model);
-
-		model.connect();
 
 		return writeResponse;
 	}

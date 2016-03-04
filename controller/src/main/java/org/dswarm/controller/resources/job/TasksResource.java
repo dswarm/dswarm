@@ -358,13 +358,16 @@ public class TasksResource {
 			TasksResource.LOG.debug("skip result versioning");
 		}
 
-		final Observable<GDMModel> result;
+		final ConnectableObservable<GDMModel> result;
 
 		try (final MonitoringHelper ignore = monitoringLogger.get().startExecution(task)) {
 
 			final GDMModelTransformationFlow flow = transformationFlowFactory.fromTask(task);
-			result = flow.apply(inputData, writeResultToDatahub, doNotReturnJsonToCaller2, doVersioningOnResult, TRANSFORMATION_ENGINE_SCHEDULER)
-					.subscribeOn(TRANSFORMATION_ENGINE_SCHEDULER);
+			final ConnectableObservable<GDMModel> apply = flow.apply(inputData, writeResultToDatahub, doNotReturnJsonToCaller2, doVersioningOnResult, TRANSFORMATION_ENGINE_SCHEDULER);
+			result = apply.subscribeOn(TRANSFORMATION_ENGINE_SCHEDULER)
+					.onBackpressureBuffer(10000)
+					.publish();
+			apply.connect();
 		}
 
 		if (result == null) {
@@ -381,6 +384,8 @@ public class TasksResource {
 
 			doExportOnTheFly(requestHeaders, asyncResponse, task, result);
 
+			result.connect();
+
 			return;
 		}
 
@@ -388,10 +393,14 @@ public class TasksResource {
 
 			returnEmptyResponse(asyncResponse, result);
 
+			result.connect();
+
 			return;
 		}
 
 		transformHierarchicalGDMModelToFEFriendlyJSON(asyncResponse, result);
+
+		result.connect();
 	}
 
 	/**
