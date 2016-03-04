@@ -159,7 +159,7 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 
 		final MorphTask morphTask = new MorphTask(morphTimer, timerBasedFactory, outputDataModel, TRANSFORMATION_ENGINE_IDENTIFIER, optionalSkipFilter, opener, transformer);
 
-		final ConnectableObservable<org.dswarm.persistence.model.internal.Model> model = doPostProcessingOfResultModel(morphTask.getWriter());
+		final ConnectableObservable<org.dswarm.persistence.model.internal.Model> model = doPostProcessingOfResultModel(morphTask.getWriter(), scheduler);
 
 		final Optional<Observable<RESULTFORMAT>> optionalResultObservable;
 		final Optional<ConnectableObservable<RESULTFORMAT>> optionalConnectableResultObservable;
@@ -179,7 +179,7 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 
 		final ConnectableObservable<RESULTFORMAT> resultformatObservable = Observable.create(wireTransformationFlowMorphConnector(doNotReturnJsonToCaller, optionalResultObservable, optionalConnectableResultObservable, scheduler, writeResponse, morphTask.getMorphContext(), tuples, opener, morphTask.getWriter()))
 				.doOnCompleted(() -> logTransformationFlowEnd(opener, morphTask.getConverter(), morphTask.getWriter(), writeResultToDatahub))
-				.subscribeOn(scheduler)
+				.observeOn(scheduler)
 				.publish();
 
 		model.connect();
@@ -253,9 +253,10 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 		return resourceNodeCache.computeIfAbsent(resourceURI, resourceURI1 -> new ResourceNode(resourceURI));
 	}
 
-	protected ConnectableObservable<org.dswarm.persistence.model.internal.Model> doPostProcessingOfResultModel(final GDMModelReceiver writer) {
+	protected ConnectableObservable<org.dswarm.persistence.model.internal.Model> doPostProcessingOfResultModel(final GDMModelReceiver writer, final Scheduler scheduler) {
 
 		final ConnectableObservable<GDMModel> modelConnectableObservable = writer.getObservable()
+				.observeOn(scheduler)
 				.onBackpressureBuffer(10000)
 				.publish();
 		final ConnectableObservable<org.dswarm.persistence.model.internal.Model> model = doPostProcessingOfResultModel(modelConnectableObservable);
@@ -423,7 +424,7 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 				finalResultObservable = optionalConnectableResultObservable.get();
 			}
 
-			finalResultObservable.subscribeOn(scheduler)
+			finalResultObservable.observeOn(scheduler)
 					.compose(concatStreams(writeResponse))
 					.doOnCompleted(morphContext::stop)
 					.subscribe(subscriber);
@@ -435,7 +436,7 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 
 			final AtomicInteger counter = new AtomicInteger(0);
 
-			final Observable<Tuple<String, JsonNode>> tupleObservable = tuples.subscribeOn(scheduler);
+			final Observable<Tuple<String, JsonNode>> tupleObservable = tuples.observeOn(scheduler);
 
 			tupleObservable.doOnNext(tuple -> {
 

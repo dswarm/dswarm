@@ -364,7 +364,7 @@ public class TasksResource {
 
 			final GDMModelTransformationFlow flow = transformationFlowFactory.fromTask(task);
 			final ConnectableObservable<GDMModel> apply = flow.apply(inputData, writeResultToDatahub, doNotReturnJsonToCaller2, doVersioningOnResult, TRANSFORMATION_ENGINE_SCHEDULER);
-			result = apply.subscribeOn(TRANSFORMATION_ENGINE_SCHEDULER)
+			result = apply.observeOn(TRANSFORMATION_ENGINE_SCHEDULER)
 					.onBackpressureBuffer(10000)
 					.publish();
 			apply.connect();
@@ -520,12 +520,12 @@ public class TasksResource {
 
 				case MediaType.APPLICATION_XML:
 
-					resultObservable = doXMLExport(result, responseMediaType, bos, task);
+					resultObservable = doXMLExport(result.observeOn(EXPORT_SCHEDULER), responseMediaType, bos, task);
 
 					break;
 				case MediaTypeUtil.N_TRIPLES:
 
-					resultObservable = doRDFExport(result, responseMediaType, bos);
+					resultObservable = doRDFExport(result.observeOn(EXPORT_SCHEDULER), responseMediaType, bos);
 
 					break;
 				default:
@@ -540,7 +540,7 @@ public class TasksResource {
 
 			result.connect();
 
-			resultObservable.subscribeOn(EXPORT_SCHEDULER)
+			resultObservable.observeOn(EXPORT_SCHEDULER)
 					.doOnSubscribe(() -> LOG.debug("subscribed to {} export in task resource", responseMediaType.toString()))
 					.doOnCompleted(() -> {
 
