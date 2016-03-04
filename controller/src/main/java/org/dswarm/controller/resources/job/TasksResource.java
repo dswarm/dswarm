@@ -15,21 +15,46 @@
  */
 package org.dswarm.controller.resources.job;
 
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicInteger;
+import com.codahale.metrics.annotation.Timed;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Iterators;
+import com.google.inject.servlet.RequestScoped;
+import com.wordnik.swagger.annotations.*;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
+import org.dswarm.common.MediaTypeUtil;
+import org.dswarm.common.types.Tuple;
+import org.dswarm.controller.DMPControllerException;
+import org.dswarm.controller.utils.DataModelUtil;
+import org.dswarm.controller.utils.JsonUtils;
+import org.dswarm.controller.utils.ResourceUtils;
+import org.dswarm.converter.DMPConverterException;
+import org.dswarm.converter.export.Exporter;
+import org.dswarm.converter.export.RDFExporter;
+import org.dswarm.converter.export.XMLExporter;
+import org.dswarm.converter.flow.GDMModelTransformationFlow;
+import org.dswarm.converter.flow.GDMModelTransformationFlowFactory;
+import org.dswarm.converter.morph.MorphScriptBuilder;
+import org.dswarm.persistence.model.internal.gdm.GDMModel;
+import org.dswarm.persistence.model.job.Job;
+import org.dswarm.persistence.model.job.Task;
+import org.dswarm.persistence.model.job.Transformation;
+import org.dswarm.persistence.model.resource.Configuration;
+import org.dswarm.persistence.model.resource.DataModel;
+import org.dswarm.persistence.model.resource.Resource;
+import org.dswarm.persistence.monitoring.MonitoringHelper;
+import org.dswarm.persistence.monitoring.MonitoringLogger;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import rx.Observable;
+import rx.Observer;
+import rx.Scheduler;
+import rx.observables.ConnectableObservable;
+import rx.schedulers.Schedulers;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -40,57 +65,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import javax.xml.stream.XMLStreamException;
-
-import com.codahale.metrics.annotation.Timed;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.inject.servlet.RequestScoped;
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
-import com.wordnik.swagger.annotations.ApiResponse;
-import com.wordnik.swagger.annotations.ApiResponses;
-import org.apache.commons.lang3.concurrent.BasicThreadFactory;
-import org.dswarm.common.MediaTypeUtil;
-import org.dswarm.converter.export.Exporter;
-import org.dswarm.converter.export.RDFExporter;
-import org.dswarm.converter.flow.TransformationFlow;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import rx.Observable;
-import rx.Observer;
-import rx.Scheduler;
-import rx.schedulers.Schedulers;
-
-import org.dswarm.common.types.Tuple;
-import org.dswarm.controller.DMPControllerException;
-import org.dswarm.controller.utils.DataModelUtil;
-import org.dswarm.controller.utils.JsonUtils;
-import org.dswarm.controller.utils.ResourceUtils;
-import org.dswarm.converter.DMPConverterException;
-import org.dswarm.converter.export.XMLExporter;
-import org.dswarm.converter.flow.JSONTransformationFlow;
-import org.dswarm.converter.flow.TransformationFlowFactory;
-import org.dswarm.converter.morph.MorphScriptBuilder;
-import org.dswarm.persistence.model.job.Job;
-import org.dswarm.persistence.model.job.Task;
-import org.dswarm.persistence.model.job.Transformation;
-import org.dswarm.persistence.model.resource.Configuration;
-import org.dswarm.persistence.model.resource.DataModel;
-import org.dswarm.persistence.model.resource.Resource;
-import org.dswarm.persistence.monitoring.MonitoringHelper;
-import org.dswarm.persistence.monitoring.MonitoringLogger;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A resource (controller service) for {@link Task}s.
@@ -156,7 +139,7 @@ public class TasksResource {
 	 */
 	private final ObjectMapper objectMapper;
 
-	private final TransformationFlowFactory transformationFlowFactory;
+	private final GDMModelTransformationFlowFactory transformationFlowFactory;
 	private final Provider<MonitoringLogger> monitoringLogger;
 
 	/**
@@ -171,7 +154,7 @@ public class TasksResource {
 	public TasksResource(
 			final DataModelUtil dataModelUtilArg,
 			final ObjectMapper objectMapperArg,
-			final TransformationFlowFactory transformationFlowFactoryArg,
+			final GDMModelTransformationFlowFactory transformationFlowFactoryArg,
 			@Named("Monitoring") final Provider<MonitoringLogger> monitoringLogger) {
 
 		dataModelUtil = dataModelUtilArg;
@@ -380,11 +363,11 @@ public class TasksResource {
 			TasksResource.LOG.debug("skip result versioning");
 		}
 
-		final Observable<JsonNode> result;
+		final Observable<GDMModel> result;
 
 		try (final MonitoringHelper ignore = monitoringLogger.get().startExecution(task)) {
 
-			final TransformationFlow flow = transformationFlowFactory.fromTask(task);
+			final GDMModelTransformationFlow flow = transformationFlowFactory.fromTask(task);
 			result = flow.apply(inputData, writeResultToDatahub, doNotReturnJsonToCaller2, doVersioningOnResult, TRANSFORMATION_ENGINE_SCHEDULER)
 					.subscribeOn(TRANSFORMATION_ENGINE_SCHEDULER);
 		}
@@ -397,6 +380,8 @@ public class TasksResource {
 
 			return;
 		}
+
+		final ConnectableObservable<JsonNode> jsonResult = generateJSONResult(result);
 
 		// note: you can only do one of this, i.e., export result as xml or as json
 		if (doExportOnTheFly) {
@@ -518,7 +503,7 @@ public class TasksResource {
 
 						LOG.debug("trigger {} export", responseMediaType.toString());
 
-						final Observable<JsonNode> resultObservable = exporter.generate(result.subscribeOn(EXPORT_SCHEDULER), bos);
+						final Observable<JsonNode> resultObservable = exporter.generate(jsonResult.subscribeOn(EXPORT_SCHEDULER), bos);
 
 						resultObservable.subscribeOn(EXPORT_SCHEDULER)
 								.doOnSubscribe(() -> LOG.debug("subscribed to {} export in task resource", responseMediaType.toString()))
@@ -642,7 +627,7 @@ public class TasksResource {
 
 			if (doNotReturnJsonToCaller) {
 
-				result.subscribe(new Observer<JsonNode>() {
+				jsonResult.subscribe(new Observer<JsonNode>() {
 
 					@Override
 					public void onCompleted() {
@@ -669,6 +654,8 @@ public class TasksResource {
 					}
 				});
 
+				jsonResult.connect();
+
 				return;
 			}
 
@@ -676,7 +663,7 @@ public class TasksResource {
 			final ArrayNode feFriendlyJSON = objectMapper.createArrayNode();
 			final AtomicInteger counter = new AtomicInteger(0);
 
-			result.doOnSubscribe(() -> TasksResource.LOG.debug("subscribed to JSON export on task resource")).subscribe(new Observer<JsonNode>() {
+			jsonResult.doOnSubscribe(() -> TasksResource.LOG.debug("subscribed to JSON export on task resource")).subscribe(new Observer<JsonNode>() {
 
 				@Override
 				public void onCompleted() {
@@ -719,6 +706,38 @@ public class TasksResource {
 			});
 		}
 
+		jsonResult.connect();
+	}
+
+	private ConnectableObservable<JsonNode> generateJSONResult(final Observable<GDMModel> model) {
+
+		final AtomicInteger resultCounter = new AtomicInteger(0);
+
+		// transform to FE friendly JSON => or use Model#toJSON() ;)
+
+		return model.onBackpressureBuffer(10000)
+				.doOnSubscribe(() -> TasksResource.LOG.debug("subscribed to results observable in task resource"))
+				.doOnNext(resultObj -> {
+
+					resultCounter.incrementAndGet();
+
+					if (resultCounter.get() == 1) {
+
+						TasksResource.LOG.debug("received first result in task resource");
+					}
+				})
+				.doOnCompleted(() -> TasksResource.LOG.debug("received '{}' results in task resource overall", resultCounter.get()))
+				.map(org.dswarm.persistence.model.internal.Model::toJSON)
+				.flatMapIterable(nodes -> {
+
+					final ArrayList<JsonNode> nodeList = new ArrayList<>();
+
+					Iterators.addAll(nodeList, nodes.elements());
+
+					return nodeList;
+				})
+				.onBackpressureBuffer(10000)
+				.publish();
 	}
 
 	/**

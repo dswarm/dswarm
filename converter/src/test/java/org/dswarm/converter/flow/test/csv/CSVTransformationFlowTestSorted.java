@@ -19,12 +19,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import org.dswarm.converter.flow.JSONTransformationFlowFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.flow.JSONTransformationFlow;
-import org.dswarm.converter.flow.TransformationFlowFactory;
 import org.dswarm.persistence.model.job.Task;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
@@ -38,8 +38,8 @@ public class CSVTransformationFlowTestSorted extends GuicedTest {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("test_transf_sorted.result.json");
 
-		final TransformationFlowFactory flowFactory = GuicedTest.injector
-				.getInstance(TransformationFlowFactory.class);
+		final JSONTransformationFlowFactory flowFactory = GuicedTest.injector
+				.getInstance(JSONTransformationFlowFactory.class);
 
 		final String finalTaskJSONString = DMPPersistenceUtil.getResourceAsString("dd-474.task.json");
 		final ObjectMapper objectMapper = DMPPersistenceUtil.getJSONObjectMapper();

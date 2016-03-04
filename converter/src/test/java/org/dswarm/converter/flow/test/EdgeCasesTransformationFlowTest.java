@@ -21,12 +21,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.dswarm.converter.flow.JSONTransformationFlow;
+import org.dswarm.converter.flow.JSONTransformationFlowFactory;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import org.dswarm.converter.GuicedTest;
-import org.dswarm.converter.flow.TransformationFlowFactory;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 public class EdgeCasesTransformationFlowTest extends GuicedTest {
@@ -37,8 +37,8 @@ public class EdgeCasesTransformationFlowTest extends GuicedTest {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("test-mabxml.ws1ec1.result.json");
 
-		final TransformationFlowFactory flowFactory = GuicedTest.injector
-				.getInstance(TransformationFlowFactory.class);
+		final JSONTransformationFlowFactory flowFactory = GuicedTest.injector
+				.getInstance(JSONTransformationFlowFactory.class);
 
 		final JSONTransformationFlow flow = flowFactory.fromFile("ws1ec1morph.xml");
 
