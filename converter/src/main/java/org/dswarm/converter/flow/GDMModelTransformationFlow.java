@@ -26,6 +26,7 @@ import org.culturegraph.mf.stream.pipe.Filter;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.pipe.timing.TimerBasedFactory;
 import org.dswarm.graph.json.Model;
+import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.slf4j.Logger;
@@ -45,19 +46,18 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author sreichert
  * @author polowins
  */
-public class GDMTriplesTransformationFlow extends TransformationFlow<Model> {
+public class GDMModelTransformationFlow extends TransformationFlow<GDMModel> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(GDMTriplesTransformationFlow.class);
+	private static final Logger LOG = LoggerFactory.getLogger(GDMModelTransformationFlow.class);
 
 	@Inject
-	private GDMTriplesTransformationFlow(
-			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg,
-			@Named("Monitoring") final MetricRegistry registry,
-			final TimerBasedFactory timerBasedFactory,
-			@Assisted final Metamorph transformer,
-			@Assisted final String scriptArg,
-			@Assisted final Optional<DataModel> outputDataModelArg,
-			@Assisted final Optional<Filter> optionalSkipFilterArg) {
+	private GDMModelTransformationFlow(final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg,
+	                                   @Named("Monitoring") final MetricRegistry registry,
+	                                   final TimerBasedFactory timerBasedFactory,
+	                                   @Assisted final Metamorph transformer,
+	                                   @Assisted final String scriptArg,
+	                                   @Assisted final Optional<DataModel> outputDataModelArg,
+	                                   @Assisted final Optional<Filter> optionalSkipFilterArg) {
 
 		super(internalModelServiceFactoryProviderArg, registry, timerBasedFactory, transformer, scriptArg, outputDataModelArg, optionalSkipFilterArg);
 	}
@@ -67,31 +67,32 @@ public class GDMTriplesTransformationFlow extends TransformationFlow<Model> {
 		throw new NotImplementedException("TODO");
 	}
 
-	protected ConnectableObservable<Model> transformResultModel(final Observable<org.dswarm.persistence.model.internal.Model> model) {
+	protected ConnectableObservable<GDMModel> transformResultModel(final Observable<org.dswarm.persistence.model.internal.Model> model) {
 
 		final AtomicInteger resultCounter = new AtomicInteger(0);
 
-		return model.onBackpressureBuffer(10000).doOnSubscribe(() -> GDMTriplesTransformationFlow.LOG.debug("subscribed to results observable in transformation engine"))
+		return model.doOnSubscribe(() -> GDMModelTransformationFlow.LOG.debug("subscribed to results observable in transformation engine"))
 				.doOnNext(resultObj -> {
 
 					resultCounter.incrementAndGet();
 
 					if (resultCounter.get() == 1) {
 
-						GDMTriplesTransformationFlow.LOG.debug("received first result in transformation engine");
+						GDMModelTransformationFlow.LOG.debug("received first result in transformation engine");
 					}
-				}).doOnCompleted(() -> GDMTriplesTransformationFlow.LOG.debug("received '{}' results in transformation engine overall", resultCounter.get()))
+				})
+				.doOnCompleted(() -> GDMModelTransformationFlow.LOG.debug("received '{}' results in transformation engine overall", resultCounter.get()))
 				.cast(org.dswarm.persistence.model.internal.gdm.GDMModel.class)
-				.map(org.dswarm.persistence.model.internal.gdm.GDMModel::getModel).onBackpressureBuffer(10000).publish();
+				.publish();
 	}
 
-	protected AndThenWaitFor<Model, Response> concatStreams(final Observable<Response> writeResponse) {
+	protected AndThenWaitFor<GDMModel, Response> concatStreams(final Observable<Response> writeResponse) {
 
-		return new AndThenWaitFor<>(writeResponse, GDMTriplesTransformationFlow::createModel);
+		return new AndThenWaitFor<>(writeResponse, GDMModelTransformationFlow::createModel);
 	}
 
-	private static Model createModel() {
+	private static GDMModel createModel() {
 
-		return new Model();
+		return new GDMModel(new Model());
 	}
 }

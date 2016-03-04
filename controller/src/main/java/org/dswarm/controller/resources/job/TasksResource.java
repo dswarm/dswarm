@@ -64,6 +64,7 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.dswarm.common.MediaTypeUtil;
 import org.dswarm.converter.export.Exporter;
 import org.dswarm.converter.export.RDFExporter;
+import org.dswarm.converter.flow.TransformationFlow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
@@ -383,7 +384,7 @@ public class TasksResource {
 
 		try (final MonitoringHelper ignore = monitoringLogger.get().startExecution(task)) {
 
-			final JSONTransformationFlow flow = transformationFlowFactory.fromTask(task);
+			final TransformationFlow flow = transformationFlowFactory.fromTask(task);
 			result = flow.apply(inputData, writeResultToDatahub, doNotReturnJsonToCaller2, doVersioningOnResult, TRANSFORMATION_ENGINE_SCHEDULER)
 					.subscribeOn(TRANSFORMATION_ENGINE_SCHEDULER);
 		}

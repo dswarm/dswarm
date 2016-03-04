@@ -24,7 +24,7 @@ import java.io.OutputStream;
 /**
  * Created by tgaengler on 03.03.16.
  */
-public interface Exporter {
+public interface Exporter<RESULTFORMAT> {
 
-	Observable<JsonNode> generate(final Observable<JsonNode> recordGDM, final OutputStream outputStream) throws XMLStreamException;
+	Observable<JsonNode> generate(final Observable<RESULTFORMAT> recordGDM, final OutputStream outputStream) throws XMLStreamException;
 }

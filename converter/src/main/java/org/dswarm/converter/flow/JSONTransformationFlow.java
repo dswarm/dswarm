@@ -61,14 +61,13 @@ public class JSONTransformationFlow extends TransformationFlow<JsonNode> {
 	private static final Logger LOG = LoggerFactory.getLogger(JSONTransformationFlow.class);
 
 	@Inject
-	private JSONTransformationFlow(
-			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg,
-			@Named("Monitoring") final MetricRegistry registry,
-			final TimerBasedFactory timerBasedFactory,
-			@Assisted final Metamorph transformer,
-			@Assisted final String scriptArg,
-			@Assisted final Optional<DataModel> outputDataModelArg,
-			@Assisted final Optional<Filter> optionalSkipFilterArg) {
+	private JSONTransformationFlow(final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg,
+	                               @Named("Monitoring") final MetricRegistry registry,
+	                               final TimerBasedFactory timerBasedFactory,
+	                               @Assisted final Metamorph transformer,
+	                               @Assisted final String scriptArg,
+	                               @Assisted final Optional<DataModel> outputDataModelArg,
+	                               @Assisted final Optional<Filter> optionalSkipFilterArg) {
 
 		super(internalModelServiceFactoryProviderArg, registry, timerBasedFactory, transformer, scriptArg, outputDataModelArg, optionalSkipFilterArg);
 	}
@@ -124,7 +123,8 @@ public class JSONTransformationFlow extends TransformationFlow<JsonNode> {
 
 		// transform to FE friendly JSON => or use Model#toJSON() ;)
 
-		return model.onBackpressureBuffer(10000).doOnSubscribe(() -> JSONTransformationFlow.LOG.debug("subscribed to results observable in transformation engine"))
+		return model.onBackpressureBuffer(10000)
+				.doOnSubscribe(() -> JSONTransformationFlow.LOG.debug("subscribed to results observable in transformation engine"))
 				.doOnNext(resultObj -> {
 
 					resultCounter.incrementAndGet();
@@ -133,15 +133,19 @@ public class JSONTransformationFlow extends TransformationFlow<JsonNode> {
 
 						JSONTransformationFlow.LOG.debug("received first result in transformation engine");
 					}
-				}).doOnCompleted(() -> JSONTransformationFlow.LOG.debug("received '{}' results in transformation engine overall", resultCounter.get()))
-				.map(org.dswarm.persistence.model.internal.Model::toJSON).flatMapIterable(nodes -> {
+				})
+				.doOnCompleted(() -> JSONTransformationFlow.LOG.debug("received '{}' results in transformation engine overall", resultCounter.get()))
+				.map(org.dswarm.persistence.model.internal.Model::toJSON)
+				.flatMapIterable(nodes -> {
 
 					final ArrayList<JsonNode> nodeList = new ArrayList<>();
 
 					Iterators.addAll(nodeList, nodes.elements());
 
 					return nodeList;
-				}).onBackpressureBuffer(10000).publish();
+				})
+				.onBackpressureBuffer(10000)
+				.publish();
 	}
 
 	@Override

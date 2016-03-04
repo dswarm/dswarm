@@ -114,14 +114,13 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 					new BasicThreadFactory.Builder().daemon(false).namingPattern(DSWARM_GDM_THREAD_NAMING_PATTERN).build());
 	private static final Scheduler GDM_SCHEDULER = Schedulers.from(GDM_EXECUTOR_SERVICE);
 
-	protected TransformationFlow(
-			final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg,
-			final MetricRegistry registry,
-			final TimerBasedFactory timerBasedFactory,
-			final Metamorph transformer,
-			final String scriptArg,
-			final Optional<DataModel> outputDataModelArg,
-			final Optional<Filter> optionalSkipFilterArg) {
+	protected TransformationFlow(final Provider<InternalModelServiceFactory> internalModelServiceFactoryProviderArg,
+	                             final MetricRegistry registry,
+	                             final TimerBasedFactory timerBasedFactory,
+	                             final Metamorph transformer,
+	                             final String scriptArg,
+	                             final Optional<DataModel> outputDataModelArg,
+	                             final Optional<Filter> optionalSkipFilterArg) {
 
 		this.timerBasedFactory = timerBasedFactory;
 		this.transformer = transformer;
@@ -150,11 +149,12 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 		}
 	}
 
-	public Observable<RESULTFORMAT> apply(
-			final Observable<Tuple<String, JsonNode>> tuples,
-			final ObjectPipe<Tuple<String, JsonNode>, StreamReceiver> opener,
-			final boolean writeResultToDatahub, final boolean doNotReturnJsonToCaller, final boolean enableVersioning, final Scheduler scheduler)
-			throws DMPConverterException {
+	public Observable<RESULTFORMAT> apply(final Observable<Tuple<String, JsonNode>> tuples,
+	                                      final ObjectPipe<Tuple<String, JsonNode>, StreamReceiver> opener,
+	                                      final boolean writeResultToDatahub,
+	                                      final boolean doNotReturnJsonToCaller,
+	                                      final boolean enableVersioning,
+	                                      final Scheduler scheduler) throws DMPConverterException {
 
 		final MorphTask morphTask = new MorphTask(morphTimer, timerBasedFactory, outputDataModel, TRANSFORMATION_ENGINE_IDENTIFIER, optionalSkipFilter, opener, transformer);
 
@@ -182,8 +182,11 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 				.subscribeOn(scheduler);
 	}
 
-	public Observable<RESULTFORMAT> apply(final Observable<Tuple<String, JsonNode>> tuples, final boolean writeResultToDatahub,
-	                                      final boolean doNotReturnJsonToCaller, final boolean enableVersioning, final Scheduler scheduler) throws DMPConverterException {
+	public Observable<RESULTFORMAT> apply(final Observable<Tuple<String, JsonNode>> tuples,
+	                                      final boolean writeResultToDatahub,
+	                                      final boolean doNotReturnJsonToCaller,
+	                                      final boolean enableVersioning,
+	                                      final Scheduler scheduler) throws DMPConverterException {
 
 		final JsonNodeReader opener = new JsonNodeReader();
 
@@ -247,7 +250,9 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 
 	protected ConnectableObservable<org.dswarm.persistence.model.internal.Model> doPostProcessingOfResultModel(final GDMModelReceiver writer) {
 
-		final ConnectableObservable<GDMModel> modelConnectableObservable = writer.getObservable().onBackpressureBuffer(10000).publish();
+		final ConnectableObservable<GDMModel> modelConnectableObservable = writer.getObservable()
+				.onBackpressureBuffer(10000)
+				.publish();
 		final ConnectableObservable<org.dswarm.persistence.model.internal.Model> model = doPostProcessingOfResultModel(modelConnectableObservable);
 		modelConnectableObservable.connect();
 
@@ -256,11 +261,9 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 
 	private ConnectableObservable<org.dswarm.persistence.model.internal.Model> doPostProcessingOfResultModel(final Observable<GDMModel> modelObservable) {
 
-		final Optional<String> optionalDataModelSchemaRecordClassURI =
-				getDataModelSchemaRecordClassURI();
+		final Optional<String> optionalDataModelSchemaRecordClassURI = getDataModelSchemaRecordClassURI();
 
-		final String defaultRecordClassURI =
-				optionalDataModelSchemaRecordClassURI.orElse(ClaszUtils.BIBO_DOCUMENT_URI);
+		final String defaultRecordClassURI = optionalDataModelSchemaRecordClassURI.orElse(ClaszUtils.BIBO_DOCUMENT_URI);
 
 		final AtomicInteger counter = new AtomicInteger(0);
 		final AtomicInteger counter2 = new AtomicInteger(0);
@@ -302,7 +305,8 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 					final Set<String> recordURIsFromGDMModel = gdmModel.getRecordURIs();
 
 					return !(recordURIsFromGDMModel == null || recordURIsFromGDMModel.isEmpty());
-				}).map(gdmModel -> {
+				})
+				.map(gdmModel -> {
 
 					final GDMModel finalGDMModel;
 
@@ -335,12 +339,14 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 					}
 
 					return finalGDMModel;
-				}).cast(org.dswarm.persistence.model.internal.Model.class).doOnCompleted(
-						() -> LOG.info("processed '{}' records (from '{}') with '{}' statements in transformation engine", counter2.get(), counter.get(),
-								statementCounter.get())).publish();
+				})
+				.cast(org.dswarm.persistence.model.internal.Model.class)
+				.doOnCompleted(() -> LOG.info("processed '{}' records (from '{}') with '{}' statements in transformation engine", counter2.get(), counter.get(), statementCounter.get())).publish();
 	}
 
-	protected Observable<Response> writeResultToDatahub(boolean writeResultToDatahub, boolean enableVersioning, ConnectableObservable<org.dswarm.persistence.model.internal.Model> model) {
+	protected Observable<Response> writeResultToDatahub(boolean writeResultToDatahub,
+	                                                    boolean enableVersioning,
+	                                                    final ConnectableObservable<org.dswarm.persistence.model.internal.Model> model) {
 
 		final Observable<Response> writeResponse = writeResultToDatahubInternal(writeResultToDatahub, enableVersioning, model);
 
@@ -349,7 +355,9 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 		return writeResponse;
 	}
 
-	private Observable<Response> writeResultToDatahubInternal(final boolean writeResultToDatahub, final boolean enableVersioning, final Observable<org.dswarm.persistence.model.internal.Model> model) {
+	private Observable<Response> writeResultToDatahubInternal(final boolean writeResultToDatahub,
+	                                                          final boolean enableVersioning,
+	                                                          final Observable<org.dswarm.persistence.model.internal.Model> model) {
 
 		if (!writeResultToDatahub) {
 
@@ -390,7 +398,15 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 
 	protected abstract ConnectableObservable<RESULTFORMAT> transformResultModel(final Observable<org.dswarm.persistence.model.internal.Model> model);
 
-	protected Observable.OnSubscribe<RESULTFORMAT> wireTransformationFlowMorphConnector(final boolean doNotReturnJsonToCaller, final Optional<Observable<RESULTFORMAT>> optionalResultObservable, final Optional<ConnectableObservable<RESULTFORMAT>> optionalConnectableResultObservable, final Scheduler scheduler, final Observable<Response> writeResponse, final Context morphContext, final Observable<Tuple<String, JsonNode>> tuples, final ObjectPipe<Tuple<String, JsonNode>, StreamReceiver> opener, final GDMModelReceiver writer) {
+	protected Observable.OnSubscribe<RESULTFORMAT> wireTransformationFlowMorphConnector(final boolean doNotReturnJsonToCaller,
+	                                                                                    final Optional<Observable<RESULTFORMAT>> optionalResultObservable,
+	                                                                                    final Optional<ConnectableObservable<RESULTFORMAT>> optionalConnectableResultObservable,
+	                                                                                    final Scheduler scheduler,
+	                                                                                    final Observable<Response> writeResponse,
+	                                                                                    final Context morphContext,
+	                                                                                    final Observable<Tuple<String, JsonNode>> tuples,
+	                                                                                    final ObjectPipe<Tuple<String, JsonNode>, StreamReceiver> opener,
+	                                                                                    final GDMModelReceiver writer) {
 
 		return subscriber -> {
 
@@ -432,7 +448,10 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 
 	protected abstract AndThenWaitFor<RESULTFORMAT, Response> concatStreams(final Observable<Response> writeResponse);
 
-	protected static void logTransformationFlowEnd(final ObjectPipe<Tuple<String, JsonNode>, StreamReceiver> opener, final GDMEncoder converter, final GDMModelReceiver writer, final boolean writeResultToDatahub) {
+	protected static void logTransformationFlowEnd(final ObjectPipe<Tuple<String, JsonNode>, StreamReceiver> opener,
+	                                               final GDMEncoder converter,
+	                                               final GDMModelReceiver writer,
+	                                               final boolean writeResultToDatahub) {
 
 		if (JsonNodeReader.class.isInstance(opener)) {
 
