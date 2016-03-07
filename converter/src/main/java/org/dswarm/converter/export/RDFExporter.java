@@ -44,7 +44,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * <p>
  * TODO: maybe, go with a cache impl that is more performing than concurrent hash map, e.g., that one from hppc
  */
-public class RDFExporter implements Exporter<GDMModel> {
+public abstract class RDFExporter<TUPLE_FORMAT> implements Exporter<GDMModel> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(RDFExporter.class);
 
@@ -86,26 +86,18 @@ public class RDFExporter implements Exporter<GDMModel> {
 
 					return nodeList;
 				})
-				.doOnCompleted(() -> writer.finish())
+				.doOnCompleted(writer::finish)
 				.doOnCompleted(() -> LOG.debug("finished RDF export; return data as '{}'", mediaType.toString()));
 	}
 
-	private static GDMModel processRecordGDMModel(final StreamRDF writer,
+	private GDMModel processRecordGDMModel(final StreamRDF writer,
 	                                              final ConcurrentHashMap<String, org.apache.jena.graph.Node> resourceNodeCache,
 	                                              final ConcurrentHashMap<String, org.apache.jena.graph.Node> predicateCache, GDMModel recordGDMModel) {
 
 		final Optional<Model> optionalRecordModel = Optional.ofNullable(recordGDMModel.getModel());
 
 		optionalRecordModel.flatMap(recordModel -> Optional.ofNullable(recordModel.getResources())
-				.filter(resources -> {
-
-					if (resources.isEmpty()) {
-
-						return false;
-					}
-
-					return true;
-				}))
+				.filter(resources -> !resources.isEmpty()))
 				.ifPresent(resources -> resources.stream()
 						.forEach(resource -> processResource(writer, resourceNodeCache, predicateCache, resource)));
 
@@ -113,7 +105,7 @@ public class RDFExporter implements Exporter<GDMModel> {
 		return recordGDMModel;
 	}
 
-	private static void processResource(final StreamRDF writer,
+	private void processResource(final StreamRDF writer,
 	                                    final ConcurrentHashMap<String, org.apache.jena.graph.Node> resourceNodeCache,
 	                                    final ConcurrentHashMap<String, org.apache.jena.graph.Node> predicateCache, Resource resource) {
 
@@ -121,53 +113,37 @@ public class RDFExporter implements Exporter<GDMModel> {
 
 		final Optional<Collection<Statement>> optionalStatements = Optional.ofNullable(resource.getStatements());
 
-		optionalStatements.filter(statements -> {
-
-			if (statements.isEmpty()) {
-
-				return false;
-			}
-
-			return true;
-		})
+		optionalStatements.filter(statements -> !statements.isEmpty())
 				.ifPresent(statements -> statements.stream()
 						.map(statement -> {
 
 							try {
 
-								return generateTriple(statement, resourceNodeCache, bnodeCache, predicateCache);
+								return generateTuple(statement, resourceNodeCache, bnodeCache, predicateCache);
 							} catch (final DMPConverterException e) {
 
 								throw DMPConverterError.wrap(e);
 							}
 						})
-						.forEach(triple -> writer.triple(triple)));
+						.forEach(tuple -> writeTuple(tuple, writer)));
 	}
 
-	private static Triple generateTriple(final Statement statement,
+	protected abstract TUPLE_FORMAT generateTuple(final Statement statement,
 	                                     final ConcurrentHashMap<String, org.apache.jena.graph.Node> resourceNodeCache,
 	                                     final ConcurrentHashMap<Long, org.apache.jena.graph.Node> bnodeCache,
-	                                     final ConcurrentHashMap<String, org.apache.jena.graph.Node> predicateCache) throws DMPConverterException {
+	                                     final ConcurrentHashMap<String, org.apache.jena.graph.Node> predicateCache) throws DMPConverterException;
 
-		final Node gdmSubject = statement.getSubject();
-		final Predicate gdmPredicate = statement.getPredicate();
-		final Node gdmObject = statement.getObject();
+	protected abstract void writeTuple(final TUPLE_FORMAT tuple,
+	                                   final StreamRDF writer);
 
-		final org.apache.jena.graph.Node subject = generateSubjectNode(gdmSubject, resourceNodeCache, bnodeCache);
-		final org.apache.jena.graph.Node predicate = generatePredicate(gdmPredicate, predicateCache);
-		final org.apache.jena.graph.Node object = generateObjectNode(gdmObject, resourceNodeCache, bnodeCache);
-
-		return Triple.create(subject, predicate, object);
-	}
-
-	private static org.apache.jena.graph.Node generateSubjectNode(final Node gdmNode,
+	protected static org.apache.jena.graph.Node generateSubjectNode(final Node gdmNode,
 	                                                              final ConcurrentHashMap<String, org.apache.jena.graph.Node> resourceNodeCache,
 	                                                              final ConcurrentHashMap<Long, org.apache.jena.graph.Node> bnodeCache) throws DMPConverterException {
 
 		return generateNode(gdmNode, TriplePosition.SUBJECT, resourceNodeCache, bnodeCache);
 	}
 
-	private static org.apache.jena.graph.Node generateObjectNode(final Node gdmNode,
+	protected static org.apache.jena.graph.Node generateObjectNode(final Node gdmNode,
 	                                                             final ConcurrentHashMap<String, org.apache.jena.graph.Node> resourceNodeCache,
 	                                                             final ConcurrentHashMap<Long, org.apache.jena.graph.Node> bnodeCache) throws DMPConverterException {
 
@@ -190,7 +166,7 @@ public class RDFExporter implements Exporter<GDMModel> {
 				final ResourceNode resourceNode = (ResourceNode) gdmNode;
 				final String resourceURI = resourceNode.getUri();
 
-				node = resourceNodeCache.computeIfAbsent(resourceURI, resourceURI1 -> NodeFactory.createURI(resourceURI1));
+				node = resourceNodeCache.computeIfAbsent(resourceURI, NodeFactory::createURI);
 
 				break;
 			case BNode:
@@ -220,11 +196,11 @@ public class RDFExporter implements Exporter<GDMModel> {
 		return node;
 	}
 
-	private static org.apache.jena.graph.Node generatePredicate(final Predicate gdmPredicate,
+	protected static org.apache.jena.graph.Node generatePredicate(final Predicate gdmPredicate,
 	                                                            final ConcurrentHashMap<String, org.apache.jena.graph.Node> predicateCache) {
 
 		final String predicateURI = gdmPredicate.getUri();
 
-		return predicateCache.computeIfAbsent(predicateURI, predicateURI1 -> NodeFactory.createURI(predicateURI1));
+		return predicateCache.computeIfAbsent(predicateURI, NodeFactory::createURI);
 	}
 }

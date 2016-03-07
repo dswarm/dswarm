@@ -33,6 +33,7 @@ import org.dswarm.controller.utils.JsonUtils;
 import org.dswarm.controller.utils.ResourceUtils;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.export.RDFExporter;
+import org.dswarm.converter.export.TripleRDFExporter;
 import org.dswarm.converter.export.XMLExporter;
 import org.dswarm.converter.flow.GDMModelTransformationFlow;
 import org.dswarm.converter.flow.GDMModelTransformationFlowFactory;
@@ -523,7 +524,7 @@ public class TasksResource {
 				case MediaTypeUtil.N_TRIPLES:
 				case MediaTypeUtil.TURTLE:
 
-					resultObservable = doRDFExport(connectableResult.observeOn(EXPORT_SCHEDULER), responseMediaType, bos);
+					resultObservable = doTripleRDFExport(connectableResult.observeOn(EXPORT_SCHEDULER), responseMediaType, bos);
 
 					break;
 				default:
@@ -662,11 +663,18 @@ public class TasksResource {
 		return resultObservable;
 	}
 
-	private Observable<Void> doRDFExport(final Observable<GDMModel> result,
+	private Observable<Void> doTripleRDFExport(final Observable<GDMModel> result,
 	                                     final MediaType responseMediaType,
 	                                     final BufferedOutputStream bos) throws XMLStreamException {
 
-		final RDFExporter rdfExporter = new RDFExporter(responseMediaType);
+		final RDFExporter rdfExporter = new TripleRDFExporter(responseMediaType);
+
+		return doRDFExport(result, bos, rdfExporter);
+	}
+
+	private Observable<Void> doRDFExport(final Observable<GDMModel> result,
+	                                     final BufferedOutputStream bos,
+	                                     final RDFExporter rdfExporter) throws XMLStreamException {
 
 		final ConnectableObservable<GDMModel> publish = result.publish();
 		final Observable<JsonNode> generate = rdfExporter.generate(result, bos);
