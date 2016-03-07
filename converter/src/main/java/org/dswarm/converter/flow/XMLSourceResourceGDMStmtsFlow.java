@@ -151,12 +151,12 @@ public class XMLSourceResourceGDMStmtsFlow {
 
 				try {
 
-					writer.getObservable().subscribe(subscriber);
+					writer.getObservable()
+							.doOnCompleted(() -> morphContext.stop())
+							.subscribe(subscriber);
 
 					opener.process(object);
 					opener.closeStream();
-
-					morphContext.stop();
 				} catch (final Exception e) {
 
 					writer.propagateError(e);
