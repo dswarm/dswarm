@@ -185,7 +185,7 @@ public class TasksResource {
 	 * - at_most: the number of result records that should be returned at most (optional)
 	 * - persist: flag that indicates whether the result should be persisted in the datahub or not (optional)
 	 * <p>
-	 * returns the result of the task execution
+	 * returns the result of the task execution in the requested format (media type, e.g., "application/json", "application/xml", "application/n-triples", "application/n-quads", "application/trig")
 	 *
 	 * @param jsonObjectString a JSON representation of the request JSON (incl. task)
 	 * @throws IOException
@@ -198,7 +198,7 @@ public class TasksResource {
 	@Timed
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaTypeUtil.N_TRIPLES, MediaTypeUtil.TURTLE, MediaTypeUtil.N_QUADS})
+	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaTypeUtil.N_TRIPLES, MediaTypeUtil.TURTLE, MediaTypeUtil.N_QUADS, MediaTypeUtil.TRIG})
 	public void executeTask(@ApiParam(value = "task execution request (as JSON)", required = true) final String jsonObjectString,
 	                        @Context final HttpHeaders requestHeaders,
 	                        @Suspended final AsyncResponse asyncResponse) throws IOException, DMPConverterException, DMPControllerException {
@@ -530,6 +530,7 @@ public class TasksResource {
 
 					break;
 				case MediaTypeUtil.N_QUADS:
+				case MediaTypeUtil.TRIG:
 
 					resultObservable = doQuadRDFExport(connectableResult.observeOn(EXPORT_SCHEDULER), responseMediaType, bos, task);
 
@@ -746,7 +747,8 @@ public class TasksResource {
 				.filter(mediaType -> MediaType.APPLICATION_XML_TYPE.equals(mediaType)
 						|| MediaTypeUtil.N_TRIPLES_TYPE.equals(mediaType)
 						|| MediaTypeUtil.TURTLE_TYPE.equals(mediaType)
-						|| MediaTypeUtil.N_QUADS_TYPE.equals(mediaType))
+						|| MediaTypeUtil.N_QUADS_TYPE.equals(mediaType)
+				        || MediaTypeUtil.TRIG_TYPE.equals(mediaType))
 				.findFirst();
 
 		if (mediaTypeOptional.isPresent()) {
