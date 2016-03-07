@@ -195,7 +195,7 @@ public class TasksResource {
 	@Timed
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaTypeUtil.N_TRIPLES})
+	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaTypeUtil.N_TRIPLES, MediaTypeUtil.TURTLE})
 	public void executeTask(@ApiParam(value = "task execution request (as JSON)", required = true) final String jsonObjectString,
 	                        @Context final HttpHeaders requestHeaders,
 	                        @Suspended final AsyncResponse asyncResponse) throws IOException, DMPConverterException, DMPControllerException {
@@ -521,6 +521,7 @@ public class TasksResource {
 
 					break;
 				case MediaTypeUtil.N_TRIPLES:
+				case MediaTypeUtil.TURTLE:
 
 					resultObservable = doRDFExport(connectableResult.observeOn(EXPORT_SCHEDULER), responseMediaType, bos);
 
@@ -713,7 +714,9 @@ public class TasksResource {
 		}
 
 		final Optional<MediaType> mediaTypeOptional = acceptableMediaTypes.stream()
-				.filter(mediaType -> MediaType.APPLICATION_XML_TYPE.equals(mediaType) || MediaTypeUtil.N_TRIPLES_TYPE.equals(mediaType))
+				.filter(mediaType -> MediaType.APPLICATION_XML_TYPE.equals(mediaType)
+						|| MediaTypeUtil.N_TRIPLES_TYPE.equals(mediaType)
+						|| MediaTypeUtil.TURTLE_TYPE.equals(mediaType))
 				.findFirst();
 
 		if (mediaTypeOptional.isPresent()) {
