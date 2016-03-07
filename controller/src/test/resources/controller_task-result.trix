@@ -1,0 +1,45 @@
+<TriX xmlns="http://www.w3.org/2004/03/trix/trix-1/">
+  <graph>
+    <uri>http://data.slub-dresden.de/datamodel/DataModel-cf998267-392a-4d87-a33a-88dd1bffb016/data</uri>
+    <triple>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-9405f772-4458-4a4a-8770-b96d6a394095/records/a4538c42-4678-439b-836a-3e60aba56bd4</uri>
+      <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
+      <uri>http://data.slub-dresden.de/resource/02a05f63-f35b-41e7-abb2-c7e15666a60b</uri>
+    </triple>
+    <triple>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-9405f772-4458-4a4a-8770-b96d6a394095/records/a4538c42-4678-439b-836a-3e60aba56bd4</uri>
+      <uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</uri>
+      <uri>http://purl.org/ontology/bibo/Document</uri>
+    </triple>
+    <triple>
+      <uri>http://data.slub-dresden.de/resource/02a05f63-f35b-41e7-abb2-c7e15666a60b</uri>
+      <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
+      <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp0?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
+    </triple>
+    <triple>
+      <uri>http://data.slub-dresden.de/resource/02a05f63-f35b-41e7-abb2-c7e15666a60b</uri>
+      <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
+      <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp2?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
+    </triple>
+    <triple>
+      <uri>http://data.slub-dresden.de/resource/02a05f63-f35b-41e7-abb2-c7e15666a60b</uri>
+      <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
+      <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp3?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
+    </triple>
+    <triple>
+      <uri>http://data.slub-dresden.de/resource/02a05f63-f35b-41e7-abb2-c7e15666a60b</uri>
+      <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
+      <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp5?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
+    </triple>
+    <triple>
+      <uri>http://data.slub-dresden.de/resource/02a05f63-f35b-41e7-abb2-c7e15666a60b</uri>
+      <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
+      <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp7?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
+    </triple>
+    <triple>
+      <uri>http://data.slub-dresden.de/resource/02a05f63-f35b-41e7-abb2-c7e15666a60b</uri>
+      <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
+      <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp1?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
+    </triple>
+  </graph>
+</TriX>
