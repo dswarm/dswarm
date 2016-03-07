@@ -96,7 +96,7 @@
     }, {
       "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind" : "b"
     }, {
-      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "http://md5.jsontest.com/?text=example_text"
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#value" : "http://demo.dswarm.org/dmp/_health/_all"
     } ], [ {
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feldType"
     }, {
