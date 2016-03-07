@@ -204,7 +204,8 @@ public class TasksResource {
 			MediaTypeUtil.TURTLE,
 			MediaTypeUtil.N_QUADS,
 			MediaTypeUtil.TRIG,
-			MediaTypeUtil.TRIX})
+			MediaTypeUtil.TRIX,
+			MediaTypeUtil.RDF_THRIFT})
 	public void executeTask(@ApiParam(value = "task execution request (as JSON)", required = true) final String jsonObjectString,
 	                        @Context final HttpHeaders requestHeaders,
 	                        @Suspended final AsyncResponse asyncResponse) throws IOException, DMPConverterException, DMPControllerException {
@@ -538,6 +539,7 @@ public class TasksResource {
 				case MediaTypeUtil.N_QUADS:
 				case MediaTypeUtil.TRIG:
 				case MediaTypeUtil.TRIX:
+				case MediaTypeUtil.RDF_THRIFT:
 
 					resultObservable = doQuadRDFExport(connectableResult.observeOn(EXPORT_SCHEDULER), responseMediaType, bos, task);
 
@@ -756,7 +758,8 @@ public class TasksResource {
 						|| MediaTypeUtil.TURTLE_TYPE.equals(mediaType)
 						|| MediaTypeUtil.N_QUADS_TYPE.equals(mediaType)
 				        || MediaTypeUtil.TRIG_TYPE.equals(mediaType)
-						|| MediaTypeUtil.TRIX_TYPE.equals(mediaType))
+						|| MediaTypeUtil.TRIX_TYPE.equals(mediaType)
+						|| MediaTypeUtil.RDF_THRIFT_TYPE.equals(mediaType))
 				.findFirst();
 
 		if (mediaTypeOptional.isPresent()) {
