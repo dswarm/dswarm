@@ -32,6 +32,7 @@ import org.dswarm.controller.utils.DataModelUtil;
 import org.dswarm.controller.utils.JsonUtils;
 import org.dswarm.controller.utils.ResourceUtils;
 import org.dswarm.converter.DMPConverterException;
+import org.dswarm.converter.export.QuadRDFExporter;
 import org.dswarm.converter.export.RDFExporter;
 import org.dswarm.converter.export.TripleRDFExporter;
 import org.dswarm.converter.export.XMLExporter;
@@ -48,6 +49,7 @@ import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.monitoring.MonitoringHelper;
 import org.dswarm.persistence.monitoring.MonitoringLogger;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
+import org.dswarm.persistence.util.GDMUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
@@ -196,7 +198,7 @@ public class TasksResource {
 	@Timed
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaTypeUtil.N_TRIPLES, MediaTypeUtil.TURTLE})
+	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaTypeUtil.N_TRIPLES, MediaTypeUtil.TURTLE, MediaTypeUtil.N_QUADS})
 	public void executeTask(@ApiParam(value = "task execution request (as JSON)", required = true) final String jsonObjectString,
 	                        @Context final HttpHeaders requestHeaders,
 	                        @Suspended final AsyncResponse asyncResponse) throws IOException, DMPConverterException, DMPControllerException {
@@ -527,6 +529,11 @@ public class TasksResource {
 					resultObservable = doTripleRDFExport(connectableResult.observeOn(EXPORT_SCHEDULER), responseMediaType, bos);
 
 					break;
+				case MediaTypeUtil.N_QUADS:
+
+					resultObservable = doQuadRDFExport(connectableResult.observeOn(EXPORT_SCHEDULER), responseMediaType, bos, task);
+
+					break;
 				default:
 
 					// media type is not supported
@@ -672,6 +679,20 @@ public class TasksResource {
 		return doRDFExport(result, bos, rdfExporter);
 	}
 
+	private Observable<Void> doQuadRDFExport(final Observable<GDMModel> result,
+	                                         final MediaType responseMediaType,
+	                                         final BufferedOutputStream bos,
+	                                         final Task task) throws XMLStreamException, DMPConverterException {
+
+		final DataModel finalOutputDataModel = getOutputDataModel(task);
+		final String dataModelUuid = finalOutputDataModel.getUuid();
+		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelUuid);
+
+		final RDFExporter rdfExporter = new QuadRDFExporter(responseMediaType, dataModelURI);
+
+		return doRDFExport(result, bos, rdfExporter);
+	}
+
 	private Observable<Void> doRDFExport(final Observable<GDMModel> result,
 	                                     final BufferedOutputStream bos,
 	                                     final RDFExporter rdfExporter) throws XMLStreamException {
@@ -724,7 +745,8 @@ public class TasksResource {
 		final Optional<MediaType> mediaTypeOptional = acceptableMediaTypes.stream()
 				.filter(mediaType -> MediaType.APPLICATION_XML_TYPE.equals(mediaType)
 						|| MediaTypeUtil.N_TRIPLES_TYPE.equals(mediaType)
-						|| MediaTypeUtil.TURTLE_TYPE.equals(mediaType))
+						|| MediaTypeUtil.TURTLE_TYPE.equals(mediaType)
+						|| MediaTypeUtil.N_QUADS_TYPE.equals(mediaType))
 				.findFirst();
 
 		if (mediaTypeOptional.isPresent()) {
