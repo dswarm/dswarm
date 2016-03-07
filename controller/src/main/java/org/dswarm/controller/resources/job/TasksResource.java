@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2013 – 2016 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -343,6 +343,8 @@ public class TasksResource {
 			}
 		}
 
+		final ConnectableObservable<Tuple<String, JsonNode>> connectableInputData = inputData.publish();
+
 		final boolean writeResultToDatahub = JsonUtils.getBooleanValue(TasksResource.PERSIST_IDENTIFIER, requestJSON, false);
 
 		final boolean doNotReturnJsonToCaller = JsonUtils.getBooleanValue(TasksResource.RETURN_IDENTIFIER, requestJSON, false);
@@ -358,47 +360,40 @@ public class TasksResource {
 			TasksResource.LOG.debug("skip result versioning");
 		}
 
-		final ConnectableObservable<GDMModel> result;
+		final ConnectableObservable<GDMModel> connectableResult;
 
 		try (final MonitoringHelper ignore = monitoringLogger.get().startExecution(task)) {
 
 			final GDMModelTransformationFlow flow = transformationFlowFactory.fromTask(task);
-			final ConnectableObservable<GDMModel> apply = flow.apply(inputData, writeResultToDatahub, doNotReturnJsonToCaller2, doVersioningOnResult, TRANSFORMATION_ENGINE_SCHEDULER);
-			result = apply.observeOn(TRANSFORMATION_ENGINE_SCHEDULER)
+			final ConnectableObservable<GDMModel> apply = flow.apply(connectableInputData, writeResultToDatahub, doNotReturnJsonToCaller2, doVersioningOnResult, TRANSFORMATION_ENGINE_SCHEDULER);
+			connectableResult = apply.observeOn(TRANSFORMATION_ENGINE_SCHEDULER)
 					.onBackpressureBuffer(10000)
 					.publish();
 			apply.connect();
 		}
 
-		if (result == null) {
-
-			TasksResource.LOG.debug("result of task execution is null");
-
-			asyncResponse.resume(Response.noContent().build());
-
-			return;
-		}
-
 		// note: you can only do one of this, i.e., export result as (xml or a RDF serialization) or as json
 		if (doExportOnTheFly) {
 
-			doExportOnTheFly(requestHeaders, asyncResponse, task, result);
+			doExportOnTheFly(requestHeaders, asyncResponse, task, connectableResult, connectableInputData);
 
 			return;
 		}
 
 		if (doNotReturnJsonToCaller) {
 
-			returnEmptyResponse(asyncResponse, result);
+			returnEmptyResponse(asyncResponse, connectableResult);
 
-			result.connect();
+			connectableResult.connect();
+			connectableInputData.connect();
 
 			return;
 		}
 
-		transformHierarchicalGDMModelToFEFriendlyJSON(asyncResponse, result);
+		transformHierarchicalGDMModelToFEFriendlyJSON(asyncResponse, connectableResult);
 
-		result.connect();
+		connectableResult.connect();
+		connectableInputData.connect();
 	}
 
 	/**
@@ -452,7 +447,8 @@ public class TasksResource {
 	private void doExportOnTheFly(final HttpHeaders requestHeaders,
 	                              final AsyncResponse asyncResponse,
 	                              final Task task,
-	                              final ConnectableObservable<GDMModel> result) throws DMPControllerException {
+	                              final ConnectableObservable<GDMModel> connectableResult,
+	                              final ConnectableObservable<Tuple<String, JsonNode>> connectableInputData) throws DMPControllerException {
 
 		LOG.debug("do export on-the-fly for task execution of task '{}'", task.getUuid());
 
@@ -472,7 +468,7 @@ public class TasksResource {
 
 			final CountDownLatch countDownLatch = new CountDownLatch(1);
 
-			return os -> generateResponseOutputStream(asyncResponse, task, result, responseMediaType, countDownLatch, os);
+			return os -> generateResponseOutputStream(asyncResponse, task, connectableResult, connectableInputData, responseMediaType, countDownLatch, os);
 		}, EXPORT_EXECUTOR_SERVICE);
 
 		try {
@@ -503,7 +499,8 @@ public class TasksResource {
 
 	private void generateResponseOutputStream(final AsyncResponse asyncResponse,
 	                                          final Task task,
-	                                          final ConnectableObservable<GDMModel> result,
+	                                          final ConnectableObservable<GDMModel> connectableResult,
+	                                          final ConnectableObservable<Tuple<String, JsonNode>> connectableInputData,
 	                                          final MediaType responseMediaType,
 	                                          final CountDownLatch countDownLatch,
 	                                          final OutputStream os) {
@@ -520,12 +517,12 @@ public class TasksResource {
 
 				case MediaType.APPLICATION_XML:
 
-					resultObservable = doXMLExport(result.observeOn(EXPORT_SCHEDULER), responseMediaType, bos, task);
+					resultObservable = doXMLExport(connectableResult.observeOn(EXPORT_SCHEDULER), responseMediaType, bos, task);
 
 					break;
 				case MediaTypeUtil.N_TRIPLES:
 
-					resultObservable = doRDFExport(result.observeOn(EXPORT_SCHEDULER), responseMediaType, bos);
+					resultObservable = doRDFExport(connectableResult.observeOn(EXPORT_SCHEDULER), responseMediaType, bos);
 
 					break;
 				default:
@@ -538,7 +535,7 @@ public class TasksResource {
 					return;
 			}
 
-			result.connect();
+			connectableResult.connect();
 
 			resultObservable.observeOn(EXPORT_SCHEDULER)
 					.doOnSubscribe(() -> LOG.debug("subscribed to {} export in task resource", responseMediaType.toString()))
@@ -600,6 +597,8 @@ public class TasksResource {
 							countDownLatch.countDown();
 						}
 					}).subscribe();
+
+			connectableInputData.connect();
 
 			// just for count down latch, taken from http://christopher-batey.blogspot.de/2014/12/streaming-large-payloads-over-http-from.html
 			try {
