@@ -608,7 +608,7 @@ public class InternalGDMGraphService implements InternalModelService {
 		final Optional<Boolean> optionalDeprecateMissingRecords = determineMissingRecordsFlag(updateFormat);
 		final String dataModelURI = GDMUtil.getDataModelGraphURI(dataModelUuid);
 		// TODO: remove, or avoid redundant schema determination
-		final DataModel dataModel = schemaDeterminatorProvider.get().getSchemaInternal(dataModelUuid);
+		final DataModel dataModel = schemaDeterminatorProvider.get().determineSchema(dataModelUuid);
 
 		// TODO: remove, or avoid redundant schema determination
 		final boolean isSchemaAnInBuiltSchema = schemaDeterminatorProvider.get().isSchemaAnInbuiltSchema(dataModel);
@@ -644,7 +644,8 @@ public class InternalGDMGraphService implements InternalModelService {
 				}
 
 				// TODO: remove, or avoid redundant schema determination
-				schemaDeterminatorProvider.get().optionallyEnhancedDataModel(dataModel, gdm, model1, isSchemaAnInBuiltSchema);
+				final boolean updateDataModelDirectly = false;
+				schemaDeterminatorProvider.get().optionallyEnhancedDataModel(dataModel, gdm, model1, isSchemaAnInBuiltSchema, updateDataModelDirectly);
 
 				// note the model should always consist of one resource only
 				return resources;
@@ -652,13 +653,24 @@ public class InternalGDMGraphService implements InternalModelService {
 
 				throw DMPPersistenceError.wrap(e);
 			}
-		});
+		}).doOnCompleted(() -> {
+
+					try {
+
+						schemaDeterminatorProvider.get().updateDataModel(dataModel);
+					} catch (final DMPPersistenceException e) {
+
+						throw DMPPersistenceError.wrap(e);
+					}
+				});
 
 		resourceObservable.subscribe(operator.resourceObserver());
 
 		final Observable<Response> responseObservable = operator.responseObservable();
 
-		return responseObservable.doOnCompleted(() -> {
+		return responseObservable
+				.doOnSubscribe(() -> LOG.debug("subscribed to write response observable"))
+				.doOnCompleted(() -> {
 
 			if (dataModel.isDeprecated()) {
 
@@ -878,7 +890,7 @@ public class InternalGDMGraphService implements InternalModelService {
 			return Tuple.tuple(modelConsumer, asyncPost);
 		} catch (final InterruptedException | ExecutionException e) {
 
-			throw new DMPPersistenceException("couldn't store GDM data into database successfully");
+			throw new DMPPersistenceException("couldn't store GDM data into database successfully", e);
 		}
 	}
 
@@ -1347,8 +1359,9 @@ public class InternalGDMGraphService implements InternalModelService {
 
 							final org.dswarm.graph.json.Model realModel = getRealModel(gdm);
 							// TODO: remove, or avoid redundant schema determination
+							final boolean updateDataModelDirectly = true;
 							final DataModel finalDataModel = schemaDeterminatorProvider.get()
-									.optionallyEnhancedDataModel(dataModel, gdm, realModel, isSchemaAnInBuiltSchema);
+									.optionallyEnhancedDataModel(dataModel, gdm, realModel, isSchemaAnInBuiltSchema, updateDataModelDirectly);
 							final Optional<ContentSchema> optionalContentSchema = Optional
 									.ofNullable(finalDataModel.getSchema().getContentSchema());
 							final Optional<String> optionalRecordClassUri = Optional

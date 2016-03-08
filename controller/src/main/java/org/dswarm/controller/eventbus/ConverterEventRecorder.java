@@ -65,10 +65,10 @@ public abstract class ConverterEventRecorder<CONVERTER_EVENT_IMPL extends Conver
 	/**
 	 * The internal model service factory
 	 */
-	private final   InternalModelServiceFactory  internalServiceFactory;
-	protected final Provider<MonitoringLogger>   loggerProvider;
-	private final   Provider<SchemaDeterminator> schemaDeterminatorProvider;
-	private final   String                       type;
+	private final InternalModelServiceFactory internalServiceFactory;
+	protected final Provider<MonitoringLogger> loggerProvider;
+	private final Provider<SchemaDeterminator> schemaDeterminatorProvider;
+	private final String type;
 
 	private static final String DSWARM_GDM_THREAD_NAMING_PATTERN = "dswarm-gdm-%d";
 
@@ -130,6 +130,7 @@ public abstract class ConverterEventRecorder<CONVERTER_EVENT_IMPL extends Conver
 			final ConnectableObservable<Response> writeResponse = internalServiceFactory.getInternalGDMGraphService()
 					.updateObject(dataModel.getUuid(), connectableResult2.observeOn(GDM_SCHEDULER).onBackpressureBuffer(10000), updateFormat, enableVersioning)
 					.onBackpressureBuffer(10000)
+					.doOnSubscribe(() -> LOG.debug("subscribed to write response observable"))
 					.publish();
 
 			connectableResult2.connect();
@@ -176,8 +177,8 @@ public abstract class ConverterEventRecorder<CONVERTER_EVENT_IMPL extends Conver
 	}
 
 	private Tuple<ConnectableObservable<GDMModel>, ConnectableObservable<org.dswarm.persistence.model.internal.Model>> doIngestInternal(final DataModel dataModel,
-	                                                                                            final boolean utiliseExistingSchema,
-	                                                                                            final Scheduler scheduler) throws DMPControllerException {
+	                                                                                                                                    final boolean utiliseExistingSchema,
+	                                                                                                                                    final Scheduler scheduler) throws DMPControllerException {
 		// TODO: enable monitoring here
 
 		LOG.debug("try to process {} data resource into data model '{}' (utilise existing schema = '{}')", type, dataModel.getUuid(),
@@ -186,7 +187,7 @@ public abstract class ConverterEventRecorder<CONVERTER_EVENT_IMPL extends Conver
 		try {
 
 			final SchemaDeterminator schemaDeterminator = schemaDeterminatorProvider.get();
-			final DataModel freshDataModel = schemaDeterminator.getSchemaInternal(dataModel.getUuid());
+			final DataModel freshDataModel = schemaDeterminator.determineSchema(dataModel.getUuid());
 			final boolean isSchemaAnInbuiltSchema = schemaDeterminator.isSchemaAnInbuiltSchema(freshDataModel);
 			final boolean hasSchema = isSchemaAnInbuiltSchema || utiliseExistingSchema;
 
@@ -233,7 +234,9 @@ public abstract class ConverterEventRecorder<CONVERTER_EVENT_IMPL extends Conver
 								type, dataModel.getUuid(), statementCounter.get(), path);
 					}
 
-					schemaDeterminator.optionallyEnhancedDataModel(freshDataModel, gdmModel, model, hasSchema);
+					final boolean updateDataModelDirectly = false;
+
+					schemaDeterminator.optionallyEnhancedDataModel(freshDataModel, gdmModel, model, hasSchema, updateDataModelDirectly);
 
 					//final int current = counter.incrementAndGet();
 
@@ -249,49 +252,60 @@ public abstract class ConverterEventRecorder<CONVERTER_EVENT_IMPL extends Conver
 
 					throw DMPPersistenceError.wrap(e);
 				}
-			}).cast(org.dswarm.persistence.model.internal.Model.class).doOnCompleted(
-					() -> {
+			})
+					.cast(org.dswarm.persistence.model.internal.Model.class)
+					.doOnCompleted(
+							() -> {
 
-						final int recordCount = counter.get();
+								final int recordCount = counter.get();
 
-						if (recordCount == 0) {
+								if (recordCount == 0) {
 
-							final Configuration configuration = dataModel.getConfiguration();
-							final Optional<JsonNode> optionalRecordTagNode = Optional.ofNullable(
-									configuration.getParameter(ConfigurationStatics.RECORD_TAG));
+									final Configuration configuration = dataModel.getConfiguration();
+									final Optional<JsonNode> optionalRecordTagNode = Optional.ofNullable(
+											configuration.getParameter(ConfigurationStatics.RECORD_TAG));
 
-							final Optional<String> optionalRecordTag;
+									final Optional<String> optionalRecordTag;
 
-							if (optionalRecordTagNode.isPresent()) {
+									if (optionalRecordTagNode.isPresent()) {
 
-								optionalRecordTag = Optional.ofNullable(optionalRecordTagNode.get().asText(null));
-							} else {
+										optionalRecordTag = Optional.ofNullable(optionalRecordTagNode.get().asText(null));
+									} else {
 
-								optionalRecordTag = Optional.empty();
-							}
+										optionalRecordTag = Optional.empty();
+									}
 
-							final String messageStart = String.format(
-									"couldn't transform any record from %s data resource at '%s' to GDM for data model '%s'; ", type, path,
-									dataModel.getUuid());
+									final String messageStart = String.format(
+											"couldn't transform any record from %s data resource at '%s' to GDM for data model '%s'; ", type, path,
+											dataModel.getUuid());
 
-							final StringBuilder messageSB = new StringBuilder();
-							messageSB.append(messageStart);
+									final StringBuilder messageSB = new StringBuilder();
+									messageSB.append(messageStart);
 
-							if (optionalRecordTag.isPresent()) {
+									if (optionalRecordTag.isPresent()) {
 
-								messageSB.append("maybe you set a wrong record tag (current one = '").append(optionalRecordTag.get()).append("')");
-							} else {
+										messageSB.append("maybe you set a wrong record tag (current one = '").append(optionalRecordTag.get()).append("')");
+									} else {
 
-								messageSB.append("maybe because you set no record tag");
-							}
+										messageSB.append("maybe because you set no record tag");
+									}
 
-							throw new RuntimeException(messageSB.toString());
-						}
+									throw new RuntimeException(messageSB.toString());
+								}
 
-						LOG.info(
-								"transformed {} data resource at to GDM for data model '{}' - transformed '{}' records with '{}' statements (data resource at '{}')",
-								type, dataModel.getUuid(), recordCount, statementCounter.get(), path);
-					})
+								try {
+
+									// update data model only once (per processing)
+									schemaDeterminator.updateDataModel(freshDataModel);
+								} catch (final DMPPersistenceException e) {
+
+									throw DMPPersistenceError.wrap(e);
+								}
+
+								LOG.info(
+										"transformed {} data resource at to GDM for data model '{}' - transformed '{}' records with '{}' statements (data resource at '{}')",
+										type, dataModel.getUuid(), recordCount, statementCounter.get(), path);
+							})
 					.doOnSubscribe(() -> LOG.debug("subscribed to {} ingest", type))
 					.onBackpressureBuffer(10000)
 					.publish();
@@ -315,5 +329,5 @@ public abstract class ConverterEventRecorder<CONVERTER_EVENT_IMPL extends Conver
 	}
 
 	protected abstract Observable<GDMModel> convertData(final DataModel dataModel, final boolean utiliseExistingSchema, final Scheduler scheduler,
-			final String path, final boolean hasSchema);
+	                                                    final String path, final boolean hasSchema);
 }
