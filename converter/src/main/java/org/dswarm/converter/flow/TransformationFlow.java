@@ -27,6 +27,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
@@ -50,6 +52,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.culturegraph.mf.exceptions.MorphDefException;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.StreamPipe;
@@ -61,6 +64,7 @@ import org.slf4j.LoggerFactory;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscriber;
+import rx.observables.ConnectableObservable;
 import rx.schedulers.Schedulers;
 
 import org.dswarm.common.types.Tuple;
@@ -103,8 +107,8 @@ public class TransformationFlow {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TransformationFlow.class);
 
-	private static final String    TRANSFORMATION_ENGINE_IDENTIFIER = "transformation engine";
-	private static final Predicate RDF_TYPE_PREDICATE               = new Predicate(GDMUtil.RDF_type);
+	private static final String TRANSFORMATION_ENGINE_IDENTIFIER = "transformation engine";
+	private static final Predicate RDF_TYPE_PREDICATE = new Predicate(GDMUtil.RDF_type);
 
 	private final Map<String, ResourceNode> resourceNodeCache = new ConcurrentHashMap<>();
 
@@ -121,6 +125,14 @@ public class TransformationFlow {
 	private final TimerBasedFactory timerBasedFactory;
 
 	private final Timer morphTimer;
+
+	private static final String DSWARM_GDM_THREAD_NAMING_PATTERN = "dswarm-gdm-%d";
+
+	private static final ExecutorService GDM_EXECUTOR_SERVICE = Executors
+			.newCachedThreadPool(
+					new BasicThreadFactory.Builder().daemon(false).namingPattern(DSWARM_GDM_THREAD_NAMING_PATTERN).build());
+	private static final Scheduler GDM_SCHEDULER = Schedulers.from(GDM_EXECUTOR_SERVICE);
+
 
 	@Inject
 	private TransformationFlow(
@@ -255,7 +267,10 @@ public class TransformationFlow {
 		final AtomicInteger counter2 = new AtomicInteger(0);
 		final AtomicLong statementCounter = new AtomicLong(0);
 
-		final Observable<org.dswarm.persistence.model.internal.Model> model = writer.getObservable().filter(gdmModel -> {
+		final ConnectableObservable<GDMModel> modelConnectableObservable = writer.getObservable().onBackpressureBuffer(10000).publish();
+		final ConnectableObservable<org.dswarm.persistence.model.internal.Model> model = modelConnectableObservable
+				.doOnSubscribe(() -> TransformationFlow.LOG.debug("subscribed on transformation result observable"))
+				.filter(gdmModel -> {
 
 			if (counter.incrementAndGet() == 1) {
 
@@ -324,24 +339,43 @@ public class TransformationFlow {
 			return finalGDMModel;
 		}).cast(org.dswarm.persistence.model.internal.Model.class).doOnCompleted(
 				() -> LOG.info("processed '{}' records (from '{}') with '{}' statements in transformation engine", counter2.get(), counter.get(),
-						statementCounter.get()));
+						statementCounter.get())).publish();
+
+		modelConnectableObservable.connect();
 
 		final Observable<JsonNode> resultObservable;
+		final ConnectableObservable<JsonNode> connectableResultObservable;
 
 		if (doNotReturnJsonToCaller) {
 
 			resultObservable = Observable.empty();
+			connectableResultObservable = null;
 		} else {
 
-			resultObservable = model.onBackpressureBuffer(10000).map(org.dswarm.persistence.model.internal.Model::toJSON).flatMapIterable(nodes -> {
+			final AtomicInteger resultCounter = new AtomicInteger(0);
 
-				final ArrayList<JsonNode> nodeList = new ArrayList<>();
+			resultObservable = model.onBackpressureBuffer(10000).doOnSubscribe(() -> TransformationFlow.LOG.debug("subscribed to results observable in transformation engine"))
+					.doOnNext(resultObj -> {
 
-				Iterators.addAll(nodeList, nodes.elements());
+						resultCounter.incrementAndGet();
 
-				return nodeList;
-			});
+						if (resultCounter.get() == 1) {
+
+							TransformationFlow.LOG.debug("received first result in transformation engine");
+						}
+					}).doOnCompleted(() -> TransformationFlow.LOG.debug("received '{}' results in transformation engine overall", resultCounter.get()))
+					.map(org.dswarm.persistence.model.internal.Model::toJSON).flatMapIterable(nodes -> {
+
+						final ArrayList<JsonNode> nodeList = new ArrayList<>();
+
+						Iterators.addAll(nodeList, nodes.elements());
+
+						return nodeList;
+					}).onBackpressureBuffer(10000);
+
+			connectableResultObservable = resultObservable.publish();
 		}
+
 		final Observable<Response> writeResponse;
 
 		if (writeResultToDatahub) {
@@ -355,7 +389,7 @@ public class TransformationFlow {
 
 				try {
 
-					writeResponse = internalModelService.updateObject(outputDataModel.get().getUuid(), model.onBackpressureBuffer(10000), UpdateFormat.DELTA, enableVersioning);
+					writeResponse = internalModelService.updateObject(outputDataModel.get().getUuid(), model.observeOn(GDM_SCHEDULER).onBackpressureBuffer(10000), UpdateFormat.DELTA, enableVersioning);
 				} catch (final DMPPersistenceException e) {
 
 					final String message = "couldn't persist the result of the transformation: " + e.getMessage();
@@ -378,14 +412,32 @@ public class TransformationFlow {
 			writeResponse = Observable.empty();
 		}
 
+		model.connect();
+
 		return Observable.create(new Observable.OnSubscribe<JsonNode>() {
 
-			@Override public void call(final Subscriber<? super JsonNode> subscriber) {
+			@Override
+			public void call(final Subscriber<? super JsonNode> subscriber) {
 
-				resultObservable.subscribeOn(scheduler)
+				final Observable<JsonNode> finalResultObservable;
+
+				if(doNotReturnJsonToCaller) {
+
+					finalResultObservable = resultObservable;
+				} else {
+
+					finalResultObservable = connectableResultObservable;
+				}
+
+				finalResultObservable.subscribeOn(scheduler)
 						.compose(new AndThenWaitFor<>(writeResponse, DMPPersistenceUtil.getJSONObjectMapper()::createArrayNode))
 						.doOnCompleted(morphContext::stop)
 						.subscribe(subscriber);
+
+				if(!doNotReturnJsonToCaller) {
+
+					connectableResultObservable.connect();
+				}
 
 				final AtomicInteger counter = new AtomicInteger(0);
 
@@ -416,9 +468,9 @@ public class TransformationFlow {
 
 			final int outGoingCounter;
 
-			if(writeResultToDatahub) {
+			if (writeResultToDatahub) {
 
-				outGoingCounter = writer.getOutGoingCounter()/2;
+				outGoingCounter = writer.getOutGoingCounter() / 2;
 			} else {
 				outGoingCounter = writer.getOutGoingCounter();
 			}
@@ -429,7 +481,7 @@ public class TransformationFlow {
 	}
 
 	public Observable<JsonNode> apply(final Observable<Tuple<String, JsonNode>> tuples, final boolean writeResultToDatahub,
-			final boolean doNotReturnJsonToCaller, final boolean enableVersioning, final Scheduler scheduler) throws DMPConverterException {
+	                                  final boolean doNotReturnJsonToCaller, final boolean enableVersioning, final Scheduler scheduler) throws DMPConverterException {
 
 		final JsonNodeReader opener = new JsonNodeReader();
 
@@ -502,7 +554,7 @@ public class TransformationFlow {
 	private static class AndThenWaitFor<T, U> implements Observable.Transformer<T, T> {
 
 		private final Observable<U> other;
-		private final Supplier<T>   emptyResultValue;
+		private final Supplier<T> emptyResultValue;
 
 		public AndThenWaitFor(final Observable<U> other, final Supplier<T> emptyResultValue) {
 			this.other = other;
