@@ -37,10 +37,7 @@ import org.dswarm.converter.mf.stream.GDMEncoder;
 import org.dswarm.converter.mf.stream.GDMModelReceiver;
 import org.dswarm.converter.mf.stream.reader.JsonNodeReader;
 import org.dswarm.converter.pipe.timing.TimerBasedFactory;
-import org.dswarm.graph.json.Model;
-import org.dswarm.graph.json.Predicate;
-import org.dswarm.graph.json.Resource;
-import org.dswarm.graph.json.ResourceNode;
+import org.dswarm.graph.json.*;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.DMPObject;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
@@ -151,11 +148,11 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 	}
 
 	public ConnectableObservable<RESULTFORMAT> apply(final Observable<Tuple<String, JsonNode>> tuples,
-	                                      final ObjectPipe<Tuple<String, JsonNode>, StreamReceiver> opener,
-	                                      final boolean writeResultToDatahub,
-	                                      final boolean doNotReturnJsonToCaller,
-	                                      final boolean enableVersioning,
-	                                      final Scheduler scheduler) throws DMPConverterException {
+	                                                 final ObjectPipe<Tuple<String, JsonNode>, StreamReceiver> opener,
+	                                                 final boolean writeResultToDatahub,
+	                                                 final boolean doNotReturnJsonToCaller,
+	                                                 final boolean enableVersioning,
+	                                                 final Scheduler scheduler) throws DMPConverterException {
 
 		final MorphTask morphTask = new MorphTask(morphTimer, timerBasedFactory, outputDataModel, TRANSFORMATION_ENGINE_IDENTIFIER, optionalSkipFilter, opener, transformer);
 
@@ -188,10 +185,10 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 	}
 
 	public ConnectableObservable<RESULTFORMAT> apply(final Observable<Tuple<String, JsonNode>> tuples,
-	                                      final boolean writeResultToDatahub,
-	                                      final boolean doNotReturnJsonToCaller,
-	                                      final boolean enableVersioning,
-	                                      final Scheduler scheduler) throws DMPConverterException {
+	                                                 final boolean writeResultToDatahub,
+	                                                 final boolean doNotReturnJsonToCaller,
+	                                                 final boolean enableVersioning,
+	                                                 final Scheduler scheduler) throws DMPConverterException {
 
 		final JsonNodeReader opener = new JsonNodeReader();
 
@@ -277,127 +274,34 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 
 		return modelObservable
 				.doOnSubscribe(() -> TransformationFlow.LOG.debug("subscribed on transformation result observable"))
-				.filter(gdmModel -> {
+				.doOnNext(gdmModel1 -> {
 
 					if (counter.incrementAndGet() == 1) {
 
 						LOG.debug("start processing first record in transformation engine");
 					}
-
-					//final int current = counter.incrementAndGet();
-
-					//LOG.debug("processed resource model number '{}'", current);
-
-					final Model model1 = gdmModel.getModel();
-
-					if (model1 == null) {
-
-						LOG.debug("no model available");
-
-						return false;
-					}
-
-					final Collection<Resource> resources = model1.getResources();
-
-					if (resources == null || resources.isEmpty()) {
-
-						LOG.debug("no resources in model available");
-
-						return false;
-					}
-
-					//LOG.debug("processed resource model number '{}' with '{}' and resource size '{}'", current, resources.iterator().next().getUri(), resources.size());
-
-					final Set<String> recordURIsFromGDMModel = gdmModel.getRecordURIs();
-
-					return !(recordURIsFromGDMModel == null || recordURIsFromGDMModel.isEmpty());
 				})
-				.map(gdmModel -> {
+				.filter(TransformationFlow::validateGDMModel)
+				.map(this::optionallySetRecordURI)
+				.map(gdmModel3 -> optionallyEnhanceType(defaultRecordClassURI, gdmModel3))
+				.doOnNext(gdmModel4 -> {
 
-					final GDMModel finalGDMModel;
-
-					// TODO: this a WORKAROUND to insert a default type (data model schema record class URI or bibo:Document) for records in the output data model
-					if (gdmModel.getRecordClassURI() == null) {
-
-						final String recordURI = gdmModel.getRecordURIs().iterator().next();
-
-						final Resource recordResource = gdmModel.getModel().getResource(recordURI);
-
-						if (recordResource != null) {
-
-							// TODO check this: subject OK?
-							recordResource.addStatement(getOrCreateResourceNode(recordResource.getUri()), RDF_TYPE_PREDICATE,
-									getOrCreateResourceNode(defaultRecordClassURI));
-						}
-
-						// re-write GDM model
-						finalGDMModel = new GDMModel(gdmModel.getModel(), recordURI, defaultRecordClassURI);
-					} else {
-
-						finalGDMModel = gdmModel;
-					}
-
-					statementCounter.addAndGet(gdmModel.getModel().size());
+					statementCounter.addAndGet(gdmModel4.getModel().size());
 
 					if (counter2.incrementAndGet() == 1) {
 
 						LOG.info("processed first record with '{}' statements in transformation engine", statementCounter.get());
 					}
-
-					return finalGDMModel;
 				})
 				.cast(org.dswarm.persistence.model.internal.Model.class)
 				.doOnCompleted(() -> LOG.info("processed '{}' records (from '{}') with '{}' statements in transformation engine", counter2.get(), counter.get(), statementCounter.get())).publish();
 	}
 
-	protected Observable<Response> writeResultToDatahub(boolean writeResultToDatahub,
-	                                                    boolean enableVersioning,
+	protected Observable<Response> writeResultToDatahub(final boolean writeResultToDatahub,
+	                                                    final boolean enableVersioning,
 	                                                    final Observable<org.dswarm.persistence.model.internal.Model> model) {
 
-		final Observable<Response> writeResponse = writeResultToDatahubInternal(writeResultToDatahub, enableVersioning, model);
-
-		return writeResponse;
-	}
-
-	private Observable<Response> writeResultToDatahubInternal(final boolean writeResultToDatahub,
-	                                                          final boolean enableVersioning,
-	                                                          final Observable<org.dswarm.persistence.model.internal.Model> model) {
-
-		if (!writeResultToDatahub) {
-
-			return Observable.empty();
-		}
-
-		final Observable<Response> writeResponse;
-
-		LOG.debug("write transformation result to datahub");
-
-		if (hasDefined(outputDataModel, DMPObject::getUuid)) {
-
-			// write result to graph db
-			final InternalModelService internalModelService = internalModelServiceFactoryProvider.get().getInternalGDMGraphService();
-
-			try {
-
-				writeResponse = internalModelService.updateObject(outputDataModel.get().getUuid(), model.observeOn(GDM_SCHEDULER).onBackpressureBuffer(10000), UpdateFormat.DELTA, enableVersioning);
-			} catch (final DMPPersistenceException e) {
-
-				final String message = "couldn't persist the result of the transformation: " + e.getMessage();
-				TransformationFlow.LOG.error(message);
-
-				throw DMPConverterError.wrap(new DMPConverterException(message, e));
-			}
-
-		} else {
-
-			final String message = "couldn't persist the result of the transformation, because there is no output data model assigned at this task";
-
-			TransformationFlow.LOG.error(message);
-
-			writeResponse = Observable.empty();
-		}
-
-		return writeResponse;
+		return writeResultToDatahubInternal(writeResultToDatahub, enableVersioning, model);
 	}
 
 	protected abstract ConnectableObservable<RESULTFORMAT> transformResultModel(final Observable<org.dswarm.persistence.model.internal.Model> model);
@@ -487,6 +391,174 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 
 	protected static <T, U> boolean hasDefined(final Optional<T> optional, final Function<T, U> access) {
 		return exists(optional, t -> access.apply(t) != null);
+	}
+
+	private GDMModel optionallySetRecordURI(final GDMModel gdmModel) {
+
+
+		final Model model = gdmModel.getModel();
+
+		final String recordURI = gdmModel.getRecordURIs().iterator().next();
+
+		final Resource recordResource = model.getResource(recordURI);
+
+		// search for rdf:about statement
+		final Optional<Statement> optionalRdfAboutStatement = findRDFAboutStatement(recordResource);
+
+		if (!optionalRdfAboutStatement.isPresent()) {
+
+			// no rdf:about available -> keep record URI (and the whole model) as it is
+
+			return gdmModel;
+		}
+
+		final Statement rdfAboutStatement = optionalRdfAboutStatement.get();
+
+		final Node newRecordURINode = rdfAboutStatement.getObject();
+
+		if (!LiteralNode.class.isInstance(newRecordURINode)) {
+
+			// new record URI node should be a literal node
+
+			return gdmModel;
+		}
+
+		final String newRecordURI = ((LiteralNode) newRecordURINode).getValue();
+
+		final ResourceNode newRecordResourceNode = getOrCreateResourceNode(newRecordURI);
+
+		final Resource newRecordResource = new Resource(newRecordURI);
+
+		final Set<Statement> statements = recordResource.getStatements();
+
+		statements.stream()
+				.filter(statement -> !GDMUtil.RDF_about.equals(statement.getPredicate().getUri()))
+				.forEach(statement1 -> {
+
+					statement1.setSubject(newRecordResourceNode);
+					newRecordResource.addStatement(statement1);
+				});
+
+		final Model newModel = new Model();
+		newModel.addResource(newRecordResource);
+
+		model.getResources().stream()
+				.filter(resource -> !recordURI.equals(resource.getUri()))
+				.forEach(newModel::addResource);
+
+		return new GDMModel(newModel, newRecordURI, gdmModel.getRecordClassURI());
+	}
+
+	private GDMModel optionallyEnhanceType(final String defaultRecordClassURI,
+	                                       final GDMModel gdmModel) {
+
+		if (gdmModel.getRecordClassURI() != null) {
+
+			return gdmModel;
+		}
+
+		// TODO: this a WORKAROUND to insert a default type (data model schema record class URI or bibo:Document) for records in the output data model
+
+		final String recordURI = gdmModel.getRecordURIs().iterator().next();
+
+		final Resource recordResource = gdmModel.getModel().getResource(recordURI);
+
+		if (recordResource != null) {
+
+			// TODO check this: subject OK?
+			recordResource.addStatement(getOrCreateResourceNode(recordResource.getUri()), RDF_TYPE_PREDICATE,
+					getOrCreateResourceNode(defaultRecordClassURI));
+		}
+
+		// re-write GDM model
+		return new GDMModel(gdmModel.getModel(), recordURI, defaultRecordClassURI);
+	}
+
+	private Observable<Response> writeResultToDatahubInternal(final boolean writeResultToDatahub,
+	                                                          final boolean enableVersioning,
+	                                                          final Observable<org.dswarm.persistence.model.internal.Model> model) {
+
+		if (!writeResultToDatahub) {
+
+			return Observable.empty();
+		}
+
+		final Observable<Response> writeResponse;
+
+		LOG.debug("write transformation result to datahub");
+
+		if (hasDefined(outputDataModel, DMPObject::getUuid)) {
+
+			// write result to graph db
+			final InternalModelService internalModelService = internalModelServiceFactoryProvider.get().getInternalGDMGraphService();
+
+			try {
+
+				writeResponse = internalModelService.updateObject(outputDataModel.get().getUuid(), model.observeOn(GDM_SCHEDULER).onBackpressureBuffer(10000), UpdateFormat.DELTA, enableVersioning);
+			} catch (final DMPPersistenceException e) {
+
+				final String message = "couldn't persist the result of the transformation: " + e.getMessage();
+				TransformationFlow.LOG.error(message);
+
+				throw DMPConverterError.wrap(new DMPConverterException(message, e));
+			}
+
+		} else {
+
+			final String message = "couldn't persist the result of the transformation, because there is no output data model assigned at this task";
+
+			TransformationFlow.LOG.error(message);
+
+			writeResponse = Observable.empty();
+		}
+
+		return writeResponse;
+	}
+
+	private static Boolean validateGDMModel(final GDMModel gdmModel) {
+
+		//final int current = counter.incrementAndGet();
+
+		//LOG.debug("processed resource model number '{}'", current);
+
+		final Model model1 = gdmModel.getModel();
+
+		if (model1 == null) {
+
+			LOG.debug("no model available");
+
+			return false;
+		}
+
+		final Collection<Resource> resources = model1.getResources();
+
+		if (resources == null || resources.isEmpty()) {
+
+			LOG.debug("no resources in model available");
+
+			return false;
+		}
+
+		//LOG.debug("processed resource model number '{}' with '{}' and resource size '{}'", current, resources.iterator().next().getUri(), resources.size());
+
+		final Set<String> recordURIsFromGDMModel = gdmModel.getRecordURIs();
+
+		return !(recordURIsFromGDMModel == null || recordURIsFromGDMModel.isEmpty());
+	}
+
+	private static Optional<Statement> findRDFAboutStatement(final Resource recordResource) {
+
+		final Set<Statement> statements = recordResource.getStatements();
+
+		if (statements == null || statements.isEmpty()) {
+
+			return Optional.empty();
+		}
+
+		return statements.stream()
+				.filter(statement -> GDMUtil.RDF_about.equals(statement.getPredicate().getUri()))
+				.limit(1)
+				.findFirst();
 	}
 
 	protected static class AndThenWaitFor<T, U> implements Observable.Transformer<T, T> {
