@@ -17,16 +17,12 @@ package org.dswarm.converter;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.dswarm.converter.flow.CSVResourceFlowFactory;
-import org.dswarm.converter.flow.JsonResourceFlowFactory;
-import org.dswarm.converter.flow.TransformationFlowFactory;
-import org.dswarm.converter.flow.XmlResourceFlowFactory;
+import org.dswarm.converter.flow.*;
 import org.dswarm.converter.pipe.timing.TimerBasedFactory;
 import org.dswarm.converter.schema.SolrSchemaParser;
 import org.dswarm.converter.schema.XMLSchemaParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Guice configuration of the converter module. Interface/classes that are registered here can be utilised for injection.
@@ -35,7 +31,7 @@ import org.dswarm.converter.schema.XMLSchemaParser;
  */
 public class ConverterModule extends AbstractModule {
 
-	private static final Logger	LOG	= LoggerFactory.getLogger(ConverterModule.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ConverterModule.class);
 
 	@Override
 	protected void configure() {
@@ -45,7 +41,8 @@ public class ConverterModule extends AbstractModule {
 
 		install(new FactoryModuleBuilder().build(CSVResourceFlowFactory.class));
 		install(new FactoryModuleBuilder().build(TimerBasedFactory.class));
-		install(new FactoryModuleBuilder().build(TransformationFlowFactory.class));
+		install(new FactoryModuleBuilder().build(JSONTransformationFlowFactory.class));
+		install(new FactoryModuleBuilder().build(GDMModelTransformationFlowFactory.class));
 		install(new FactoryModuleBuilder().build(XmlResourceFlowFactory.class));
 		install(new FactoryModuleBuilder().build(JsonResourceFlowFactory.class));
 	}

@@ -37,6 +37,7 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.io.Resources;
 import com.google.inject.Key;
 import org.apache.commons.io.FileUtils;
+import org.dswarm.controller.resources.job.test.utils.TasksResourceTestUtils;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
@@ -290,7 +291,7 @@ public class TasksCsvResourceTest5 extends ResourceTest {
 				final String recordData = expectedNode.get(DMPPersistenceUtil.RECORD_DATA).get(0)
 						.get(expectedDataResourceSchemaBaseURI + "description")
 						.asText();
-				final JsonNode actualNode = getRecordData(recordData, actualJSONArray, actualDataResourceSchemaBaseURI + "description");
+				final JsonNode actualNode = TasksResourceTestUtils.getRecordData(recordData, actualJSONArray, actualDataResourceSchemaBaseURI + "description");
 
 				// SR TODO use Assert.assertNotNull here?
 				Assert.assertThat(actualNode, CoreMatchers.is(Matchers.notNullValue()));
@@ -329,28 +330,5 @@ public class TasksCsvResourceTest5 extends ResourceTest {
 		Assert.assertNotNull("the data model schema record class shouldn't be null", schema.getRecordClass());
 
 		TasksCsvResourceTest5.LOG.debug("end task execution test");
-	}
-
-	private JsonNode getRecordData(final String recordData, final ArrayNode jsonArray, final String key) {
-
-		for (final JsonNode jsonEntry : jsonArray) {
-
-			final ArrayNode actualRecordDataArray = (ArrayNode) jsonEntry.get(DMPPersistenceUtil.RECORD_DATA);
-
-			for (final JsonNode actualRecordData : actualRecordDataArray) {
-
-				if (actualRecordData.get(key) == null) {
-
-					continue;
-				}
-
-				if (recordData.equals(actualRecordData.get(key).asText())) {
-
-					return jsonEntry;
-				}
-			}
-		}
-
-		return null;
 	}
 }

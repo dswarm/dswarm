@@ -1,0 +1,8 @@
+<http://data.slub-dresden.de/datamodels/DataModel-72c9e3f5-34a9-4ba4-9c2f-8c516bfb5394/records/f79b3c3e-2d37-4c20-a4f6-019375b8623b> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> <http://data.slub-dresden.de/resource/eb89c708-9836-4d0f-849c-d29e1d04f3b4> .
+<http://data.slub-dresden.de/datamodels/DataModel-72c9e3f5-34a9-4ba4-9c2f-8c516bfb5394/records/f79b3c3e-2d37-4c20-a4f6-019375b8623b> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/ontology/bibo/Document> .
+<http://data.slub-dresden.de/resource/eb89c708-9836-4d0f-849c-d29e1d04f3b4> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/resource/eb89c708-9836-4d0f-849c-d29e1d04f3b4> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp2?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/resource/eb89c708-9836-4d0f-849c-d29e1d04f3b4> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/resource/eb89c708-9836-4d0f-849c-d29e1d04f3b4> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp5?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/resource/eb89c708-9836-4d0f-849c-d29e1d04f3b4> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/resource/eb89c708-9836-4d0f-849c-d29e1d04f3b4> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>" .

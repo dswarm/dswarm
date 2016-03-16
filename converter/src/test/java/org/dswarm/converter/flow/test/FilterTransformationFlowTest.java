@@ -25,13 +25,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.dswarm.converter.flow.JSONTransformationFlow;
+import org.dswarm.converter.flow.JSONTransformationFlowFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import org.dswarm.converter.GuicedTest;
-import org.dswarm.converter.flow.TransformationFlow;
-import org.dswarm.converter.flow.TransformationFlowFactory;
 import org.dswarm.converter.flow.utils.DMPConverterUtils;
 import org.dswarm.converter.morph.MorphScriptBuilder;
 import org.dswarm.persistence.model.job.Task;
@@ -204,8 +204,8 @@ public class FilterTransformationFlowTest extends GuicedTest {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString("test-mabxml.filter.morphscript.result.json");
 
-		final TransformationFlowFactory flowFactory = GuicedTest.injector
-				.getInstance(TransformationFlowFactory.class);
+		final JSONTransformationFlowFactory flowFactory = GuicedTest.injector
+				.getInstance(JSONTransformationFlowFactory.class);
 
 		final String request = DMPPersistenceUtil.getResourceAsString("task.filter.json");
 
@@ -215,7 +215,7 @@ public class FilterTransformationFlowTest extends GuicedTest {
 
 		final String morphScriptString = new MorphScriptBuilder().apply(task).toString();
 
-		final TransformationFlow flow = flowFactory.fromString(morphScriptString);
+		final JSONTransformationFlow flow = flowFactory.fromString(morphScriptString);
 
 		flow.getScript();
 
@@ -237,10 +237,10 @@ public class FilterTransformationFlowTest extends GuicedTest {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString(resultFileName);
 
-		final TransformationFlowFactory flowFactory = GuicedTest.injector
-				.getInstance(TransformationFlowFactory.class);
+		final JSONTransformationFlowFactory flowFactory = GuicedTest.injector
+				.getInstance(JSONTransformationFlowFactory.class);
 
-		final TransformationFlow flow;
+		final JSONTransformationFlow flow;
 
 		if (optionalSkipFilterMorphScriptFileName.isPresent()) {
 

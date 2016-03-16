@@ -21,12 +21,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import org.dswarm.converter.flow.JSONTransformationFlow;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import org.dswarm.converter.GuicedTest;
-import org.dswarm.converter.flow.TransformationFlow;
-import org.dswarm.converter.flow.TransformationFlowFactory;
+import org.dswarm.converter.flow.JSONTransformationFlowFactory;
 import org.dswarm.persistence.model.job.Task;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
@@ -126,8 +126,8 @@ public class CSVTransformationFlowTest extends GuicedTest {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString(taskResultJSONFileName);
 
-		final TransformationFlowFactory flowFactory = GuicedTest.injector
-				.getInstance(TransformationFlowFactory.class);
+		final JSONTransformationFlowFactory flowFactory = GuicedTest.injector
+				.getInstance(JSONTransformationFlowFactory.class);
 
 		final String finalTaskJSONString = DMPPersistenceUtil.getResourceAsString(taskJSONFileName);
 		final ObjectMapper objectMapper = DMPPersistenceUtil.getJSONObjectMapper();
@@ -139,7 +139,7 @@ public class CSVTransformationFlowTest extends GuicedTest {
 
 		final Task task = objectMapper.readValue(finalTaskJSONString, Task.class);
 
-		final TransformationFlow flow = flowFactory.fromTask(task);
+		final JSONTransformationFlow flow = flowFactory.fromTask(task);
 
 		flow.getScript();
 
@@ -159,8 +159,8 @@ public class CSVTransformationFlowTest extends GuicedTest {
 
 		final String expected = DMPPersistenceUtil.getResourceAsString(resultJSONFileName);
 
-		final TransformationFlowFactory flowFactory = GuicedTest.injector
-				.getInstance(TransformationFlowFactory.class);
+		final JSONTransformationFlowFactory flowFactory = GuicedTest.injector
+				.getInstance(JSONTransformationFlowFactory.class);
 
 		// looks like that the utilised ObjectMappers getting a bit mixed, i.e., actual sometimes delivers a result that is not in
 		// pretty print and sometimes it is in pretty print ... (that's why the reformatting of both - expected and actual)
@@ -169,7 +169,7 @@ public class CSVTransformationFlowTest extends GuicedTest {
 
 		// final Task task = objectMapper.readValue(finalTaskJSONString, Task.class);
 
-		final TransformationFlow flow;
+		final JSONTransformationFlow flow;
 
 		if (optionalSkipFilterMorphXMLFileName.isPresent()) {
 

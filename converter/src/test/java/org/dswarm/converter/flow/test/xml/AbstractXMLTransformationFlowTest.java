@@ -30,15 +30,16 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.collect.AbstractIterator;
 import com.google.inject.Provider;
+import org.dswarm.converter.flow.JSONTransformationFlowFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import rx.Observable;
+import rx.observables.ConnectableObservable;
 import rx.schedulers.Schedulers;
 
 import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.GuicedTest;
-import org.dswarm.converter.flow.TransformationFlow;
-import org.dswarm.converter.flow.TransformationFlowFactory;
+import org.dswarm.converter.flow.JSONTransformationFlow;
 import org.dswarm.converter.flow.XMLSourceResourceGDMStmtsFlow;
 import org.dswarm.converter.flow.XmlResourceFlowFactory;
 import org.dswarm.persistence.model.internal.Model;
@@ -224,17 +225,20 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		final Task task = objectMapper.get().readValue(finalTaskJSONString, Task.class);
 
-		final TransformationFlowFactory flowFactory = GuicedTest.injector
-				.getInstance(TransformationFlowFactory.class);
+		final JSONTransformationFlowFactory flowFactory = GuicedTest.injector
+				.getInstance(JSONTransformationFlowFactory.class);
 
-		final TransformationFlow flow = flowFactory.fromTask(task);
+		final JSONTransformationFlow flow = flowFactory.fromTask(task);
 
 		flow.getScript();
 
-		final ArrayNode actual = flow.apply(tuples, true, false, true, Schedulers.newThread()).reduce(
+		final ConnectableObservable<JsonNode> apply = flow.apply(tuples, true, false, true, Schedulers.newThread());
+		final Observable<ArrayNode> reduce = apply.reduce(
 				DMPPersistenceUtil.getJSONObjectMapper().createArrayNode(),
 				ArrayNode::add
-		).toBlocking().first();
+		);
+		apply.connect();
+		final ArrayNode actual = reduce.toBlocking().first();
 
 		compareResults(expected, actual);
 
