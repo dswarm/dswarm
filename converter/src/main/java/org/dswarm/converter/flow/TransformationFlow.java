@@ -557,7 +557,6 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 
 		return statements.stream()
 				.filter(statement -> GDMUtil.RDF_about.equals(statement.getPredicate().getUri()))
-				.limit(1)
 				.findFirst();
 	}
 
