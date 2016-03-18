@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2013 – 2016 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,8 +17,6 @@ package org.dswarm.persistence.service.schema.test.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.json.JSONException;
-
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.Schema;
@@ -26,6 +24,9 @@ import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.proxy.ProxySchemaAttributePathInstance;
 import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
+import org.json.JSONException;
+
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -49,17 +50,20 @@ public class SchemaAttributePathInstanceServiceTestUtils extends
 		sstUtils = schemaServiceTestUtils;
 	}
 
-	@Override public SchemaAttributePathInstance createObject(String identifier) throws Exception {
+	@Override
+	public SchemaAttributePathInstance createObject(String identifier) throws Exception {
 
 		return null;
 	}
 
-	@Override public SchemaAttributePathInstance createAndPersistDefaultObject() throws Exception {
+	@Override
+	public SchemaAttributePathInstance createAndPersistDefaultObject() throws Exception {
 
 		return getDctermsTitleDctermsHaspartDctermsTitleSAPI();
 	}
 
-	@Override public SchemaAttributePathInstance createDefaultObject() throws Exception {
+	@Override
+	public SchemaAttributePathInstance createDefaultObject() throws Exception {
 		return null;
 	}
 
@@ -91,12 +95,24 @@ public class SchemaAttributePathInstanceServiceTestUtils extends
 	 */
 	@Override
 	public void compareObjects(final SchemaAttributePathInstance expectedSchemaAttributePathInstance,
-			final SchemaAttributePathInstance actualSchemaAttributePathInstance) throws JsonProcessingException, JSONException {
+	                           final SchemaAttributePathInstance actualSchemaAttributePathInstance) throws JsonProcessingException, JSONException {
 
 		super.compareObjects(expectedSchemaAttributePathInstance, actualSchemaAttributePathInstance);
 
 		assertEquals("the subschema should be equal", expectedSchemaAttributePathInstance.getSubSchema(),
 				actualSchemaAttributePathInstance.getSubSchema());
+	}
+
+	public SchemaAttributePathInstance createOrGetSchemaAttributePathInstance(final String uuid, final String name, final AttributePath attributePath, final Schema subSchema) throws Exception {
+
+		final Optional<SchemaAttributePathInstance> optionalSapi = Optional.ofNullable(this.getJpaService().getObject(uuid));
+
+		if(optionalSapi.isPresent()) {
+
+			return optionalSapi.get();
+		}
+
+		return createSchemaAttributePathInstance(name, attributePath, subSchema);
 	}
 
 	public SchemaAttributePathInstance createSchemaAttributePathInstance(final String name, final AttributePath attributePath, final Schema subSchema)
@@ -116,6 +132,18 @@ public class SchemaAttributePathInstanceServiceTestUtils extends
 
 	public SchemaAttributePathInstance createSchemaAttributePathInstance(final String name, final AttributePath attributePath) throws Exception {
 		return createSchemaAttributePathInstance(name, attributePath, null);
+	}
+
+	public SchemaAttributePathInstance createOrGetSchemaAttributePathInstance(final String uuid, final AttributePath attributePath) throws Exception {
+
+		final Optional<SchemaAttributePathInstance> optionalSapi = Optional.ofNullable(this.getJpaService().getObject(uuid));
+
+		if(optionalSapi.isPresent()) {
+
+			return optionalSapi.get();
+		}
+
+		return createSchemaAttributePathInstance(attributePath);
 	}
 
 	public SchemaAttributePathInstance createSchemaAttributePathInstance(final AttributePath attributePath) throws Exception {
@@ -150,7 +178,8 @@ public class SchemaAttributePathInstanceServiceTestUtils extends
 		return createSchemaAttributePathInstance(null, attributePath, subSchema);
 	}
 
-	@Override public SchemaAttributePathInstance createAndPersistDefaultCompleteObject() throws Exception {
+	@Override
+	public SchemaAttributePathInstance createAndPersistDefaultCompleteObject() throws Exception {
 
 		final SchemaAttributePathInstance sapi = createAndPersistDefaultObject();
 		sapi.setSubSchema(sstUtils.createAndPersistDefaultObject());
@@ -163,7 +192,7 @@ public class SchemaAttributePathInstanceServiceTestUtils extends
 	 */
 	@Override
 	protected SchemaAttributePathInstance prepareObjectForUpdate(final SchemaAttributePathInstance objectWithUpdates,
-			final SchemaAttributePathInstance object) {
+	                                                             final SchemaAttributePathInstance object) {
 		super.prepareObjectForUpdate(objectWithUpdates, object);
 		object.setSubSchema(objectWithUpdates.getSubSchema());
 		return object;
@@ -171,7 +200,7 @@ public class SchemaAttributePathInstanceServiceTestUtils extends
 
 	@Override
 	protected SchemaAttributePathInstance createAttributePathInstance(final String name, final AttributePath attributePath,
-			final JsonNode objectDescription) throws Exception {
+	                                                                  final JsonNode objectDescription) throws Exception {
 		//TODO externalize keys (sub_schema)
 		final JsonNode schemaJson = objectDescription.get("sub_schema") != null ? objectDescription.get("sub_schema") : null;
 		final Schema subSchema = sstUtils.createObject(schemaJson);

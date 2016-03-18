@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2013 – 2016 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,21 +15,29 @@
  */
 package org.dswarm.converter.schema.test;
 
-import java.io.File;
-
-import com.google.inject.Key;
-import com.google.inject.name.Names;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.init.util.CmdUtil;
+import org.dswarm.persistence.DMPPersistenceError;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
-import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.model.schema.*;
+import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 import org.dswarm.persistence.service.resource.DataModelService;
+import org.dswarm.persistence.service.schema.*;
 import org.dswarm.persistence.service.schema.test.internalmodel.BiboDocumentSchemaBuilder;
 import org.dswarm.persistence.service.schema.test.internalmodel.BibrmContractItemSchemaBuilder;
 import org.dswarm.persistence.service.schema.test.utils.AttributeServiceTestUtils;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
+import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Serves as a preliminary place for triggering the build of a script that populates the database with initially required internal
@@ -41,21 +49,56 @@ import org.dswarm.persistence.service.schema.test.utils.AttributeServiceTestUtil
 public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 
 	private DataModelService dataModelService;
+	private AttributeService attributeService;
+	private ClaszService classService;
+	private AttributePathService attributePathService;
+	private SchemaAttributePathInstanceService schemaAttributePathInstanceService;
+	private SchemaService schemaService;
+
+	private Map<String, String> attributes = new HashMap<>();
+	private Map<String, String> classes = new HashMap<>();
+	private Map<String, String> attributePaths = new HashMap<>();
+	private Map<String, String> sapis = new HashMap<>();
+	private Map<String, String> schemata = new HashMap<>();
+	private Map<String, String> subSchemata = new HashMap<>();
+
+	private Map<String, Map<String, String>> schemaAttributePathsSAPIUUIDs = new HashMap<>();
 
 	@Override
 	public void prepare() throws Exception {
-		GuicedTest.tearDown();
-		GuicedTest.startUp();
-		initObjects();
-		maintainDBService.createTables();
-		maintainDBService.truncateTables();
+		init();
+
+		// create inbuilt schemata from existing script
+		maintainDBService.initDB();
+
+		// retrieve all data that should be preserved
+		preserveData();
+
+		// clean tables
+		tearDown3();
+		init();
+
+		// replay preserved data
+		replayPreservedData();
+
+		// create helpers
+		createHelpers();
+
+		//maintainDBService.createTables();
+		//maintainDBService.truncateTables();
 	}
 
-	@Override public void tearDown3() throws Exception {
+	private void init() throws Exception {
 
 		GuicedTest.tearDown();
 		GuicedTest.startUp();
 		initObjects();
+	}
+
+	@Override
+	public void tearDown3() throws Exception {
+
+		init();
 		maintainDBService.truncateTables();
 	}
 
@@ -63,14 +106,24 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 	protected void initObjects() {
 
 		super.initObjects();
-		dataModelService = GuicedTest.injector.getInstance(DataModelService.class);
+		injectPersistenceServices();
 	}
 
-	//@Test
+	private void injectPersistenceServices() {
+
+		dataModelService = GuicedTest.injector.getInstance(DataModelService.class);
+		attributeService = GuicedTest.injector.getInstance(AttributeService.class);
+		classService = GuicedTest.injector.getInstance(ClaszService.class);
+		attributePathService = GuicedTest.injector.getInstance(AttributePathService.class);
+		schemaAttributePathInstanceService = GuicedTest.injector.getInstance(SchemaAttributePathInstanceService.class);
+		schemaService = GuicedTest.injector.getInstance(SchemaService.class);
+	}
+
+	@Test
 	public void buildScript() throws Exception {
 
-		final Schema bibrmContractSchema = new BibrmContractItemSchemaBuilder().buildSchema();
-		final Schema biboDocumentSchema = new BiboDocumentSchemaBuilder().buildSchema();
+		final Schema bibrmContractSchema = new BibrmContractItemSchemaBuilder(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.BIBRM_CONTRACT_ITEM_SCHEMA_UUID))).buildSchema();
+		final Schema biboDocumentSchema = new BiboDocumentSchemaBuilder(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.BIBO_DOCUMENT_SCHEMA_UUID))).buildSchema();
 		final Schema mabxmlSchema = XMLSchemaParserTest.parseMabxmlSchema();
 		final Schema pnxSchema = XMLSchemaParserTest.parsePNXSchema();
 		final Schema marc21Schema = XMLSchemaParserTest.parseMarc21Schema();
@@ -145,4 +198,211 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		dataModelService.createObjectTransactional(dataModel);
 	}
 
+	private void preserveData() {
+
+		preserveAttributes();
+		preserveClasses();
+		preserveAttributePaths();
+		preserveSAPIs();
+		preserveSchemata();
+	}
+
+	private void preserveAttributes() {
+
+		final List<Attribute> attributeList = attributeService.getObjects();
+
+		attributeList.forEach(attribute -> {
+
+			try {
+
+				attributes.put(attribute.getUuid(), DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(attribute));
+			} catch (final JsonProcessingException e) {
+
+				DMPPersistenceError.wrap(new DMPPersistenceException("something went wrong", e));
+			}
+		});
+	}
+
+	private void preserveClasses() {
+
+		final List<Clasz> claszList = classService.getObjects();
+
+		claszList.forEach(clasz -> {
+
+			try {
+
+				classes.put(clasz.getUuid(), DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(clasz));
+			} catch (final JsonProcessingException e) {
+
+				DMPPersistenceError.wrap(new DMPPersistenceException("something went wrong", e));
+			}
+		});
+	}
+
+	private void preserveAttributePaths() {
+
+		final List<AttributePath> attributePathList = attributePathService.getObjects();
+
+		attributePathList.forEach(attributePath -> {
+
+			try {
+
+				attributePaths.put(attributePath.getUuid(), DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(attributePath));
+			} catch (final JsonProcessingException e) {
+
+				DMPPersistenceError.wrap(new DMPPersistenceException("something went wrong", e));
+			}
+		});
+	}
+
+	private void preserveSAPIs() {
+
+		final List<SchemaAttributePathInstance> sapiList = schemaAttributePathInstanceService.getObjects();
+
+		sapiList.forEach(sapi -> {
+
+			try {
+
+				final Schema subSchema = sapi.getSubSchema();
+
+				if (subSchema != null) {
+
+					subSchemata.put(subSchema.getUuid(), DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(subSchema));
+				}
+
+				sapis.put(sapi.getUuid(), DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(sapi));
+			} catch (final JsonProcessingException e) {
+
+				DMPPersistenceError.wrap(new DMPPersistenceException("something went wrong", e));
+			}
+		});
+	}
+
+	private void preserveSchemata() {
+
+		final List<Schema> schemaList = schemaService.getObjects();
+
+		schemaList.forEach(schema -> {
+
+			try {
+
+				schemata.put(schema.getUuid(), DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(schema));
+			} catch (final JsonProcessingException e) {
+
+				DMPPersistenceError.wrap(new DMPPersistenceException("something went wrong", e));
+			}
+		});
+	}
+
+	private void replayPreservedData() {
+
+		replayAttributes();
+		replayClasses();
+		replayAttributePaths();
+		replaySubSchemata();
+		replaySAPIs();
+	}
+
+	private void replayAttributes() {
+
+		attributes.forEach((uuid, attributeString) -> {
+
+			try {
+
+				final Attribute attribute = DMPPersistenceUtil.getJSONObjectMapper().readValue(attributeString, Attribute.class);
+
+				attributeService.createObjectTransactional(attribute);
+			} catch (final IOException | DMPPersistenceException e) {
+
+				DMPPersistenceError.wrap(new DMPPersistenceException("something went wrong", e));
+			}
+		});
+	}
+
+	private void replayClasses() {
+
+		classes.forEach((uuid, claszString) -> {
+
+			try {
+
+				final Clasz clasz = DMPPersistenceUtil.getJSONObjectMapper().readValue(claszString, Clasz.class);
+
+				classService.createObjectTransactional(clasz);
+			} catch (final IOException | DMPPersistenceException e) {
+
+				DMPPersistenceError.wrap(new DMPPersistenceException("something went wrong", e));
+			}
+		});
+	}
+
+	private void replayAttributePaths() {
+
+		attributePaths.forEach((uuid, attributePathString) -> {
+
+			try {
+
+				final AttributePath attributePath = DMPPersistenceUtil.getJSONObjectMapper().readValue(attributePathString, AttributePath.class);
+
+				attributePathService.createObjectTransactional(attributePath);
+			} catch (final IOException | DMPPersistenceException e) {
+
+				DMPPersistenceError.wrap(new DMPPersistenceException("something went wrong", e));
+			}
+		});
+	}
+
+	private void replaySubSchemata() {
+
+		subSchemata.forEach((uuid, subSchemaString) -> {
+
+			try {
+
+				final Schema subSchema = DMPPersistenceUtil.getJSONObjectMapper().readValue(subSchemaString, Schema.class);
+
+				subSchema.setAttributePaths(null);
+				subSchema.setRecordClass(null);
+
+				schemaService.createObjectTransactional(subSchema);
+			} catch (final IOException | DMPPersistenceException e) {
+
+				DMPPersistenceError.wrap(new DMPPersistenceException("something went wrong", e));
+			}
+		});
+	}
+
+	private void replaySAPIs() {
+
+		sapis.forEach((uuid, sapiString) -> {
+
+			try {
+
+				final SchemaAttributePathInstance sapi = DMPPersistenceUtil.getJSONObjectMapper().readValue(sapiString, SchemaAttributePathInstance.class);
+
+				schemaAttributePathInstanceService.createObjectTransactional(sapi);
+			} catch (final IOException | DMPPersistenceException e) {
+
+				DMPPersistenceError.wrap(new DMPPersistenceException("something went wrong", e));
+			}
+		});
+	}
+
+	private void createHelpers() {
+
+		schemata.forEach((uuid, schemaString) -> {
+
+			try {
+
+				final Schema schema = DMPPersistenceUtil.getJSONObjectMapper().readValue(schemaString, Schema.class);
+
+				final Map<String, String> attributePathsSAPIUUIDs = new HashMap<>();
+
+				schema.getAttributePaths().forEach(sapi -> attributePathsSAPIUUIDs.put(sapi.getAttributePath().toAttributePath(), sapi.getUuid()));
+
+				schemaAttributePathsSAPIUUIDs.put(schema.getUuid(), attributePathsSAPIUUIDs);
+			} catch (final IOException e) {
+
+				DMPPersistenceError.wrap(new DMPPersistenceException("something went wrong", e));
+			}
+		});
+	}
 }
