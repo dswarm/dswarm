@@ -742,7 +742,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 			// do schema determination, i.e., append inbuilt schema, if it can be derived from the config
 			final SchemaDeterminator schemaDeterminator = schemaDeterminatorProvider.get();
-			final DataModel freshDataModel = schemaDeterminator.getSchemaInternal(dataModel.getUuid());
+			final DataModel freshDataModel = schemaDeterminator.determineSchema(dataModel.getUuid());
 
 			final ProxyDataModel freshProxyDataModel = new ProxyDataModel(freshDataModel, proxyDataModel.getType());
 
