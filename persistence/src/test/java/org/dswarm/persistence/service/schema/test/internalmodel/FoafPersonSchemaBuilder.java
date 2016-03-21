@@ -45,6 +45,9 @@ public class FoafPersonSchemaBuilder extends SchemaBuilder {
 
 		final Clasz clasz = claszServiceTestUtils.createObject(NameSpacePrefixRegistry.FOAF + "Person", "Person");
 
+		// for record identifier generating
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("rdf:about"));
+
 		// basic properties as an example:
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("rdf:type"));
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("foaf:familyName"));

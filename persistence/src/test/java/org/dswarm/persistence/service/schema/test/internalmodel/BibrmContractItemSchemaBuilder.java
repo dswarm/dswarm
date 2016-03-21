@@ -48,6 +48,9 @@ public class BibrmContractItemSchemaBuilder extends SchemaBuilder {
 
 		final Clasz clasz = claszServiceTestUtils.createObject(NameSpacePrefixRegistry.BIBRM + "ContractItem", "ContractItem");
 
+		// for record identifier generating
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("rdf:about"));
+
 		// basic properties for ERM example
 		// tempSchema.addAttributePath(builder.parsePrefixPath("bibrm:hasItem")); // this needs to go to the schema of Contract
 		// itself
