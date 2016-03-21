@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2013 – 2016 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
- * <p>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,14 +25,21 @@ import java.util.Optional;
 
 public class BiboDocumentSchemaBuilder extends SchemaBuilder {
 
+	private final Optional<Map<String, String>> optionalSubSchemaAttributePathsSAPIUUIDs;
+
 	public BiboDocumentSchemaBuilder() {
 
 		super();
+
+		optionalSubSchemaAttributePathsSAPIUUIDs = Optional.empty();
 	}
 
-	public BiboDocumentSchemaBuilder(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDsArg) {
+	public BiboDocumentSchemaBuilder(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDsArg,
+	                                 final Optional<Map<String, String>> optionalSubSchemaAttributePathsSAPIUUIDsArg) {
 
 		super(optionalAttributePathsSAPIUUIDsArg);
+
+		optionalSubSchemaAttributePathsSAPIUUIDs = optionalSubSchemaAttributePathsSAPIUUIDsArg;
 	}
 
 	@Override
@@ -59,7 +66,7 @@ public class BiboDocumentSchemaBuilder extends SchemaBuilder {
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dc:contributor"));
 		{
 			// add "deep" paths as schema attribute path instances with attached sub-schemata ...
-			final Schema foafPersonSchema = new FoafPersonSchemaBuilder().buildSchema();
+			final Schema foafPersonSchema = new FoafPersonSchemaBuilder(optionalSubSchemaAttributePathsSAPIUUIDs).buildSchema();
 			tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:creator", foafPersonSchema));
 			tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:contributor", foafPersonSchema));
 		}

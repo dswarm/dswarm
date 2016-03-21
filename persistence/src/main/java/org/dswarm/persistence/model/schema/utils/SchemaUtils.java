@@ -15,73 +15,53 @@
  */
 package org.dswarm.persistence.model.schema.utils;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-
-import javax.annotation.Nullable;
-
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import com.google.common.net.UrlEscapers;
 import com.google.inject.Provider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import org.dswarm.common.model.util.AttributePathUtil;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.AdvancedDMPJPAObject;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
 import org.dswarm.persistence.model.proxy.RetrievalType;
 import org.dswarm.persistence.model.resource.DataModel;
-import org.dswarm.persistence.model.schema.Attribute;
-import org.dswarm.persistence.model.schema.AttributePath;
-import org.dswarm.persistence.model.schema.Clasz;
-import org.dswarm.persistence.model.schema.Schema;
-import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
-import org.dswarm.persistence.model.schema.proxy.ProxyAttribute;
-import org.dswarm.persistence.model.schema.proxy.ProxyAttributePath;
-import org.dswarm.persistence.model.schema.proxy.ProxyClasz;
-import org.dswarm.persistence.model.schema.proxy.ProxySchema;
-import org.dswarm.persistence.model.schema.proxy.ProxySchemaAttributePathInstance;
+import org.dswarm.persistence.model.schema.*;
+import org.dswarm.persistence.model.schema.proxy.*;
 import org.dswarm.persistence.model.utils.BasicDMPJPAObjectUtils;
-import org.dswarm.persistence.service.schema.AttributePathService;
-import org.dswarm.persistence.service.schema.AttributeService;
-import org.dswarm.persistence.service.schema.ClaszService;
-import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
-import org.dswarm.persistence.service.schema.SchemaService;
+import org.dswarm.persistence.service.schema.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nullable;
+import java.net.URI;
+import java.util.*;
 
 /**
  * @author tgaengler
  */
 public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
-	private static final Logger LOG                 = LoggerFactory.getLogger(SchemaUtils.class);
-	public static final  String BASE_URI            = "http://data.slub-dresden.de/";
-	private static final String RECORD_BASE_URI     = BASE_URI + "records/";
-	public static final  String DATA_MODEL_BASE_URI = BASE_URI + "datamodels/";
+	private static final Logger LOG = LoggerFactory.getLogger(SchemaUtils.class);
+	public static final String BASE_URI = "http://data.slub-dresden.de/";
+	private static final String RECORD_BASE_URI = BASE_URI + "records/";
+	public static final String DATA_MODEL_BASE_URI = BASE_URI + "datamodels/";
 	private static final String RECORD_RELATIVE_URI = "/records/";
-	private static final String TERM_BASE_URI       = BASE_URI + "terms/%s";
-	public static final  String HASH                = "#";
-	public static final  String SLASH               = "/";
-	public static final  String TYPE_POSTFIX        = "Type";
-	private static final String SCHEMA_BASE_URI     = BASE_URI + "schemas/";
+	private static final String TERM_BASE_URI = BASE_URI + "terms/%s";
+	public static final String HASH = "#";
+	public static final String SLASH = "/";
+	public static final String TYPE_POSTFIX = "Type";
+	private static final String SCHEMA_BASE_URI = BASE_URI + "schemas/";
 
-	public static final String MABXML_SCHEMA_UUID                      = "Schema-d87ba5c2-b02b-481d-a62d-2b46dd66d347";
-	public static final String BIBRM_CONTRACT_ITEM_SCHEMA_UUID         = "Schema-70228b28-10fc-43fe-9d3e-ad22b038ebdf";
-	public static final String BIBO_DOCUMENT_SCHEMA_UUID               = "Schema-ff62ec21-0a11-4c27-a704-d7ca53a21521";
-	public static final String FOAF_SCHEMA_UUID                        = "Schema-309e901c-3da9-4d82-a694-bab632eaa340";
-	public static final String PNX_SCHEMA_UUID                         = "Schema-dbc97499-278d-4551-a65e-8e8bb219ca6c";
-	public static final String MARC21_SCHEMA_UUID                      = "Schema-781d73f0-d115-462e-9b4c-ec23e4251c8d";
-	public static final String FINC_SOLR_SCHEMA_UUID                   = "Schema-5664ba0e-ccb3-4b71-8823-13281490de30";
-	public static final String OAI_PMH_DC_ELEMENTS_SCHEMA_UUID         = "Schema-cb8f4b96-9ab2-4972-88f8-143656199518";
-	public static final String OAI_PMH_DC_TERMS_SCHEMA_UUID            = "Schema-8fefbced-c2f2-478c-a22a-debb122e05de";
-	public static final String OAI_PMH_MARCXML_SCHEMA_UUID             = "Schema-5ca8e59f-0f40-4f17-8237-e5d0a6e83f18";
+	public static final String MABXML_SCHEMA_UUID = "Schema-d87ba5c2-b02b-481d-a62d-2b46dd66d347";
+	public static final String BIBRM_CONTRACT_ITEM_SCHEMA_UUID = "Schema-70228b28-10fc-43fe-9d3e-ad22b038ebdf";
+	public static final String BIBO_DOCUMENT_SCHEMA_UUID = "Schema-ff62ec21-0a11-4c27-a704-d7ca53a21521";
+	public static final String FOAF_SCHEMA_UUID = "Schema-309e901c-3da9-4d82-a694-bab632eaa340";
+	public static final String PNX_SCHEMA_UUID = "Schema-dbc97499-278d-4551-a65e-8e8bb219ca6c";
+	public static final String MARC21_SCHEMA_UUID = "Schema-781d73f0-d115-462e-9b4c-ec23e4251c8d";
+	public static final String FINC_SOLR_SCHEMA_UUID = "Schema-5664ba0e-ccb3-4b71-8823-13281490de30";
+	public static final String OAI_PMH_DC_ELEMENTS_SCHEMA_UUID = "Schema-cb8f4b96-9ab2-4972-88f8-143656199518";
+	public static final String OAI_PMH_DC_TERMS_SCHEMA_UUID = "Schema-8fefbced-c2f2-478c-a22a-debb122e05de";
+	public static final String OAI_PMH_MARCXML_SCHEMA_UUID = "Schema-5ca8e59f-0f40-4f17-8237-e5d0a6e83f18";
 	public static final String OAI_PMH_DC_ELEMENTS_AND_EDM_SCHEMA_UUID = "Schema-e6d4ff86-07d9-494f-9299-9d67d3a0d9e8";
 
 	private static final Collection<String> inbuiltSchemaUuids = new ArrayList<>();
@@ -202,13 +182,12 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 		return true;
 	}
 
-	public static boolean addAttributePaths(
-			final Schema schema,
-			final Set<AttributePathHelper> attributePathHelpers,
-			final Provider<AttributePathService> attributePathServiceProvider,
-			final Provider<SchemaAttributePathInstanceService> attributePathInstanceServiceProvider,
-			final Provider<AttributeService> attributeServiceProvider)
-			throws DMPPersistenceException {
+	public static boolean addAttributePaths(final Schema schema,
+	                                        final Set<AttributePathHelper> attributePathHelpers,
+	                                        final Provider<AttributePathService> attributePathServiceProvider,
+	                                        final Provider<SchemaAttributePathInstanceService> attributePathInstanceServiceProvider,
+	                                        final Provider<AttributeService> attributeServiceProvider,
+	                                        final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs) throws DMPPersistenceException {
 
 		if (attributePathHelpers == null) {
 
@@ -247,6 +226,27 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 				// attribute path is already in schema
 
 				continue;
+			}
+
+			if(optionalAttributePathsSAPIUUIDs.isPresent()) {
+
+				final Map<String, String> attributePathsSAPIUUIDs = optionalAttributePathsSAPIUUIDs.get();
+
+				final Optional<String> optionalSAPIUUID = Optional.ofNullable(attributePathsSAPIUUIDs.getOrDefault(attributePathString, null));
+
+				if (optionalSAPIUUID.isPresent()) {
+
+					// try to retrieve existing SAPI
+					final Optional<SchemaAttributePathInstance> optionalSAPI = Optional.ofNullable(schemaAttributePathInstanceService.getObject(optionalSAPIUUID.get()));
+
+					if (optionalSAPI.isPresent()) {
+
+						// add existing SAPI to schema
+						schema.addAttributePath(optionalSAPI.get());
+
+						continue;
+					}
+				}
 			}
 
 			final List<String> attributePathFromHelper = attributePathHelper.getAttributePath();
@@ -289,21 +289,61 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 		return true;
 	}
 
-	public static AttributePath addAttributePaths(final Schema schema, final List<Attribute> attributes,
-			final AttributePathService attributePathService,
-			final SchemaAttributePathInstanceService schemaAttributePathInstanceService) throws DMPPersistenceException {
+	public static boolean addAttributePaths(final Schema schema,
+	                                        final Set<AttributePathHelper> attributePathHelpers,
+	                                        final Provider<AttributePathService> attributePathServiceProvider,
+	                                        final Provider<SchemaAttributePathInstanceService> attributePathInstanceServiceProvider,
+	                                        final Provider<AttributeService> attributeServiceProvider) throws DMPPersistenceException {
 
-		final SchemaAttributePathInstance schemaAttributePathInstance = createSchemaAttributePathInstance(attributes, attributePathService,
-				schemaAttributePathInstanceService);
+
+		return addAttributePaths(schema, attributePathHelpers, attributePathServiceProvider, attributePathInstanceServiceProvider, attributeServiceProvider, Optional.empty());
+	}
+
+	public static AttributePath addAttributePaths(final Schema schema,
+	                                              final List<Attribute> attributes,
+	                                              final AttributePathService attributePathService,
+	                                              final SchemaAttributePathInstanceService schemaAttributePathInstanceService,
+	                                              final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs) throws DMPPersistenceException {
+
+		final SchemaAttributePathInstance schemaAttributePathInstance = createOrGetSchemaAttributePathInstance(attributes, attributePathService, schemaAttributePathInstanceService, optionalAttributePathsSAPIUUIDs);
 
 		schema.addAttributePath(schemaAttributePathInstance);
 
 		return schemaAttributePathInstance.getAttributePath();
 	}
 
-	public static SchemaAttributePathInstance createSchemaAttributePathInstance(final List<Attribute> attributes,
-			final AttributePathService attributePathService, final SchemaAttributePathInstanceService schemaAttributePathInstanceService)
-			throws DMPPersistenceException {
+	public static AttributePath addAttributePaths(final Schema schema,
+	                                              final List<Attribute> attributes,
+	                                              final AttributePathService attributePathService,
+	                                              final SchemaAttributePathInstanceService schemaAttributePathInstanceService) throws DMPPersistenceException {
+
+		return addAttributePaths(schema, attributes, attributePathService, schemaAttributePathInstanceService, Optional.empty());
+	}
+
+	public static SchemaAttributePathInstance createOrGetSchemaAttributePathInstance(final List<Attribute> attributes,
+	                                                                                 final AttributePathService attributePathService,
+	                                                                                 final SchemaAttributePathInstanceService schemaAttributePathInstanceService,
+	                                                                                 final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs) throws DMPPersistenceException {
+
+		if (optionalAttributePathsSAPIUUIDs.isPresent()) {
+
+			final String attributePathString = AttributePathUtils.generateAttributePath(attributes);
+
+			final Map<String, String> attributePathsSAPIUUIDs = optionalAttributePathsSAPIUUIDs.get();
+
+			final Optional<String> optionalSAPIUUID = Optional.ofNullable(attributePathsSAPIUUIDs.getOrDefault(attributePathString, null));
+
+			if (optionalSAPIUUID.isPresent()) {
+
+				// try to retrieve existing SAPI
+				final Optional<SchemaAttributePathInstance> optionalSAPI = Optional.ofNullable(schemaAttributePathInstanceService.getObject(optionalSAPIUUID.get()));
+
+				if (optionalSAPI.isPresent()) {
+
+					return optionalSAPI.get();
+				}
+			}
+		}
 
 		final ProxyAttributePath proxyAttributePath = attributePathService.createOrGetObjectTransactional(attributes);
 
@@ -336,6 +376,14 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 		}
 		return schemaAttributePathInstance;
+	}
+
+
+	public static SchemaAttributePathInstance createSchemaAttributePathInstance(final List<Attribute> attributes,
+	                                                                            final AttributePathService attributePathService,
+	                                                                            final SchemaAttributePathInstanceService schemaAttributePathInstanceService) throws DMPPersistenceException {
+
+		return createOrGetSchemaAttributePathInstance(attributes, attributePathService, schemaAttributePathInstanceService, Optional.empty());
 	}
 
 	public static boolean isValidUri(@Nullable final String identifier) {
@@ -474,7 +522,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 	/**
 	 * returns an attribute map with local attribute names as key and attribute objects as values of an entry. Incl. record class.
-	 *
+	 * <p>
 	 * note: if a local name occurs multiple times, this won't be handles right now
 	 *
 	 * @param schema
@@ -503,7 +551,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 	/**
 	 * returns an attribute map with local attribute names as key and attribute objects as values of an entry.
-	 *
+	 * <p>
 	 * note: if a local name occurs multiple times, this won't be handles right now
 	 *
 	 * @param schema
@@ -545,7 +593,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 	/**
 	 * returns an attribute map with local attribute names as key and attribute objects as values of an entry.
-	 *
+	 * <p>
 	 * note: if a local name occurs multiple times, this won't be handles right now
 	 *
 	 * @param schema

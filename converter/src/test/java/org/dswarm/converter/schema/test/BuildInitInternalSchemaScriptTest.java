@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2013 – 2016 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
- * <p>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,7 +30,6 @@ import org.dswarm.persistence.service.schema.test.internalmodel.BiboDocumentSche
 import org.dswarm.persistence.service.schema.test.internalmodel.BibrmContractItemSchemaBuilder;
 import org.dswarm.persistence.service.schema.test.utils.AttributeServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,14 +54,15 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 	private SchemaAttributePathInstanceService schemaAttributePathInstanceService;
 	private SchemaService schemaService;
 
-	private Map<String, String> attributes = new HashMap<>();
-	private Map<String, String> classes = new HashMap<>();
-	private Map<String, String> attributePaths = new HashMap<>();
-	private Map<String, String> sapis = new HashMap<>();
-	private Map<String, String> schemata = new HashMap<>();
-	private Map<String, String> subSchemata = new HashMap<>();
+	private final Map<String, String> attributes = new HashMap<>();
+	private final Map<String, String> classes = new HashMap<>();
+	private final Map<String, String> attributePaths = new HashMap<>();
+	private final Map<String, String> sapis = new HashMap<>();
+	private final Map<String, String> schemata = new HashMap<>();
+	private final Map<String, String> subSchemata = new HashMap<>();
 
-	private Map<String, Map<String, String>> schemaAttributePathsSAPIUUIDs = new HashMap<>();
+	private final Map<String, Map<String, String>> schemaAttributePathsSAPIUUIDs = new HashMap<>();
+	private final Map<String, String> schemaContentSchemaMap = new HashMap<>();
 
 	@Override
 	public void prepare() throws Exception {
@@ -119,19 +119,19 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		schemaService = GuicedTest.injector.getInstance(SchemaService.class);
 	}
 
-	@Test
+	//@Test
 	public void buildScript() throws Exception {
 
 		final Schema bibrmContractSchema = new BibrmContractItemSchemaBuilder(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.BIBRM_CONTRACT_ITEM_SCHEMA_UUID))).buildSchema();
-		final Schema biboDocumentSchema = new BiboDocumentSchemaBuilder(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.BIBO_DOCUMENT_SCHEMA_UUID))).buildSchema();
-		final Schema mabxmlSchema = XMLSchemaParserTest.parseMabxmlSchema();
-		final Schema pnxSchema = XMLSchemaParserTest.parsePNXSchema();
-		final Schema marc21Schema = XMLSchemaParserTest.parseMarc21Schema();
-		final Schema fincSolrSchema = SolrSchemaParserTest.parseFincSolrSchema();
-		final Schema oaipmhDCElementsSchema = XMLSchemaParserTest.parseOAIPMHPlusDCElementsSchema();
-		final Schema oaipmhDCTermsSchema = XMLSchemaParserTest.parseOAIPMHPlusDCTermsSchema();
-		final Schema oaipmhMARCXMLSchema = XMLSchemaParserTest.parseOAIPMHPlusMARCXMLSchema();
-		final Schema oaipmhDCElementsAndEDMSchema = XMLSchemaParserTest.parseOAIPMHPlusDCElementsAndEDMSchema();
+		final Schema biboDocumentSchema = new BiboDocumentSchemaBuilder(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.BIBO_DOCUMENT_SCHEMA_UUID)), Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.FOAF_SCHEMA_UUID))).buildSchema();
+		final Schema mabxmlSchema = XMLSchemaParserTest.parseMabxmlSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.MABXML_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.MABXML_SCHEMA_UUID)));
+		final Schema pnxSchema = XMLSchemaParserTest.parsePNXSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.PNX_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.PNX_SCHEMA_UUID)));
+		final Schema marc21Schema = XMLSchemaParserTest.parseMarc21Schema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.MARC21_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.MARC21_SCHEMA_UUID)));
+		final Schema fincSolrSchema = SolrSchemaParserTest.parseFincSolrSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.FINC_SOLR_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.FINC_SOLR_SCHEMA_UUID)));
+		final Schema oaipmhDCElementsSchema = XMLSchemaParserTest.parseOAIPMHPlusDCElementsSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID)));
+		final Schema oaipmhDCTermsSchema = XMLSchemaParserTest.parseOAIPMHPlusDCTermsSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID)));
+		final Schema oaipmhMARCXMLSchema = XMLSchemaParserTest.parseOAIPMHPlusMARCXMLSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID)));
+		final Schema oaipmhDCElementsAndEDMSchema = XMLSchemaParserTest.parseOAIPMHPlusDCElementsAndEDMSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.OAI_PMH_DC_ELEMENTS_AND_EDM_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.OAI_PMH_DC_ELEMENTS_AND_EDM_SCHEMA_UUID)));
 
 		final String bibrmContractDM = "Internal Data Model ContractItem";
 		final String biboDocumentDM = "Internal Data Model BiboDocument";
@@ -394,11 +394,20 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 
 				final Schema schema = DMPPersistenceUtil.getJSONObjectMapper().readValue(schemaString, Schema.class);
 
+				final String schemaUuid = schema.getUuid();
+
 				final Map<String, String> attributePathsSAPIUUIDs = new HashMap<>();
 
 				schema.getAttributePaths().forEach(sapi -> attributePathsSAPIUUIDs.put(sapi.getAttributePath().toAttributePath(), sapi.getUuid()));
 
-				schemaAttributePathsSAPIUUIDs.put(schema.getUuid(), attributePathsSAPIUUIDs);
+				schemaAttributePathsSAPIUUIDs.put(schemaUuid, attributePathsSAPIUUIDs);
+
+				final ContentSchema contentSchema = schema.getContentSchema();
+
+				if (contentSchema != null) {
+
+					schemaContentSchemaMap.put(schemaUuid, contentSchema.getUuid());
+				}
 			} catch (final IOException e) {
 
 				DMPPersistenceError.wrap(new DMPPersistenceException("something went wrong", e));

@@ -20,12 +20,25 @@ import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.utils.NameSpacePrefixRegistry;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 
+import java.util.Map;
+import java.util.Optional;
+
 public class FoafPersonSchemaBuilder extends SchemaBuilder {
+
+	public FoafPersonSchemaBuilder() {
+
+		super();
+	}
+
+	public FoafPersonSchemaBuilder(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDsArg) {
+
+		super(optionalAttributePathsSAPIUUIDsArg);
+	}
 
 	@Override
 	public Schema buildSchema() throws Exception {
 
-		final AttributePathBuilder builder = new AttributePathBuilder();
+		final AttributePathBuilder builder = new AttributePathBuilder(optionalAttributePathsSAPIUUIDs);
 
 		// we should take a static identifier here
 		final Schema tempSchema = new Schema(SchemaUtils.FOAF_SCHEMA_UUID);

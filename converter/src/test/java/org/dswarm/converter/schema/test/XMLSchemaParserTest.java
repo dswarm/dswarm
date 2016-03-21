@@ -15,18 +15,7 @@
  */
 package org.dswarm.converter.schema.test;
 
-import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-
-import com.google.common.base.Optional;
-import com.google.common.collect.Maps;
 import com.google.inject.Provider;
-import org.junit.Assert;
-import org.junit.Test;
-
 import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.schema.XMLSchemaParser;
@@ -36,7 +25,6 @@ import org.dswarm.persistence.model.internal.helper.AttributePathHelperHelper;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.ContentSchema;
 import org.dswarm.persistence.model.schema.Schema;
-import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.schema.AttributePathService;
@@ -44,6 +32,11 @@ import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
 import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.util.*;
 
 /**
  * @author tgaengler
@@ -204,13 +197,14 @@ public class XMLSchemaParserTest extends GuicedTest {
 		compareAttributePaths("oai-pmh_plus_marcxml_schema_-_attribute_paths.txt", newAttributePaths);
 	}
 
-	public static Schema parseOAIPMHPlusDCElementsSchema() throws DMPPersistenceException {
+	public static Schema parseOAIPMHPlusDCElementsSchema(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
+	                                                     final Optional<String> optionalContentSchemaIdentifier) throws DMPPersistenceException {
 
-		final Schema schema = parseOAIPMHPlusXSchema("oai_dc.xsd", "DC Elements", SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID, "dc", true);
+		final Schema schema = parseOAIPMHPlusXSchema("oai_dc.xsd", "DC Elements", SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID, "dc", true, optionalAttributePathsSAPIUUIDs);
 
 		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(schema);
 
-		final String uuid = UUIDService.getUUID(ContentSchema.class.getSimpleName());
+		final String uuid = getOrCreateContentSchemaIdentifier(optionalContentSchemaIdentifier);
 
 		final ContentSchema contentSchema = new ContentSchema(uuid);
 		contentSchema.setName("OAI-PMH + DC Elements content schema");
@@ -221,7 +215,13 @@ public class XMLSchemaParserTest extends GuicedTest {
 		return fillContentSchemaAndUpdateSchema(contentSchema, id, null, schema);
 	}
 
-	public static Schema parseOAIPMHPlusDCElementsAndEDMSchema() throws DMPPersistenceException {
+	public static Schema parseOAIPMHPlusDCElementsSchema() throws DMPPersistenceException {
+
+		return parseOAIPMHPlusDCElementsSchema(Optional.empty(), Optional.empty());
+	}
+
+	public static Schema parseOAIPMHPlusDCElementsAndEDMSchema(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
+	                                                           final Optional<String> optionalContentSchemaIdentifier) throws DMPPersistenceException {
 
 		final String childSchemaName = "DC Elements + EDM";
 		final Tuple<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("OAI-PMH.xsd", "record",
@@ -232,11 +232,11 @@ public class XMLSchemaParserTest extends GuicedTest {
 		final Map<String, AttributePathHelper> newAttributePaths = buildOAIPMHPlusDCElementsAndEDMAttributePaths(rootAttributePaths);
 
 		final Schema schema = result.v1();
-		final Schema updatedSchema = addChildSchemataAttributePathsToSchema(newAttributePaths, schema);
+		final Schema updatedSchema = addChildSchemataAttributePathsToSchema(newAttributePaths, schema, optionalAttributePathsSAPIUUIDs);
 
 		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(updatedSchema);
 
-		final String uuid = UUIDService.getUUID(ContentSchema.class.getSimpleName());
+		final String uuid = getOrCreateContentSchemaIdentifier(optionalContentSchemaIdentifier);
 
 		final ContentSchema contentSchema = new ContentSchema(uuid);
 		contentSchema.setName("OAI-PMH + DC Elements + EDM content schema");
@@ -247,13 +247,19 @@ public class XMLSchemaParserTest extends GuicedTest {
 		return fillContentSchemaAndUpdateSchema(contentSchema, id, null, updatedSchema);
 	}
 
-	public static Schema parseOAIPMHPlusDCTermsSchema() throws DMPPersistenceException {
+	public static Schema parseOAIPMHPlusDCElementsAndEDMSchema() throws DMPPersistenceException {
 
-		final Schema schema = parseOAIPMHPlusXSchema("dcterms.xsd", "DC Terms", SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID, null, false);
+		return parseOAIPMHPlusDCElementsAndEDMSchema(Optional.empty(), Optional.empty());
+	}
+
+	public static Schema parseOAIPMHPlusDCTermsSchema(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
+	                                                  final Optional<String> optionalContentSchemaIdentifier) throws DMPPersistenceException {
+
+		final Schema schema = parseOAIPMHPlusXSchema("dcterms.xsd", "DC Terms", SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID, null, false, optionalAttributePathsSAPIUUIDs);
 
 		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(schema);
 
-		final String uuid = UUIDService.getUUID(ContentSchema.class.getSimpleName());
+		final String uuid = getOrCreateContentSchemaIdentifier(optionalContentSchemaIdentifier);
 
 		final ContentSchema contentSchema = new ContentSchema(uuid);
 		contentSchema.setName("OAI-PMH + DC Terms content schema");
@@ -264,14 +270,20 @@ public class XMLSchemaParserTest extends GuicedTest {
 		return fillContentSchemaAndUpdateSchema(contentSchema, id, null, schema);
 	}
 
-	public static Schema parseOAIPMHPlusMARCXMLSchema() throws DMPPersistenceException {
+	public static Schema parseOAIPMHPlusDCTermsSchema() throws DMPPersistenceException {
+
+		return parseOAIPMHPlusDCTermsSchema(Optional.empty(), Optional.empty());
+	}
+
+	public static Schema parseOAIPMHPlusMARCXMLSchema(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
+	                                                  final Optional<String> optionalContentSchemaIdentifier) throws DMPPersistenceException {
 
 		// collection - to include "record" attribute into the attribute paths
-		final Schema schema = parseOAIPMHPlusXSchema("MARC21slim.xsd", "MARCXML", SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID, "collection", false);
+		final Schema schema = parseOAIPMHPlusXSchema("MARC21slim.xsd", "MARCXML", SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID, "collection", false, optionalAttributePathsSAPIUUIDs);
 
 		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(schema);
 
-		final String uuid = UUIDService.getUUID(ContentSchema.class.getSimpleName());
+		final String uuid = getOrCreateContentSchemaIdentifier(optionalContentSchemaIdentifier);
 
 		final ContentSchema contentSchema = new ContentSchema(uuid);
 		contentSchema.setName("OAI-PMH + MARCXML content schema");
@@ -297,6 +309,11 @@ public class XMLSchemaParserTest extends GuicedTest {
 		return fillContentSchemaAndUpdateSchema(contentSchema, id, datafieldSubfieldValue, schema);
 	}
 
+	public static Schema parseOAIPMHPlusMARCXMLSchema() throws DMPPersistenceException {
+
+		return parseOAIPMHPlusMARCXMLSchema(Optional.empty(), Optional.empty());
+	}
+
 	/**
 	 * note: creates the mabxml from the given xml schema file from scratch
 	 *
@@ -310,24 +327,25 @@ public class XMLSchemaParserTest extends GuicedTest {
 
 		final String schemaUUID = UUIDService.getUUID(Schema.class.getSimpleName());
 
-		final Optional<Schema> optionalSchema = xmlSchemaParser.parse("mabxml-1.xsd", "datensatz", schemaUUID, "mabxml schema");
+		final java.util.Optional<Schema> optionalSchema = xmlSchemaParser.parse("mabxml-1.xsd", "datensatz", schemaUUID, "mabxml schema");
 
 		Assert.assertTrue(optionalSchema.isPresent());
 	}
 
 	/**
-	 * note: creates the mabxml from the given xml schema file from scratch + addes content schema programmatically
+	 * note: creates the mabxml from the given xml schema file from scratch (by optionally reutilising existing SAPIs) + adds content schema programmatically
 	 *
 	 * @throws IOException
 	 * @throws DMPPersistenceException
 	 */
-	public static Schema parseMabxmlSchema() throws IOException, DMPPersistenceException {
+	public static Schema parseMabxmlSchema(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
+	                                       final Optional<String> optionalContentSchemaIdentifier) throws IOException, DMPPersistenceException {
 
-		final Schema schema = parseSchema("mabxml-1.xsd", "datensatz", SchemaUtils.MABXML_SCHEMA_UUID, "mabxml schema");
+		final Schema schema = parseSchema("mabxml-1.xsd", "datensatz", SchemaUtils.MABXML_SCHEMA_UUID, "mabxml schema", optionalAttributePathsSAPIUUIDs);
 
 		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(schema);
 
-		final String uuid = UUIDService.getUUID(ContentSchema.class.getSimpleName());
+		final String uuid = getOrCreateContentSchemaIdentifier(optionalContentSchemaIdentifier);
 
 		final ContentSchema contentSchema = new ContentSchema(uuid);
 		contentSchema.setName("mab content schema");
@@ -347,18 +365,30 @@ public class XMLSchemaParserTest extends GuicedTest {
 	}
 
 	/**
-	 * creates the PNX schema from the given XML schema file from scratch
+	 * note: creates the mabxml from the given xml schema file from scratch + adds content schema programmatically
 	 *
 	 * @throws IOException
 	 * @throws DMPPersistenceException
 	 */
-	public static Schema parsePNXSchema() throws IOException, DMPPersistenceException {
+	public static Schema parseMabxmlSchema() throws IOException, DMPPersistenceException {
 
-		final Schema schema = parseSchema("pnx.xsd", "record", SchemaUtils.PNX_SCHEMA_UUID, "pnx schema");
+		return parseMabxmlSchema(Optional.empty(), Optional.empty());
+	}
+
+	/**
+	 * creates the PNX schema from the given XML schema file from scratch (by optionally reutilising existing SAPIs)
+	 *
+	 * @throws IOException
+	 * @throws DMPPersistenceException
+	 */
+	public static Schema parsePNXSchema(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
+	                                    final Optional<String> optionalContentSchemaIdentifier) throws IOException, DMPPersistenceException {
+
+		final Schema schema = parseSchema("pnx.xsd", "record", SchemaUtils.PNX_SCHEMA_UUID, "pnx schema", optionalAttributePathsSAPIUUIDs);
 
 		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(schema);
 
-		final String uuid = UUIDService.getUUID(ContentSchema.class.getSimpleName());
+		final String uuid = getOrCreateContentSchemaIdentifier(optionalContentSchemaIdentifier);
 
 		final ContentSchema contentSchema = new ContentSchema(uuid);
 		contentSchema.setName("PNX content schema");
@@ -370,18 +400,30 @@ public class XMLSchemaParserTest extends GuicedTest {
 	}
 
 	/**
-	 * creates the Marc21 schema from the given XML schema file from scratch
+	 * creates the PNX schema from the given XML schema file from scratch
 	 *
 	 * @throws IOException
 	 * @throws DMPPersistenceException
 	 */
-	public static Schema parseMarc21Schema() throws IOException, DMPPersistenceException {
+	public static Schema parsePNXSchema() throws IOException, DMPPersistenceException {
 
-		final Schema schema = parseSchema("MARC21slim.xsd", "record", SchemaUtils.MARC21_SCHEMA_UUID, "marc21 schema");
+		return parsePNXSchema(Optional.empty(), Optional.empty());
+	}
+
+	/**
+	 * creates the Marc21 schema from the given XML schema file from scratch (by optionally reutilising existing SAPIs)
+	 *
+	 * @throws IOException
+	 * @throws DMPPersistenceException
+	 */
+	public static Schema parseMarc21Schema(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
+	                                       final Optional<String> optionalContentSchemaIdentifier) throws IOException, DMPPersistenceException {
+
+		final Schema schema = parseSchema("MARC21slim.xsd", "record", SchemaUtils.MARC21_SCHEMA_UUID, "marc21 schema", optionalAttributePathsSAPIUUIDs);
 
 		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(schema);
 
-		final String uuid = UUIDService.getUUID(ContentSchema.class.getSimpleName());
+		final String uuid = getOrCreateContentSchemaIdentifier(optionalContentSchemaIdentifier);
 
 		final ContentSchema contentSchema = new ContentSchema(uuid);
 		contentSchema.setName("marc21 content schema");
@@ -406,30 +448,56 @@ public class XMLSchemaParserTest extends GuicedTest {
 		return fillContentSchemaAndUpdateSchema(contentSchema, id, datafieldSubfieldValue, schema);
 	}
 
-	private static Schema parseSchema(final String xsdFileName, final String recordIdentifier, final String schemaUUID, final String schemaName)
-			throws DMPPersistenceException {
+	/**
+	 * creates the Marc21 schema from the given XML schema file from scratch
+	 *
+	 * @throws IOException
+	 * @throws DMPPersistenceException
+	 */
+	public static Schema parseMarc21Schema() throws IOException, DMPPersistenceException {
+
+		return parseMarc21Schema(Optional.empty(), Optional.empty());
+	}
+
+	private static Schema parseSchema(final String xsdFileName,
+	                                  final String recordIdentifier,
+	                                  final String schemaUUID,
+	                                  final String schemaName,
+	                                  final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs) throws DMPPersistenceException {
 
 		final XMLSchemaParser xmlSchemaParser = GuicedTest.injector.getInstance(XMLSchemaParser.class);
-		final Optional<Schema> optionalSchema = xmlSchemaParser.parse(xsdFileName, recordIdentifier, schemaUUID, schemaName);
+		final java.util.Optional<Schema> optionalSchema = xmlSchemaParser.parse(xsdFileName, recordIdentifier, schemaUUID, schemaName, optionalAttributePathsSAPIUUIDs);
+
 		Assert.assertTrue(optionalSchema.isPresent());
 
 		return optionalSchema.get();
 	}
 
-	private static Tuple<Schema, Map<String, AttributePathHelper>> parseSchemaSeparately(final String xsdFileName, final String recordIdentifier,
-			final String schemaUUID, final String schemaName)
-			throws DMPPersistenceException {
+	private static Schema parseSchema(final String xsdFileName,
+	                                  final String recordIdentifier,
+	                                  final String schemaUUID,
+	                                  final String schemaName) throws DMPPersistenceException {
+
+
+		return parseSchema(xsdFileName, recordIdentifier, schemaUUID, schemaName, Optional.empty());
+	}
+
+	private static Tuple<Schema, Map<String, AttributePathHelper>> parseSchemaSeparately(final String xsdFileName,
+	                                                                                     final String recordIdentifier,
+	                                                                                     final String schemaUUID,
+	                                                                                     final String schemaName) throws DMPPersistenceException {
 
 		final XMLSchemaParser xmlSchemaParser = GuicedTest.injector.getInstance(XMLSchemaParser.class);
-		final Optional<Tuple<Schema, Map<String, AttributePathHelper>>> optionalResult = xmlSchemaParser.parseSeparately(xsdFileName,
+		final java.util.Optional<Tuple<Schema, Map<String, AttributePathHelper>>> optionalResult = xmlSchemaParser.parseSeparately(xsdFileName,
 				recordIdentifier, schemaUUID, schemaName);
+
 		Assert.assertTrue(optionalResult.isPresent());
 
 		return optionalResult.get();
 	}
 
 	private void testAttributePathsParsing(final String xsdFileName, final String recordIdentifier, final String resultFileName,
-			final boolean includeRecordTag) throws IOException {
+	                                       final boolean includeRecordTag) throws IOException {
 
 		final Map<String, AttributePathHelper> attributePaths = parseAttributePaths(xsdFileName, recordIdentifier, includeRecordTag);
 
@@ -452,12 +520,12 @@ public class XMLSchemaParserTest extends GuicedTest {
 	}
 
 	private static Map<String, AttributePathHelper> parseAttributePaths(final String xsdFileName, final String recordIdentifier,
-			final boolean includeRecordTag) {
+	                                                                    final boolean includeRecordTag) {
 
 		final XMLSchemaParser xmlSchemaParser = GuicedTest.injector.getInstance(XMLSchemaParser.class);
 		xmlSchemaParser.setIncludeRecordTag(includeRecordTag);
 		final Optional<Map<String, AttributePathHelper>> optionalAttributePaths = xmlSchemaParser.parseAttributePathsMap(xsdFileName,
-				Optional.fromNullable(recordIdentifier));
+				Optional.ofNullable(recordIdentifier));
 
 		Assert.assertTrue(optionalAttributePaths.isPresent());
 
@@ -465,7 +533,7 @@ public class XMLSchemaParserTest extends GuicedTest {
 	}
 
 	private static Schema fillContentSchemaAndUpdateSchema(final ContentSchema contentSchema, final AttributePath recordIdentifierAP,
-			final AttributePath valueAP, final Schema schema)
+	                                                       final AttributePath valueAP, final Schema schema)
 			throws DMPPersistenceException {
 
 		contentSchema.setRecordIdentifierAttributePath(recordIdentifierAP);
@@ -485,8 +553,8 @@ public class XMLSchemaParserTest extends GuicedTest {
 	}
 
 	private static Map<String, AttributePathHelper> composeAttributePaths(final Map<String, AttributePathHelper> rootAttributePaths,
-			final AttributePathHelper rootAttributePath,
-			final Map<String, AttributePathHelper> childAttributePaths) {
+	                                                                      final AttributePathHelper rootAttributePath,
+	                                                                      final Map<String, AttributePathHelper> childAttributePaths) {
 
 		final Set<AttributePathHelper> compoundAttributePaths = new LinkedHashSet<>();
 
@@ -526,9 +594,12 @@ public class XMLSchemaParserTest extends GuicedTest {
 		return attributePaths;
 	}
 
-	private static Schema parseOAIPMHPlusXSchema(final String childSchemaFileName, final String childSchemaName, final String schemaUUID,
-			final String childRecordIdentifier, final boolean includeRecordTag)
-			throws DMPPersistenceException {
+	private static Schema parseOAIPMHPlusXSchema(final String childSchemaFileName,
+	                                             final String childSchemaName,
+	                                             final String schemaUUID,
+	                                             final String childRecordIdentifier,
+	                                             final boolean includeRecordTag,
+	                                             final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs) throws DMPPersistenceException {
 
 		final Tuple<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("OAI-PMH.xsd", "record", schemaUUID,
 				"OAI-PMH + " + childSchemaName + " schema");
@@ -545,11 +616,21 @@ public class XMLSchemaParserTest extends GuicedTest {
 
 		final Schema schema = result.v1();
 
-		return addChildSchemataAttributePathsToSchema(newAttributePaths, schema);
+		return addChildSchemataAttributePathsToSchema(newAttributePaths, schema, optionalAttributePathsSAPIUUIDs);
 	}
 
-	private static Schema addChildSchemataAttributePathsToSchema(final Map<String, AttributePathHelper> newAttributePaths, final Schema schema)
-			throws DMPPersistenceException {
+	private static Schema parseOAIPMHPlusXSchema(final String childSchemaFileName,
+	                                             final String childSchemaName,
+	                                             final String schemaUUID,
+	                                             final String childRecordIdentifier,
+	                                             final boolean includeRecordTag) throws DMPPersistenceException {
+
+		return parseOAIPMHPlusXSchema(childSchemaFileName, childSchemaName, schemaUUID, childRecordIdentifier, includeRecordTag, Optional.empty());
+	}
+
+	private static Schema addChildSchemataAttributePathsToSchema(final Map<String, AttributePathHelper> newAttributePaths,
+	                                                             final Schema schema,
+	                                                             final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs) throws DMPPersistenceException {
 
 		final Set<AttributePathHelper> attributePaths = convertToSet(newAttributePaths);
 		final Provider<AttributePathService> attributePathServiceProvider = GuicedTest.injector.getProvider(AttributePathService.class);
@@ -559,9 +640,29 @@ public class XMLSchemaParserTest extends GuicedTest {
 		final Provider<SchemaService> schemaServiceProvider = GuicedTest.injector.getProvider(SchemaService.class);
 
 		SchemaUtils.addAttributePaths(schema, attributePaths, attributePathServiceProvider, schemaAttributePathInstanceServiceProvider,
-				attributeServiceProvider);
+				attributeServiceProvider, optionalAttributePathsSAPIUUIDs);
 
 		return SchemaUtils.updateSchema(schema, schemaServiceProvider);
 	}
 
+	private static String getOrCreateContentSchemaIdentifier(final Optional<String> optionalContentSchemaIdentifier) {
+
+		return getOrCreateIdentifier(optionalContentSchemaIdentifier, ContentSchema.class.getSimpleName());
+	}
+
+	private static String getOrCreateIdentifier(final Optional<String> optionalIdentifier,
+	                                            final String entityPrefix) {
+
+		final String uuid;
+
+		if (optionalIdentifier.isPresent()) {
+
+			uuid = optionalIdentifier.get();
+		} else {
+
+			uuid = UUIDService.getUUID(entityPrefix);
+		}
+
+		return uuid;
+	}
 }
