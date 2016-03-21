@@ -30,13 +30,12 @@ import org.dswarm.persistence.service.schema.test.internalmodel.BiboDocumentSche
 import org.dswarm.persistence.service.schema.test.internalmodel.BibrmContractItemSchemaBuilder;
 import org.dswarm.persistence.service.schema.test.utils.AttributeServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Serves as a preliminary place for triggering the build of a script that populates the database with initially required internal
@@ -46,6 +45,8 @@ import java.util.Optional;
  * @author polowins
  */
 public class BuildInitInternalSchemaScriptTest extends GuicedTest {
+
+	private static final Logger LOG = LoggerFactory.getLogger(BuildInitInternalSchemaScriptTest.class);
 
 	private DataModelService dataModelService;
 	private AttributeService attributeService;
@@ -99,6 +100,7 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 	public void tearDown3() throws Exception {
 
 		init();
+
 		maintainDBService.truncateTables();
 	}
 
@@ -161,6 +163,9 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		createSchemaDataModel(DataModelUtils.OAI_PMH_MARCXML_DATA_MODEL_UUID, oaipmhMARCXMLSchemaDM, oaipmhMARCXMLSchemaDM, oaipmhMARCXMLSchema);
 		createSchemaDataModel(DataModelUtils.OAI_PMH_DC_ELEMENTS_AND_EDM_DATA_MODEL_UUID, oaipmhDCElementsAndEDMSchemaDM, oaipmhDCElementsAndEDMSchemaDM,
 				oaipmhDCElementsAndEDMSchema);
+
+		// clean up DB from deprecated entities
+		cleanUpDB();
 
 		final String sep = File.separator;
 
@@ -413,5 +418,205 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 				DMPPersistenceError.wrap(new DMPPersistenceException("something went wrong", e));
 			}
 		});
+	}
+
+	private void cleanUpDB() {
+
+		schemata.forEach((uuid, schemaString) -> {
+
+			try {
+
+				final Schema schema = DMPPersistenceUtil.getJSONObjectMapper().readValue(schemaString, Schema.class);
+
+				cleanUpSAPIs(schema);
+			} catch (final IOException e) {
+
+				DMPPersistenceError.wrap(new DMPPersistenceException("something went wrong", e));
+			}
+		});
+	}
+
+	private void cleanUpSAPIs(final Schema oldSchema) {
+
+		final Optional<Collection<SchemaAttributePathInstance>> optionalOldSAPIs = Optional.ofNullable(oldSchema.getAttributePaths());
+
+		if (!optionalOldSAPIs.isPresent()) {
+
+			return;
+		}
+
+		final Collection<SchemaAttributePathInstance> oldSAPIs = optionalOldSAPIs.get();
+
+		final Optional<Schema> optionalNewSchema = Optional.ofNullable(schemaService.getObject(oldSchema.getUuid()));
+
+		if (!optionalNewSchema.isPresent()) {
+
+			// remove all SAPIs, since schema does not exist anymore
+			oldSAPIs.forEach(oldSAPI -> cleanUpSAPI(oldSAPI));
+
+			return;
+		}
+
+		final Schema newSchema = optionalNewSchema.get();
+
+		oldSAPIs.forEach(oldSAPI -> {
+
+			final String oldSAPIUuid = oldSAPI.getUuid();
+
+			final Optional<SchemaAttributePathInstance> optionalNewSAPI = Optional.ofNullable(newSchema.getAttributePath(oldSAPIUuid));
+
+			if (!optionalNewSAPI.isPresent()) {
+
+				// remove old SAPI, since this one does not exist anymore + try to remove SAPI parts as well
+				cleanUpSAPI(oldSAPI);
+			}
+		});
+	}
+
+	private void cleanUpSAPI(final SchemaAttributePathInstance oldSAPI) {
+
+		schemaAttributePathInstanceService.deleteObject(oldSAPI.getUuid());
+
+		cleanUpSAPIParts(oldSAPI);
+	}
+
+	private void cleanUpSAPIParts(final SchemaAttributePathInstance oldSAPI) {
+
+		cleanUpSubSchema(oldSAPI);
+		cleanUpSAPIAttributePath(oldSAPI);
+	}
+
+	private void cleanUpSubSchema(final SchemaAttributePathInstance oldSAPI) {
+
+		final Optional<Schema> optionalOldSubSchema = Optional.ofNullable(oldSAPI.getSubSchema());
+
+		try {
+
+			cleanUpSchema(optionalOldSubSchema);
+		} catch (final Exception e) {
+
+			LOG.debug("could not remove SAPI sub schema (maybe because it is utilised somewhere else as well)", e);
+		}
+	}
+
+	private void cleanUpSAPIAttributePath(final SchemaAttributePathInstance oldSAPI) {
+
+		final Optional<AttributePath> optionalOldAttributePath = Optional.ofNullable(oldSAPI.getAttributePath());
+
+		try {
+
+			cleanUpAttributePath(optionalOldAttributePath);
+		} catch (final Exception e) {
+
+			LOG.debug("could not remove SAPI attribute path (maybe because it is utilised somewhere else as well)", e);
+		}
+
+
+	}
+
+	private void cleanUpSchema(final Optional<Schema> optionalOldSchema) {
+
+		if (!optionalOldSchema.isPresent()) {
+
+			return;
+		}
+
+		final Schema oldSchema = optionalOldSchema.get();
+
+		cleanUpSchema(oldSchema);
+	}
+
+	private void cleanUpAttributePath(final Optional<AttributePath> optionalOldAttributePath) {
+
+		if (!optionalOldAttributePath.isPresent()) {
+
+			return;
+		}
+
+		final AttributePath oldattributePath = optionalOldAttributePath.get();
+
+		attributePathService.deleteObject(oldattributePath.getUuid());
+
+		cleanUpAttributePathParts(oldattributePath);
+	}
+
+	private void cleanUpSchema(final Schema oldSchema) {
+
+		schemaService.deleteObject(oldSchema.getUuid());
+
+		cleanUpSchemaParts(oldSchema);
+	}
+
+	private void cleanUpSchemaParts(final Schema oldSchema) {
+
+		cleanUPSAPIs(oldSchema);
+		cleanUpRecordClass(oldSchema);
+	}
+
+	private void cleanUPSAPIs(final Schema oldSchema) {
+
+		final Optional<Set<SchemaAttributePathInstance>> optionalOldSAPIs = Optional.ofNullable(oldSchema.getUniqueAttributePaths());
+
+		if (!optionalOldSAPIs.isPresent()) {
+
+			return;
+		}
+
+		final Set<SchemaAttributePathInstance> oldSAPIs = optionalOldSAPIs.get();
+
+		oldSAPIs.forEach(oldSAPI -> cleanUpSAPI(oldSAPI));
+	}
+
+	private void cleanUpRecordClass(final Schema oldSchema) {
+
+		final Optional<Clasz> optionalOldRecordClass = Optional.ofNullable(oldSchema.getRecordClass());
+
+		try {
+
+			cleanUpClass(optionalOldRecordClass);
+		} catch (final Exception e) {
+
+			LOG.debug("could not remove record class from schema (maybe it is utilised somewhere else as well)", e);
+		}
+	}
+
+	private void cleanUpClass(final Optional<Clasz> optionalClass) {
+
+		if (!optionalClass.isPresent()) {
+
+			return;
+		}
+
+		final Clasz clasz = optionalClass.get();
+
+		classService.deleteObject(clasz.getUuid());
+	}
+
+	private void cleanUpAttributePathParts(final AttributePath oldattributePath) {
+
+		final Optional<Set<Attribute>> optionalOldAttributes = Optional.ofNullable(oldattributePath.getAttributes());
+
+		if (!optionalOldAttributes.isPresent()) {
+
+			return;
+		}
+
+		final Set<Attribute> oldAttributes = optionalOldAttributes.get();
+
+		oldAttributes.forEach(oldAttribute -> {
+
+			try {
+
+				cleanUpAttribute(oldAttribute);
+			} catch (final Exception e) {
+
+				LOG.debug("could not remove attribute from attribute path (maybe it is utilised somewhere else as well)", e);
+			}
+		});
+	}
+
+	private void cleanUpAttribute(final Attribute oldAttribute) {
+
+		attributeService.deleteObject(oldAttribute.getUuid());
 	}
 }
