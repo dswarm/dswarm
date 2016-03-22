@@ -2,7 +2,8 @@
 <dataConfig>
 	<dataSource type="HttpDataSource" encoding="UTF-8"/>
 	<document>
-		<entity name="Schema-5664ba0e-ccb3-4b71-8823-13281490de30" processor="XPathEntityProcessor" forEach="/RecordTypes/RecordType">
+		<entity name="Schema-5664ba0e-ccb3-4b71-8823-13281490de30" processor="XPathEntityProcessor"
+		        forEach="/RecordTypes/RecordType">
 			<field column="_version_" xpath="/RecordTypes/RecordType/_version_"/>
 			<field column="recordtype" xpath="/RecordTypes/RecordType/recordtype"/>
 			<field column="id" xpath="/RecordTypes/RecordType/id"/>
@@ -15,7 +16,6 @@
 			<field column="spelling" xpath="/RecordTypes/RecordType/spelling"/>
 			<field column="spellingShingle" xpath="/RecordTypes/RecordType/spellingShingle"/>
 			<field column="mega_collection" xpath="/RecordTypes/RecordType/mega_collection"/>
-			<field column="mega_toplevel" xpath="/RecordTypes/RecordType/mega_toplevel"/>
 			<field column="record_id" xpath="/RecordTypes/RecordType/record_id"/>
 			<field column="source_id" xpath="/RecordTypes/RecordType/source_id"/>
 			<field column="authorized_mode" xpath="/RecordTypes/RecordType/authorized_mode"/>
@@ -119,9 +119,7 @@
 			<field column="urn" xpath="/RecordTypes/RecordType/urn"/>
 			<field column="isbn" xpath="/RecordTypes/RecordType/isbn"/>
 			<field column="issn" xpath="/RecordTypes/RecordType/issn"/>
-			<field column="isbn_canc" xpath="/RecordTypes/RecordType/isbn_canc"/>
 			<field column="ismn" xpath="/RecordTypes/RecordType/ismn"/>
-			<field column="issn_canc" xpath="/RecordTypes/RecordType/issn_canc"/>
 			<field column="oclc_num" xpath="/RecordTypes/RecordType/oclc_num"/>
 			<field column="topic" xpath="/RecordTypes/RecordType/topic"/>
 			<field column="topic_unstemmed" xpath="/RecordTypes/RecordType/topic_unstemmed"/>
@@ -149,6 +147,7 @@
 			<field column="hierarchy_sequence" xpath="/RecordTypes/RecordType/hierarchy_sequence"/>
 			<field column="is_hierarchy_id" xpath="/RecordTypes/RecordType/is_hierarchy_id"/>
 			<field column="is_hierarchy_title" xpath="/RecordTypes/RecordType/is_hierarchy_title"/>
+			<field column="title_in_hierarchy" xpath="/RecordTypes/RecordType/title_in_hierarchy"/>
 			<field column="container_title" xpath="/RecordTypes/RecordType/container_title"/>
 			<field column="container_volume" xpath="/RecordTypes/RecordType/container_volume"/>
 			<field column="container_issue" xpath="/RecordTypes/RecordType/container_issue"/>

@@ -15,7 +15,6 @@
 			<field column="spelling" xpath="/Document/spelling"/>
 			<field column="spellingShingle" xpath="/Document/spellingShingle"/>
 			<field column="mega_collection" xpath="/Document/mega_collection"/>
-			<field column="mega_toplevel" xpath="/Document/mega_toplevel"/>
 			<field column="record_id" xpath="/Document/record_id"/>
 			<field column="source_id" xpath="/Document/source_id"/>
 			<field column="authorized_mode" xpath="/Document/authorized_mode"/>
@@ -119,9 +118,7 @@
 			<field column="urn" xpath="/Document/urn"/>
 			<field column="isbn" xpath="/Document/isbn"/>
 			<field column="issn" xpath="/Document/issn"/>
-			<field column="isbn_canc" xpath="/Document/isbn_canc"/>
 			<field column="ismn" xpath="/Document/ismn"/>
-			<field column="issn_canc" xpath="/Document/issn_canc"/>
 			<field column="oclc_num" xpath="/Document/oclc_num"/>
 			<field column="topic" xpath="/Document/topic"/>
 			<field column="topic_unstemmed" xpath="/Document/topic_unstemmed"/>
@@ -149,6 +146,7 @@
 			<field column="hierarchy_sequence" xpath="/Document/hierarchy_sequence"/>
 			<field column="is_hierarchy_id" xpath="/Document/is_hierarchy_id"/>
 			<field column="is_hierarchy_title" xpath="/Document/is_hierarchy_title"/>
+			<field column="title_in_hierarchy" xpath="/Document/title_in_hierarchy"/>
 			<field column="container_title" xpath="/Document/container_title"/>
 			<field column="container_volume" xpath="/Document/container_volume"/>
 			<field column="container_issue" xpath="/Document/container_issue"/>
