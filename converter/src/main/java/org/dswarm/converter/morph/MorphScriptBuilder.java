@@ -351,7 +351,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 				.filter(filterExpressionMap1 -> !filterExpressionMap1.isEmpty())
 				.filter(filterExpressionMap2 -> filterExpressionMap2.containsKey(inputAttributePathStringXMLEscaped));
 
-		if (mappingInputIsUtilisedInFilterExpression.isPresent()) {
+		if (mappingInputIsUtilisedInFilterExpression.isPresent() && filterExpressionMap.size() > 1) {
 
 			final FilterExpression mappingInputFilter = filterExpressionMap.remove(inputAttributePathStringXMLEscaped);
 
