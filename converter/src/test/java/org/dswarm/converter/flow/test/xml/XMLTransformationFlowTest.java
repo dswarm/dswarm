@@ -276,6 +276,18 @@ public class XMLTransformationFlowTest extends GuicedTest {
 		testXMLMorphWithTuples("misc_del152.task.result.json", "misc_del152.task.morph.xml", "fincmarc_small2.tuples.json");
 	}
 
+	/**
+	 * should select two values that are explicitly filtered
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testFilterEncodingMappingTask() throws Exception {
+
+		testXMLMorphWithTuples("neuer_test.task.result.json", "neuer_test.task.morph.xml", "mabxml_dmp.tuples.json");
+	}
+
+
 	@Test
 	public void testSqlMapTask() throws Exception {
 

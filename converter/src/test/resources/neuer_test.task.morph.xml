@@ -7,17 +7,27 @@
         <data name="@feld_type" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
         <data name="http://purl.org/dc/elements/1.1/creator" source="@__TRANSFORMATION_OUTPUT_VARIABLE__6"/>
         <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__6" source="@feld_type"/>
-        <combine flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value" includeSubEntities="true" name="@feld_value" reset="true" sameEntity="true" value="${feld_value.filtered}">
-            <data name="feld_value.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value">
-                <regexp match="Ginsbach, Julia"/>
-            </data>
+        <combine flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld" includeSubEntities="true" name="@feld_value" reset="true" sameEntity="true" value="${feld_value.filtered}">
+            <if>
+                <all flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value" includeSubEntities="true" name="CONDITION_ALL" reset="true">
+                    <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value">
+                        <regexp match="Ginsbach, Julia"/>
+                    </data>
+                </all>
+            </if>
+            <data name="feld_value.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
         </combine>
         <data name="http://purl.org/dc/elements/1.1/contributor" source="@__TRANSFORMATION_OUTPUT_VARIABLE__7"/>
         <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__7" source="@feld_value"/>
-        <combine flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" includeSubEntities="true" name="@feld_nr" reset="true" sameEntity="true" value="${feld_nr.filtered}">
-            <data name="feld_nr.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
-                <regexp match="540"/>
-            </data>
+        <combine flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld" includeSubEntities="true" name="@feld_nr" reset="true" sameEntity="true" value="${feld_nr.filtered}">
+            <if>
+                <all flushWith="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr" includeSubEntities="true" name="CONDITION_ALL" reset="true">
+                    <data source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr">
+                        <regexp match="540"/>
+                    </data>
+                </all>
+            </if>
+            <data name="feld_nr.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr"/>
         </combine>
         <data name="http://purl.org/dc/elements/1.1/creator" source="@__TRANSFORMATION_OUTPUT_VARIABLE__5"/>
         <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__5" source="@feld_nr"/>
