@@ -42,6 +42,12 @@ public class CSVTransformationFlowTest extends GuicedTest {
 	}
 
 	@Test
+	public void testCSVEndToEndWithRecordIdentifierGeneration() throws Exception {
+
+		testCSVTaskWithTuples("dd-620.csv.task.result.json", "dd-620.csv.task.json", "test_csv_-_manipulated.tuples.json");
+	}
+
+	@Test
 	public void testCSVEndToEndWithJobThatConsistsOfTwoMappingWhereOneMappingIsASimpleMapping() throws Exception {
 
 		testCSVTaskWithTuples("test_transf.result.json", "dd-474.task.json", "test_transf.tuples.json");

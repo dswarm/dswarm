@@ -1,0 +1,192 @@
+[
+  {
+    "http://example.com/records/1234": [
+      {
+        "http://purl.org/dc/elements/1.1/title": "http://example2.com/records/1234"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://example.com/records/2343": [
+      {
+        "http://purl.org/dc/elements/1.1/title": "http://example2.com/records/2343"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://example.com/records/3456": [
+      {
+        "http://purl.org/dc/elements/1.1/title": "http://example2.com/records/3456"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://example.com/records/4567": [
+      {
+        "http://purl.org/dc/elements/1.1/title": "http://example2.com/records/4567"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://example.com/records/5678": [
+      {
+        "http://purl.org/dc/elements/1.1/title": "http://example2.com/records/5678"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://example.com/records/6789": [
+      {
+        "http://purl.org/dc/elements/1.1/title": "http://example2.com/records/6789"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://example.com/records/7890": [
+      {
+        "http://purl.org/dc/elements/1.1/title": "http://example2.com/records/7890"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://example.com/records/9876": [
+      {
+        "http://purl.org/dc/elements/1.1/title": "http://example2.com/records/9876"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://example.com/records/8765": [
+      {
+        "http://purl.org/dc/elements/1.1/title": "http://example2.com/records/8765"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://example.com/records/7654": [
+      {
+        "http://purl.org/dc/elements/1.1/title": "http://example2.com/records/7654"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://example.com/records/6543": [
+      {
+        "http://purl.org/dc/elements/1.1/title": "http://example2.com/records/6543"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://example.com/records/5432": [
+      {
+        "http://purl.org/dc/elements/1.1/title": "http://example2.com/records/5432"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://example.com/records/4321": [
+      {
+        "http://purl.org/dc/elements/1.1/title": "http://example2.com/records/4321"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://example.com/records/5687": [
+      {
+        "http://purl.org/dc/elements/1.1/title": "http://example2.com/records/5687"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://example.com/records/3490": [
+      {
+        "http://purl.org/dc/elements/1.1/title": "http://example2.com/records/3490"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://example.com/records/1289": [
+      {
+        "http://purl.org/dc/elements/1.1/title": "http://example2.com/records/1289"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://example.com/records/3467": [
+      {
+        "http://purl.org/dc/elements/1.1/title": "http://example2.com/records/3467"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://example.com/records/9843": [
+      {
+        "http://purl.org/dc/elements/1.1/title": "http://example2.com/records/9843"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://example.com/records/7430": [
+      {
+        "http://purl.org/dc/elements/1.1/title": "http://example2.com/records/7430"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  }
+]

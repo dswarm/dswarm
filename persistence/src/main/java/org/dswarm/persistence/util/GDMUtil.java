@@ -44,6 +44,8 @@ public final class GDMUtil {
 
 	public static final String RDF_type = GDMUtil.RDF_NS + "type";
 
+	public static final String RDF_about = GDMUtil.RDF_NS + "about";
+
 	public static final String RDF_value = GDMUtil.RDF_NS + "value";
 
 	/**
