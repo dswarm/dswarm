@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.oclcpica.org/xmlns/ppxml-1.0" xmlns:ppxml="http://www.oclcpica.org/xmlns/ppxml-1.0">
+  <xs:element name="record">
+    <xs:complexType mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="ppxml:global"/>
+        <xs:element ref="ppxml:owner"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="owner">
+    <xs:complexType mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="ppxml:local"/>
+        <xs:element ref="ppxml:copy"/>
+      </xs:choice>
+      <xs:attributeGroup ref="ppxml:attlist.ppxml.owner"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="attlist.ppxml.owner">
+    <xs:attribute name="iln"/>
+  </xs:attributeGroup>
+  <xs:element name="tag">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="ppxml:subf"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="ppxml:attlist.ppxml.tag"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="attlist.ppxml.tag">
+    <xs:attribute name="occ"/>
+    <xs:attribute name="id"/>
+  </xs:attributeGroup>
+  <xs:element name="copy">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="ppxml:tag"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="ppxml:attlist.ppxml.copy"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="attlist.ppxml.copy">
+    <xs:attribute name="occ"/>
+    <xs:attribute name="epn"/>
+    <xs:attribute name="status"/>
+    <xs:attribute name="opacflag"/>
+  </xs:attributeGroup>
+  <xs:element name="global">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="ppxml:tag"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="ppxml:attlist.ppxml.global"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="attlist.ppxml.global">
+    <xs:attribute name="status"/>
+    <xs:attribute name="opacflag"/>
+  </xs:attributeGroup>
+  <xs:element name="local" type="xs:string"/>
+  <xs:element name="subf">
+    <xs:complexType mixed="true">
+      <xs:attributeGroup ref="ppxml:attlist.ppxml.subf"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="attlist.ppxml.subf">
+    <xs:attribute name="id"/>
+  </xs:attributeGroup>
+</xs:schema>

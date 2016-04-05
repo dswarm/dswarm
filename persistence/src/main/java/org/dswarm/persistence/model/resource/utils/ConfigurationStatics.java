@@ -134,7 +134,9 @@ public interface ConfigurationStatics {
 
 	String MABXML_STORAGE_TYPE = "mabxml";
 
-	String MARCXML_STORAGE_TYPE = "marc21";
+	String MARCXML_STORAGE_TYPE = "marcxml";
+
+	String PICAPLUSXML_STORAGE_TYPE = "picaplusxml";
 
 	String PNX_STORAGE_TYPE = "pnx";
 

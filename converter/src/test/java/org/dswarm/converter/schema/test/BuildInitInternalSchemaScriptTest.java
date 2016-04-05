@@ -128,7 +128,8 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		final Schema biboDocumentSchema = new BiboDocumentSchemaBuilder(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.BIBO_DOCUMENT_SCHEMA_UUID)), Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.FOAF_SCHEMA_UUID))).buildSchema();
 		final Schema mabxmlSchema = XMLSchemaParserTest.parseMabxmlSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.MABXML_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.MABXML_SCHEMA_UUID)));
 		final Schema pnxSchema = XMLSchemaParserTest.parsePNXSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.PNX_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.PNX_SCHEMA_UUID)));
-		final Schema marc21Schema = XMLSchemaParserTest.parseMarc21Schema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.MARC21_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.MARC21_SCHEMA_UUID)));
+		final Schema marcxmlSchema = XMLSchemaParserTest.parseMarcXmlSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.MARCXML_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.MARCXML_SCHEMA_UUID)));
+		final Schema picaplusxmlSchema = XMLSchemaParserTest.parsePicaPlusXmlSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.PICAPLUSXML_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.PICAPLUSXML_SCHEMA_UUID)));
 		final Schema fincSolrSchema = SolrSchemaParserTest.parseFincSolrSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.FINC_SOLR_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.FINC_SOLR_SCHEMA_UUID)));
 		final Schema oaipmhDCElementsSchema = XMLSchemaParserTest.parseOAIPMHPlusDCElementsSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID)));
 		final Schema oaipmhDCTermsSchema = XMLSchemaParserTest.parseOAIPMHPlusDCTermsSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID)));
@@ -139,13 +140,14 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		final String biboDocumentDM = "Internal Data Model BiboDocument";
 		final String mabxmlSchemaDM = "Internal Data Model mabxml";
 		final String pnxSchemaDM = "Internal Data Model PNX";
-		final String marc21SchemaDM = "Internal Data Model Marc21";
+		final String marcxmlSchemaDM = "Internal Data Model MARCXML";
+		final String picaplusxmlSchemaDM = "Internal Data Model PICA+ XML";
 		// [@tgaengler]: just prevention, but I guess that we also need a (default) data model for the foaf:Person schema (right now)
 		final String foafPersonDM = "Internal Data Model foafPerson";
 		final String fincSolrSchemaDM = "Internal Data Model finc Solr";
 		final String oaipmhDCElementsSchemaDM = "Internal Data Model OAI-PMH + DC Elements";
 		final String oaipmhDCTermsSchemaDM = "Internal Data Model OAI-PMH + DC Terms";
-		final String oaipmhMARCXMLSchemaDM = "Internal Data Model OAI-PNH + MARCXML";
+		final String oaipmhMARCXMLSchemaDM = "Internal Data Model OAI-PMH + MARCXML";
 		final String oaipmhDCElementsAndEDMSchemaDM = "Internal Data Model OAI-PMH + DC Elements + EDM";
 
 		final Schema foafPersonSchema = biboDocumentSchema.getAttributePathByURIPath(AttributeServiceTestUtils.DCTERMS_CREATOR).getSubSchema();
@@ -154,7 +156,8 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		createSchemaDataModel(DataModelUtils.BIBO_DOCUMENT_DATA_MODEL_UUID, biboDocumentDM, biboDocumentDM, biboDocumentSchema);
 		createSchemaDataModel(DataModelUtils.MABXML_DATA_MODEL_UUID, mabxmlSchemaDM, mabxmlSchemaDM, mabxmlSchema);
 		createSchemaDataModel(DataModelUtils.PNX_DATA_MODEL_UUID, pnxSchemaDM, pnxSchemaDM, pnxSchema);
-		createSchemaDataModel(DataModelUtils.MARC21_DATA_MODEL_UUID, marc21SchemaDM, marc21SchemaDM, marc21Schema);
+		createSchemaDataModel(DataModelUtils.MARCXML_DATA_MODEL_UUID, marcxmlSchemaDM, marcxmlSchemaDM, marcxmlSchema);
+		createSchemaDataModel(DataModelUtils.PICAPLUSXML_DATA_MODEL_UUID, picaplusxmlSchemaDM, picaplusxmlSchemaDM, picaplusxmlSchema);
 		createSchemaDataModel(DataModelUtils.FOAF_PERSON_DATA_MODEL_UUID, foafPersonDM, foafPersonDM, foafPersonSchema);
 		createSchemaDataModel(DataModelUtils.FINC_SOLR_DATA_MODEL_UUID, fincSolrSchemaDM, fincSolrSchemaDM, fincSolrSchema);
 		createSchemaDataModel(DataModelUtils.OAI_PMH_DC_ELEMENTS_DATA_MODEL_UUID, oaipmhDCElementsSchemaDM, oaipmhDCElementsSchemaDM,

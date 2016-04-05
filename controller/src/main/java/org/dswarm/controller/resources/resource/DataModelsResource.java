@@ -959,6 +959,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			case ConfigurationStatics.XML_STORAGE_TYPE:
 			case ConfigurationStatics.MABXML_STORAGE_TYPE:
 			case ConfigurationStatics.MARCXML_STORAGE_TYPE:
+			case ConfigurationStatics.PICAPLUSXML_STORAGE_TYPE:
 			case ConfigurationStatics.PNX_STORAGE_TYPE:
 			case ConfigurationStatics.OAI_PMH_DC_ELEMENTS_STORAGE_TYPE:
 			case ConfigurationStatics.OAI_PMH_DCE_AND_EDM_ELEMENTS_STORAGE_TYPE:
@@ -1105,6 +1106,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			case ConfigurationStatics.XML_STORAGE_TYPE:
 			case ConfigurationStatics.MABXML_STORAGE_TYPE:
 			case ConfigurationStatics.MARCXML_STORAGE_TYPE:
+			case ConfigurationStatics.PICAPLUSXML_STORAGE_TYPE:
 			case ConfigurationStatics.PNX_STORAGE_TYPE:
 			case ConfigurationStatics.OAI_PMH_DC_ELEMENTS_STORAGE_TYPE:
 			case ConfigurationStatics.OAI_PMH_DCE_AND_EDM_ELEMENTS_STORAGE_TYPE:

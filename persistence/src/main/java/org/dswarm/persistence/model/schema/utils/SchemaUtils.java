@@ -19,7 +19,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import com.google.common.net.UrlEscapers;
 import com.google.inject.Provider;
-import org.dswarm.common.model.util.AttributePathUtil;
+
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.AdvancedDMPJPAObject;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
@@ -57,7 +57,8 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 	public static final String BIBO_DOCUMENT_SCHEMA_UUID = "Schema-ff62ec21-0a11-4c27-a704-d7ca53a21521";
 	public static final String FOAF_SCHEMA_UUID = "Schema-309e901c-3da9-4d82-a694-bab632eaa340";
 	public static final String PNX_SCHEMA_UUID = "Schema-dbc97499-278d-4551-a65e-8e8bb219ca6c";
-	public static final String MARC21_SCHEMA_UUID = "Schema-781d73f0-d115-462e-9b4c-ec23e4251c8d";
+	public static final String MARCXML_SCHEMA_UUID = "Schema-781d73f0-d115-462e-9b4c-ec23e4251c8d";
+	public static final String PICAPLUSXML_SCHEMA_UUID = "Schema-b02b22bf-4657-4853-9263-d2acf7fdae4d";
 	public static final String FINC_SOLR_SCHEMA_UUID = "Schema-5664ba0e-ccb3-4b71-8823-13281490de30";
 	public static final String OAI_PMH_DC_ELEMENTS_SCHEMA_UUID = "Schema-cb8f4b96-9ab2-4972-88f8-143656199518";
 	public static final String OAI_PMH_DC_TERMS_SCHEMA_UUID = "Schema-8fefbced-c2f2-478c-a22a-debb122e05de";
@@ -74,7 +75,8 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 		inbuiltSchemaUuids.add(BIBO_DOCUMENT_SCHEMA_UUID);
 		inbuiltSchemaUuids.add(FOAF_SCHEMA_UUID);
 		inbuiltSchemaUuids.add(PNX_SCHEMA_UUID);
-		inbuiltSchemaUuids.add(MARC21_SCHEMA_UUID);
+		inbuiltSchemaUuids.add(MARCXML_SCHEMA_UUID);
+		inbuiltSchemaUuids.add(PICAPLUSXML_SCHEMA_UUID);
 		inbuiltSchemaUuids.add(FINC_SOLR_SCHEMA_UUID);
 		inbuiltSchemaUuids.add(OAI_PMH_DC_ELEMENTS_SCHEMA_UUID);
 		inbuiltSchemaUuids.add(OAI_PMH_DC_TERMS_SCHEMA_UUID);

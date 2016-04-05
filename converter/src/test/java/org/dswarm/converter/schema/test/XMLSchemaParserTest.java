@@ -67,9 +67,9 @@ public class XMLSchemaParserTest extends GuicedTest {
 	}
 
 	@Test
-	public void testAttributePathsParsingForMarc21() throws IOException {
+	public void testAttributePathsParsingForMarcXml() throws IOException {
 
-		testAttributePathsParsing("MARC21slim.xsd", "record", "marc21_schema_attribute_paths.txt", false);
+		testAttributePathsParsing("MARC21slim.xsd", "record", "marcxml_schema_attribute_paths.txt", false);
 	}
 
 	@Test
@@ -100,6 +100,12 @@ public class XMLSchemaParserTest extends GuicedTest {
 	public void testAttributePathsParsingForOAIPMH() throws IOException {
 
 		testAttributePathsParsing("OAI-PMH.xsd", "record", "oai-pmh_schema_-_attribute_paths.txt", false);
+	}
+
+	@Test
+	public void testAttributePathsParsingForPICAPlusXml() throws IOException {
+
+		testAttributePathsParsing("ppxml-1.0.xsd", "record", "pica_schema_-_attribute_paths.txt", false);
 	}
 
 	/**
@@ -365,6 +371,39 @@ public class XMLSchemaParserTest extends GuicedTest {
 	}
 
 	/**
+	 * note: creates the PICA+ XML from the given xml schema file from scratch (by optionally reutilising existing SAPIs) + adds content schema programmatically
+	 *
+	 * @throws IOException
+	 * @throws DMPPersistenceException
+	 */
+	public static Schema parsePicaPlusXmlSchema(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
+	                                            final Optional<String> optionalContentSchemaIdentifier) throws IOException, DMPPersistenceException {
+
+		final Schema schema = parseSchema("ppxml-1.0.xsd", "record", SchemaUtils.PICAPLUSXML_SCHEMA_UUID, "PICA+ XML schema", optionalAttributePathsSAPIUUIDs);
+
+		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(schema);
+
+		final String uuid = getOrCreateContentSchemaIdentifier(optionalContentSchemaIdentifier);
+
+		final ContentSchema contentSchema = new ContentSchema(uuid);
+		contentSchema.setName("PICA+ content schema");
+
+		final AttributePath globalTagId = aps
+				.get("http://www.oclcpica.org/xmlns/ppxml-1.0#global\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#tag\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#id");
+		final AttributePath globalTagOcc = aps
+				.get("http://www.oclcpica.org/xmlns/ppxml-1.0#global\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#tag\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#occ");
+		final AttributePath globalTagSubfId = aps.get("http://www.oclcpica.org/xmlns/ppxml-1.0#global\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#tag\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#subf\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#id");
+		final AttributePath globalTagSubfValue = aps
+				.get("http://www.oclcpica.org/xmlns/ppxml-1.0#global\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#tag\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#subf\u001Ehttp://www.w3.org/1999/02/22-rdf-syntax-ns#value");
+
+		contentSchema.addKeyAttributePath(globalTagId);
+		contentSchema.addKeyAttributePath(globalTagOcc);
+		contentSchema.addKeyAttributePath(globalTagSubfId);
+
+		return fillContentSchemaAndUpdateSchema(contentSchema, null, globalTagSubfValue, schema);
+	}
+
+	/**
 	 * note: creates the mabxml from the given xml schema file from scratch + adds content schema programmatically
 	 *
 	 * @throws IOException
@@ -411,22 +450,22 @@ public class XMLSchemaParserTest extends GuicedTest {
 	}
 
 	/**
-	 * creates the Marc21 schema from the given XML schema file from scratch (by optionally reutilising existing SAPIs)
+	 * creates the MARC XML schema from the given XML schema file from scratch (by optionally reutilising existing SAPIs)
 	 *
 	 * @throws IOException
 	 * @throws DMPPersistenceException
 	 */
-	public static Schema parseMarc21Schema(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
-	                                       final Optional<String> optionalContentSchemaIdentifier) throws IOException, DMPPersistenceException {
+	public static Schema parseMarcXmlSchema(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
+	                                        final Optional<String> optionalContentSchemaIdentifier) throws IOException, DMPPersistenceException {
 
-		final Schema schema = parseSchema("MARC21slim.xsd", "record", SchemaUtils.MARC21_SCHEMA_UUID, "marc21 schema", optionalAttributePathsSAPIUUIDs);
+		final Schema schema = parseSchema("MARC21slim.xsd", "record", SchemaUtils.MARCXML_SCHEMA_UUID, "MARCXML schema", optionalAttributePathsSAPIUUIDs);
 
 		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(schema);
 
 		final String uuid = getOrCreateContentSchemaIdentifier(optionalContentSchemaIdentifier);
 
 		final ContentSchema contentSchema = new ContentSchema(uuid);
-		contentSchema.setName("marc21 content schema");
+		contentSchema.setName("MARC21 content schema");
 
 		final AttributePath datafieldTag = aps
 				.get("http://www.loc.gov/MARC21/slim#datafield\u001Ehttp://www.loc.gov/MARC21/slim#tag");
@@ -449,14 +488,14 @@ public class XMLSchemaParserTest extends GuicedTest {
 	}
 
 	/**
-	 * creates the Marc21 schema from the given XML schema file from scratch
+	 * creates the MARC XML schema from the given XML schema file from scratch
 	 *
 	 * @throws IOException
 	 * @throws DMPPersistenceException
 	 */
-	public static Schema parseMarc21Schema() throws IOException, DMPPersistenceException {
+	public static Schema parseMarcXmlSchema() throws IOException, DMPPersistenceException {
 
-		return parseMarc21Schema(Optional.empty(), Optional.empty());
+		return parseMarcXmlSchema(Optional.empty(), Optional.empty());
 	}
 
 	private static Schema parseSchema(final String xsdFileName,
@@ -532,11 +571,15 @@ public class XMLSchemaParserTest extends GuicedTest {
 		return optionalAttributePaths.get();
 	}
 
-	private static Schema fillContentSchemaAndUpdateSchema(final ContentSchema contentSchema, final AttributePath recordIdentifierAP,
-	                                                       final AttributePath valueAP, final Schema schema)
-			throws DMPPersistenceException {
+	private static Schema fillContentSchemaAndUpdateSchema(final ContentSchema contentSchema,
+	                                                       final AttributePath recordIdentifierAP,
+	                                                       final AttributePath valueAP,
+	                                                       final Schema schema) throws DMPPersistenceException {
 
-		contentSchema.setRecordIdentifierAttributePath(recordIdentifierAP);
+		if(recordIdentifierAP != null) {
+
+			contentSchema.setRecordIdentifierAttributePath(recordIdentifierAP);
+		}
 
 		if (valueAP != null) {
 

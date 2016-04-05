@@ -106,7 +106,7 @@ public class DataModelUtil {
 	 */
 	public Observable<Tuple<String, JsonNode>> getData(final String dataModelUuid) {
 
-		return getData(dataModelUuid, Optional.<Integer>empty());
+		return getData(dataModelUuid, Optional.empty());
 	}
 
 	/**
@@ -412,6 +412,7 @@ public class DataModelUtil {
 			case ConfigurationStatics.XML_STORAGE_TYPE:
 			case ConfigurationStatics.MABXML_STORAGE_TYPE:
 			case ConfigurationStatics.MARCXML_STORAGE_TYPE:
+			case ConfigurationStatics.PICAPLUSXML_STORAGE_TYPE:
 			case ConfigurationStatics.PNX_STORAGE_TYPE:
 			case ConfigurationStatics.OAI_PMH_DC_ELEMENTS_STORAGE_TYPE:
 			case ConfigurationStatics.OAI_PMH_DCE_AND_EDM_ELEMENTS_STORAGE_TYPE:
@@ -448,7 +449,8 @@ public class DataModelUtil {
 		switch (dataModel.getUuid()) {
 
 			case DataModelUtils.MABXML_DATA_MODEL_UUID:
-			case DataModelUtils.MARC21_DATA_MODEL_UUID:
+			case DataModelUtils.MARCXML_DATA_MODEL_UUID:
+			case DataModelUtils.PICAPLUSXML_DATA_MODEL_UUID:
 			case DataModelUtils.PNX_DATA_MODEL_UUID:
 			case DataModelUtils.OAI_PMH_DC_ELEMENTS_DATA_MODEL_UUID:
 			case DataModelUtils.OAI_PMH_DC_ELEMENTS_AND_EDM_DATA_MODEL_UUID:
@@ -483,6 +485,7 @@ public class DataModelUtil {
 								case ConfigurationStatics.PNX_STORAGE_TYPE:
 								case ConfigurationStatics.MABXML_STORAGE_TYPE:
 								case ConfigurationStatics.MARCXML_STORAGE_TYPE:
+								case ConfigurationStatics.PICAPLUSXML_STORAGE_TYPE:
 								case ConfigurationStatics.OAI_PMH_DC_ELEMENTS_STORAGE_TYPE:
 								case ConfigurationStatics.OAI_PMH_DCE_AND_EDM_ELEMENTS_STORAGE_TYPE:
 								case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:
