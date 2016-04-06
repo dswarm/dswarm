@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,7 +15,18 @@
  */
 package org.dswarm.converter.schema.test;
 
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
 import com.google.inject.Provider;
+import org.junit.Assert;
+import org.junit.Test;
+
 import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.schema.XMLSchemaParser;
@@ -32,11 +43,6 @@ import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
 import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.junit.Assert;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.util.*;
 
 /**
  * @author tgaengler
@@ -106,6 +112,16 @@ public class XMLSchemaParserTest extends GuicedTest {
 	public void testAttributePathsParsingForPICAPlusXml() throws IOException {
 
 		testAttributePathsParsing("ppxml-1.0.xsd", "record", "pica_schema_-_attribute_paths.txt", false);
+	}
+
+	@Test
+	public void testAttributePathsParsingForPICAPlusXmlGlobal() throws IOException {
+
+		final Set<String> excludeAttributePathStubs = new HashSet<>();
+
+		excludeAttributePathStubs.add("http://www.oclcpica.org/xmlns/ppxml-1.0#owner");
+
+		testAttributePathsParsing("ppxml-1.0.xsd", "record", "pica_global_schema_-_attribute_paths.txt", false, Optional.of(excludeAttributePathStubs));
 	}
 
 	/**
@@ -371,7 +387,7 @@ public class XMLSchemaParserTest extends GuicedTest {
 	}
 
 	/**
-	 * note: creates the PICA+ XML from the given xml schema file from scratch (by optionally reutilising existing SAPIs) + adds content schema programmatically
+	 * note: creates the PICA+ XML schema from the given xml schema file from scratch (by optionally reutilising existing SAPIs) + adds content schema programmatically
 	 *
 	 * @throws IOException
 	 * @throws DMPPersistenceException
@@ -380,6 +396,43 @@ public class XMLSchemaParserTest extends GuicedTest {
 	                                            final Optional<String> optionalContentSchemaIdentifier) throws IOException, DMPPersistenceException {
 
 		final Schema schema = parseSchema("ppxml-1.0.xsd", "record", SchemaUtils.PICAPLUSXML_SCHEMA_UUID, "PICA+ XML schema", optionalAttributePathsSAPIUUIDs);
+
+		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(schema);
+
+		final String uuid = getOrCreateContentSchemaIdentifier(optionalContentSchemaIdentifier);
+
+		final ContentSchema contentSchema = new ContentSchema(uuid);
+		contentSchema.setName("PICA+ content schema");
+
+		final AttributePath globalTagId = aps
+				.get("http://www.oclcpica.org/xmlns/ppxml-1.0#global\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#tag\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#id");
+		final AttributePath globalTagOcc = aps
+				.get("http://www.oclcpica.org/xmlns/ppxml-1.0#global\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#tag\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#occ");
+		final AttributePath globalTagSubfId = aps.get("http://www.oclcpica.org/xmlns/ppxml-1.0#global\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#tag\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#subf\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#id");
+		final AttributePath globalTagSubfValue = aps
+				.get("http://www.oclcpica.org/xmlns/ppxml-1.0#global\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#tag\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#subf\u001Ehttp://www.w3.org/1999/02/22-rdf-syntax-ns#value");
+
+		contentSchema.addKeyAttributePath(globalTagId);
+		contentSchema.addKeyAttributePath(globalTagOcc);
+		contentSchema.addKeyAttributePath(globalTagSubfId);
+
+		return fillContentSchemaAndUpdateSchema(contentSchema, null, globalTagSubfValue, schema);
+	}
+
+	/**
+	 * note: creates the PICA+ XML 'global' schema (only attribute paths that start with 'http://www.oclcpica.org/xmlns/ppxml-1.0#owner') from the given xml schema file from scratch (by optionally reutilising existing SAPIs) + adds content schema programmatically
+	 *
+	 * @throws IOException
+	 * @throws DMPPersistenceException
+	 */
+	public static Schema parsePicaPlusXmlGlobalSchema(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
+	                                                  final Optional<String> optionalContentSchemaIdentifier) throws IOException, DMPPersistenceException {
+
+		final Set<String> excludeAttributePathStubs = new HashSet<>();
+
+		excludeAttributePathStubs.add("http://www.oclcpica.org/xmlns/ppxml-1.0#owner");
+
+		final Schema schema = parseSchema("ppxml-1.0.xsd", "record", SchemaUtils.PICAPLUSXML_GLOBAL_SCHEMA_UUID, "PICA+ XML 'global' schema", optionalAttributePathsSAPIUUIDs, Optional.of(excludeAttributePathStubs));
 
 		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(schema);
 
@@ -501,24 +554,34 @@ public class XMLSchemaParserTest extends GuicedTest {
 	private static Schema parseSchema(final String xsdFileName,
 	                                  final String recordIdentifier,
 	                                  final String schemaUUID,
-	                                  final String schemaName,
-	                                  final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs) throws DMPPersistenceException {
+	                                  final String schemaName) throws DMPPersistenceException {
 
-		final XMLSchemaParser xmlSchemaParser = GuicedTest.injector.getInstance(XMLSchemaParser.class);
-		final java.util.Optional<Schema> optionalSchema = xmlSchemaParser.parse(xsdFileName, recordIdentifier, schemaUUID, schemaName, optionalAttributePathsSAPIUUIDs);
 
-		Assert.assertTrue(optionalSchema.isPresent());
-
-		return optionalSchema.get();
+		return parseSchema(xsdFileName, recordIdentifier, schemaUUID, schemaName, Optional.empty());
 	}
 
 	private static Schema parseSchema(final String xsdFileName,
 	                                  final String recordIdentifier,
 	                                  final String schemaUUID,
-	                                  final String schemaName) throws DMPPersistenceException {
+	                                  final String schemaName,
+	                                  final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs) throws DMPPersistenceException {
 
+		return parseSchema(xsdFileName, recordIdentifier, schemaUUID, schemaName, optionalAttributePathsSAPIUUIDs, Optional.empty());
+	}
 
-		return parseSchema(xsdFileName, recordIdentifier, schemaUUID, schemaName, Optional.empty());
+	private static Schema parseSchema(final String xsdFileName,
+	                                  final String recordIdentifier,
+	                                  final String schemaUUID,
+	                                  final String schemaName,
+	                                  final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
+	                                  final Optional<Set<String>> optionalExcludeAttributePathStubs) throws DMPPersistenceException {
+
+		final XMLSchemaParser xmlSchemaParser = GuicedTest.injector.getInstance(XMLSchemaParser.class);
+		final java.util.Optional<Schema> optionalSchema = xmlSchemaParser.parse(xsdFileName, recordIdentifier, schemaUUID, schemaName, optionalAttributePathsSAPIUUIDs, optionalExcludeAttributePathStubs);
+
+		Assert.assertTrue(optionalSchema.isPresent());
+
+		return optionalSchema.get();
 	}
 
 	private static Tuple<Schema, Map<String, AttributePathHelper>> parseSchemaSeparately(final String xsdFileName,
@@ -535,15 +598,27 @@ public class XMLSchemaParserTest extends GuicedTest {
 		return optionalResult.get();
 	}
 
-	private void testAttributePathsParsing(final String xsdFileName, final String recordIdentifier, final String resultFileName,
+	private void testAttributePathsParsing(final String xsdFileName,
+	                                       final String recordIdentifier,
+	                                       final String resultFileName,
 	                                       final boolean includeRecordTag) throws IOException {
 
-		final Map<String, AttributePathHelper> attributePaths = parseAttributePaths(xsdFileName, recordIdentifier, includeRecordTag);
+		testAttributePathsParsing(xsdFileName, recordIdentifier, resultFileName, includeRecordTag, Optional.empty());
+	}
+
+	private void testAttributePathsParsing(final String xsdFileName,
+	                                       final String recordIdentifier,
+	                                       final String resultFileName,
+	                                       final boolean includeRecordTag,
+	                                       final Optional<Set<String>> optionalExcludeAttributePathStubs) throws IOException {
+
+		final Map<String, AttributePathHelper> attributePaths = parseAttributePaths(xsdFileName, recordIdentifier, includeRecordTag, optionalExcludeAttributePathStubs);
 
 		compareAttributePaths(resultFileName, attributePaths);
 	}
 
-	private void compareAttributePaths(final String resultFileName, final Map<String, AttributePathHelper> attributePaths) throws IOException {
+	private void compareAttributePaths(final String resultFileName,
+	                                   final Map<String, AttributePathHelper> attributePaths) throws IOException {
 
 		final StringBuilder sb = new StringBuilder();
 
@@ -558,13 +633,22 @@ public class XMLSchemaParserTest extends GuicedTest {
 		Assert.assertEquals(expectedAttributePaths, actualAttributePaths);
 	}
 
-	private static Map<String, AttributePathHelper> parseAttributePaths(final String xsdFileName, final String recordIdentifier,
+	private static Map<String, AttributePathHelper> parseAttributePaths(final String xsdFileName,
+	                                                                    final String recordIdentifier,
 	                                                                    final boolean includeRecordTag) {
+
+		return parseAttributePaths(xsdFileName, recordIdentifier, includeRecordTag, Optional.empty());
+	}
+
+	private static Map<String, AttributePathHelper> parseAttributePaths(final String xsdFileName,
+	                                                                    final String recordIdentifier,
+	                                                                    final boolean includeRecordTag,
+	                                                                    final Optional<Set<String>> optionalExcludeAttributePathStubs) {
 
 		final XMLSchemaParser xmlSchemaParser = GuicedTest.injector.getInstance(XMLSchemaParser.class);
 		xmlSchemaParser.setIncludeRecordTag(includeRecordTag);
 		final Optional<Map<String, AttributePathHelper>> optionalAttributePaths = xmlSchemaParser.parseAttributePathsMap(xsdFileName,
-				Optional.ofNullable(recordIdentifier));
+				Optional.ofNullable(recordIdentifier), optionalExcludeAttributePathStubs);
 
 		Assert.assertTrue(optionalAttributePaths.isPresent());
 
@@ -576,7 +660,7 @@ public class XMLSchemaParserTest extends GuicedTest {
 	                                                       final AttributePath valueAP,
 	                                                       final Schema schema) throws DMPPersistenceException {
 
-		if(recordIdentifierAP != null) {
+		if (recordIdentifierAP != null) {
 
 			contentSchema.setRecordIdentifierAttributePath(recordIdentifierAP);
 		}

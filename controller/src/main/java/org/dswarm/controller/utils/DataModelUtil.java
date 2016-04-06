@@ -413,6 +413,7 @@ public class DataModelUtil {
 			case ConfigurationStatics.MABXML_STORAGE_TYPE:
 			case ConfigurationStatics.MARCXML_STORAGE_TYPE:
 			case ConfigurationStatics.PICAPLUSXML_STORAGE_TYPE:
+			case ConfigurationStatics.PICAPLUSXML_GLOBAL_STORAGE_TYPE:
 			case ConfigurationStatics.PNX_STORAGE_TYPE:
 			case ConfigurationStatics.OAI_PMH_DC_ELEMENTS_STORAGE_TYPE:
 			case ConfigurationStatics.OAI_PMH_DCE_AND_EDM_ELEMENTS_STORAGE_TYPE:
@@ -451,6 +452,7 @@ public class DataModelUtil {
 			case DataModelUtils.MABXML_DATA_MODEL_UUID:
 			case DataModelUtils.MARCXML_DATA_MODEL_UUID:
 			case DataModelUtils.PICAPLUSXML_DATA_MODEL_UUID:
+			case DataModelUtils.PICAPLUSXML_GLOBAL_DATA_MODEL_UUID:
 			case DataModelUtils.PNX_DATA_MODEL_UUID:
 			case DataModelUtils.OAI_PMH_DC_ELEMENTS_DATA_MODEL_UUID:
 			case DataModelUtils.OAI_PMH_DC_ELEMENTS_AND_EDM_DATA_MODEL_UUID:
@@ -486,6 +488,7 @@ public class DataModelUtil {
 								case ConfigurationStatics.MABXML_STORAGE_TYPE:
 								case ConfigurationStatics.MARCXML_STORAGE_TYPE:
 								case ConfigurationStatics.PICAPLUSXML_STORAGE_TYPE:
+								case ConfigurationStatics.PICAPLUSXML_GLOBAL_STORAGE_TYPE:
 								case ConfigurationStatics.OAI_PMH_DC_ELEMENTS_STORAGE_TYPE:
 								case ConfigurationStatics.OAI_PMH_DCE_AND_EDM_ELEMENTS_STORAGE_TYPE:
 								case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:

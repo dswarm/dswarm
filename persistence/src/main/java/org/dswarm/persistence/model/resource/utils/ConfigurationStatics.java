@@ -138,6 +138,8 @@ public interface ConfigurationStatics {
 
 	String PICAPLUSXML_STORAGE_TYPE = "picaplusxml";
 
+	String PICAPLUSXML_GLOBAL_STORAGE_TYPE = "picaplusxml-global";
+
 	String PNX_STORAGE_TYPE = "pnx";
 
 	String OAI_PMH_DC_ELEMENTS_STORAGE_TYPE = "oai-pmh+dce";

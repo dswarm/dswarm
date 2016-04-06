@@ -130,6 +130,7 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		final Schema pnxSchema = XMLSchemaParserTest.parsePNXSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.PNX_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.PNX_SCHEMA_UUID)));
 		final Schema marcxmlSchema = XMLSchemaParserTest.parseMarcXmlSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.MARCXML_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.MARCXML_SCHEMA_UUID)));
 		final Schema picaplusxmlSchema = XMLSchemaParserTest.parsePicaPlusXmlSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.PICAPLUSXML_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.PICAPLUSXML_SCHEMA_UUID)));
+		final Schema picaplusxmlGlobalSchema = XMLSchemaParserTest.parsePicaPlusXmlGlobalSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.PICAPLUSXML_GLOBAL_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.PICAPLUSXML_GLOBAL_SCHEMA_UUID)));
 		final Schema fincSolrSchema = SolrSchemaParserTest.parseFincSolrSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.FINC_SOLR_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.FINC_SOLR_SCHEMA_UUID)));
 		final Schema oaipmhDCElementsSchema = XMLSchemaParserTest.parseOAIPMHPlusDCElementsSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID)));
 		final Schema oaipmhDCTermsSchema = XMLSchemaParserTest.parseOAIPMHPlusDCTermsSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID)));
@@ -142,6 +143,7 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		final String pnxSchemaDM = "Internal Data Model PNX";
 		final String marcxmlSchemaDM = "Internal Data Model MARCXML";
 		final String picaplusxmlSchemaDM = "Internal Data Model PICA+ XML";
+		final String picaplusxmlGlobalSchemaDM = "Internal Data Model PICA+ XML 'global'";
 		// [@tgaengler]: just prevention, but I guess that we also need a (default) data model for the foaf:Person schema (right now)
 		final String foafPersonDM = "Internal Data Model foafPerson";
 		final String fincSolrSchemaDM = "Internal Data Model finc Solr";
@@ -158,6 +160,7 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		createSchemaDataModel(DataModelUtils.PNX_DATA_MODEL_UUID, pnxSchemaDM, pnxSchemaDM, pnxSchema);
 		createSchemaDataModel(DataModelUtils.MARCXML_DATA_MODEL_UUID, marcxmlSchemaDM, marcxmlSchemaDM, marcxmlSchema);
 		createSchemaDataModel(DataModelUtils.PICAPLUSXML_DATA_MODEL_UUID, picaplusxmlSchemaDM, picaplusxmlSchemaDM, picaplusxmlSchema);
+		createSchemaDataModel(DataModelUtils.PICAPLUSXML_GLOBAL_DATA_MODEL_UUID, picaplusxmlGlobalSchemaDM, picaplusxmlGlobalSchemaDM, picaplusxmlGlobalSchema);
 		createSchemaDataModel(DataModelUtils.FOAF_PERSON_DATA_MODEL_UUID, foafPersonDM, foafPersonDM, foafPersonSchema);
 		createSchemaDataModel(DataModelUtils.FINC_SOLR_DATA_MODEL_UUID, fincSolrSchemaDM, fincSolrSchemaDM, fincSolrSchema);
 		createSchemaDataModel(DataModelUtils.OAI_PMH_DC_ELEMENTS_DATA_MODEL_UUID, oaipmhDCElementsSchemaDM, oaipmhDCElementsSchemaDM,

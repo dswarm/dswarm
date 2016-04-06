@@ -44,6 +44,7 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 	public static final String PNX_DATA_MODEL_UUID = "DataModel-a65018b1-d27b-4125-9eff-5f6fd860079d";
 	public static final String MARCXML_DATA_MODEL_UUID = "DataModel-326d3380-258e-43fd-83d2-6a87daa8480a";
 	public static final String PICAPLUSXML_DATA_MODEL_UUID = "DataModel-81109aec-8b2c-4744-80d1-a35839e9eadc";
+	public static final String PICAPLUSXML_GLOBAL_DATA_MODEL_UUID = "DataModel-06f5ad75-3519-44c7-9fbd-783974de9351";
 	public static final String FINC_SOLR_DATA_MODEL_UUID = "5fddf2c5-916b-49dc-a07d-af04020c17f7";
 	public static final String OAI_PMH_DC_ELEMENTS_DATA_MODEL_UUID = "DataModel-fbf2e242-0a6b-4306-9264-d0ff420398b1";
 	public static final String OAI_PMH_DC_TERMS_DATA_MODEL_UUID = "DataModel-324e9d95-d06d-4bee-9a7e-a492ad8f0880";
@@ -61,6 +62,7 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 		dataModelsToInbuiltSchemata.add(PNX_DATA_MODEL_UUID);
 		dataModelsToInbuiltSchemata.add(MARCXML_DATA_MODEL_UUID);
 		dataModelsToInbuiltSchemata.add(PICAPLUSXML_DATA_MODEL_UUID);
+		dataModelsToInbuiltSchemata.add(PICAPLUSXML_GLOBAL_DATA_MODEL_UUID);
 		dataModelsToInbuiltSchemata.add(FINC_SOLR_DATA_MODEL_UUID);
 		dataModelsToInbuiltSchemata.add(OAI_PMH_DC_ELEMENTS_DATA_MODEL_UUID);
 		dataModelsToInbuiltSchemata.add(OAI_PMH_DC_TERMS_DATA_MODEL_UUID);

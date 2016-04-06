@@ -127,6 +127,7 @@ public class SchemaDeterminator {
 					case SchemaUtils.MABXML_SCHEMA_UUID:
 					case SchemaUtils.MARCXML_SCHEMA_UUID:
 					case SchemaUtils.PICAPLUSXML_SCHEMA_UUID:
+					case SchemaUtils.PICAPLUSXML_GLOBAL_SCHEMA_UUID:
 					case SchemaUtils.PNX_SCHEMA_UUID:
 					case SchemaUtils.FINC_SOLR_SCHEMA_UUID:
 					case SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID:
@@ -185,6 +186,7 @@ public class SchemaDeterminator {
 						case ConfigurationStatics.MABXML_STORAGE_TYPE:
 						case ConfigurationStatics.MARCXML_STORAGE_TYPE:
 						case ConfigurationStatics.PICAPLUSXML_STORAGE_TYPE:
+						case ConfigurationStatics.PICAPLUSXML_GLOBAL_STORAGE_TYPE:
 						case ConfigurationStatics.PNX_STORAGE_TYPE:
 						case ConfigurationStatics.OAI_PMH_DC_ELEMENTS_STORAGE_TYPE:
 						case ConfigurationStatics.OAI_PMH_DCE_AND_EDM_ELEMENTS_STORAGE_TYPE:
@@ -239,6 +241,13 @@ public class SchemaDeterminator {
 					// assign existing PICA+ XML schema to data resource
 
 					schema = schemaService.get().getObject(SchemaUtils.PICAPLUSXML_SCHEMA_UUID);
+
+					break;
+				case ConfigurationStatics.PICAPLUSXML_GLOBAL_STORAGE_TYPE:
+
+					// assign existing PICA+ XML 'global' schema to data resource
+
+					schema = schemaService.get().getObject(SchemaUtils.PICAPLUSXML_GLOBAL_SCHEMA_UUID);
 
 					break;
 				case ConfigurationStatics.PNX_STORAGE_TYPE:
