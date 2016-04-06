@@ -16,35 +16,56 @@
 package org.dswarm.persistence.service.schema.test.internalmodel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.service.schema.test.utils.ClaszServiceTestUtils;
 import org.dswarm.persistence.service.schema.test.utils.SchemaServiceTestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Map;
+import java.util.Optional;
 
 public abstract class SchemaBuilder extends GuicedTest {
 
-	private final        ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
-	private static final Logger       LOG          = LoggerFactory.getLogger(SchemaBuilder.class);
-	protected            String       prefixPaths  = "";
+	private final ObjectMapper objectMapper = GuicedTest.injector.getInstance(ObjectMapper.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SchemaBuilder.class);
+	protected String prefixPaths = "";
 
-	protected ClaszServiceTestUtils  claszServiceTestUtils;
+	protected ClaszServiceTestUtils claszServiceTestUtils;
 	protected SchemaServiceTestUtils schemaServiceTestUtils;
 
+	protected final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs;
+
 	public SchemaBuilder() {
+
 		super();
+
+		optionalAttributePathsSAPIUUIDs = Optional.empty();
+
+		init();
+	}
+
+	public SchemaBuilder(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDsArg) {
+
+		super();
+
+		optionalAttributePathsSAPIUUIDs = optionalAttributePathsSAPIUUIDsArg;
+
+		init();
+	}
+
+	private void init() {
 
 		claszServiceTestUtils = new ClaszServiceTestUtils();
 		schemaServiceTestUtils = new SchemaServiceTestUtils();
 	}
 
-	@Override protected void initObjects() {
+	@Override
+	protected void initObjects() {
 		super.initObjects();
 
-		claszServiceTestUtils = new ClaszServiceTestUtils();
-		schemaServiceTestUtils = new SchemaServiceTestUtils();
+		init();
 	}
 
 	public abstract Schema buildSchema() throws Exception;

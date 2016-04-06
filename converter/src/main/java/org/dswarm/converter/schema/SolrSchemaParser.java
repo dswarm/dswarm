@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -33,6 +34,7 @@ import javax.xml.xpath.XPathFactory;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.dswarm.persistence.service.schema.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -51,10 +53,6 @@ import org.dswarm.persistence.model.schema.proxy.ProxyAttributePath;
 import org.dswarm.persistence.model.schema.proxy.ProxySchema;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 import org.dswarm.persistence.service.UUIDService;
-import org.dswarm.persistence.service.schema.AttributePathService;
-import org.dswarm.persistence.service.schema.AttributeService;
-import org.dswarm.persistence.service.schema.ClaszService;
-import org.dswarm.persistence.service.schema.SchemaService;
 
 /**
  * Transforms a given Solr schema file (schema.xml) to a d:swarm schema.
@@ -72,6 +70,8 @@ public class SolrSchemaParser {
 	private final Provider<AttributePathService> attributePathServiceProvider;
 
 	private final Provider<AttributeService> attributeServiceProvider;
+
+	private final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceServiceProvider;
 
 	private static final String SCHEMA_IDENTIFIER               = "schema";
 	private static final String FIELDS_IDENTIFIER               = "fields";
@@ -92,17 +92,22 @@ public class SolrSchemaParser {
 
 	@Inject
 	public SolrSchemaParser(final Provider<SchemaService> schemaServiceProviderArg,
-			final Provider<ClaszService> classServiceProviderArg, final Provider<AttributePathService> attributePathServiceProviderArg,
-			final Provider<AttributeService> attributeServiceProviderArg) {
+	                        final Provider<ClaszService> classServiceProviderArg,
+	                        final Provider<AttributePathService> attributePathServiceProviderArg,
+	                        final Provider<AttributeService> attributeServiceProviderArg,
+	                        final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceServiceProviderArg) {
 
 		schemaServiceProvider = schemaServiceProviderArg;
 		classServiceProvider = classServiceProviderArg;
 		attributePathServiceProvider = attributePathServiceProviderArg;
 		attributeServiceProvider = attributeServiceProviderArg;
+		schemaAttributePathInstanceServiceProvider = schemaAttributePathInstanceServiceProviderArg;
 	}
 
-	public Optional<Schema> parse(final String solrSchemaFilePath, final String schemaUUID, final String schemaName)
-			throws DMPPersistenceException {
+	public Optional<Schema> parse(final String solrSchemaFilePath,
+	                              final String schemaUUID,
+	                              final String schemaName,
+	                              final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs) throws DMPPersistenceException {
 
 		final Optional<Document> optionalDocument = readXML(solrSchemaFilePath);
 
@@ -150,7 +155,7 @@ public class SolrSchemaParser {
 		// schema attribute paths
 		for (final AttributePath attributePath : attributePaths) {
 
-			final SchemaAttributePathInstance schemaAttributePathInstance = createSchemaAttributePathInstance(attributePath);
+			final SchemaAttributePathInstance schemaAttributePathInstance = createOrGetSchemaAttributePathInstance(attributePath, optionalAttributePathsSAPIUUIDs);
 
 			schema.addAttributePath(schemaAttributePathInstance);
 		}
@@ -168,6 +173,13 @@ public class SolrSchemaParser {
 		}
 
 		return Optional.ofNullable(optionalProxySchema.get().getObject());
+	}
+
+	public Optional<Schema> parse(final String solrSchemaFilePath,
+	                              final String schemaUUID,
+	                              final String schemaName) throws DMPPersistenceException {
+
+		return parse(solrSchemaFilePath, schemaUUID, schemaName, Optional.empty());
 	}
 
 	private Optional<Document> readXML(final String solrSchemaFilePath) {
@@ -368,8 +380,39 @@ public class SolrSchemaParser {
 		return Optional.ofNullable(optionalProxyAttributePath.get().getObject());
 	}
 
-	private SchemaAttributePathInstance createSchemaAttributePathInstance(final AttributePath attributePath)
-			throws DMPPersistenceException {
+	private SchemaAttributePathInstance createOrGetSchemaAttributePathInstance(final AttributePath attributePath,
+	                                                                           final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs) throws DMPPersistenceException {
+
+		if(!optionalAttributePathsSAPIUUIDs.isPresent()) {
+
+			return createSchemaAttributePathInstance(attributePath);
+		}
+
+		final Map<String, String> attributePathsSAPIUUIDs = optionalAttributePathsSAPIUUIDs.get();
+
+		final String attributePathString = attributePath.toAttributePath();
+
+		final Optional<String> optionalSAPIUUID = Optional.ofNullable(attributePathsSAPIUUIDs.getOrDefault(attributePathString, null));
+
+		if(!optionalSAPIUUID.isPresent()) {
+
+			return createSchemaAttributePathInstance(attributePath);
+		}
+
+		final String sapiUUID = optionalSAPIUUID.get();
+
+		final Optional<SchemaAttributePathInstance> optionalSAPI = Optional.ofNullable(schemaAttributePathInstanceServiceProvider.get().getObject(sapiUUID));
+
+		if(!optionalSAPI.isPresent()) {
+
+			return createSchemaAttributePathInstance(attributePath);
+		}
+
+		// utilise existing SAPI
+		return optionalSAPI.get();
+	}
+
+	private SchemaAttributePathInstance createSchemaAttributePathInstance(final AttributePath attributePath) throws DMPPersistenceException {
 
 		final String uuid = UUIDService.getUUID(SchemaAttributePathInstance.class.getSimpleName());
 

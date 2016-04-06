@@ -15,28 +15,15 @@
  */
 package org.dswarm.converter.schema;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Resources;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
-
 import org.dswarm.common.types.Tuple;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
@@ -44,14 +31,17 @@ import org.dswarm.persistence.model.internal.helper.AttributePathHelperHelper;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.proxy.ProxySchema;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
-import org.dswarm.persistence.service.schema.AttributePathService;
-import org.dswarm.persistence.service.schema.AttributeService;
-import org.dswarm.persistence.service.schema.ClaszService;
-import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
-import org.dswarm.persistence.service.schema.SchemaService;
+import org.dswarm.persistence.service.schema.*;
 import org.dswarm.persistence.util.GDMUtil;
 import org.dswarm.xsd2jsonschema.JsonSchemaParser;
 import org.dswarm.xsd2jsonschema.model.JSRoot;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.*;
 
 /**
  * @author tgaengler
@@ -72,25 +62,27 @@ public class XMLSchemaParser {
 
 	private final Provider<ObjectMapper> objectMapperProvider;
 
-	private static final String ROOT_NODE_IDENTIFIER               = "__ROOT_NODE__";
+	private static final String ROOT_NODE_IDENTIFIER = "__ROOT_NODE__";
 	private static final String UNKNOWN_JSON_SCHEMA_ATTRIBUTE_TYPE = "__UNKNOWN__";
-	private static final String STRING_JSON_SCHEMA_ATTRIBUTE_TYPE  = "string";
-	private static final String OBJECT_JSON_SCHEMA_ATTRIBUTE_TYPE  = "object";
-	private static final String ARRAY_JSON_SCHEMA_ATTRIBUTE_TYPE   = "array";
+	private static final String STRING_JSON_SCHEMA_ATTRIBUTE_TYPE = "string";
+	private static final String OBJECT_JSON_SCHEMA_ATTRIBUTE_TYPE = "object";
+	private static final String ARRAY_JSON_SCHEMA_ATTRIBUTE_TYPE = "array";
 
 	private static final String JSON_SCHEMA_PROPERTIES_IDENTIFIER = "properties";
-	private static final String JSON_SCHEMA_ITEMS_IDENTIFIER      = "items";
-	private static final String JSON_SCHEMA_TYPE_IDENTIFIER       = "type";
-	private static final String JSON_SCHEMA_MIXED_IDENTIFIER      = "mixed";
-	private static final String JSON_SCHEMA_TITLE_IDENTIFIER      = "title";
+	private static final String JSON_SCHEMA_ITEMS_IDENTIFIER = "items";
+	private static final String JSON_SCHEMA_TYPE_IDENTIFIER = "type";
+	private static final String JSON_SCHEMA_MIXED_IDENTIFIER = "mixed";
+	private static final String JSON_SCHEMA_TITLE_IDENTIFIER = "title";
 
 	private boolean includeRecordTag = false;
 
 	@Inject
 	public XMLSchemaParser(final Provider<SchemaService> schemaServiceProviderArg,
-			final Provider<ClaszService> classServiceProviderArg, final Provider<AttributePathService> attributePathServiceProviderArg,
-			final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceServiceProviderArg,
-			final Provider<AttributeService> attributeServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg) {
+	                       final Provider<ClaszService> classServiceProviderArg,
+	                       final Provider<AttributePathService> attributePathServiceProviderArg,
+	                       final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceServiceProviderArg,
+	                       final Provider<AttributeService> attributeServiceProviderArg,
+	                       final Provider<ObjectMapper> objectMapperProviderArg) {
 
 		schemaServiceProvider = schemaServiceProviderArg;
 		classServiceProvider = classServiceProviderArg;
@@ -105,38 +97,52 @@ public class XMLSchemaParser {
 		includeRecordTag = includeRecordTagArg;
 	}
 
-	public Optional<Schema> parse(final String xmlSchemaFilePath, final String recordTag, final String uuid, final String schemaName)
-			throws DMPPersistenceException {
+	// Map<String, String>
+
+	public Optional<Schema> parse(final String xmlSchemaFilePath,
+	                              final String recordTag,
+	                              final String uuid,
+	                              final String schemaName,
+	                              final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs) throws DMPPersistenceException {
 
 		final Optional<Tuple<Schema, Set<AttributePathHelper>>> optionalResult = parseSeparatelyInternal(xmlSchemaFilePath, recordTag, uuid,
 				schemaName);
 
 		if (!optionalResult.isPresent()) {
 
-			return Optional.absent();
+			return Optional.empty();
 		}
 
 		final Schema schema = optionalResult.get().v1();
 		final Set<AttributePathHelper> attributePaths = optionalResult.get().v2();
 
 		SchemaUtils.addAttributePaths(schema, attributePaths, attributePathServiceProvider, schemaAttributePathInstanceServiceProvider,
-				attributeServiceProvider);
+				attributeServiceProvider, optionalAttributePathsSAPIUUIDs);
 
 		final Schema updatedSchema = SchemaUtils.updateSchema(schema, schemaServiceProvider);
 
-		return Optional.fromNullable(updatedSchema);
+		return Optional.ofNullable(updatedSchema);
 	}
 
-	public Optional<Tuple<Schema, Map<String, AttributePathHelper>>> parseSeparately(final String xmlSchemaFilePath, final String recordTag,
-			final String uuid, final String schemaName)
-			throws DMPPersistenceException {
+	public Optional<Schema> parse(final String xmlSchemaFilePath,
+	                              final String recordTag,
+	                              final String uuid,
+	                              final String schemaName) throws DMPPersistenceException {
+
+		return parse(xmlSchemaFilePath, recordTag, uuid, schemaName, Optional.empty());
+	}
+
+	public Optional<Tuple<Schema, Map<String, AttributePathHelper>>> parseSeparately(final String xmlSchemaFilePath,
+	                                                                                 final String recordTag,
+	                                                                                 final String uuid,
+	                                                                                 final String schemaName) throws DMPPersistenceException {
 
 		final Optional<Tuple<Schema, Set<AttributePathHelper>>> optionalResult = parseSeparatelyInternal(xmlSchemaFilePath, recordTag, uuid,
 				schemaName);
 
 		if (!optionalResult.isPresent()) {
 
-			return Optional.absent();
+			return Optional.empty();
 		}
 
 		final Schema schema = optionalResult.get().v1();
@@ -156,15 +162,17 @@ public class XMLSchemaParser {
 	 * @return
 	 * @throws DMPPersistenceException
 	 */
-	private Optional<Tuple<Schema, Set<AttributePathHelper>>> parseSeparatelyInternal(final String xmlSchemaFilePath, final String recordTag,
-			final String uuid, final String schemaName)
+	private Optional<Tuple<Schema, Set<AttributePathHelper>>> parseSeparatelyInternal(final String xmlSchemaFilePath,
+	                                                                                  final String recordTag,
+	                                                                                  final String uuid,
+	                                                                                  final String schemaName)
 			throws DMPPersistenceException {
 
 		final Optional<List<JsonNode>> optionalRecordTags = getRecordTagNodes(xmlSchemaFilePath, recordTag);
 
 		if (!optionalRecordTags.isPresent()) {
 
-			return Optional.absent();
+			return Optional.empty();
 		}
 
 		final List<JsonNode> recordTagNodes = optionalRecordTags.get();
@@ -173,7 +181,7 @@ public class XMLSchemaParser {
 
 		if (!optionalSchema.isPresent()) {
 
-			return Optional.absent();
+			return Optional.empty();
 		}
 
 		final Schema schema = optionalSchema.get();
@@ -185,7 +193,8 @@ public class XMLSchemaParser {
 		return Optional.of(Tuple.tuple(schema, attributePaths));
 	}
 
-	public Optional<Set<AttributePathHelper>> parseAttributePaths(final String xmlSchemaFilePath, final Optional<String> optionalRecordTag) {
+	public Optional<Set<AttributePathHelper>> parseAttributePaths(final String xmlSchemaFilePath,
+	                                                              final Optional<String> optionalRecordTag) {
 
 		if (optionalRecordTag.isPresent()) {
 
@@ -197,7 +206,7 @@ public class XMLSchemaParser {
 	}
 
 	public Optional<Map<String, AttributePathHelper>> parseAttributePathsMap(final String xmlSchemaFilePath,
-			final Optional<String> optionalRecordTag) {
+	                                                                         final Optional<String> optionalRecordTag) {
 
 		if (optionalRecordTag.isPresent()) {
 
@@ -208,7 +217,8 @@ public class XMLSchemaParser {
 		}
 	}
 
-	public Optional<Set<AttributePathHelper>> parseAttributePaths(final String xmlSchemaFilePath, final String recordTag) {
+	public Optional<Set<AttributePathHelper>> parseAttributePaths(final String xmlSchemaFilePath,
+	                                                              final String recordTag) {
 
 		final Optional<List<JsonNode>> optionalRecordTags = getRecordTagNodes(xmlSchemaFilePath, recordTag);
 
@@ -221,7 +231,7 @@ public class XMLSchemaParser {
 
 		if (!optionalJSONSchema.isPresent()) {
 
-			return Optional.absent();
+			return Optional.empty();
 		}
 
 		final List<JsonNode> rootNodes = Lists.newCopyOnWriteArrayList();
@@ -229,7 +239,7 @@ public class XMLSchemaParser {
 		// prepare root node
 		final ObjectNode jsonSchema = optionalJSONSchema.get();
 
-		final Optional<JsonNode> optionalTitleNode = Optional.fromNullable(jsonSchema.get(XMLSchemaParser.JSON_SCHEMA_TITLE_IDENTIFIER));
+		final Optional<JsonNode> optionalTitleNode = Optional.ofNullable(jsonSchema.get(XMLSchemaParser.JSON_SCHEMA_TITLE_IDENTIFIER));
 
 		final String rootNodeIdentifier;
 
@@ -256,14 +266,14 @@ public class XMLSchemaParser {
 
 		if (!optionalRecordTags.isPresent()) {
 
-			return Optional.absent();
+			return Optional.empty();
 		}
 
 		final List<JsonNode> recordTagNodes = optionalRecordTags.get();
 
 		final Set<AttributePathHelper> attributePaths = parseAttributePaths(recordTagNodes);
 
-		return Optional.fromNullable(attributePaths);
+		return Optional.ofNullable(attributePaths);
 	}
 
 	private Set<AttributePathHelper> parseAttributePaths(final List<JsonNode> recordTagNodes) {
@@ -286,18 +296,19 @@ public class XMLSchemaParser {
 		return attributePaths;
 	}
 
-	private Optional<List<JsonNode>> getRecordTagNodes(final String xmlSchemaFilePath, final String recordTag) {
+	private Optional<List<JsonNode>> getRecordTagNodes(final String xmlSchemaFilePath,
+	                                                   final String recordTag) {
 
 		final Optional<ObjectNode> jsonSchemaOptional = getJSONSchema(xmlSchemaFilePath);
 
 		if (!jsonSchemaOptional.isPresent()) {
 
-			return Optional.absent();
+			return Optional.empty();
 		}
 
 		final List<JsonNode> recordTagNodes = getRecordTagNodes(jsonSchemaOptional.get(), recordTag);
 
-		return Optional.fromNullable(recordTagNodes);
+		return Optional.ofNullable(recordTagNodes);
 	}
 
 	private List<JsonNode> getRecordTagNodes(final ObjectNode jsonSchema, final String recordTag) {
@@ -309,7 +320,9 @@ public class XMLSchemaParser {
 		return recordTagNodes;
 	}
 
-	private void getRecordTagNodes(final JsonNode currentJSONSchemaNode, final String recordTag, final List<JsonNode> recordTagNodes) {
+	private void getRecordTagNodes(final JsonNode currentJSONSchemaNode,
+	                               final String recordTag,
+	                               final List<JsonNode> recordTagNodes) {
 
 		final Optional<JsonNode> optionalCurrentJSONSchemaNode = determineCurrentJSONSchemaNode(currentJSONSchemaNode);
 
@@ -361,12 +374,12 @@ public class XMLSchemaParser {
 
 			LOG.error("couldn't parse XML schema '{}'", xmlSchemaFilePath, e);
 
-			return Optional.absent();
+			return Optional.empty();
 		} catch (final IOException e) {
 
 			LOG.error("couldn't read XML schema '{}'", xmlSchemaFilePath, e);
 
-			return Optional.absent();
+			return Optional.empty();
 		}
 		final JSRoot root;
 
@@ -377,7 +390,7 @@ public class XMLSchemaParser {
 
 			LOG.error("couldn't convert XSD to JSON schema for '{}'", xmlSchemaFilePath, e);
 
-			return Optional.absent();
+			return Optional.empty();
 		}
 
 		final ObjectNode json;
@@ -389,14 +402,16 @@ public class XMLSchemaParser {
 
 			LOG.error("couldn't serialize JSON schema for '{}'", xmlSchemaFilePath, e);
 
-			return Optional.absent();
+			return Optional.empty();
 		}
 
-		return Optional.fromNullable(json);
+		return Optional.ofNullable(json);
 	}
 
-	private Set<AttributePathHelper> determineAttributePaths(final JsonNode jsonSchemaAttributeNode, final Set<AttributePathHelper> attributePaths,
-			final AttributePathHelper attributePath, final boolean addRootAttribute) {
+	private Set<AttributePathHelper> determineAttributePaths(final JsonNode jsonSchemaAttributeNode,
+	                                                         final Set<AttributePathHelper> attributePaths,
+	                                                         final AttributePathHelper attributePath,
+	                                                         final boolean addRootAttribute) {
 
 		final Optional<String> optionalAttribute = getAttribute(jsonSchemaAttributeNode);
 
@@ -482,8 +497,9 @@ public class XMLSchemaParser {
 		}
 	}
 
-	private void determineAttributePaths(final Set<AttributePathHelper> attributePaths, final AttributePathHelper finalAttributePathHelper,
-			final List<JsonNode> newJSONSchemaAttributeNodes) {
+	private void determineAttributePaths(final Set<AttributePathHelper> attributePaths,
+	                                     final AttributePathHelper finalAttributePathHelper,
+	                                     final List<JsonNode> newJSONSchemaAttributeNodes) {
 
 		for (final JsonNode newJSONSchemaAttributeNode : newJSONSchemaAttributeNodes) {
 
@@ -495,16 +511,17 @@ public class XMLSchemaParser {
 
 		if (jsonSchemaAttributeNode == null || !jsonSchemaAttributeNode.fieldNames().hasNext()) {
 
-			return Optional.absent();
+			return Optional.empty();
 		}
 
 		final String attribute = jsonSchemaAttributeNode.fieldNames().next();
 
-		return Optional.fromNullable(attribute);
+		return Optional.ofNullable(attribute);
 	}
 
-	private void addRDFValueAttributePath(final boolean addRDFValueAttributePath, final Set<AttributePathHelper> attributePaths,
-			final AttributePathHelper attributePath) {
+	private void addRDFValueAttributePath(final boolean addRDFValueAttributePath,
+	                                      final Set<AttributePathHelper> attributePaths,
+	                                      final AttributePathHelper attributePath) {
 
 		if (addRDFValueAttributePath) {
 
@@ -528,16 +545,17 @@ public class XMLSchemaParser {
 			schema = null;
 		}
 
-		return Optional.fromNullable(schema);
+		return Optional.ofNullable(schema);
 	}
 
-	private Optional<Schema> createSchema(final String uuid, final String name) throws DMPPersistenceException {
+	private Optional<Schema> createSchema(final String uuid,
+	                                      final String name) throws DMPPersistenceException {
 
 		final Optional<Schema> optionalSchema = createSchema(uuid);
 
 		if (!optionalSchema.isPresent()) {
 
-			return Optional.absent();
+			return Optional.empty();
 		}
 
 		final Schema schema = optionalSchema.get();
@@ -584,7 +602,7 @@ public class XMLSchemaParser {
 			return Optional.of(currentJSONSchemaNodeItems);
 		}
 
-		return Optional.absent();
+		return Optional.empty();
 	}
 
 	/**
@@ -627,7 +645,7 @@ public class XMLSchemaParser {
 
 		if (!optionalAttributePaths.isPresent()) {
 
-			return Optional.absent();
+			return Optional.empty();
 		}
 
 		final Map<String, AttributePathHelper> attributePathsMap = new LinkedHashMap<>();
@@ -640,7 +658,8 @@ public class XMLSchemaParser {
 		return Optional.of(attributePathsMap);
 	}
 
-	private void addRecordClass(final List<JsonNode> recordTagNodes, final Schema schema) throws DMPPersistenceException {
+	private void addRecordClass(final List<JsonNode> recordTagNodes,
+	                            final Schema schema) throws DMPPersistenceException {
 
 		final Optional<String> optionalRecordTagAttribute = getAttribute(recordTagNodes.get(0));
 

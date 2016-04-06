@@ -20,12 +20,32 @@ import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.utils.NameSpacePrefixRegistry;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 
+import java.util.Map;
+import java.util.Optional;
+
 public class BiboDocumentSchemaBuilder extends SchemaBuilder {
+
+	private final Optional<Map<String, String>> optionalSubSchemaAttributePathsSAPIUUIDs;
+
+	public BiboDocumentSchemaBuilder() {
+
+		super();
+
+		optionalSubSchemaAttributePathsSAPIUUIDs = Optional.empty();
+	}
+
+	public BiboDocumentSchemaBuilder(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDsArg,
+	                                 final Optional<Map<String, String>> optionalSubSchemaAttributePathsSAPIUUIDsArg) {
+
+		super(optionalAttributePathsSAPIUUIDsArg);
+
+		optionalSubSchemaAttributePathsSAPIUUIDs = optionalSubSchemaAttributePathsSAPIUUIDsArg;
+	}
 
 	@Override
 	public Schema buildSchema() throws Exception {
 
-		final AttributePathBuilder builder = new AttributePathBuilder();
+		final AttributePathBuilder builder = new AttributePathBuilder(optionalAttributePathsSAPIUUIDs);
 
 		// we should take a static identifier here
 		final Schema tempSchema = new Schema(SchemaUtils.BIBO_DOCUMENT_SCHEMA_UUID);
@@ -37,6 +57,9 @@ public class BiboDocumentSchemaBuilder extends SchemaBuilder {
 		 * biboDocumentSchema.addAttributePath(builder.start().add(DC + "creator").add(FOAF + "first_name").getPath());
 		 */
 
+		// for record identifier generating
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("rdf:about"));
+
 		// basic properties used in DINI-AG Titeldaten recommendations
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dc:title"));
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("rda:otherTitleInformation"));
@@ -46,7 +69,7 @@ public class BiboDocumentSchemaBuilder extends SchemaBuilder {
 		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dc:contributor"));
 		{
 			// add "deep" paths as schema attribute path instances with attached sub-schemata ...
-			final Schema foafPersonSchema = new FoafPersonSchemaBuilder().buildSchema();
+			final Schema foafPersonSchema = new FoafPersonSchemaBuilder(optionalSubSchemaAttributePathsSAPIUUIDs).buildSchema();
 			tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:creator", foafPersonSchema));
 			tempSchema.addAttributePath(builder.parseAsAttributePathInstance("dcterms:contributor", foafPersonSchema));
 		}

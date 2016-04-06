@@ -20,20 +20,36 @@ import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.utils.NameSpacePrefixRegistry;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 
+import java.util.Map;
+import java.util.Optional;
+
 // TODO make this schema also use sub-schemata when everything works for the document schema
 public class BibrmContractItemSchemaBuilder extends SchemaBuilder {
 
 	// private static final Logger LOG = LoggerFactory.getLogger(BibrmContractItemSchemaBuilder.class);
 
+	public BibrmContractItemSchemaBuilder() {
+
+		super();
+	}
+
+	public BibrmContractItemSchemaBuilder(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDsArg) {
+
+		super(optionalAttributePathsSAPIUUIDsArg);
+	}
+
 	@Override
 	public Schema buildSchema() throws Exception {
 
-		final AttributePathBuilder builder = new AttributePathBuilder();
+		final AttributePathBuilder builder = new AttributePathBuilder(optionalAttributePathsSAPIUUIDs);
 
 		// we should take a static identifier here
 		final Schema tempSchema = new Schema(SchemaUtils.BIBRM_CONTRACT_ITEM_SCHEMA_UUID);
 
 		final Clasz clasz = claszServiceTestUtils.createObject(NameSpacePrefixRegistry.BIBRM + "ContractItem", "ContractItem");
+
+		// for record identifier generating
+		tempSchema.addAttributePath(builder.parseAsAttributePathInstance("rdf:about"));
 
 		// basic properties for ERM example
 		// tempSchema.addAttributePath(builder.parsePrefixPath("bibrm:hasItem")); // this needs to go to the schema of Contract

@@ -15,24 +15,27 @@
  */
 package org.dswarm.persistence.service.schema.test.internalmodel;
 
-import java.util.LinkedList;
-
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
-
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
-import org.dswarm.persistence.model.schema.utils.NameSpacePrefixRegistry;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
+import org.dswarm.persistence.model.schema.utils.NameSpacePrefixRegistry;
 import org.dswarm.persistence.service.schema.test.utils.AttributePathServiceTestUtils;
 import org.dswarm.persistence.service.schema.test.utils.AttributeServiceTestUtils;
 import org.dswarm.persistence.service.schema.test.utils.SchemaAttributePathInstanceServiceTestUtils;
 
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Optional;
+
 public class AttributePathBuilder extends GuicedTest {
 
 	//private static final Logger									LOG			= LoggerFactory.getLogger(AttributePathBuilder.class);
+
+	private final Optional<Map<String, String>> otionalAttributePathsSAPIUUIDs;
 
 	private AttributePath pathUnderConstruction;
 
@@ -45,26 +48,43 @@ public class AttributePathBuilder extends GuicedTest {
 	private String prefixPaths = "";
 
 	private SchemaAttributePathInstanceServiceTestUtils schemaAPinstanceServiceTestUtils;
-	private AttributePathServiceTestUtils               apServiceTestUtils;
-	private AttributeServiceTestUtils                   attributeServiceTestUtils;
+	private AttributePathServiceTestUtils apServiceTestUtils;
+	private AttributeServiceTestUtils attributeServiceTestUtils;
 
 	public AttributePathBuilder() {
 
 		super();
 
+		otionalAttributePathsSAPIUUIDs = Optional.empty();
+
 		registry = new NameSpacePrefixRegistry();
+
+		init();
+	}
+
+	public AttributePathBuilder(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDsArg) {
+
+		super();
+
+		otionalAttributePathsSAPIUUIDs = optionalAttributePathsSAPIUUIDsArg;
+
+		registry = new NameSpacePrefixRegistry();
+
+		init();
+	}
+
+	private void init() {
 
 		schemaAPinstanceServiceTestUtils = new SchemaAttributePathInstanceServiceTestUtils();
 		apServiceTestUtils = new AttributePathServiceTestUtils();
 		attributeServiceTestUtils = new AttributeServiceTestUtils();
 	}
 
-	@Override protected void initObjects() {
+	@Override
+	protected void initObjects() {
 		super.initObjects();
 
-		schemaAPinstanceServiceTestUtils = new SchemaAttributePathInstanceServiceTestUtils();
-		apServiceTestUtils = new AttributePathServiceTestUtils();
-		attributeServiceTestUtils = new AttributeServiceTestUtils();
+		init();
 	}
 
 	public AttributePathBuilder start() {
@@ -111,14 +131,42 @@ public class AttributePathBuilder extends GuicedTest {
 
 	public SchemaAttributePathInstance parseAsAttributePathInstance(final String pathInPrefixNotation) throws Exception {
 
-		AttributePath attributePath = parseAsAttributePath(pathInPrefixNotation);
+		final AttributePath attributePath = parseAsAttributePath(pathInPrefixNotation);
+
+		if(otionalAttributePathsSAPIUUIDs.isPresent()) {
+
+			final String attributePathString = attributePath.toAttributePath();
+
+			final Map<String, String> attributePathsSAPIUUIDs = otionalAttributePathsSAPIUUIDs.get();
+
+			final Optional<String> optionalSapiUUID = Optional.ofNullable(attributePathsSAPIUUIDs.getOrDefault(attributePathString, null));
+
+			if (optionalSapiUUID.isPresent()) {
+
+				return schemaAPinstanceServiceTestUtils.createOrGetSchemaAttributePathInstance(optionalSapiUUID.get(), attributePath);
+			}
+		}
 
 		return schemaAPinstanceServiceTestUtils.createSchemaAttributePathInstance(attributePath);
 	}
 
-	public SchemaAttributePathInstance parseAsAttributePathInstance(final String pathInPrefixNotation, Schema subSchema) throws Exception {
+	public SchemaAttributePathInstance parseAsAttributePathInstance(final String pathInPrefixNotation, final Schema subSchema) throws Exception {
 
-		AttributePath attributePath = parseAsAttributePath(pathInPrefixNotation);
+		final AttributePath attributePath = parseAsAttributePath(pathInPrefixNotation);
+
+		if (otionalAttributePathsSAPIUUIDs.isPresent()) {
+
+			final String attributePathString = attributePath.toAttributePath();
+
+			final Map<String, String> attributePathsSAPIUUIDs = otionalAttributePathsSAPIUUIDs.get();
+
+			final Optional<String> optionalSapiUUID = Optional.ofNullable(attributePathsSAPIUUIDs.getOrDefault(attributePathString, null));
+
+			if (optionalSapiUUID.isPresent()) {
+
+				return schemaAPinstanceServiceTestUtils.createOrGetSchemaAttributePathInstance(optionalSapiUUID.get(), null, attributePath, subSchema);
+			}
+		}
 
 		return schemaAPinstanceServiceTestUtils.createSchemaAttributePathInstance(null, attributePath, subSchema);
 	}
