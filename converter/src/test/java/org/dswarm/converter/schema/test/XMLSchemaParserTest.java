@@ -109,6 +109,12 @@ public class XMLSchemaParserTest extends GuicedTest {
 	}
 
 	@Test
+	public void testAttributePathsParsingForSRU11() throws IOException {
+
+		testAttributePathsParsing("srw-types.1_1.xsd", "record", "sru_1_1_schema_-_attribute_paths.txt", false);
+	}
+
+	@Test
 	public void testAttributePathsParsingForPICAPlusXml() throws IOException {
 
 		testAttributePathsParsing("ppxml-1.0.xsd", "record", "pica_schema_-_attribute_paths.txt", false);
@@ -158,6 +164,25 @@ public class XMLSchemaParserTest extends GuicedTest {
 		final Map<String, AttributePathHelper> newAttributePaths = buildOAIPMHPlusDCElementsAndEDMAttributePaths(rootAttributePaths);
 
 		compareAttributePaths("oai-pmh_plus_oai_dc_elements_and_edm_schema_-_attribute_paths.txt", newAttributePaths);
+	}
+
+	@Test
+	public void testAttributePathsParsingForSRU11PlusPICAPlusXML() throws IOException {
+
+		final Map<String, AttributePathHelper> rootAttributePaths = parseAttributePaths("srw-types.1_1.xsd", "record", false);
+
+		final String rootAttributePathIdentifier = "http://www.loc.gov/zing/srw/recordData";
+		final AttributePathHelper rootAttributePath = rootAttributePaths.get(rootAttributePathIdentifier);
+
+		final Set<String> excludeAttributePathStubs = new HashSet<>();
+
+		excludeAttributePathStubs.add("http://www.oclcpica.org/xmlns/ppxml-1.0#record\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#owner");
+
+		final Map<String, AttributePathHelper> childAttributePaths = parseAttributePaths("ppxml-1.0.xsd", "record", true, Optional.of(excludeAttributePathStubs));
+
+		final Map<String, AttributePathHelper> newAttributePaths = composeAttributePaths(rootAttributePaths, rootAttributePath, childAttributePaths);
+
+		compareAttributePaths("sru_1_1_plus_picaplus_xml_schema_-_attribute_paths.txt", newAttributePaths);
 	}
 
 	private static Map<String, AttributePathHelper> buildOAIPMHPlusDCElementsAndEDMAttributePaths(final Map<String, AttributePathHelper> rootAttributePaths) {
@@ -297,6 +322,30 @@ public class XMLSchemaParserTest extends GuicedTest {
 		return parseOAIPMHPlusDCTermsSchema(Optional.empty(), Optional.empty());
 	}
 
+	private static Schema fillContentSchemaAndUpdateSchema(final ContentSchema contentSchema,
+	                                                       final AttributePath recordIdentifierAP,
+	                                                       final AttributePath valueAP,
+	                                                       final Schema schema) throws DMPPersistenceException {
+
+		if (recordIdentifierAP != null) {
+
+			contentSchema.setRecordIdentifierAttributePath(recordIdentifierAP);
+		}
+
+		if (valueAP != null) {
+
+			contentSchema.setValueAttributePath(valueAP);
+		}
+
+		schema.setContentSchema(contentSchema);
+
+		final SchemaService schemaService = GuicedTest.injector.getInstance(SchemaService.class);
+
+		schemaService.updateObjectTransactional(schema);
+
+		return schema;
+	}
+
 	public static Schema parseOAIPMHPlusMARCXMLSchema(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
 	                                                  final Optional<String> optionalContentSchemaIdentifier) throws DMPPersistenceException {
 
@@ -329,6 +378,38 @@ public class XMLSchemaParserTest extends GuicedTest {
 		contentSchema.addKeyAttributePath(datafieldSubfieldCode);
 
 		return fillContentSchemaAndUpdateSchema(contentSchema, id, datafieldSubfieldValue, schema);
+	}
+
+	public static Schema parseSRU11PlusPICAPlusXMLSchema(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
+	                                                     final Optional<String> optionalContentSchemaIdentifier) throws DMPPersistenceException {
+
+		final Set<String> excludeAttributePathStubs = new HashSet<>();
+
+		excludeAttributePathStubs.add("http://www.oclcpica.org/xmlns/ppxml-1.0#record\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#owner");
+
+		// collection - to include "record" attribute into the attribute paths
+		final Schema schema = parseSRU11PlusXSchema("ppxml-1.0.xsd", "PICA+ XML 'global'", SchemaUtils.SRU_11_PICAPLUSXML_GLOBAL_SCHEMA_UUID, "record", true, optionalAttributePathsSAPIUUIDs, Optional.of(excludeAttributePathStubs));
+
+		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(schema);
+
+		final String uuid = getOrCreateContentSchemaIdentifier(optionalContentSchemaIdentifier);
+
+		final ContentSchema contentSchema = new ContentSchema(uuid);
+		contentSchema.setName("SRU 1.1 + PICA+ XML 'global' content schema");
+
+		final AttributePath globalTagId = aps
+				.get("http://www.loc.gov/zing/srw/recordData\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#record\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#global\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#tag\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#id");
+		final AttributePath globalTagOcc = aps
+				.get("http://www.loc.gov/zing/srw/recordData\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#record\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#global\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#tag\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#occ");
+		final AttributePath globalTagSubfId = aps
+				.get("http://www.loc.gov/zing/srw/recordData\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#record\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#global\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#tag\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#subf\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#id");
+		final AttributePath globalTagSubfValue = aps
+				.get("http://www.loc.gov/zing/srw/recordDatahttp://www.oclcpica.org/xmlns/ppxml-1.0#recordhttp://www.oclcpica.org/xmlns/ppxml-1.0#globalhttp://www.oclcpica.org/xmlns/ppxml-1.0#taghttp://www.oclcpica.org/xmlns/ppxml-1.0#subfhttp://www.w3.org/1999/02/22-rdf-syntax-ns#value");
+		contentSchema.addKeyAttributePath(globalTagId);
+		contentSchema.addKeyAttributePath(globalTagOcc);
+		contentSchema.addKeyAttributePath(globalTagSubfId);
+
+		return fillContentSchemaAndUpdateSchema(contentSchema, null, globalTagSubfValue, schema);
 	}
 
 	public static Schema parseOAIPMHPlusMARCXMLSchema() throws DMPPersistenceException {
@@ -655,30 +736,6 @@ public class XMLSchemaParserTest extends GuicedTest {
 		return optionalAttributePaths.get();
 	}
 
-	private static Schema fillContentSchemaAndUpdateSchema(final ContentSchema contentSchema,
-	                                                       final AttributePath recordIdentifierAP,
-	                                                       final AttributePath valueAP,
-	                                                       final Schema schema) throws DMPPersistenceException {
-
-		if (recordIdentifierAP != null) {
-
-			contentSchema.setRecordIdentifierAttributePath(recordIdentifierAP);
-		}
-
-		if (valueAP != null) {
-
-			contentSchema.setValueAttributePath(valueAP);
-		}
-
-		schema.setContentSchema(contentSchema);
-
-		final SchemaService schemaService = GuicedTest.injector.getInstance(SchemaService.class);
-
-		schemaService.updateObjectTransactional(schema);
-
-		return schema;
-	}
-
 	private static Map<String, AttributePathHelper> composeAttributePaths(final Map<String, AttributePathHelper> rootAttributePaths,
 	                                                                      final AttributePathHelper rootAttributePath,
 	                                                                      final Map<String, AttributePathHelper> childAttributePaths) {
@@ -725,6 +782,15 @@ public class XMLSchemaParserTest extends GuicedTest {
 	                                             final String childSchemaName,
 	                                             final String schemaUUID,
 	                                             final String childRecordIdentifier,
+	                                             final boolean includeRecordTag) throws DMPPersistenceException {
+
+		return parseOAIPMHPlusXSchema(childSchemaFileName, childSchemaName, schemaUUID, childRecordIdentifier, includeRecordTag, Optional.empty());
+	}
+
+	private static Schema parseOAIPMHPlusXSchema(final String childSchemaFileName,
+	                                             final String childSchemaName,
+	                                             final String schemaUUID,
+	                                             final String childRecordIdentifier,
 	                                             final boolean includeRecordTag,
 	                                             final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs) throws DMPPersistenceException {
 
@@ -746,13 +812,30 @@ public class XMLSchemaParserTest extends GuicedTest {
 		return addChildSchemataAttributePathsToSchema(newAttributePaths, schema, optionalAttributePathsSAPIUUIDs);
 	}
 
-	private static Schema parseOAIPMHPlusXSchema(final String childSchemaFileName,
-	                                             final String childSchemaName,
-	                                             final String schemaUUID,
-	                                             final String childRecordIdentifier,
-	                                             final boolean includeRecordTag) throws DMPPersistenceException {
+	private static Schema parseSRU11PlusXSchema(final String childSchemaFileName,
+	                                            final String childSchemaName,
+	                                            final String schemaUUID,
+	                                            final String childRecordIdentifier,
+	                                            final boolean includeRecordTag,
+	                                            final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
+	                                            final Optional<Set<String>> optionalExcludeAttributePathStubs) throws DMPPersistenceException {
 
-		return parseOAIPMHPlusXSchema(childSchemaFileName, childSchemaName, schemaUUID, childRecordIdentifier, includeRecordTag, Optional.empty());
+		final Tuple<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("srw-types.1_1.xsd", "record", schemaUUID,
+				"SRU 1.1 + " + childSchemaName + " schema");
+
+		final Map<String, AttributePathHelper> rootAttributePaths = result.v2();
+
+		final String rootAttributePathIdentifier = "http://www.loc.gov/zing/srw/recordData";
+		final AttributePathHelper rootAttributePath = rootAttributePaths.get(rootAttributePathIdentifier);
+
+		final Map<String, AttributePathHelper> childAttributePaths = parseAttributePaths(childSchemaFileName, childRecordIdentifier,
+				includeRecordTag, optionalExcludeAttributePathStubs);
+
+		final Map<String, AttributePathHelper> newAttributePaths = composeAttributePaths(rootAttributePaths, rootAttributePath, childAttributePaths);
+
+		final Schema schema = result.v1();
+
+		return addChildSchemataAttributePathsToSchema(newAttributePaths, schema, optionalAttributePathsSAPIUUIDs);
 	}
 
 	private static Schema addChildSchemataAttributePathsToSchema(final Map<String, AttributePathHelper> newAttributePaths,

@@ -966,6 +966,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			case ConfigurationStatics.OAI_PMH_DCE_AND_EDM_ELEMENTS_STORAGE_TYPE:
 			case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:
 			case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
+			case ConfigurationStatics.SRU_11_PICAPLUSXML_GLOBAL_STORAGE_TYPE:
 
 				// eventBusProvider.get().post(new XMLConverterEvent(dataModel));
 
@@ -1114,6 +1115,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			case ConfigurationStatics.OAI_PMH_DCE_AND_EDM_ELEMENTS_STORAGE_TYPE:
 			case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:
 			case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
+			case ConfigurationStatics.SRU_11_PICAPLUSXML_GLOBAL_STORAGE_TYPE:
 
 				break;
 			default:

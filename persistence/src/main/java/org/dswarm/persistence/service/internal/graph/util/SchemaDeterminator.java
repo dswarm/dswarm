@@ -134,6 +134,7 @@ public class SchemaDeterminator {
 					case SchemaUtils.OAI_PMH_DC_ELEMENTS_AND_EDM_SCHEMA_UUID:
 					case SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID:
 					case SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID:
+					case SchemaUtils.SRU_11_PICAPLUSXML_GLOBAL_SCHEMA_UUID:
 
 						// those schemas are already there and shouldn't be manipulated by data that differs from those schemas
 						LOG.debug("schema for data model '{}' is a preset schema, so everything is already set", dataModel.getUuid());
@@ -192,6 +193,7 @@ public class SchemaDeterminator {
 						case ConfigurationStatics.OAI_PMH_DCE_AND_EDM_ELEMENTS_STORAGE_TYPE:
 						case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:
 						case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
+						case ConfigurationStatics.SRU_11_PICAPLUSXML_GLOBAL_STORAGE_TYPE:
 
 							optionalPresetSchema = Optional.of(storageType);
 
@@ -283,6 +285,13 @@ public class SchemaDeterminator {
 					// assign existing OAI-PMH + MARCXML schema to data resource
 
 					schema = schemaService.get().getObject(SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID);
+
+					break;
+				case ConfigurationStatics.SRU_11_PICAPLUSXML_GLOBAL_STORAGE_TYPE:
+
+					// assign existing SRU 1.1. + PICA+ XML 'global' schema to data resource
+
+					schema = schemaService.get().getObject(SchemaUtils.SRU_11_PICAPLUSXML_GLOBAL_SCHEMA_UUID);
 
 					break;
 				default:

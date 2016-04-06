@@ -419,6 +419,7 @@ public class DataModelUtil {
 			case ConfigurationStatics.OAI_PMH_DCE_AND_EDM_ELEMENTS_STORAGE_TYPE:
 			case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:
 			case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
+			case ConfigurationStatics.SRU_11_PICAPLUSXML_GLOBAL_STORAGE_TYPE:
 
 				modelObservable = xmlConvertEventRecorderProvider.get().doIngest(dataModel, utiliseExistingInputSchema, scheduler);
 
@@ -458,6 +459,7 @@ public class DataModelUtil {
 			case DataModelUtils.OAI_PMH_DC_ELEMENTS_AND_EDM_DATA_MODEL_UUID:
 			case DataModelUtils.OAI_PMH_DC_TERMS_DATA_MODEL_UUID:
 			case DataModelUtils.OAI_PMH_MARCXML_DATA_MODEL_UUID:
+			case DataModelUtils.SRU_11_PICAPLUSXML_GLOBAL_DATA_MODEL_UUID:
 
 				optionalOriginalDataModelType = Optional.of(DMPStatics.XML_DATA_TYPE);
 
@@ -493,6 +495,7 @@ public class DataModelUtil {
 								case ConfigurationStatics.OAI_PMH_DCE_AND_EDM_ELEMENTS_STORAGE_TYPE:
 								case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:
 								case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
+								case ConfigurationStatics.SRU_11_PICAPLUSXML_GLOBAL_STORAGE_TYPE:
 
 									optionalOriginalDataModelType = Optional.of(DMPStatics.XML_DATA_TYPE);
 

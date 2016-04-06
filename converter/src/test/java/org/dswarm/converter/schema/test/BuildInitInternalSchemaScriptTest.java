@@ -154,6 +154,7 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		final Schema oaipmhDCElementsSchema = XMLSchemaParserTest.parseOAIPMHPlusDCElementsSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID)));
 		final Schema oaipmhDCTermsSchema = XMLSchemaParserTest.parseOAIPMHPlusDCTermsSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID)));
 		final Schema oaipmhMARCXMLSchema = XMLSchemaParserTest.parseOAIPMHPlusMARCXMLSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID)));
+		final Schema sru11PICAPlusXMLGlobalSchema = XMLSchemaParserTest.parseSRU11PlusPICAPlusXMLSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.SRU_11_PICAPLUSXML_GLOBAL_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.SRU_11_PICAPLUSXML_GLOBAL_SCHEMA_UUID)));
 		final Schema oaipmhDCElementsAndEDMSchema = XMLSchemaParserTest.parseOAIPMHPlusDCElementsAndEDMSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.OAI_PMH_DC_ELEMENTS_AND_EDM_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.OAI_PMH_DC_ELEMENTS_AND_EDM_SCHEMA_UUID)));
 
 		final String bibrmContractDM = "Internal Data Model ContractItem";
@@ -169,6 +170,7 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		final String oaipmhDCElementsSchemaDM = "Internal Data Model OAI-PMH + DC Elements";
 		final String oaipmhDCTermsSchemaDM = "Internal Data Model OAI-PMH + DC Terms";
 		final String oaipmhMARCXMLSchemaDM = "Internal Data Model OAI-PMH + MARCXML";
+		final String sru11PICAPlusXMLGlobalSchemaDM = "Internal Data Model SRU 1.1 + PICA+ XML 'global'";
 		final String oaipmhDCElementsAndEDMSchemaDM = "Internal Data Model OAI-PMH + DC Elements + EDM";
 
 		final Schema foafPersonSchema = biboDocumentSchema.getAttributePathByURIPath(AttributeServiceTestUtils.DCTERMS_CREATOR).getSubSchema();
@@ -186,6 +188,7 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 				oaipmhDCElementsSchema);
 		createSchemaDataModel(DataModelUtils.OAI_PMH_DC_TERMS_DATA_MODEL_UUID, oaipmhDCTermsSchemaDM, oaipmhDCTermsSchemaDM, oaipmhDCTermsSchema);
 		createSchemaDataModel(DataModelUtils.OAI_PMH_MARCXML_DATA_MODEL_UUID, oaipmhMARCXMLSchemaDM, oaipmhMARCXMLSchemaDM, oaipmhMARCXMLSchema);
+		createSchemaDataModel(DataModelUtils.SRU_11_PICAPLUSXML_GLOBAL_DATA_MODEL_UUID, sru11PICAPlusXMLGlobalSchemaDM, sru11PICAPlusXMLGlobalSchemaDM, sru11PICAPlusXMLGlobalSchema);
 		createSchemaDataModel(DataModelUtils.OAI_PMH_DC_ELEMENTS_AND_EDM_DATA_MODEL_UUID, oaipmhDCElementsAndEDMSchemaDM, oaipmhDCElementsAndEDMSchemaDM,
 				oaipmhDCElementsAndEDMSchema);
 
