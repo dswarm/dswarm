@@ -1,4 +1,28 @@
-<?xml version="1.0" ?>
+<?xml version="1.0"?>
+<!--
+/**
+ * finc-solr biblio schema
+ *
+ * Copyright (C) 2015 Leipzig University Library <info@ub.uni-leipzig.de>
+ *
+ * @author   Finc Team <team@finc.info>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU GPLv2
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ */
+-->
 <schema name="VuFind Bibliographic Index" version="1.2">
   <types>
     <!-- longtype fuer _version_ feld -->
@@ -21,6 +45,7 @@
       <analyzer type="index">
         <tokenizer class="solr.WhitespaceTokenizerFactory"/>
         <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="1" catenateNumbers="1" catenateAll="0" splitOnCaseChange="0"/>
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stoppwoerter_de-en-kurz.txt" enablePositionIncrements="true"/>
         <filter class="solr.ICUFoldingFilterFactory"/>
         <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
         <filter class="solr.SnowballPorterFilterFactory" language="German2"/>
@@ -29,13 +54,13 @@
       <analyzer type="query">
         <tokenizer class="solr.WhitespaceTokenizerFactory"/>
         <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="1" catenateNumbers="1" catenateAll="0" splitOnCaseChange="0"/>
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stoppwoerter_de-en-kurz.txt" enablePositionIncrements="true"/>
         <filter class="solr.ICUFoldingFilterFactory"/>
         <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
         <filter class="solr.SnowballPorterFilterFactory" language="German2"/>
         <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
       </analyzer>
     </fieldType>
-
     <!-- Text Field without Stemming and Synonyms -->
     <fieldType name="textProper" class="solr.TextField" positionIncrementGap="100">
       <analyzer type="index">
@@ -57,9 +82,8 @@
         <tokenizer class="solr.ICUTokenizerFactory"/>
         <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="0" catenateNumbers="0" catenateAll="0"/>
         <filter class="solr.ICUFoldingFilterFactory"/>
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stoppwoerter_de-en-kurz.txt" enablePositionIncrements="true"/>
         <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
-        <filter class="solr.StopFilterFactory" ignoreCase="true" words="german_stop.txt" enablePositionIncrements="true"/>
-        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true"/>
       </analyzer>
     </fieldType>
     <!-- More advanced spell checking field. -->
@@ -69,16 +93,14 @@
         <filter class="solr.ICUFoldingFilterFactory"/>
         <filter class="solr.ShingleFilterFactory" maxShingleSize="2" outputUnigrams="false"/>
         <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
-        <filter class="solr.StopFilterFactory" ignoreCase="true" words="german_stop.txt" enablePositionIncrements="true"/>
-        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true"/>
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stoppwoerter_de-en-kurz.txt" enablePositionIncrements="true"/>
       </analyzer>
       <analyzer type="query">
         <tokenizer class="solr.ICUTokenizerFactory"/>
         <filter class="solr.ICUFoldingFilterFactory"/>
         <filter class="solr.ShingleFilterFactory" maxShingleSize="2" outputUnigrams="false"/>
         <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
-        <filter class="solr.StopFilterFactory" ignoreCase="true" words="german_stop.txt" enablePositionIncrements="true"/>
-        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true"/>
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stoppwoerter_de-en-kurz.txt" enablePositionIncrements="true"/>
       </analyzer>
     </fieldType>
     <!-- Text Field for Normalized ISBN/ISSN Numbers - take first chunk of text
@@ -89,7 +111,7 @@
         <tokenizer class="solr.PatternTokenizerFactory" pattern="^(\S*)\s*.*$" group="1"/>
         <filter class="solr.LowerCaseFilterFactory"/>
         <filter class="solr.PatternReplaceFilterFactory" pattern="[^0-9x]" replacement="" replace="all"/>
-        <filter class="solr.LengthFilterFactory" min="1" max="100" />
+        <filter class="solr.LengthFilterFactory" min="1" max="100"/>
       </analyzer>
     </fieldType>
     <!-- Text Field for rather normalized information like call number (Signatur),
@@ -105,7 +127,6 @@
         <filter class="solr.LowerCaseFilterFactory"/>
       </analyzer>
     </fieldType>
-
     <fieldType name="codetokenized" class="solr.TextField" positionIncrementGap="100">
       <analyzer type="index">
         <tokenizer class="solr.WhitespaceTokenizerFactory"/>
@@ -116,7 +137,6 @@
         <filter class="solr.LowerCaseFilterFactory"/>
       </analyzer>
     </fieldType>
-
     <fieldType name="num" class="solr.TrieLongField" sortMissingLast="true" omitNorms="true"/>
     <fieldType name="date" class="solr.DateField" sortMissingLast="true" omitNorms="true"/>
   </types>
@@ -138,7 +158,7 @@
     <field name="spellingShingle" type="textSpellShingle" indexed="true" stored="true" multiValued="true"/>
     <!-- finc-spezifisch, bibliotheksübergreifend -->
     <field name="mega_collection" type="string" indexed="true" stored="true" multiValued="true"/>
-    <field name="mega_toplevel" type="string" indexed="true" stored="true" multiValued="true"/>
+    <!-- <field name="mega_toplevel" type="string" indexed="true" stored="true" multiValued="true"/> -->
     <field name="record_id" type="string" indexed="true" stored="true" multiValued="false" termVectors="true"/>
     <field name="source_id" default="error" type="string" indexed="true" stored="true" multiValued="false"/>
     <!-- <field name="source_name" default="error" type="string" indexed="true" stored="true" multiValued="false"/> -->
@@ -146,13 +166,13 @@
     <field name="institution" default="finc" type="string" indexed="true" stored="true" multiValued="true"/>
     <field name="signatur" type="code" indexed="true" stored="true" multiValued="true"/>
     <field name="barcode" type="code" indexed="true" stored="true" multiValued="true"/>
-    <field name="rsn" type="string" indexed="true" stored="true" multiValued="true" />
+    <field name="rsn" type="string" indexed="true" stored="true" multiValued="true"/>
     <field name="access_facet" type="string" indexed="true" stored="true" multiValued="false"/>
-    <field name="author_id" type="string" indexed="true" stored="true" multiValued="true" />
-    <field name="topic_id" type="string" indexed="true" stored="true" multiValued="true" />
-    <field name="author_ref" type="textProper" indexed="true" stored="false" multiValued="true" />
-    <field name="author_corp_ref" type="textProper" indexed="true" stored="false" multiValued="true" />
-    <field name="topic_ref" type="text" indexed="true" stored="false" multiValued="true" />
+    <field name="author_id" type="string" indexed="true" stored="true" multiValued="true"/>
+    <field name="topic_id" type="string" indexed="true" stored="true" multiValued="true"/>
+    <field name="author_ref" type="textProper" indexed="true" stored="false" multiValued="true"/>
+    <field name="author_corp_ref" type="textProper" indexed="true" stored="false" multiValued="true"/>
+    <field name="topic_ref" type="text" indexed="true" stored="false" multiValued="true"/>
     <field name="multipart_set" type="string" indexed="true" stored="true" multiValued="false"/>
     <field name="multipart_link" type="string" indexed="true" stored="true" multiValued="true" termVectors="true"/>
     <field name="multipart_part" type="string" indexed="true" stored="true" multiValued="true"/>
@@ -160,39 +180,20 @@
     <field name="timecode" type="textFacet" indexed="true" stored="true" multiValued="true"/>
     <!-- finc-spezifisch UND bibliotheksspezifisch -->
     <field name="misc_dech1" type="codetokenized" indexed="true" stored="false" multiValued="true"/>
-    <!--field name="misc_de15" type="code" indexed="true" stored="false" multiValued="true"/-->
     <field name="misc_del152" type="textFacet" indexed="true" stored="true" multiValued="true"/>
     <field name="misc_de105" type="textFacet" indexed="true" stored="true" multiValued="true"/>
-    <!--field name="misc_de520" type="code" indexed="true" stored="false" multiValued="true"/-->
-    <!--field name="misc_del189" type="code" indexed="true" stored="false" multiValued="true"/-->
-    <!--field name="misc_dezwi2" type="code" indexed="true" stored="false" multiValued="true"/-->
-    <!--field name="misc_dezi4" type="code" indexed="true" stored="false" multiValued="true"/-->
-    <!--field name="misc_ded117" type="code" indexed="true" stored="false" multiValued="true"/-->
-    <!--field name="misc_de540" type="code" indexed="true" stored="false" multiValued="true"/-->
-    <!--field name="misc_del242" type="code" indexed="true" stored="false" multiValued="true"/-->
     <field name="branch_de15" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
     <field name="branch_dech1" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
     <field name="branch_de105" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
     <field name="branch_de520" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
-    <!--field name="branch_del189" type="textFacet" indexed="true" stored="false" multiValued="true"/-->
     <field name="branch_dezwi2" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
     <field name="branch_dezi4" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
-    <!--field name="branch_ded117" type="textFacet" indexed="true" stored="false" multiValued="true"/-->
-    <!--field name="branch_de540" type="textFacet" indexed="true" stored="false" multiValued="true"/-->
-    <!--field name="branch_del242" type="textFacet" indexed="true" stored="false" multiValued="true"/-->
     <field name="collcode_de15" type="textFacet" indexed="true" stored="true" multiValued="true"/>
     <field name="collcode_dech1" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
     <field name="collcode_de105" type="textFacet" indexed="true" stored="true" multiValued="true"/>
     <field name="collcode_de520" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
-    <!--field name="collcode_del189" type="textFacet" indexed="true" stored="false" multiValued="true"/-->
     <field name="collcode_dezwi2" type="textFacet" indexed="true" stored="true" multiValued="true"/>
     <field name="collcode_dezi4" type="textFacet" indexed="true" stored="true" multiValued="true"/>
-    <!--field name="collcode_ded117" type="textFacet" indexed="true" stored="false" multiValued="true"/-->
-    <!--field name="collcode_de540" type="textFacet" indexed="true" stored="false" multiValued="true"/-->
-    <!--field name="collcode_del242" type="textFacet" indexed="true" stored="false" multiValued="true"/-->
-
-    <!-- <field name="format_*" type="textFacet" indexed="true" stored="true" multiValued="true"/> -->
-    <!-- default value vs. dynamic fields // "not assigned" may be important -->
     <field name="format_de14"                        type="textFacet" indexed="true" stored="true" multiValued="true"/>
     <field name="format_de15" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
     <field name="format_del152" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
@@ -205,10 +206,6 @@
     <field name="format_de540" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
     <field name="format_ded117" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
     <field name="format_degla1" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
-    <!--field name="format_ded117" type="textFacet" indexed="true" stored="false" multiValued="true"/-->
-    <!--field name="format_de540" type="textFacet" indexed="true" stored="false" multiValued="true"/-->
-    <!--field name="format_del242" type="textFacet" indexed="true" stored="false" multiValued="true"/-->
-    <!-- Local Subject Headings for searching and faceting -->
     <field name="local_heading_facet_del152" type="textFacet" indexed="true" stored="true" multiValued="true"/>
     <field name="local_heading_dezwi2" type="text" indexed="true" stored="true" multiValued="true"/>
     <field name="local_heading_facet_dezwi2" type="textFacet" indexed="true" stored="true" multiValued="true"/>
@@ -217,7 +214,6 @@
     <field name="udk_raw_de105" default="not assigned" type="code" indexed="true" stored="true" multiValued="true"/>
     <field name="udk_facet_de105" default="not assigned" type="string" indexed="true" stored="true" multiValued="true"/>
     <field name="udk_raw_del189" default="not assigned" type="code" indexed="true" stored="true" multiValued="true"/>
-    <!--field name="udk_facet_del189" default="not assigned" type="string" indexed="true" stored="true" multiValued="true"/-->
     <field name="finc_class_facet" default="not assigned" type="string" indexed="true" stored="true" multiValued="true"/>
     <!-- allgemeingueltig, Generic Fields -->
     <field name="zdb" type="string" indexed="true" stored="true" multiValued="false"/>
@@ -240,7 +236,7 @@
     <!--field name="author_additionalStr" type="string" indexed="true" stored="true" multiValued="true"/ -->
     <field name="author_facet" type="textFacet" indexed="true" stored="false" multiValued="true"/>
     <field name="author_browse" type="string" indexed="true" stored="false" multiValued="true"/>
-    <field name="author_sort" type="string_ci" indexed="true" stored="true" />
+    <field name="author_sort" type="string_ci" indexed="true" stored="true"/>
     <field name="title" type="text" indexed="true" termVectors="true" stored="true"/>
     <field name="title_part" type="text" indexed="true" stored="true"/>
     <field name="title_sub" type="text" indexed="true" stored="true"/>
@@ -274,9 +270,9 @@
     <field name="urn" type="string" indexed="true" stored="false" multiValued="true"/>
     <field name="isbn" type="isn" indexed="true" stored="true" multiValued="true"/>
     <field name="issn" type="isn" indexed="true" stored="true" multiValued="true"/>
-    <field name="isbn_canc" type="isn" indexed="true" stored="true" multiValued="true"/>
+    <!-- <field name="isbn_canc" type="isn" indexed="true" stored="true" multiValued="true"/> -->
     <field name="ismn" type="isn" indexed="true" stored="true" multiValued="true"/>
-    <field name="issn_canc" type="isn" indexed="true" stored="true" multiValued="true"/>
+    <!-- <field name="issn_canc" type="isn" indexed="true" stored="true" multiValued="true"/> -->
     <field name="oclc_num" type="num" indexed="true" stored="true" multiValued="true"/>
     <field name="topic" type="text" indexed="true" stored="true" termVectors="true" multiValued="true"/>
     <field name="topic_unstemmed" type="textProper" indexed="true" stored="false" multiValued="true"/>
@@ -290,18 +286,14 @@
     <field name="dewey-tens" default="not assigned" type="string" indexed="true" stored="true" multiValued="true"/>
     <field name="dewey-ones" default="not assigned" type="string" indexed="true" stored="true" multiValued="true"/>
     <field name="dewey-full" default="not assigned" type="string" indexed="true" stored="true" multiValued="true"/>
-    <field name="dewey-sort" default="not assigned" type="string" indexed="true" stored="true" />
+    <field name="dewey-sort" default="not assigned" type="string" indexed="true" stored="true"/>
     <field name="dewey-raw" type="string" indexed="true" stored="true"/>
     <field name="rvk_facet" default="not assigned" type="code" indexed="true" stored="true" termVectors="true" multiValued="true"/>
     <field name="rvk_label" type="text" indexed="true" stored="true" multiValued="true"/>
-    <field name="rvk_path" type="code" indexed="true" stored="true" multiValued="true"/>
-    <!-- attached RSS #857 #4505 #4789 -->
-    <dynamicField name="date_*" type="date" indexed="true" stored="true"/>
-
+    <field name="rvk_path" type="textProper" indexed="true" stored="true" multiValued="true"/>
     <!-- Tracking fields to keep track of oldest and most recent index times -->
     <!-- field name="first_indexed" type="date" indexed="true" stored="true"/ -->
     <!-- field name="last_indexed" type="date" indexed="true" stored="true"/ -->
-    <!-- blubb-->
     <field name="fulltext_unstemmed" type="textProper" indexed="true" stored="false"/>
     <!-- Hierarchy Fields -->
     <field name="hierarchytype" type="string" indexed="true" stored="true" multiValued="false"/>
@@ -312,16 +304,14 @@
     <field name="hierarchy_sequence" type="string" indexed="true" stored="true" multiValued="true"/>
     <field name="is_hierarchy_id" type="string" indexed="true" stored="true" multiValued="false"/>
     <field name="is_hierarchy_title" type="string" indexed="true" stored="true" multiValued="false"/>
-    <!-- <field name="title_in_hierarchy" type="string" indexed="true" stored="true" multiValued="true" /> -->
-    <!-- <field name="hierarchy_browse" type="textFacetRaw" indexed="true" stored="false" multiValued="true"/> -->
-
+    <field name="title_in_hierarchy" type="string" indexed="true" stored="true" multiValued="true"/>
+    <!--<field name="hierarchy_browse" type="textFacetRaw" indexed="true" stored="false" multiValued="true"/>-->
     <!-- Container fields (i.e. for describing journal containing an article) -->
     <field name="container_title" type="text" indexed="true" stored="true"/>
     <field name="container_volume" type="text" indexed="true" stored="true"/>
     <field name="container_issue" type="text" indexed="true" stored="true"/>
     <field name="container_start_page" type="text" indexed="true" stored="true"/>
     <field name="container_reference" type="text" indexed="true" stored="true"/>
-
   </fields>
   <uniqueKey>id</uniqueKey>
   <!-- CopyFields for Spelling -->
@@ -345,15 +335,14 @@
   <copyField source="allfields" dest="allfields_unstemmed"/>
   <!-- CopyFields for Alphabetic Browse -->
   <!--copyField source="topic" dest="topic_browse"/-->
-  <copyField source="music_heading" dest="music_heading_browse" />
+  <copyField source="music_heading" dest="music_heading_browse"/>
   <copyField source="author" dest="author_browse"/>
   <copyField source="author2" dest="author_browse"/>
   <!-- Laut http://wiki.apache.org/solr/SchemaXml ist "defaultSearchField" considered for deprecation.
-  Stattdessen sollen der Request Handler oder die Query LocalParams die Default-Felder festlegen.-->
+ Stattdessen sollen der Request Handler oder die Query LocalParams die Default-Felder festlegen.-->
   <defaultSearchField>allfields</defaultSearchField>
   <!-- Default Boolean Operator -->
   <!-- Laut http://wiki.apache.org/solr/SchemaXml ist "defaultOperator" considered for deprecation.
-  Stattdessen sollen der Request Handler oder die Query LocalParams den Default-Operator festlegen.-->
+ Stattdessen sollen der Request Handler oder die Query LocalParams den Default-Operator festlegen.-->
   <solrQueryParser defaultOperator="AND"/>
-
 </schema>
