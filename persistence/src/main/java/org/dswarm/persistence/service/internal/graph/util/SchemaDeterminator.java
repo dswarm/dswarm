@@ -15,10 +15,15 @@
  */
 package org.dswarm.persistence.service.internal.graph.util;
 
+import java.util.Set;
+import java.util.Optional;
+
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
@@ -31,11 +36,11 @@ import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.proxy.ProxySchema;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 import org.dswarm.persistence.service.resource.DataModelService;
-import org.dswarm.persistence.service.schema.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Set;
+import org.dswarm.persistence.service.schema.AttributePathService;
+import org.dswarm.persistence.service.schema.AttributeService;
+import org.dswarm.persistence.service.schema.ClaszService;
+import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
+import org.dswarm.persistence.service.schema.SchemaService;
 
 /**
  * @author tgaengler
@@ -120,13 +125,16 @@ public class SchemaDeterminator {
 				switch (schemaUUID) {
 
 					case SchemaUtils.MABXML_SCHEMA_UUID:
-					case SchemaUtils.MARC21_SCHEMA_UUID:
+					case SchemaUtils.MARCXML_SCHEMA_UUID:
+					case SchemaUtils.PICAPLUSXML_SCHEMA_UUID:
+					case SchemaUtils.PICAPLUSXML_GLOBAL_SCHEMA_UUID:
 					case SchemaUtils.PNX_SCHEMA_UUID:
 					case SchemaUtils.FINC_SOLR_SCHEMA_UUID:
 					case SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID:
 					case SchemaUtils.OAI_PMH_DC_ELEMENTS_AND_EDM_SCHEMA_UUID:
 					case SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID:
 					case SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID:
+					case SchemaUtils.SRU_11_PICAPLUSXML_GLOBAL_SCHEMA_UUID:
 
 						// those schemas are already there and shouldn't be manipulated by data that differs from those schemas
 						LOG.debug("schema for data model '{}' is a preset schema, so everything is already set", dataModel.getUuid());
@@ -178,11 +186,14 @@ public class SchemaDeterminator {
 
 						case ConfigurationStatics.MABXML_STORAGE_TYPE:
 						case ConfigurationStatics.MARCXML_STORAGE_TYPE:
+						case ConfigurationStatics.PICAPLUSXML_STORAGE_TYPE:
+						case ConfigurationStatics.PICAPLUSXML_GLOBAL_STORAGE_TYPE:
 						case ConfigurationStatics.PNX_STORAGE_TYPE:
 						case ConfigurationStatics.OAI_PMH_DC_ELEMENTS_STORAGE_TYPE:
 						case ConfigurationStatics.OAI_PMH_DCE_AND_EDM_ELEMENTS_STORAGE_TYPE:
 						case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:
 						case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
+						case ConfigurationStatics.SRU_11_PICAPLUSXML_GLOBAL_STORAGE_TYPE:
 
 							optionalPresetSchema = Optional.of(storageType);
 
@@ -222,9 +233,23 @@ public class SchemaDeterminator {
 					break;
 				case ConfigurationStatics.MARCXML_STORAGE_TYPE:
 
-					// assign existing marc21 schema to data resource
+					// assign existing MARC XML schema to data resource
 
-					schema = schemaService.get().getObject(SchemaUtils.MARC21_SCHEMA_UUID);
+					schema = schemaService.get().getObject(SchemaUtils.MARCXML_SCHEMA_UUID);
+
+					break;
+				case ConfigurationStatics.PICAPLUSXML_STORAGE_TYPE:
+
+					// assign existing PICA+ XML schema to data resource
+
+					schema = schemaService.get().getObject(SchemaUtils.PICAPLUSXML_SCHEMA_UUID);
+
+					break;
+				case ConfigurationStatics.PICAPLUSXML_GLOBAL_STORAGE_TYPE:
+
+					// assign existing PICA+ XML 'global' schema to data resource
+
+					schema = schemaService.get().getObject(SchemaUtils.PICAPLUSXML_GLOBAL_SCHEMA_UUID);
 
 					break;
 				case ConfigurationStatics.PNX_STORAGE_TYPE:
@@ -260,6 +285,13 @@ public class SchemaDeterminator {
 					// assign existing OAI-PMH + MARCXML schema to data resource
 
 					schema = schemaService.get().getObject(SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID);
+
+					break;
+				case ConfigurationStatics.SRU_11_PICAPLUSXML_GLOBAL_STORAGE_TYPE:
+
+					// assign existing SRU 1.1. + PICA+ XML 'global' schema to data resource
+
+					schema = schemaService.get().getObject(SchemaUtils.SRU_11_PICAPLUSXML_GLOBAL_SCHEMA_UUID);
 
 					break;
 				default:

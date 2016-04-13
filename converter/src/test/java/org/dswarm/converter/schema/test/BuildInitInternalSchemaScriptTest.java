@@ -15,27 +15,42 @@
  */
 package org.dswarm.converter.schema.test;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.init.util.CmdUtil;
 import org.dswarm.persistence.DMPPersistenceError;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
-import org.dswarm.persistence.model.schema.*;
+import org.dswarm.persistence.model.schema.Attribute;
+import org.dswarm.persistence.model.schema.AttributePath;
+import org.dswarm.persistence.model.schema.Clasz;
+import org.dswarm.persistence.model.schema.ContentSchema;
+import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 import org.dswarm.persistence.service.resource.DataModelService;
-import org.dswarm.persistence.service.schema.*;
+import org.dswarm.persistence.service.schema.AttributePathService;
+import org.dswarm.persistence.service.schema.AttributeService;
+import org.dswarm.persistence.service.schema.ClaszService;
+import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
+import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.service.schema.test.internalmodel.BiboDocumentSchemaBuilder;
 import org.dswarm.persistence.service.schema.test.internalmodel.BibrmContractItemSchemaBuilder;
 import org.dswarm.persistence.service.schema.test.utils.AttributeServiceTestUtils;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
 
 /**
  * Serves as a preliminary place for triggering the build of a script that populates the database with initially required internal
@@ -128,24 +143,34 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		final Schema biboDocumentSchema = new BiboDocumentSchemaBuilder(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.BIBO_DOCUMENT_SCHEMA_UUID)), Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.FOAF_SCHEMA_UUID))).buildSchema();
 		final Schema mabxmlSchema = XMLSchemaParserTest.parseMabxmlSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.MABXML_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.MABXML_SCHEMA_UUID)));
 		final Schema pnxSchema = XMLSchemaParserTest.parsePNXSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.PNX_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.PNX_SCHEMA_UUID)));
-		final Schema marc21Schema = XMLSchemaParserTest.parseMarc21Schema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.MARC21_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.MARC21_SCHEMA_UUID)));
+		final Schema marcxmlSchema = XMLSchemaParserTest.parseMarcXmlSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.MARCXML_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.MARCXML_SCHEMA_UUID)));
+		final Schema picaplusxmlSchema = XMLSchemaParserTest.parsePicaPlusXmlSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.PICAPLUSXML_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.PICAPLUSXML_SCHEMA_UUID)));
+
+		// reutilize content schema from PICA+ XML schema
+		schemaContentSchemaMap.put(SchemaUtils.PICAPLUSXML_GLOBAL_SCHEMA_UUID, picaplusxmlSchema.getContentSchema().getUuid());
+
+		final Schema picaplusxmlGlobalSchema = XMLSchemaParserTest.parsePicaPlusXmlGlobalSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.PICAPLUSXML_GLOBAL_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.PICAPLUSXML_GLOBAL_SCHEMA_UUID)));
 		final Schema fincSolrSchema = SolrSchemaParserTest.parseFincSolrSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.FINC_SOLR_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.FINC_SOLR_SCHEMA_UUID)));
 		final Schema oaipmhDCElementsSchema = XMLSchemaParserTest.parseOAIPMHPlusDCElementsSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID)));
 		final Schema oaipmhDCTermsSchema = XMLSchemaParserTest.parseOAIPMHPlusDCTermsSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID)));
 		final Schema oaipmhMARCXMLSchema = XMLSchemaParserTest.parseOAIPMHPlusMARCXMLSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID)));
+		final Schema sru11PICAPlusXMLGlobalSchema = XMLSchemaParserTest.parseSRU11PlusPICAPlusXMLSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.SRU_11_PICAPLUSXML_GLOBAL_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.SRU_11_PICAPLUSXML_GLOBAL_SCHEMA_UUID)));
 		final Schema oaipmhDCElementsAndEDMSchema = XMLSchemaParserTest.parseOAIPMHPlusDCElementsAndEDMSchema(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.OAI_PMH_DC_ELEMENTS_AND_EDM_SCHEMA_UUID)), Optional.ofNullable(schemaContentSchemaMap.get(SchemaUtils.OAI_PMH_DC_ELEMENTS_AND_EDM_SCHEMA_UUID)));
 
 		final String bibrmContractDM = "Internal Data Model ContractItem";
 		final String biboDocumentDM = "Internal Data Model BiboDocument";
 		final String mabxmlSchemaDM = "Internal Data Model mabxml";
 		final String pnxSchemaDM = "Internal Data Model PNX";
-		final String marc21SchemaDM = "Internal Data Model Marc21";
+		final String marcxmlSchemaDM = "Internal Data Model MARCXML";
+		final String picaplusxmlSchemaDM = "Internal Data Model PICA+ XML";
+		final String picaplusxmlGlobalSchemaDM = "Internal Data Model PICA+ XML 'global'";
 		// [@tgaengler]: just prevention, but I guess that we also need a (default) data model for the foaf:Person schema (right now)
 		final String foafPersonDM = "Internal Data Model foafPerson";
 		final String fincSolrSchemaDM = "Internal Data Model finc Solr";
 		final String oaipmhDCElementsSchemaDM = "Internal Data Model OAI-PMH + DC Elements";
 		final String oaipmhDCTermsSchemaDM = "Internal Data Model OAI-PMH + DC Terms";
-		final String oaipmhMARCXMLSchemaDM = "Internal Data Model OAI-PNH + MARCXML";
+		final String oaipmhMARCXMLSchemaDM = "Internal Data Model OAI-PMH + MARCXML";
+		final String sru11PICAPlusXMLGlobalSchemaDM = "Internal Data Model SRU 1.1 + PICA+ XML 'global'";
 		final String oaipmhDCElementsAndEDMSchemaDM = "Internal Data Model OAI-PMH + DC Elements + EDM";
 
 		final Schema foafPersonSchema = biboDocumentSchema.getAttributePathByURIPath(AttributeServiceTestUtils.DCTERMS_CREATOR).getSubSchema();
@@ -154,13 +179,16 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		createSchemaDataModel(DataModelUtils.BIBO_DOCUMENT_DATA_MODEL_UUID, biboDocumentDM, biboDocumentDM, biboDocumentSchema);
 		createSchemaDataModel(DataModelUtils.MABXML_DATA_MODEL_UUID, mabxmlSchemaDM, mabxmlSchemaDM, mabxmlSchema);
 		createSchemaDataModel(DataModelUtils.PNX_DATA_MODEL_UUID, pnxSchemaDM, pnxSchemaDM, pnxSchema);
-		createSchemaDataModel(DataModelUtils.MARC21_DATA_MODEL_UUID, marc21SchemaDM, marc21SchemaDM, marc21Schema);
+		createSchemaDataModel(DataModelUtils.MARCXML_DATA_MODEL_UUID, marcxmlSchemaDM, marcxmlSchemaDM, marcxmlSchema);
+		createSchemaDataModel(DataModelUtils.PICAPLUSXML_DATA_MODEL_UUID, picaplusxmlSchemaDM, picaplusxmlSchemaDM, picaplusxmlSchema);
+		createSchemaDataModel(DataModelUtils.PICAPLUSXML_GLOBAL_DATA_MODEL_UUID, picaplusxmlGlobalSchemaDM, picaplusxmlGlobalSchemaDM, picaplusxmlGlobalSchema);
 		createSchemaDataModel(DataModelUtils.FOAF_PERSON_DATA_MODEL_UUID, foafPersonDM, foafPersonDM, foafPersonSchema);
 		createSchemaDataModel(DataModelUtils.FINC_SOLR_DATA_MODEL_UUID, fincSolrSchemaDM, fincSolrSchemaDM, fincSolrSchema);
 		createSchemaDataModel(DataModelUtils.OAI_PMH_DC_ELEMENTS_DATA_MODEL_UUID, oaipmhDCElementsSchemaDM, oaipmhDCElementsSchemaDM,
 				oaipmhDCElementsSchema);
 		createSchemaDataModel(DataModelUtils.OAI_PMH_DC_TERMS_DATA_MODEL_UUID, oaipmhDCTermsSchemaDM, oaipmhDCTermsSchemaDM, oaipmhDCTermsSchema);
 		createSchemaDataModel(DataModelUtils.OAI_PMH_MARCXML_DATA_MODEL_UUID, oaipmhMARCXMLSchemaDM, oaipmhMARCXMLSchemaDM, oaipmhMARCXMLSchema);
+		createSchemaDataModel(DataModelUtils.SRU_11_PICAPLUSXML_GLOBAL_DATA_MODEL_UUID, sru11PICAPlusXMLGlobalSchemaDM, sru11PICAPlusXMLGlobalSchemaDM, sru11PICAPlusXMLGlobalSchema);
 		createSchemaDataModel(DataModelUtils.OAI_PMH_DC_ELEMENTS_AND_EDM_DATA_MODEL_UUID, oaipmhDCElementsAndEDMSchemaDM, oaipmhDCElementsAndEDMSchemaDM,
 				oaipmhDCElementsAndEDMSchema);
 

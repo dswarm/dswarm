@@ -42,6 +42,7 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author tgaengler
@@ -97,13 +98,29 @@ public class XMLSchemaParser {
 		includeRecordTag = includeRecordTagArg;
 	}
 
-	// Map<String, String>
+	public Optional<Schema> parse(final String xmlSchemaFilePath,
+	                              final String recordTag,
+	                              final String uuid,
+	                              final String schemaName) throws DMPPersistenceException {
+
+		return parse(xmlSchemaFilePath, recordTag, uuid, schemaName, Optional.empty());
+	}
 
 	public Optional<Schema> parse(final String xmlSchemaFilePath,
 	                              final String recordTag,
 	                              final String uuid,
 	                              final String schemaName,
 	                              final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs) throws DMPPersistenceException {
+
+		return parse(xmlSchemaFilePath, recordTag, uuid, schemaName, optionalAttributePathsSAPIUUIDs, Optional.empty());
+	}
+
+	public Optional<Schema> parse(final String xmlSchemaFilePath,
+	                              final String recordTag,
+	                              final String uuid,
+	                              final String schemaName,
+	                              final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
+	                              final Optional<Set<String>> optionalExcludeAttributePathStubs) throws DMPPersistenceException {
 
 		final Optional<Tuple<Schema, Set<AttributePathHelper>>> optionalResult = parseSeparatelyInternal(xmlSchemaFilePath, recordTag, uuid,
 				schemaName);
@@ -117,19 +134,11 @@ public class XMLSchemaParser {
 		final Set<AttributePathHelper> attributePaths = optionalResult.get().v2();
 
 		SchemaUtils.addAttributePaths(schema, attributePaths, attributePathServiceProvider, schemaAttributePathInstanceServiceProvider,
-				attributeServiceProvider, optionalAttributePathsSAPIUUIDs);
+				attributeServiceProvider, optionalAttributePathsSAPIUUIDs, optionalExcludeAttributePathStubs);
 
 		final Schema updatedSchema = SchemaUtils.updateSchema(schema, schemaServiceProvider);
 
 		return Optional.ofNullable(updatedSchema);
-	}
-
-	public Optional<Schema> parse(final String xmlSchemaFilePath,
-	                              final String recordTag,
-	                              final String uuid,
-	                              final String schemaName) throws DMPPersistenceException {
-
-		return parse(xmlSchemaFilePath, recordTag, uuid, schemaName, Optional.empty());
 	}
 
 	public Optional<Tuple<Schema, Map<String, AttributePathHelper>>> parseSeparately(final String xmlSchemaFilePath,
@@ -208,24 +217,44 @@ public class XMLSchemaParser {
 	public Optional<Map<String, AttributePathHelper>> parseAttributePathsMap(final String xmlSchemaFilePath,
 	                                                                         final Optional<String> optionalRecordTag) {
 
+		return parseAttributePathsMap(xmlSchemaFilePath, optionalRecordTag, Optional.empty());
+	}
+
+	public Optional<Map<String, AttributePathHelper>> parseAttributePathsMap(final String xmlSchemaFilePath,
+	                                                                         final Optional<String> optionalRecordTag,
+	                                                                         final Optional<Set<String>> optionalExcludeAttributePathStubs) {
+
 		if (optionalRecordTag.isPresent()) {
 
-			return convertSetToMap(parseAttributePaths(xmlSchemaFilePath, optionalRecordTag.get()));
+			return convertSetToMap(parseAttributePaths(xmlSchemaFilePath, optionalRecordTag.get(), optionalExcludeAttributePathStubs));
 		} else {
 
-			return convertSetToMap(parseAttributePaths(xmlSchemaFilePath));
+			return convertSetToMap(parseAttributePaths2(xmlSchemaFilePath, optionalExcludeAttributePathStubs));
 		}
 	}
 
 	public Optional<Set<AttributePathHelper>> parseAttributePaths(final String xmlSchemaFilePath,
 	                                                              final String recordTag) {
 
+		return parseAttributePaths(xmlSchemaFilePath, recordTag, Optional.empty());
+	}
+
+	public Optional<Set<AttributePathHelper>> parseAttributePaths(final String xmlSchemaFilePath,
+	                                                              final String recordTag,
+	                                                              final Optional<Set<String>> optionalExcludeAttributePathStubs) {
+
 		final Optional<List<JsonNode>> optionalRecordTags = getRecordTagNodes(xmlSchemaFilePath, recordTag);
 
-		return parseAttributePaths(optionalRecordTags);
+		return parseAttributePaths(optionalRecordTags, optionalExcludeAttributePathStubs);
 	}
 
 	public Optional<Set<AttributePathHelper>> parseAttributePaths(final String xmlSchemaFilePath) {
+
+		return parseAttributePaths2(xmlSchemaFilePath, Optional.empty());
+	}
+
+	public Optional<Set<AttributePathHelper>> parseAttributePaths2(final String xmlSchemaFilePath,
+	                                                               final Optional<Set<String>> optionalExcludeAttributePathStubs) {
 
 		final Optional<ObjectNode> optionalJSONSchema = getJSONSchema(xmlSchemaFilePath);
 
@@ -259,10 +288,16 @@ public class XMLSchemaParser {
 
 		final Optional<List<JsonNode>> optionalRootNodes = Optional.of(rootNodes);
 
-		return parseAttributePaths(optionalRootNodes);
+		return parseAttributePaths(optionalRootNodes, optionalExcludeAttributePathStubs);
 	}
 
 	private Optional<Set<AttributePathHelper>> parseAttributePaths(final Optional<List<JsonNode>> optionalRecordTags) {
+
+		return parseAttributePaths(optionalRecordTags, Optional.empty());
+	}
+
+	private Optional<Set<AttributePathHelper>> parseAttributePaths(final Optional<List<JsonNode>> optionalRecordTags,
+	                                                               final Optional<Set<String>> optionalExcludeAttributePathStubs) {
 
 		if (!optionalRecordTags.isPresent()) {
 
@@ -271,12 +306,18 @@ public class XMLSchemaParser {
 
 		final List<JsonNode> recordTagNodes = optionalRecordTags.get();
 
-		final Set<AttributePathHelper> attributePaths = parseAttributePaths(recordTagNodes);
+		final Set<AttributePathHelper> attributePaths = parseAttributePaths(recordTagNodes, optionalExcludeAttributePathStubs);
 
 		return Optional.ofNullable(attributePaths);
 	}
 
 	private Set<AttributePathHelper> parseAttributePaths(final List<JsonNode> recordTagNodes) {
+
+		return parseAttributePaths(recordTagNodes, Optional.empty());
+	}
+
+	private Set<AttributePathHelper> parseAttributePaths(final List<JsonNode> recordTagNodes,
+	                                                     final Optional<Set<String>> optionalExcludeAttributePathStubs) {
 
 		final Set<AttributePathHelper> attributePaths = Sets.newCopyOnWriteArraySet();
 
@@ -289,7 +330,42 @@ public class XMLSchemaParser {
 
 			if (recordTagNodeAttributePaths != null && !recordTagNodeAttributePaths.isEmpty()) {
 
-				attributePaths.addAll(recordTagNodeAttributePaths);
+				final Set<AttributePathHelper> finalRecordTagNodeAttributePaths;
+
+				if(optionalExcludeAttributePathStubs.isPresent()) {
+
+					final Set<String> excludeAttributePathStubs = optionalExcludeAttributePathStubs.get();
+
+					finalRecordTagNodeAttributePaths = new LinkedHashSet<>();
+
+					for(final AttributePathHelper recordTagNodeAttributePath : recordTagNodeAttributePaths) {
+
+						final String recordTagNodeAttributePathString = recordTagNodeAttributePath.toString();
+
+						boolean excludeRecordTagNodeAttributePath = false;
+
+						for(final String excludeAttributePathStub : excludeAttributePathStubs) {
+
+							if(recordTagNodeAttributePathString.startsWith(excludeAttributePathStub)) {
+
+								excludeRecordTagNodeAttributePath = true;
+
+								break;
+							}
+						}
+
+						// if excludeRecordTagNodeAttributePath == true, then this attribute path will be excluded
+						if(!excludeRecordTagNodeAttributePath) {
+
+							finalRecordTagNodeAttributePaths.add(recordTagNodeAttributePath);
+						}
+					}
+				} else {
+
+					finalRecordTagNodeAttributePaths = recordTagNodeAttributePaths;
+				}
+
+				attributePaths.addAll(finalRecordTagNodeAttributePaths);
 			}
 		}
 

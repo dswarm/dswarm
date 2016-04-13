@@ -134,7 +134,11 @@ public interface ConfigurationStatics {
 
 	String MABXML_STORAGE_TYPE = "mabxml";
 
-	String MARCXML_STORAGE_TYPE = "marc21";
+	String MARCXML_STORAGE_TYPE = "marcxml";
+
+	String PICAPLUSXML_STORAGE_TYPE = "picaplusxml";
+
+	String PICAPLUSXML_GLOBAL_STORAGE_TYPE = "picaplusxml-global";
 
 	String PNX_STORAGE_TYPE = "pnx";
 
@@ -145,4 +149,6 @@ public interface ConfigurationStatics {
 	String OAIPMH_DC_TERMS_STORAGE_TYPE = "oai-pmh+dct";
 
 	String OAIPMH_MARCXML_STORAGE_TYPE = "oai-pmh+marcxml";
+
+	String SRU_11_PICAPLUSXML_GLOBAL_STORAGE_TYPE = "sru11+picaplusxml-global";
 }

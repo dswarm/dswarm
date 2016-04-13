@@ -19,7 +19,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import com.google.common.net.UrlEscapers;
 import com.google.inject.Provider;
-import org.dswarm.common.model.util.AttributePathUtil;
+
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.AdvancedDMPJPAObject;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
@@ -57,11 +57,14 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 	public static final String BIBO_DOCUMENT_SCHEMA_UUID = "Schema-ff62ec21-0a11-4c27-a704-d7ca53a21521";
 	public static final String FOAF_SCHEMA_UUID = "Schema-309e901c-3da9-4d82-a694-bab632eaa340";
 	public static final String PNX_SCHEMA_UUID = "Schema-dbc97499-278d-4551-a65e-8e8bb219ca6c";
-	public static final String MARC21_SCHEMA_UUID = "Schema-781d73f0-d115-462e-9b4c-ec23e4251c8d";
+	public static final String MARCXML_SCHEMA_UUID = "Schema-781d73f0-d115-462e-9b4c-ec23e4251c8d";
+	public static final String PICAPLUSXML_SCHEMA_UUID = "Schema-b02b22bf-4657-4853-9263-d2acf7fdae4d";
+	public static final String PICAPLUSXML_GLOBAL_SCHEMA_UUID = "Schema-435ea7b2-f377-4545-9f0c-91c0ce95371a";
 	public static final String FINC_SOLR_SCHEMA_UUID = "Schema-5664ba0e-ccb3-4b71-8823-13281490de30";
 	public static final String OAI_PMH_DC_ELEMENTS_SCHEMA_UUID = "Schema-cb8f4b96-9ab2-4972-88f8-143656199518";
 	public static final String OAI_PMH_DC_TERMS_SCHEMA_UUID = "Schema-8fefbced-c2f2-478c-a22a-debb122e05de";
 	public static final String OAI_PMH_MARCXML_SCHEMA_UUID = "Schema-5ca8e59f-0f40-4f17-8237-e5d0a6e83f18";
+	public static final String SRU_11_PICAPLUSXML_GLOBAL_SCHEMA_UUID = "Schema-93cd8d2a-a583-48f1-83e3-2867e9f85ec8";
 	public static final String OAI_PMH_DC_ELEMENTS_AND_EDM_SCHEMA_UUID = "Schema-e6d4ff86-07d9-494f-9299-9d67d3a0d9e8";
 
 	private static final Collection<String> inbuiltSchemaUuids = new ArrayList<>();
@@ -74,11 +77,14 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 		inbuiltSchemaUuids.add(BIBO_DOCUMENT_SCHEMA_UUID);
 		inbuiltSchemaUuids.add(FOAF_SCHEMA_UUID);
 		inbuiltSchemaUuids.add(PNX_SCHEMA_UUID);
-		inbuiltSchemaUuids.add(MARC21_SCHEMA_UUID);
+		inbuiltSchemaUuids.add(MARCXML_SCHEMA_UUID);
+		inbuiltSchemaUuids.add(PICAPLUSXML_SCHEMA_UUID);
+		inbuiltSchemaUuids.add(PICAPLUSXML_GLOBAL_SCHEMA_UUID);
 		inbuiltSchemaUuids.add(FINC_SOLR_SCHEMA_UUID);
 		inbuiltSchemaUuids.add(OAI_PMH_DC_ELEMENTS_SCHEMA_UUID);
 		inbuiltSchemaUuids.add(OAI_PMH_DC_TERMS_SCHEMA_UUID);
 		inbuiltSchemaUuids.add(OAI_PMH_MARCXML_SCHEMA_UUID);
+		inbuiltSchemaUuids.add(SRU_11_PICAPLUSXML_GLOBAL_SCHEMA_UUID);
 		inbuiltSchemaUuids.add(OAI_PMH_DC_ELEMENTS_AND_EDM_SCHEMA_UUID);
 	}
 
@@ -186,8 +192,30 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 	                                        final Set<AttributePathHelper> attributePathHelpers,
 	                                        final Provider<AttributePathService> attributePathServiceProvider,
 	                                        final Provider<SchemaAttributePathInstanceService> attributePathInstanceServiceProvider,
+	                                        final Provider<AttributeService> attributeServiceProvider) throws DMPPersistenceException {
+
+
+		return addAttributePaths(schema, attributePathHelpers, attributePathServiceProvider, attributePathInstanceServiceProvider, attributeServiceProvider, Optional.empty());
+	}
+
+	public static boolean addAttributePaths(final Schema schema,
+	                                        final Set<AttributePathHelper> attributePathHelpers,
+	                                        final Provider<AttributePathService> attributePathServiceProvider,
+	                                        final Provider<SchemaAttributePathInstanceService> attributePathInstanceServiceProvider,
 	                                        final Provider<AttributeService> attributeServiceProvider,
 	                                        final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs) throws DMPPersistenceException {
+
+
+		return addAttributePaths(schema, attributePathHelpers, attributePathServiceProvider, attributePathInstanceServiceProvider, attributeServiceProvider, optionalAttributePathsSAPIUUIDs, Optional.empty());
+	}
+
+	public static boolean addAttributePaths(final Schema schema,
+	                                        final Set<AttributePathHelper> attributePathHelpers,
+	                                        final Provider<AttributePathService> attributePathServiceProvider,
+	                                        final Provider<SchemaAttributePathInstanceService> attributePathInstanceServiceProvider,
+	                                        final Provider<AttributeService> attributeServiceProvider,
+	                                        final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
+	                                        final Optional<Set<String>> optionalExcludeAttributePathStubs) throws DMPPersistenceException {
 
 		if (attributePathHelpers == null) {
 
@@ -217,6 +245,30 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 				SchemaUtils.LOG.debug("attribute path is non-existent or empty for schema '{}'", schema.getUuid());
 
 				continue;
+			}
+
+			if(optionalExcludeAttributePathStubs.isPresent()) {
+
+				boolean excludeAttributePath = false;
+
+				final Set<String> excludeAttributePathStubs = optionalExcludeAttributePathStubs.get();
+
+				for(final String excludeAttributePathStub : excludeAttributePathStubs) {
+
+					if(attributePathString.startsWith(excludeAttributePathStub)) {
+
+						excludeAttributePath = true;
+
+						break;
+					}
+				}
+
+				if(excludeAttributePath) {
+
+					// don't add and persist this attribute path to the schema, i.e., exclude it
+
+					continue;
+				}
 			}
 
 			final SchemaAttributePathInstance attributePathByURIPath = schema.getAttributePathByURIPath(attributePathString);
@@ -287,16 +339,6 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 		}
 
 		return true;
-	}
-
-	public static boolean addAttributePaths(final Schema schema,
-	                                        final Set<AttributePathHelper> attributePathHelpers,
-	                                        final Provider<AttributePathService> attributePathServiceProvider,
-	                                        final Provider<SchemaAttributePathInstanceService> attributePathInstanceServiceProvider,
-	                                        final Provider<AttributeService> attributeServiceProvider) throws DMPPersistenceException {
-
-
-		return addAttributePaths(schema, attributePathHelpers, attributePathServiceProvider, attributePathInstanceServiceProvider, attributeServiceProvider, Optional.empty());
 	}
 
 	public static AttributePath addAttributePaths(final Schema schema,
