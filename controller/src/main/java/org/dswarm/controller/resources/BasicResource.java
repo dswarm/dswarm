@@ -29,7 +29,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Optional;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -293,6 +292,13 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 		return Response.status(Status.NO_CONTENT).build();
 	}
 
+	protected Response createObject(final POJOCLASS object) throws DMPControllerException {
+
+		final PROXYPOJOCLASS proxyObject = addObject(object);
+
+		return createObjectInternal(proxyObject);
+	}
+
 	/**
 	 * Creates the resource URI for the given object.
 	 *
@@ -324,6 +330,11 @@ public abstract class BasicResource<POJOCLASSPERSISTENCESERVICE extends BasicJPA
 		// get the deserialisised object from the object JSON string
 
 		final POJOCLASS objectFromJSON = deserializeObjectJSONString(objectJSONString);
+
+		return addObject(objectFromJSON);
+	}
+
+	protected PROXYPOJOCLASS addObject(final POJOCLASS objectFromJSON) throws DMPControllerException {
 
 		// create a new persistent object
 

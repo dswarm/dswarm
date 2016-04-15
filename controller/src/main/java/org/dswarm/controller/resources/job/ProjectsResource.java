@@ -16,7 +16,14 @@
 package org.dswarm.controller.resources.job;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -54,7 +61,9 @@ import org.dswarm.controller.resources.ExtendedBasicDMPResource;
 import org.dswarm.controller.resources.POJOFormat;
 import org.dswarm.controller.utils.JsonUtils;
 import org.dswarm.init.DMPException;
+import org.dswarm.persistence.DMPPersistenceError;
 import org.dswarm.persistence.DMPPersistenceException;
+import org.dswarm.persistence.model.DMPObject;
 import org.dswarm.persistence.model.job.Component;
 import org.dswarm.persistence.model.job.Filter;
 import org.dswarm.persistence.model.job.Function;
@@ -64,14 +73,24 @@ import org.dswarm.persistence.model.job.Project;
 import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.job.proxy.ProxyProject;
 import org.dswarm.persistence.model.resource.DataModel;
+import org.dswarm.persistence.model.schema.Attribute;
 import org.dswarm.persistence.model.schema.AttributePath;
 import org.dswarm.persistence.model.schema.AttributePathInstance;
+import org.dswarm.persistence.model.schema.Clasz;
 import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
+import org.dswarm.persistence.model.schema.proxy.ProxyAttribute;
+import org.dswarm.persistence.model.schema.proxy.ProxyAttributePath;
+import org.dswarm.persistence.model.schema.proxy.ProxyClasz;
+import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 import org.dswarm.persistence.service.UUIDService;
 import org.dswarm.persistence.service.job.ProjectService;
 import org.dswarm.persistence.service.resource.DataModelService;
+import org.dswarm.persistence.service.schema.AttributePathService;
+import org.dswarm.persistence.service.schema.AttributeService;
+import org.dswarm.persistence.service.schema.ClaszService;
+import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -114,6 +133,10 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	}
 
 	private final Provider<DataModelService> dataModelPersistenceServiceProvider;
+	private final Provider<AttributeService> attributePersistenceServiceProvider;
+	private final Provider<AttributePathService> attributePathPersistenceServiceProvider;
+	private final Provider<ClaszService> classPersistenceServiceProvider;
+	private final Provider<SchemaService> schemaPersistenceServiceProvider;
 
 	/**
 	 * Creates a new resource (controller service) for {@link Project}s with the provider of the project persistence service, the
@@ -124,12 +147,20 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	 */
 	@Inject
 	public ProjectsResource(final Provider<ProjectService> persistenceServiceProviderArg,
-							final Provider<DataModelService> dataModelPersistenceServiceProviderArg, final Provider<ObjectMapper> objectMapperProviderArg)
-			throws DMPControllerException {
+	                        final Provider<DataModelService> dataModelPersistenceServiceProviderArg,
+	                        final Provider<AttributeService> attributePersistenceServiceProviderArg,
+	                        final Provider<AttributePathService> attributePathPersistenceServiceProviderArg,
+	                        final Provider<ClaszService> classPersistenceServiceProviderArg,
+	                        final Provider<SchemaService> schemaPersistenceServiceProviderArg,
+	                        final Provider<ObjectMapper> objectMapperProviderArg) throws DMPControllerException {
 
 		super(Project.class, persistenceServiceProviderArg, objectMapperProviderArg);
 
 		dataModelPersistenceServiceProvider = dataModelPersistenceServiceProviderArg;
+		attributePersistenceServiceProvider = attributePersistenceServiceProviderArg;
+		attributePathPersistenceServiceProvider = attributePathPersistenceServiceProviderArg;
+		classPersistenceServiceProvider = classPersistenceServiceProviderArg;
+		schemaPersistenceServiceProvider = schemaPersistenceServiceProviderArg;
 	}
 
 	/**
@@ -178,6 +209,51 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	}
 
 	/**
+	 * This endpoint consumes a project as JSON representation and persists this project (incl. all its parts, i.e., new sub
+	 * elements, e.g., mappings will be persisted as well) robust in the database, i.e., attributes and attribute paths will be written beforehand to guarantee entity identifier compatibility.<br/>
+	 * Note: please utilise generated uuids for all entity identifier.
+	 *
+	 * @param jsonObjectString a JSON representation of one project
+	 * @return the persisted project as JSON representation
+	 * @throws DMPControllerException
+	 */
+	@ApiOperation(value = "create a new project robust", notes = "Returns a new Project object. Persists this project (incl. all its parts, i.e., new sub elements, e.g., mappings will be persisted as well) robust, i.e., attributes and attribute paths will be written beforehand to guarantee entity identifier compatibility. Note: please utilise generated uuids for all entity identifier.", response = Project.class)
+	@ApiResponses(value = {@ApiResponse(code = 201, message = "project was successfully persisted robust"),
+			@ApiResponse(code = 500, message = "internal processing error (see body for details)")})
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/robust")
+	public Response createObjectRobust(@ApiParam(value = "project (as JSON)", required = true) final String jsonObjectString)
+			throws DMPControllerException {
+
+		final Project projectFromJSON = deserializeObjectJSONString(jsonObjectString);
+
+		final Optional<Schema> optionalPersistentInputSchema = persistInputSchema(projectFromJSON);
+		final Optional<Schema> optionalPersistentOutputSchema = persistOutputSchema(projectFromJSON);
+
+		if (optionalPersistentInputSchema.isPresent()) {
+
+			final Schema inputSchema = optionalPersistentInputSchema.get();
+
+			projectFromJSON.getInputDataModel().setSchema(inputSchema);
+
+			replaceMappingInputs(projectFromJSON, inputSchema);
+		}
+
+		if (optionalPersistentOutputSchema.isPresent()) {
+
+			final Schema outputSchema = optionalPersistentOutputSchema.get();
+
+			projectFromJSON.getOutputDataModel().setSchema(outputSchema);
+
+			replaceMappingOutputs(projectFromJSON, outputSchema);
+		}
+
+		return super.createObject(projectFromJSON);
+	}
+
+	/**
 	 * This endpoint returns a list of all projects as JSON representation.
 	 *
 	 * @return a list of all projects as JSON representation
@@ -216,7 +292,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateObject(@ApiParam(value = "project (as JSON)", required = true) final String jsonObjectString,
-								 @ApiParam(value = "project identifier", required = true) @PathParam("id") final String uuid) throws DMPControllerException {
+	                             @ApiParam(value = "project identifier", required = true) @PathParam("id") final String uuid) throws DMPControllerException {
 
 		return super.updateObject(jsonObjectString, uuid);
 	}
@@ -503,7 +579,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 
 		if (referenceSchema == null) {
 
-			final String message = String.format("Reference schema is not available; cannot map attribute paths from reference schema to new schema");
+			final String message = "Reference schema is not available; cannot map attribute paths from reference schema to new schema";
 
 			LOG.error(message);
 
@@ -512,7 +588,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 
 		if (newSchema == null) {
 
-			final String message = String.format("New schema is not available; cannot map attribute paths from reference schema to new schema");
+			final String message = "New schema is not available; cannot map attribute paths from reference schema to new schema";
 
 			LOG.error(message);
 
@@ -647,7 +723,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	 * @param newProject
 	 */
 	private void migrateMappingsToSomehowSimilarInputAttributePaths(final Project referenceProject, final Project newProject,
-																	final Map<AttributePath, AttributePath> attributePathMap)
+	                                                                final Map<AttributePath, AttributePath> attributePathMap)
 			throws DMPControllerException {
 
 		final Set<Mapping> referenceMappings = referenceProject.getMappings();
@@ -698,7 +774,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	}
 
 	private Set<MappingAttributePathInstance> migrateMappingInputs(final Set<MappingAttributePathInstance> referenceInputMAPIs,
-																   final Map<AttributePath, AttributePath> attributePathAttributePathMap, final Map<String, String> attributePathStringsMap)
+	                                                               final Map<AttributePath, AttributePath> attributePathAttributePathMap, final Map<String, String> attributePathStringsMap)
 			throws DMPControllerException {
 
 		if (referenceInputMAPIs == null) {
@@ -739,7 +815,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	}
 
 	private void migrateMappingInputFilter(final MappingAttributePathInstance referenceInputMAPI, final MappingAttributePathInstance newInputMAPI,
-										   final Map<String, String> attributePathStringsMap)
+	                                       final Map<String, String> attributePathStringsMap)
 			throws DMPControllerException {
 
 		final Filter referenceIMAPIFilter = referenceInputMAPI.getFilter();
@@ -902,8 +978,8 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 							referenceAndNewComponentTuple -> referenceAndNewComponentTuple.v2().getUuid()));
 
 			final Map<String, Component> newComponentsMap = referenceAndNewComponents.parallelStream()
-					.map(referenceAndNewComponentTuple -> referenceAndNewComponentTuple.v2())
-					.collect(Collectors.toMap(newComponent -> newComponent.getUuid(), newComponent -> newComponent));
+					.map(Tuple::v2)
+					.collect(Collectors.toMap(DMPObject::getUuid, newComponent -> newComponent));
 
 			final Set<Component> newComponents = referenceAndNewComponents.parallelStream().map(referenceAndNewComponentTuple -> {
 
@@ -984,5 +1060,320 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 		LOG.debug("successfully persisted new project '{}' from mappings copying/migration", newProjectId);
 
 		return createCreateObjectResponse(newPersistentProxyProject, newPersistentProject);
+	}
+
+	private Optional<Schema> persistInputSchema(final Project project) {
+
+		final DataModel inputDataModel = project.getInputDataModel();
+
+		if (inputDataModel == null) {
+
+			return Optional.empty();
+		}
+
+		final Schema schema = inputDataModel.getSchema();
+
+		if (schema == null) {
+
+			return Optional.empty();
+		}
+
+		return persistSchema(schema);
+	}
+
+	private Optional<Schema> persistOutputSchema(final Project project) {
+
+		final DataModel outputDataModel = project.getOutputDataModel();
+
+		if (outputDataModel == null) {
+
+			return Optional.empty();
+		}
+
+		final Schema schema = outputDataModel.getSchema();
+
+		if (schema == null) {
+
+			return Optional.empty();
+		}
+
+		return persistSchema(schema);
+	}
+
+	private Optional<Schema> persistSchema(final Schema schema) {
+
+		final Optional<Schema> optionalPersistentInbuiltSchema = checkForInbuiltSchema(schema);
+
+		if (optionalPersistentInbuiltSchema.isPresent()) {
+
+			// directly take fresh inbuilt schema from metadata repository
+
+			return optionalPersistentInbuiltSchema;
+		}
+
+		final Collection<SchemaAttributePathInstance> sapis = schema.getAttributePaths();
+
+		if (sapis == null || sapis.isEmpty()) {
+
+			return Optional.empty();
+		}
+
+		sapis.forEach(this::persistAttributePath);
+
+		final Optional<Clasz> optionalPersistRecordClass = persistRecordClass(schema);
+
+		if (optionalPersistRecordClass.isPresent()) {
+
+			final Clasz persistentRecordClass = optionalPersistRecordClass.get();
+
+			schema.setRecordClass(persistentRecordClass);
+		}
+
+		return Optional.of(schema);
+	}
+
+	private void persistAttributePath(final SchemaAttributePathInstance sapi) {
+
+		final AttributePath attributePath = sapi.getAttributePath();
+
+		if (attributePath == null) {
+
+			return;
+		}
+
+		final Optional<List<Attribute>> optionalPersistentAttributePathList = persistAttributes(attributePath);
+
+		if (!optionalPersistentAttributePathList.isPresent()) {
+
+			return;
+		}
+
+		final List<Attribute> persistentAttributePathList = optionalPersistentAttributePathList.get();
+
+		try {
+
+			final ProxyAttributePath proxyAttributePath = attributePathPersistenceServiceProvider.get().createOrGetObjectTransactional(persistentAttributePathList);
+
+			if (proxyAttributePath == null) {
+
+				return;
+			}
+
+			final AttributePath persistentAttributePath = proxyAttributePath.getObject();
+
+			sapi.setAttributePath(persistentAttributePath);
+		} catch (final DMPPersistenceException e) {
+
+			throw DMPPersistenceError.wrap(e);
+		}
+
+		final Schema subSchema = sapi.getSubSchema();
+
+		if (subSchema != null) {
+
+			persistSchema(subSchema);
+		}
+	}
+
+	private Optional<List<Attribute>> persistAttributes(final AttributePath attributePath) {
+
+		final Set<Attribute> attributes = attributePath.getAttributes();
+
+		if (attributes == null || attributes.isEmpty()) {
+
+			return Optional.empty();
+		}
+
+		final Map<String, Attribute> persistentAttributes = attributes.stream()
+				.map(this::persistAttribute)
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.collect(Collectors.toMap(Attribute::getUri, attribute -> attribute));
+
+		final List<Attribute> attributePathList = attributePath.getAttributePath();
+
+		final List<Attribute> persistentAttributePathList = attributePathList.stream()
+				.map(attribute -> Optional.ofNullable(persistentAttributes.get(attribute.getUri())))
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.collect(Collectors.toList());
+
+		return Optional.ofNullable(persistentAttributePathList);
+	}
+
+	private Optional<Attribute> persistAttribute(final Attribute attribute) {
+
+		try {
+
+			final ProxyAttribute proxyAttribute = attributePersistenceServiceProvider.get().createOrGetObjectTransactional(attribute);
+
+			if (proxyAttribute == null) {
+
+				return Optional.empty();
+			}
+
+			return Optional.ofNullable(proxyAttribute.getObject());
+		} catch (final DMPPersistenceException e) {
+
+			throw DMPPersistenceError.wrap(e);
+		}
+	}
+
+	private Optional<Clasz> persistRecordClass(final Schema schema) {
+
+		final Clasz recordClass = schema.getRecordClass();
+
+		if (recordClass == null) {
+
+			return Optional.empty();
+		}
+
+		try {
+
+			final ProxyClasz proxyClasz = classPersistenceServiceProvider.get().createOrGetObjectTransactional(recordClass);
+
+			if (proxyClasz == null) {
+
+				return Optional.empty();
+			}
+
+			return Optional.ofNullable(proxyClasz.getObject());
+		} catch (final DMPPersistenceException e) {
+
+			throw DMPPersistenceError.wrap(e);
+		}
+	}
+
+	private static void replaceMappingInputs(final Project project,
+	                                         final Schema inputSchema) {
+
+		final Set<Mapping> mappings = project.getMappings();
+
+		if (mappings == null || mappings.isEmpty()) {
+
+			return;
+		}
+
+		final Map<String, AttributePath> inputAttributePathMap = SchemaUtils.generateAttributePathMap(inputSchema);
+
+		mappings.stream()
+				.filter(mapping -> {
+
+					final Set<MappingAttributePathInstance> inputAttributePaths = mapping.getInputAttributePaths();
+
+					return inputAttributePaths != null && !inputAttributePaths.isEmpty();
+				})
+				.forEach(mapping -> {
+
+					final Set<MappingAttributePathInstance> inputAttributePaths = mapping.getInputAttributePaths();
+
+					replaceAttributePaths(inputAttributePaths, inputAttributePathMap);
+				});
+	}
+
+	private static void replaceMappingOutputs(final Project project,
+	                                          final Schema outputSchema) {
+
+		final Set<Mapping> mappings = project.getMappings();
+
+		if (mappings == null || mappings.isEmpty()) {
+
+			return;
+		}
+
+		final Map<String, AttributePath> outputAttributePathMap = SchemaUtils.generateAttributePathMap(outputSchema);
+
+		mappings.stream()
+				.filter(mapping -> {
+
+					final MappingAttributePathInstance outputAttributePath = mapping.getOutputAttributePath();
+
+					return outputAttributePath != null;
+				})
+				.forEach(mapping -> {
+
+					final MappingAttributePathInstance outputAttributePath = mapping.getOutputAttributePath();
+
+					replaceAttributePath(outputAttributePath, outputAttributePathMap);
+				});
+	}
+
+	private static void replaceAttributePaths(final Set<MappingAttributePathInstance> attributePaths,
+	                                          final Map<String, AttributePath> attributePathMap) {
+
+		attributePaths.stream()
+				.filter(ProjectsResource::checkMAPI)
+				.forEach(mapi -> replaceAttributePath2(attributePathMap, mapi));
+	}
+
+	private static void replaceAttributePath(final MappingAttributePathInstance mapi,
+	                                         final Map<String, AttributePath> attributePathMap) {
+
+		if (!checkMAPI(mapi)) {
+
+			return;
+		}
+
+		replaceAttributePath2(attributePathMap, mapi);
+	}
+
+	private static boolean checkMAPI(final MappingAttributePathInstance mapi) {
+
+		final AttributePath attributePath = mapi.getAttributePath();
+
+		return attributePath != null;
+	}
+
+	private static void replaceAttributePath2(final Map<String, AttributePath> attributePathMap,
+	                                          final MappingAttributePathInstance mapi) {
+
+		final AttributePath attributePath = mapi.getAttributePath();
+
+		final String attributePathString = attributePath.toAttributePath();
+
+		if (!attributePathMap.containsKey(attributePathString)) {
+
+			return;
+		}
+
+		final AttributePath persistentAttributePath = attributePathMap.get(attributePathString);
+
+		mapi.setAttributePath(persistentAttributePath);
+	}
+
+	private Optional<Schema> checkForInbuiltSchema(final Schema schema) {
+
+		final String schemaUuid = schema.getUuid();
+
+		final Optional<Schema> optionalPersistentInbuiltSchema;
+
+		switch (schemaUuid) {
+
+			case SchemaUtils.MABXML_SCHEMA_UUID:
+			case SchemaUtils.MARCXML_SCHEMA_UUID:
+			case SchemaUtils.PICAPLUSXML_SCHEMA_UUID:
+			case SchemaUtils.PICAPLUSXML_GLOBAL_SCHEMA_UUID:
+			case SchemaUtils.PNX_SCHEMA_UUID:
+			case SchemaUtils.FINC_SOLR_SCHEMA_UUID:
+			case SchemaUtils.OAI_PMH_DC_ELEMENTS_SCHEMA_UUID:
+			case SchemaUtils.OAI_PMH_DC_ELEMENTS_AND_EDM_SCHEMA_UUID:
+			case SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID:
+			case SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID:
+			case SchemaUtils.SRU_11_PICAPLUSXML_GLOBAL_SCHEMA_UUID:
+
+				optionalPersistentInbuiltSchema = fetchInbuiltSchema(schemaUuid);
+
+				break;
+			default:
+
+				optionalPersistentInbuiltSchema = Optional.empty();
+		}
+
+		return optionalPersistentInbuiltSchema;
+	}
+
+	private Optional<Schema> fetchInbuiltSchema(final String schemaUuid) {
+
+		return Optional.ofNullable(schemaPersistenceServiceProvider.get().getObject(schemaUuid));
 	}
 }
