@@ -1,0 +1,16 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+    <meta>
+        <name>mappingMapping-4bebd379-5b5a-40f4-a755-40e348db12b0</name>
+    </meta>
+    <rules>
+        <data name="@metadata_dc_title_value__dbfade9e-16f2-8fbc-8b92-936e4b5eaa93__6__" source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://oai.base-search.net/base_dc/dc&#30;http://purl.org/dc/elements/1.1/title&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+        <data name="@metadata_dc_description_value__a170c331-beb9-9024-86e8-b65041d8cf68__6__" source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://oai.base-search.net/base_dc/dc&#30;http://purl.org/dc/elements/1.1/description&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+        <data name="http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/allfields" source="@__TRANSFORMATION_OUTPUT_VARIABLE__41b63773-9f40-83b3-01b9-3e45b7c68f2f"/>
+        <concat name="@__TRANSFORMATION_OUTPUT_VARIABLE__41b63773-9f40-83b3-01b9-3e45b7c68f2f" delimiter=" ">
+            <data name="metadata_dc_title_value__dbfade9e-16f2-8fbc-8b92-936e4b5eaa93__6__" source="@metadata_dc_title_value__dbfade9e-16f2-8fbc-8b92-936e4b5eaa93__6__"/>
+            <data name="metadata_dc_description_value__a170c331-beb9-9024-86e8-b65041d8cf68__6__" source="@metadata_dc_description_value__a170c331-beb9-9024-86e8-b65041d8cf68__6__"/>
+        </concat>
+    </rules>
+    <maps/>
+</metamorph>

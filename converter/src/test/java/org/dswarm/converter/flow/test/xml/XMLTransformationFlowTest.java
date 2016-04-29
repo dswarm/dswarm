@@ -358,6 +358,26 @@ public class XMLTransformationFlowTest extends GuicedTest {
 		testXMLTaskWithTuples("dd-651.xml.task.result.json", "dd-651.xml.task.json", "testset5.xml.tuples.json");
 	}
 
+	/**
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testOptionalConcatValuesFromMultipleFieldsTask() throws Exception {
+
+		testXMLMorphWithTuples("base.allfields.task.result.json", "base.allfields.task.morph.xml", "base_dc_testdaten.tuples.json");
+	}
+
+	/**
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testOptionalConcatValuesFromMultipleFieldsTask2() throws Exception {
+
+		testXMLTaskWithTuples("base.allfields.task.result.2.json", "base.allfields.task.json", "base_dc_testdaten.tuples.json");
+	}
+
 	private void testXMLTaskWithTuples(final String taskResultJSONFileName, final String taskJSONFileName, final String tuplesJSONFileName)
 			throws Exception {
 

@@ -16,36 +16,48 @@
 package org.dswarm.converter.morph;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.google.common.base.*;
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.dswarm.common.DMPStatics;
-import org.dswarm.common.model.Attribute;
-import org.dswarm.common.model.util.AttributePathUtil;
-import org.dswarm.common.types.Tuple;
-import org.dswarm.persistence.model.job.*;
-import org.dswarm.persistence.model.job.Function;
-import org.dswarm.persistence.model.schema.AttributePath;
-import org.dswarm.persistence.model.schema.ContentSchema;
-import org.dswarm.persistence.model.schema.Schema;
-import org.dswarm.persistence.model.schema.utils.AttributePathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 
+import org.dswarm.common.DMPStatics;
+import org.dswarm.common.types.Tuple;
 import org.dswarm.common.xml.utils.XMLUtils;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.morph.model.FilterExpression;
+import org.dswarm.persistence.model.job.Component;
+import org.dswarm.persistence.model.job.Function;
+import org.dswarm.persistence.model.job.FunctionType;
+import org.dswarm.persistence.model.job.Mapping;
+import org.dswarm.persistence.model.job.Task;
+import org.dswarm.persistence.model.job.Transformation;
+import org.dswarm.persistence.model.schema.AttributePath;
+import org.dswarm.persistence.model.schema.ContentSchema;
 import org.dswarm.persistence.model.schema.MappingAttributePathInstance;
+import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -82,6 +94,8 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 	private static final String METAMORPH_FUNCTION_CONCAT = "concat";
 
 	private static final String DSWARM_FUNCTION_COLLECT = "collect";
+
+	private static final String DSWARM_FUNCTION_MULTI_COLLECT = "multi-collect";
 
 	private static final String DSWARM_FUNCTION_IFELSE = "ifelse";
 
@@ -1125,6 +1139,13 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 				return convertCollectionFunction(multipleInputComponent, collectionNameAttribute, collectionSourceAttributes, collection);
 			case DSWARM_FUNCTION_COLLECT:
+
+				convertCollectFunction(multipleInputComponent);
+
+				collection = doc.createElement(METAMORPH_FUNCTION_CONCAT);
+
+				return convertCollectionFunction(multipleInputComponent, collectionNameAttribute, collectionSourceAttributes, collection);
+			case DSWARM_FUNCTION_MULTI_COLLECT:
 
 				convertCollectFunction(multipleInputComponent);
 
