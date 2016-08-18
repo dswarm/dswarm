@@ -38,7 +38,7 @@
 		<version.lambdaj>2.4</version.lambdaj>
 		<version.mysql-connector-java>5.1.39</version.mysql-connector-java>
 		<version.eclipselink>2.6.3</version.eclipselink>
-		<version.jpa-schema-maven-plugin>0.1.14-SNAPSHOT</version.jpa-schema-maven-plugin>
+		<version.jpa-schema-maven-plugin>0.2.2-SNAPSHOT</version.jpa-schema-maven-plugin>
 	</properties>
 
 	<repositories>
