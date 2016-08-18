@@ -79,7 +79,7 @@
 		<version.maven.plugin.jxr>2.5</version.maven.plugin.jxr>
 		<version.maven.plugin.license>2.11</version.maven.plugin.license>
 		<version.maven.plugin.pmd>3.6</version.maven.plugin.pmd>
-		<version.maven.plugin.project-info-reports>2.8.1</version.maven.plugin.project-info-reports>
+		<version.maven.plugin.project-info-reports>2.9</version.maven.plugin.project-info-reports>
 		<version.maven.plugin.release>2.5.3</version.maven.plugin.release>
 		<version.maven.plugin.resources>3.0.1</version.maven.plugin.resources>
 		<version.maven.plugin.shade>2.3</version.maven.plugin.shade>
