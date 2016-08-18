@@ -70,10 +70,10 @@
 		<version.maven.plugin.compiler>3.5.1</version.maven.plugin.compiler>
 		<version.maven.plugin.dependency>2.10</version.maven.plugin.dependency>
 		<version.maven.plugin.deploy>2.8.2</version.maven.plugin.deploy>
-		<version.maven.plugin.exec>1.4.0</version.maven.plugin.exec>
+		<version.maven.plugin.exec>1.5.0</version.maven.plugin.exec>
 		<version.maven.plugin.failsafe>2.18.1</version.maven.plugin.failsafe>
 		<version.maven.plugin.install>2.5.2</version.maven.plugin.install>
-		<version.maven.plugin.jar>2.6</version.maven.plugin.jar>
+		<version.maven.plugin.jar>3.0.2</version.maven.plugin.jar>
 		<!-- before changing the javadoc plugin version, checkout http://stackoverflow.com/a/25986409/2996265 -->
 		<version.maven.plugin.javadoc>2.9.1</version.maven.plugin.javadoc>
 		<version.maven.plugin.jxr>2.5</version.maven.plugin.jxr>
@@ -81,11 +81,11 @@
 		<version.maven.plugin.pmd>3.6</version.maven.plugin.pmd>
 		<version.maven.plugin.project-info-reports>2.8.1</version.maven.plugin.project-info-reports>
 		<version.maven.plugin.release>2.5.3</version.maven.plugin.release>
-		<version.maven.plugin.resources>2.7</version.maven.plugin.resources>
+		<version.maven.plugin.resources>3.0.1</version.maven.plugin.resources>
 		<version.maven.plugin.shade>2.3</version.maven.plugin.shade>
-		<version.maven.plugin.site>3.5</version.maven.plugin.site>
+		<version.maven.plugin.site>3.5.1</version.maven.plugin.site>
 		<version.maven.plugin.surefire>2.19.1</version.maven.plugin.surefire>
-		<version.maven.plugin.version>2.2</version.maven.plugin.version>
+		<version.maven.plugin.version>2.3</version.maven.plugin.version>
 		<version.maven.plugin.war>2.6</version.maven.plugin.war>
 		<version.metafacture-core>3.1.13-dswarm-SNAPSHOT</version.metafacture-core>
 		<version.metrics>3.1.2</version.metrics>
