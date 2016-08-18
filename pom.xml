@@ -81,7 +81,7 @@
 		<version.maven.plugin.pmd>3.6</version.maven.plugin.pmd>
 		<version.maven.plugin.project-info-reports>2.9</version.maven.plugin.project-info-reports>
 		<version.maven.plugin.release>2.5.3</version.maven.plugin.release>
-		<version.maven.plugin.resources>3.0.1</version.maven.plugin.resources>
+		<version.maven.plugin.resources>2.7</version.maven.plugin.resources>
 		<version.maven.plugin.shade>2.3</version.maven.plugin.shade>
 		<version.maven.plugin.site>3.5.1</version.maven.plugin.site>
 		<version.maven.plugin.surefire>2.19.1</version.maven.plugin.surefire>
