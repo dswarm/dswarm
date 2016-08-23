@@ -461,6 +461,25 @@ public class DataModelsResourceTest2 extends
 	}
 
 	@Test
+	public void testExceptionAtXMLData2() throws Exception {
+
+		DataModelsResourceTest2.LOG.debug("start throw Exception at XML data test 2");
+
+		final String dataResourceResourceFileName = "test-dd-1371-resoure.json";
+		final String dataResourceFileName = "TEMATEST.xml";
+		final String configurationFileName = "dd-1371-xml-configuration.json";
+		final String dataModelUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+		final String schemaUuid = UUIDService.getUUID(Schema.class.getSimpleName());
+		final String dataModelName = dataModelUuid + " name";
+		final String expectedResponse = "{\"status\":\"nok\",\"status_code\":500,\"error\":\" 29; The document type declaration for root element type \\\"documentcontainer\\\" must end with '>'.\"}";
+
+		doNegativeDataModelTest(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelUuid, schemaUuid, dataModelName,
+				expectedResponse);
+
+		DataModelsResourceTest2.LOG.debug("end throw Exception at XML data test 2");
+	}
+
+	@Test
 	public void testWrongData() throws Exception {
 
 		DataModelsResourceTest2.LOG.debug("start wrong data test");

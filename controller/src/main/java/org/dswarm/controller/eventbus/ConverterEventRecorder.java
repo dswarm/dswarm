@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,7 +27,9 @@ import javax.ws.rs.core.Response;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Provider;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
+
 import org.dswarm.common.types.Tuple;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
@@ -137,7 +139,10 @@ public abstract class ConverterEventRecorder<CONVERTER_EVENT_IMPL extends Conver
 
 			writeResponse.ignoreElements()
 					.cast(Void.class)
-					.subscribe();
+					.doOnError(e -> {
+
+						LOG.error("error in here", e);
+					});
 
 			// TODO: delegate observable
 			final BlockingObservable<Response> blockingObservable = writeResponse.toBlocking();
