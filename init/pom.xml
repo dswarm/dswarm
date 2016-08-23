@@ -34,4 +34,12 @@
 	<properties>
 		<project.root>${basedir}/..</project.root>
 	</properties>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+	</build>
 </project>
