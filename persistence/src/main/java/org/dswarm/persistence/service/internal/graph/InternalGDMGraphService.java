@@ -1181,13 +1181,9 @@ public class InternalGDMGraphService implements InternalModelService {
 
 			return new Observer<org.dswarm.graph.json.Resource>() {
 
-				//final AtomicInteger counter = new AtomicInteger(0);
-
 				@Override public void onCompleted() {
 
 					try {
-
-						//LOG.debug("in model builder onCompleted with '{}' resources", counter.get());
 
 						modelBuilder.build();
 					} catch (final IOException e) {
@@ -1198,22 +1194,13 @@ public class InternalGDMGraphService implements InternalModelService {
 
 				@Override public void onError(final Throwable e) {
 
-					// TODO
+					// TODO: note, this error should usually be propagated and logged somewhere else, i.e., this could probably be removed
 					LOG.error("couldn't serialize GDM model", e);
 				}
 
 				@Override public void onNext(final Resource resource) {
 
 					try {
-
-						//						LOG.debug("add resource number '{}' with '{}' to output stream", counter.incrementAndGet(), resource.getUri());
-						//
-						//						if(counter.get() == 1) {
-						//
-						//							LOG.debug("added first resource to output stream '{}'", resource.getUri());
-						//						}
-						//
-						//						System.out.println("resource in model builder = " + objectMapperProvider.get().writeValueAsString(resource));
 
 						modelBuilder.addResource(resource);
 						output.flush();
@@ -1373,7 +1360,8 @@ public class InternalGDMGraphService implements InternalModelService {
 
 							final Tuple<Observer<Resource>, Observable<Response>> observerObservableTuple = writeGDMToDB(dataModelURI, metadata);
 							final Observer<Resource> resourceObserver = observerObservableTuple.v1();
-							resourcePublishSubject.subscribe(resourceObserver);
+							resourcePublishSubject.doOnError(e1 -> responseAsyncSubject.onError(e1))
+									.subscribe(resourceObserver);
 
 							final Observable<Response> responseObservable = observerObservableTuple.v2();
 							responseObservable.subscribe(responseAsyncSubject);

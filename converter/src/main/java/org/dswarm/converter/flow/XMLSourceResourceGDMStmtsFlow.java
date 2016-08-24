@@ -145,22 +145,19 @@ public class XMLSourceResourceGDMStmtsFlow {
 				.setReceiver(gdmModelsTimer)
 				.setReceiver(writer);
 
-		return Observable.create(new Observable.OnSubscribe<GDMModel>() {
+		return Observable.create(subscriber -> {
 
-			@Override public void call(final Subscriber<? super GDMModel> subscriber) {
+			try {
 
-				try {
+				writer.getObservable()
+						.doOnCompleted(() -> morphContext.stop())
+						.subscribe(subscriber);
 
-					writer.getObservable()
-							.doOnCompleted(() -> morphContext.stop())
-							.subscribe(subscriber);
+				opener.process(object);
+				opener.closeStream();
+			} catch (final Exception e) {
 
-					opener.process(object);
-					opener.closeStream();
-				} catch (final Exception e) {
-
-					writer.propagateError(e);
-				}
+				writer.propagateError(e);
 			}
 		});
 	}

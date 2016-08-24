@@ -452,7 +452,7 @@ public class DataModelsResourceTest2 extends
 		final String dataModelUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
 		final String schemaUuid = UUIDService.getUUID(Schema.class.getSimpleName());
 		final String dataModelName = dataModelUuid + " name";
-		final String expectedResponse = "{\"status\":\"nok\",\"status_code\":500,\"error\":\" 1; XML document structures must start and end within the same entity.\"}";
+		final String expectedResponse = "{\"status\":\"nok\",\"status_code\":500,\"error\":\"org.xml.sax.SAXParseException; lineNumber: 3; columnNumber: 1; XML document structures must start and end within the same entity.\"}";
 
 		doNegativeDataModelTest(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelUuid, schemaUuid, dataModelName,
 				expectedResponse);
@@ -471,12 +471,36 @@ public class DataModelsResourceTest2 extends
 		final String dataModelUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
 		final String schemaUuid = UUIDService.getUUID(Schema.class.getSimpleName());
 		final String dataModelName = dataModelUuid + " name";
-		final String expectedResponse = "{\"status\":\"nok\",\"status_code\":500,\"error\":\" 29; The document type declaration for root element type \\\"documentcontainer\\\" must end with '>'.\"}";
+		final String expectedResponse = "{\"status\":\"nok\",\"status_code\":500,\"error\":\"org.xml.sax.SAXParseException; lineNumber: 2; columnNumber: 29; The document type declaration for root element type \\\"documentcontainer\\\" must end with '>'.\"}";
 
 		doNegativeDataModelTest(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelUuid, schemaUuid, dataModelName,
 				expectedResponse);
 
 		DataModelsResourceTest2.LOG.debug("end throw Exception at XML data test 2");
+	}
+
+	/**
+	 * note, data resource consists of two records and the error occurs in the second record
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testExceptionAtXMLData3() throws Exception {
+
+		DataModelsResourceTest2.LOG.debug("start throw Exception at XML data test 3");
+
+		final String dataResourceResourceFileName = "test-dd-1371-resoure2.json";
+		final String dataResourceFileName = "TEMATEST2.xml";
+		final String configurationFileName = "dd-1371-xml-configuration.json";
+		final String dataModelUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
+		final String schemaUuid = UUIDService.getUUID(Schema.class.getSimpleName());
+		final String dataModelName = dataModelUuid + " name";
+		final String expectedResponse = "{\"status\":\"nok\",\"status_code\":500,\"error\":\"org.xml.sax.SAXParseException; lineNumber: 292; columnNumber: 73; The entity name must immediately follow the '&' in the entity reference.\"}";
+
+		doNegativeDataModelTest(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelUuid, schemaUuid, dataModelName,
+				expectedResponse);
+
+		DataModelsResourceTest2.LOG.debug("end throw Exception at XML data test 3");
 	}
 
 	@Test
@@ -490,7 +514,7 @@ public class DataModelsResourceTest2 extends
 		final String dataModelUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
 		final String schemaUuid = UUIDService.getUUID(Schema.class.getSimpleName());
 		final String dataModelName = dataModelUuid + " name";
-		final String expectedResponse = "{\"status\":\"nok\",\"status_code\":500,\"error\":\" 1; Content is not allowed in prolog.\"}";
+		final String expectedResponse = "{\"status\":\"nok\",\"status_code\":500,\"error\":\"org.xml.sax.SAXParseException; lineNumber: 1; columnNumber: 1; Content is not allowed in prolog.\"}";
 
 		doNegativeDataModelTest(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelUuid, schemaUuid, dataModelName,
 				expectedResponse);

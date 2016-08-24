@@ -54,7 +54,7 @@ public class ExceptionHandler extends BaseExceptionHandler<Exception> {
 		}
 
 		final String exceptionMessage = optionalExceptionMessage.get();
-		final String[] clientSegments = exceptionMessage.split(":");
+		final String[] clientSegments = exceptionMessage.split("Exception:");
 
 		return clientSegments[clientSegments.length - 1];
 	}
