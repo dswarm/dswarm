@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ftx:documentContainer xmlns:ftx="http://www.tib-hannover.de/ext/schema/2007-06-26/fiz-tib-schema.xsd" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.tib-hannover.de/ext/schema/2007-06-26/fiz-tib-schema.xsd
+     http://www.tib-hannover.de/ext/schema/2007-06-26/fiz-tib-schema.xsd
+     http://www.w3.org/XML/1998/namespace
+     http://www.w3.org/2001/xml.xsd
+     http://purl.org/dc/elements/1.1/
+     http://dublincore.org/schemas/xmls/qdc/2003/04/02/dc.xsd
+     http://purl.org/dc/terms/
+     http://dublincore.org/schemas/xmls/qdc/2003/04/02/dcterms.xsd">
+	<document id="TEMA20150601328">
+		<systemInfo>
+			<metadataCopyright>
+				<dc:rights><![CDATA[TEMA, Copyright WTI-Frankfurt eG]]></dc:rights>
+				<dcterms:dateCopyrighted><![CDATA[2015-06-24]]></dcterms:dateCopyrighted>
+			</metadataCopyright>
+			<databaseDate><![CDATA[2015-06-22]]></databaseDate>
+			<documentID><![CDATA[20150601328]]></documentID>
+			<changeDate><![CDATA[2015-06-17]]></changeDate>
+		</systemInfo>
+		<formalInfo>
+			<copyright>
+				<dc:rights><![CDATA[(C) Alle Rechte beim Herausgeber]]></dc:rights>
+				<dcterms:dateCopyrighted><![CDATA[201506]]></dcterms:dateCopyrighted>
+			</copyright>
+			<sizes>
+				<size unit="undefined"><![CDATA[159 Seiten, Bilder, Quellen]]></size>
+			</sizes>
+			<identifiers>
+				<identifier type="issn"><![CDATA[1861-5260]]></identifier>
+				<identifier type="isbn13"><![CDATA[978-3-8440-3343-4]]></identifier>
+				<identifier type="FIZ-J-Code"><![CDATA[9144]]></identifier>
+				<identifier type="datasource"><![CDATA[WTI]]></identifier>
+				<identifier type="targetpool"><![CDATA[M]]></identifier>
+				<identifier type="multipool"><![CDATA[BEFO]]></identifier>
+				<identifier type="multipool"><![CDATA[DOMA]]></identifier>
+			</identifiers>
+			<documentLanguages>
+				<documentLanguage>
+					<languageCodes>
+						<code iso="639-1"><![CDATA[DE]]></code>
+					</languageCodes>
+				</documentLanguage>
+			</documentLanguages>
+			<locations>
+				<location type="url" subtype="fulltext"><![CDATA[http://www.shaker.eu/shop/978-3-8440-3343-4]]></location>
+			</locations>
+			<localHoldings>
+				<localHolding>
+					<location type="tibShelfmark"><![CDATA[TIB-RS5709(37)]]></location>
+				</localHolding>
+			</localHoldings>
+			<documentTypes>
+				<documentAdvancedType>
+					<documentGenreGroup>
+						<documentGenre>
+							<documentGenreCode><![CDATA[B]]></documentGenreCode>
+						</documentGenre>
+						<documentGenre>
+							<documentGenreCode><![CDATA[D]]></documentGenreCode>
+						</documentGenre>
+					</documentGenreGroup>
+				</documentAdvancedType>
+			</documentTypes>
+		</formalInfo>
+		<bibliographicInfo dependend="false">
+			<dc:title xml:lang="DE"><![CDATA[Baukastensystematik für Montageeinrichtungen in der Großbauteilmontage]]></dc:title>
+			<abstracts>
+				<abstract xml:lang="DE"><![CDATA[Die Veränderungsfähigkeit der Produktion und Montage nimmt im Zuge kürzer werdender Produktlebenszyklen einen immer größeren Stellenwert ein. In der Großbauteilmontage ist die Entwicklung jedoch noch nicht so weit vorangeschritten wie in anderen Montagebereichen. In dieser Arbeit wurden Handlungsfelder aufgezeigt und bearbeitet, die bei dem erstmaligen Einsatz eines Baukastensystems für Montageeinrichtungen in der Großbauteilmontage auftreten. Für einen erfolgreichen Einsatz solch eines Systems in der gezeigten Umgebung, ist ein Zusammenspiel der dargestellten Vorgehensweisen und Methoden erforderlich. Sie stellen allerdings nur einen Teil der Gesamtheit an Prozessen und Anpassungen dar, die für die neue Einsatzumgebung notwendig sind. Diese Prozesse greifen zum Teil stark ineinander und sind voneinander abhängig, wodurch es sich als schwierig darstellt, einen Anfang für die Entwicklung eines Baukastensystems zu identifizieren und die erforderlichen Methoden anzupassen. Der Konfigurationsprozess einer Montageeinrichtung aus einem Baukastensystem ist ein erster Baustein des Gesamtsystems, für den am LaFT bereits eine Lösungsmöglichkeit entwickelt wurde Für die Großbauteilmontage sind zwei Möglichkeiten, eine produktorientierte und eine prozessorientierte, erarbeitet worden, um die Elementarisierung anzupassen. Obwohl die prozessorientierte Methode favorisiert wurde, wurden beide Methoden ausgearbeitet, validiert und gegenübergestellt. Beim produktorientierten Vorgehen werden alle Montageanlagen in der Großbauteilmontage für sich elementarisiert. Anschließend werden alle Elemente zu einer gemeinsamen Basis zusammengezogen und gruppiert und ergeben eine gemeinsame Funktionsstruktur.]]></abstract>
+			</abstracts>
+			<creators>
+				<creator>
+					<dc:creator><![CDATA[Clausing, Nils]]></dc:creator>
+					<alternativeCreator>
+						<dc:creator><![CDATA[Clausing-Nils]]></dc:creator>
+					</alternativeCreator>
+				</creator>
+			</creators>
+			<authorsAffiliations>
+				<authorsAffiliation>
+					<affiliation><![CDATA[Fakultät für Maschinenbau, Helmut-Schmidt-Universität, Universität der Bundeswehr Hamburg, DE]]></affiliation>
+				</authorsAffiliation>
+			</authorsAffiliations>
+			<additionalDocumentInfo>
+				<articleInfo>
+					<firstPage><![CDATA[0]]></firstPage>
+				</articleInfo>
+				<journalInfo>
+					<dc:title><![CDATA[Berichte aus dem Institut für Konstruktions- und Fertigungstechnik]]></dc:title>
+					<volumeNumber><![CDATA[37]]></volumeNumber>
+					<coverDate><![CDATA[2014]]></coverDate>
+				</journalInfo>
+			</additionalDocumentInfo>
+			<publicationInfo>
+				<dc:publisher><![CDATA[Shaker]]></dc:publisher>
+				<publicationPlace><![CDATA[Aachen]]></publicationPlace>
+				<publicationURL><![CDATA[http://www.shaker.de]]></publicationURL>
+				<dcterms:Issued><![CDATA[2014]]></dcterms:Issued>
+			</publicationInfo>
+		</bibliographicInfo>
+		<classificationInfo>
+			<classifications>
+				<classification classificationName="FIZTtc">
+					<class>
+						<code><![CDATA[A]]></code>
+					</class>
+				</classification>
+				<classification classificationName="FON2006">
+					<class>
+						<code><![CDATA[3LZ]]></code>
+					</class>
+					<class>
+						<code><![CDATA[3AI]]></code>
+					</class>
+					<class>
+						<code><![CDATA[3AEN]]></code>
+					</class>
+					<class>
+						<code><![CDATA[3AA]]></code>
+					</class>
+				</classification>
+			</classifications>
+			<subjects>
+				<dc:subject><![CDATA[Montage]]></dc:subject>
+				<dc:subject><![CDATA[Baukastensystem]]></dc:subject>
+				<dc:subject><![CDATA[Produktlebenszyklus]]></dc:subject>
+				<dc:subject><![CDATA[Montageanlage]]></dc:subject>
+			</subjects>
+		</classificationInfo>
+		<functionalInfo>
+			<majorTerms>
+				<majorTerm xml:lang="DE"><![CDATA[Großbauteilmontage]]></majorTerm>
+				<majorTerm xml:lang="DE"><![CDATA[Baukastensystematik]]></majorTerm>
+				<majorTerm xml:lang="DE"><![CDATA[Montageeinrichtung]]></majorTerm>
+			</majorTerms>
+			<abstractLanguage><![CDATA[DE]]></abstractLanguage>
+			<geographicTerms>
+				<affiliationsCountryCode><![CDATA[DE]]></affiliationsCountryCode>
+			</geographicTerms>
+			<thesaurusTerms>
+				<synonyms>
+					<synonym xml:lang="DE" type="DES"><![CDATA[MONTAGE]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[EINBAU:MONTAGE]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[INDUSTRIEMONTAGE]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[KITTING]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[MONTAGEGEFUEGE]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[MONTAGETECHNIK]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[MONTAGETECHNOLOGIE]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[MONTAGEVERFAHREN]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[ZUSAMMENBAU]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[ASSEMBLING]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[ASSEMBLY:MOUNTING]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[ASSEMBLY-TECHNOLOGY]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[KITTING:ASSEMBLY]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[MOUNTING:ASSEMBLY]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[FERTIGUNGSVERFAHREN]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[ARBEITSVERFAHREN]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[FABRIKATIONSVERFAHREN]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[FERTIGUNGSPROZESS]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[HERSTELLUNGSVERFAHREN]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[HERSTELLVERFAHREN]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[PRODUKTIONSPROZESS]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[PRODUKTIONSTECHNIK]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[PRODUKTIONSVERFAHREN]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[TECHNOLOGISCHER-PROZESS]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[VERARBEITUNGSART]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[FABRICATION-METHOD]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[FABRICATION-PROCESS]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[MANUFACTURE-METHOD]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[MANUFACTURING-OPERATION]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[MANUFACTURING-PROCEDURE]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[MANUFACTURING-PROCESS]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[MANUFACTURING-TECHNIQUE]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[MANUFACTURING-TECHNOLOGY]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[PROCESS-TYPE]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[PROCESSING-TYPE]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[PRODUCTION-PROCESS]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[PRODUCTION-TECHNIQUE]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[TECHNOLOGICAL-PROCESS]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[TYPE-OF-PROCESS]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[MODULBAUWEISE]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[BAUKASTENPRINZIP]]></synonym>
+					<synonym xml:lang="DE" type="DES"><![CDATA[BAUKASTENSYSTEM]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[BAUSTEINSYSTEM]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[MODULARE-BAUWEISE]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[MODULARER-AUFBAU]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[MODULAR-CONCEPT]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[MODULAR-CONSTRUCTIONS]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[MODULAR-DESIGN]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[MODULAR-STRUCTURE]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[MODULAR-SYSTEMS]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[UNIT-CONSTRUCTION]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[BAUWEISE]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[BAUART]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[BAUFORM]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[CONSTRUCTION:STYLE]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[STRUCTURE:STYLE]]></synonym>
+					<synonym xml:lang="DE" type="DES"><![CDATA[PRODUKTLEBENSZYKLUS]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[PRODUCT-LIFE-CYCLE]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[PRODUCT-LIFECYCLE]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[LEBENSZYKLUS]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[LIFE-CYCLE]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[LIFECYCLE]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[ZYKLUS]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[CYCLUS]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[CYCLE]]></synonym>
+					<synonym xml:lang="DE" type="DES"><![CDATA[MONTAGEANLAGE]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[MONTAGELINIE]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[MONTAGEPLATZ]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[MONTAGESYSTEM]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[TAKTSTRASSE]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[ASSEMBLY-LINES]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[ASSEMBLY-SYSTEMS]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[MOUNTING-SYSTEM]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[HANDHABUNGSSYSTEM]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[HANDLING-SYSTEM]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[MANUAL-OPERATING-SYSTEM]]></synonym>
+				</synonyms>
+			</thesaurusTerms>
+			<freeTerms>
+				<freeTerm><![CDATA[Montageeinrichtung]]></freeTerm>
+				<freeTerm><![CDATA[Funktionsstruktur]]></freeTerm>
+				<freeTerm><![CDATA[Großbauteilmontage]]></freeTerm>
+			</freeTerms>
+			<indexerCode><![CDATA[0702]]></indexerCode>
+			<sourceNumber><![CDATA[907481]]></sourceNumber>
+			<sourceNotes>
+				<code><![CDATA[2014|978-3-8440-3343-4|37|0|0|BAUKASTENSYSTEM]]></code>
+				<code><![CDATA[2014|1861-5260|37|0|0|BAUKASTENSYSTEM]]></code>
+			</sourceNotes>
+		</functionalInfo>
+	</document>
+	<document id="TEMA20150513951">
+		<systemInfo>
+			<metadataCopyright>
+				<dc:rights><![CDATA[TEMA, Copyright WTI-Frankfurt eG]]></dc:rights>
+				<dcterms:dateCopyrighted><![CDATA[2015-06-24]]></dcterms:dateCopyrighted>
+			</metadataCopyright>
+			<databaseDate><![CDATA[2015-06-22]]></databaseDate>
+			<documentID><![CDATA[20150513951]]></documentID>
+			<changeDate><![CDATA[2015-06-19]]></changeDate>
+		</systemInfo>
+		<formalInfo>
+			<copyright>
+				<dc:rights><![CDATA[(C) Alle Rechte beim Herausgeber]]></dc:rights>
+				<dcterms:dateCopyrighted><![CDATA[201506]]></dcterms:dateCopyrighted>
+			</copyright>
+			<sizes>
+				<size unit="undefined"><![CDATA[7 Seiten, 8 Bilder, 36 Quellen]]></size>
+			</sizes>
+			<identifiers>
+				<identifier type="issn"><![CDATA[1040-0397]]></identifier>
+				<identifier type="eissn"><![CDATA[1521-4109]]></identifier>
+				<identifier type="FIZ-J-Code"><![CDATA[6807]]></identifier>
+				<identifier type="datasource"><![CDATA[WIL]]></identifier>
+				<identifier type="targetpool"><![CDATA[E]]></identifier>
+				<identifier type="multipool"><![CDATA[ZDEE]]></identifier>
+				<identifier type="multipool"><![CDATA[CEMA]]></identifier>
+			</identifiers>
+			<documentLanguages>
+				<documentLanguage>
+					<languageCodes>
+						<code iso="639-1"><![CDATA[EN]]></code>
+					</languageCodes>
+				</documentLanguage>
+			</documentLanguages>
+			<locations>
+				<location type="url" subtype="doi"><![CDATA[http://dx.doi.org/10.1002/elan.201400624]]></location>
+			</locations>
+			<localHoldings>
+				<localHolding>
+					<location type="tibShelfmark"><![CDATA[TIB-ZO6355]]></location>
+				</localHolding>
+			</localHoldings>
+			<documentTypes>
+				<documentAdvancedType>
+					<documentGenreGroup>
+						<documentGenre>
+							<documentGenreCode><![CDATA[J]]></documentGenreCode>
+						</documentGenre>
+					</documentGenreGroup>
+					<documentTypeGroup>
+						<documentType>
+							<documentTypeCode><![CDATA[ED]]></documentTypeCode>
+						</documentType>
+					</documentTypeGroup>
+				</documentAdvancedType>
+			</documentTypes>
+		</formalInfo>
+		<bibliographicInfo dependend="true">
+			<dc:title xml:lang="EN"><![CDATA[One Step Fabrication of Au Nanoparticles-Ni-Al Layered Double Hydroxide Composite Film for the Determination of L-Cysteine]]></dc:title>
+			<abstracts>
+				<abstract xml:lang="EN" copyright="Copyright Wiley-VCH Verlag GmbH & Co. KGaA. Reproduced with permission."><![CDATA[This paper reports the fabrication of Au nanoparticles (Au NPs)-Ni-Al layerd double hydroxide (LDH) composite film by one step electrochemical deposition on the surface of a glass carbon electrode from the mixture solution containing HAuCl]]><sub><![CDATA[4]]></sub><![CDATA[ and nitrate salts of Ni]]><sup><![CDATA[2+]]></sup><![CDATA[ and Al]]><sup><![CDATA[3+]]></sup><![CDATA[. Improved conductivity was obtained by Au NPs codeposited on LDH film. The synergic effect of LDHs and Au NPs dramatically improves the performance of L-cysteine electro-oxidation, displaying low oxidation peak potential (0.16 V) and high current response. Thus the electrode was used to sense L-cysteine, showing good sensitivity and selectivity.]]></abstract>
+			</abstracts>
+			<creators>
+				<creator>
+					<dc:creator><![CDATA[Wu, Liping]]></dc:creator>
+					<alternativeCreator>
+						<dc:creator><![CDATA[Wu-Liping]]></dc:creator>
+					</alternativeCreator>
+				</creator>
+				<creator>
+					<dc:creator><![CDATA[Li, Jing]]></dc:creator>
+					<alternativeCreator>
+						<dc:creator><![CDATA[Li-Jing]]></dc:creator>
+					</alternativeCreator>
+				</creator>
+				<creator>
+					<dc:creator><![CDATA[Zhang, Hui-Min]]></dc:creator>
+					<alternativeCreator>
+						<dc:creator><![CDATA[Zhang-Hui-Min]]></dc:creator>
+					</alternativeCreator>
+				</creator>
+			</creators>
+			<authorsAffiliations>
+				<authorsAffiliation>
+					<affiliation><![CDATA[Beijing Institute of Technology, CN]]></affiliation>
+				</authorsAffiliation>
+			</authorsAffiliations>
+			<additionalDocumentInfo>
+				<articleInfo>
+					<pages><![CDATA[1195-1201]]></pages>
+					<firstPage><![CDATA[1195]]></firstPage>
+					<lastPage><![CDATA[1201]]></lastPage>
+				</articleInfo>
+				<journalInfo>
+					<dc:title><![CDATA[Electroanalysis]]></dc:title>
+					<volumeNumber><![CDATA[27]]></volumeNumber>
+					<issueNumber><![CDATA[5]]></issueNumber>
+					<coverDate><![CDATA[2015]]></coverDate>
+				</journalInfo>
+			</additionalDocumentInfo>
+			<publicationInfo>
+				<dcterms:Issued><![CDATA[2015]]></dcterms:Issued>
+			</publicationInfo>
+		</bibliographicInfo>
+		<classificationInfo>
+			<classifications>
+				<classification classificationName="FIZTtc">
+					<class>
+						<code><![CDATA[A]]></code>
+					</class>
+				</classification>
+				<classification classificationName="FON2006">
+					<class>
+						<code><![CDATA[3QN]]></code>
+					</class>
+					<class>
+						<code><![CDATA[3PLA]]></code>
+					</class>
+				</classification>
+			</classifications>
+			<subjects>
+				<dc:subject><![CDATA[geschichtetes Doppelhydroxid]]></dc:subject>
+				<dc:subject><![CDATA[Gold]]></dc:subject>
+				<dc:subject><![CDATA[Nanoteilchen]]></dc:subject>
+				<dc:subject><![CDATA[Biosensor]]></dc:subject>
+				<dc:subject><![CDATA[Cystein]]></dc:subject>
+				<dc:subject><![CDATA[Nitrat]]></dc:subject>
+				<dc:subject><![CDATA[Oxidation]]></dc:subject>
+				<dc:subject><![CDATA[Verbundfolie]]></dc:subject>
+				<dc:subject><![CDATA[galvanische Abscheidung]]></dc:subject>
+				<dc:subject><![CDATA[Glaselektrode]]></dc:subject>
+				<dc:subject><![CDATA[Starkstrom]]></dc:subject>
+				<dc:subject><![CDATA[Elektroplattierung]]></dc:subject>
+				<dc:subject><![CDATA[Synergieeffekt]]></dc:subject>
+			</subjects>
+		</classificationInfo>
+		<functionalInfo>
+			<abstractLanguage><![CDATA[EN]]></abstractLanguage>
+			<geographicTerms>
+				<affiliationsCountryCode><![CDATA[CN]]></affiliationsCountryCode>
+			</geographicTerms>
+			<thesaurusTerms>
+				<synonyms>
+					<synonym xml:lang="DE" type="DES"><![CDATA[GESCHICHTETES-DOPPELHYDROXID]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[LDH:GESCHICHTETES-DOPPELHYDROXID]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[LDH:LAYERED-DOUBLE-HYDROXIDE]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[LAYERED-DOUBLE-HYDROXIDE]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[DOPPELHYDROXID]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[DOUBLE-HYDROXIDE]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[HYDROXIDMINERAL]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[HYDROXYDMINERAL]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[HYDROXIDE-MINERAL]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[MINERAL]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[MINERALS]]></synonym>
+					<synonym xml:lang="DE" type="DES"><![CDATA[GOLD]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[EDELMETALLE]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[EDELMETALL]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[NOBLE-METALS]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[PRECIOUS-METALS]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[NICHTEISENMETALLE]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[NE-METALL]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[NON-FERROUS-METALS]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[NONFERROUS-METALS]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[METALLE]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[METALL:ELEMENT]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[METALLISCHES-ELEMENT]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[METAL-ELEMENTS]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[METALS]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[CHEMISCHES-ELEMENT]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[ELEMENT:CHEMIE]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[CHEMICAL-ELEMENTS]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[ELEMENTS:CHEMICAL]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[ELEMENT]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[ELEMENTS]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[SCHWERMETALLE]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[SCHWERMETALL]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[HEAVY-METAL-ELEMENTS]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[HEAVY-METALS]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[UEBERGANGSMETALLE]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[UEBERGANGSELEMENT]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[TRANSITION-ELEMENTS]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[TRANSITION-METALS]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[NANOPARTIKEL]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[NANOGROSSES-PARTIKEL]]></synonym>
+					<synonym xml:lang="DE" type="DES"><![CDATA[NANOTEILCHEN]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[NANO-SIZED-PARTICLE]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[NANOPARTICLES]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[PARTIKEL]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[TEILCHEN:PARTIKEL]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[PARTICLES]]></synonym>
+					<synonym xml:lang="DE" type="DES"><![CDATA[BIOSENSOR]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[BIOSENSORIK]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[SENSOR-FUER-BIOLOGISCHE-GROESSEN]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[BIOSENSORS]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[SENSORS-FOR-BIOLOGICAL-PARAMETERS]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[SENSOR-BIOMEDIZINISCHER-GROESSEN]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[AUFNEHMER-BIOMEDIZINISCHER-GROESSEN]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[SENSORS-FOR-BIOMEDICAL-QUANTITIES]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[SENSOR]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[AUFNEHMER:SENSOR]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[FUEHLER:MESSTECHNIK]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[MESSAUFNEHMER]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[MESSFUEHLER]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[MESSGEBER]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[MESSKOPF]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[MESSTASTER]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[MESSWERTAUFNEHMER]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[MESSWERTGEBER]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[SENSORENSYSTEM]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[SENSORSYSTEM]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[DIMENSION-SENSORS]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[MEASURING-FEELERS]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[MEASURING-STYLUS]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[SENSING-DEVICES]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[SENSING-ELEMENTS]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[SENSOR-SYSTEMS]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[SENSORS]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[SENSORS-SYSTEMS]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[TRANSDUCERS:SENSOR]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[TRANSMITTERS:SENSOR]]></synonym>
+					<synonym xml:lang="DE" type="DES"><![CDATA[CYSTEIN]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[CYSTEINE]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[AMINOSAEUREN]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[AMINO-ACIDS]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[CARBONSAEUREN]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[KARBONSAEUREN]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[CARBOXYLIC-ACIDS]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[ORGANISCHE-SAEUREN]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[ACIDS:ORGANIC]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[ORGANIC-ACIDS]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[ORGANISCHE-VERBINDUNG]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[ORGANIC-COMPOUNDS]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[CHEMISCHE-VERBINDUNG]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[VERBINDUNG:CHEMISCH]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[CHEMICAL-COMPOUNDS]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[COMPOUNDS:CHEMICAL]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[SAEURE]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[ACIDS]]></synonym>
+					<synonym xml:lang="DE" type="DES"><![CDATA[NITRAT]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[SALPETER]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[NITRATES]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[SALPETRE]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[ANORGANISCHE-STICKSTOFFVERBINDUNG]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[INORGANIC-NITROGEN-COMPOUNDS]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[NICHTMETALLISCH-ANORGANISCHE-VERBINDUNG]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[NICHTMETALLISCHE-VERBINDUNG]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[NICHTMETALLVERBINDUNG]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[NON-METALLIC-INORGANIC-COMPOUNDS]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[NONMETAL-COMPOUNDS]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[NONMETALLIC-COMPOUNDS]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[NONMETALLIC-INORGANIC-COMPOUNDS]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[ANORGANISCHE-VERBINDUNG]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[INORGANIC-COMPOUNDS]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[STICKSTOFFVERBINDUNG]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[NITROGEN-COMPOUNDS]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[ANORGANISCHES-SALZ]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[INORGANIC-SALT]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[SALT:INORGANIC-COMPOUND]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[SALZE]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[SALTS]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[SAUERSTOFFVERBINDUNG]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[OXYGEN-COMPOUNDS]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[OXIDATIONSREAKTION]]></synonym>
+					<synonym xml:lang="DE" type="DES"><![CDATA[OXIDATION]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[OXIDATIVE-REAKTION]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[OXIDIEREN]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[OXYDATION]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[OXYDIEREN]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[OXIDATION-REACTION]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[OXIDATIONS]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[OXIDATIVE-REACTION]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[CHEMISCHE-REAKTION]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[CHEMISCHE-REAKTION:VERFAHRENSTECHNIK]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[CHEMISCHE-STOFFREAKTION]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[CHEMISCHER-REAKTIONSTYP]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[CHEMICAL-REACTION]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[CHEMICAL-REACTION-TYPE]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[TYPE-OF-CHEMICAL-REACTIONS]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[REAKTION]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[REACTION]]></synonym>
+					<synonym xml:lang="DE" type="DES"><![CDATA[VERBUNDFOLIE]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[COMPOSITE-FILMS]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[COMPOSITE-FOILS]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[FOLIE]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[FOILS:SHEET-FILM]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[SHEET-FILMS]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[GALVANISCHES-ABSCHEIDEN]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[ELEKTROCHEMISCHE-ABSCHEIDUNG]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[ELEKTROLYTISCHE-ABSCHEIDUNG]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[ELEKTROLYTISCHES-ABSCHEIDEN]]></synonym>
+					<synonym xml:lang="DE" type="DES"><![CDATA[GALVANISCHE-ABSCHEIDUNG]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[ELECTROCHEMICAL-PRECIPITATION]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[ELECTRODEPOSITION]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[ELECTROLYTIC-DEPOSITING]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[ELECTROLYTIC-DEPOSITION]]></synonym>
+					<synonym xml:lang="DE" type="DES"><![CDATA[GLASELEKTRODE]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[GLASS-ELECTRODES]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[ELEKTRODE]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[ELECTRODES]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[ELEKTRISCHER-LEITER]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[LEITER:ELEKTRISCH]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[CONDUCTORS:ELECTROTECHNICAL-MATERIAL]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[ELECTRIC-CONDUCTORS]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[ELECTRICAL-CONDUCTORS]]></synonym>
+					<synonym xml:lang="DE" type="DES"><![CDATA[STARKSTROM]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[KRAFTSTROM]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[HEAVY-CURRENT]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[HIGH-CURRENT]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[POWER-CURRENT]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[ELEKTRISCHER-STROM]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[ELEKTRISCHE-STROMSTAERKE]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[STROM:ELEKTRISCH]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[AMPERAGE]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[CURRENT:ELECTRIC]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[ELECTRIC-CURRENT]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[ELECTRICAL-CURRENT]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[ELEKTRISCHE-GROESSE]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[ELECTRICAL-CHARACTERISTICS]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[ELECTRICAL-QUANTITIES]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[PHYSIKALISCHE-GROESSE]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[GROESSE:PHYSIKALISCH]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[PHYSICAL-PARAMETER]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[PHYSICAL-QUANTITY]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[PHYSICAL-VARIABLE]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[GALVANISIEREN]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[ELEKTROPLATTIEREN]]></synonym>
+					<synonym xml:lang="DE" type="DES"><![CDATA[ELEKTROPLATTIERUNG]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[GALVANISCHES-METALLISIEREN]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[GALVANISCHES-VERFAHREN]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[GALVANISIERUNG]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[ELECTRO-PLATING]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[ELECTROCHEMICAL-DEPOSITION]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[ELECTROPLATING]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[GALVANOTECHNIK]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[GALVANIK]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[ELECTROPLATING-TECHNIQUE]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[TECHNIK:ALLGEMEIN]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[TECHNIQUE:GENERAL]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[ZUSAMMENWIRKUNG]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[MITWIRKUNG]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[SYNERGIE]]></synonym>
+					<synonym xml:lang="DE" type="DES"><![CDATA[SYNERGIEEFFEKT]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[SYNERGISMUS]]></synonym>
+					<synonym xml:lang="DE" type="SYN"><![CDATA[ZUSAMMENWIRKEN]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[COACTION]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[SYNERGETIC-EFFECT]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[SYNERGISM]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[SYNERGY]]></synonym>
+					<synonym xml:lang="EN" type="SYN"><![CDATA[SYNERGY-EFFECT]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[WIRKUNG:ALLGEMEIN]]></synonym>
+					<synonym xml:lang="DE" type="SUP"><![CDATA[AUSWIRKUNG:ALLGEMEIN]]></synonym>
+					<synonym xml:lang="EN" type="SUP"><![CDATA[EFFECT:GENERAL]]></synonym>
+				</synonyms>
+			</thesaurusTerms>
+			<indexerCode><![CDATA[0702]]></indexerCode>
+			<sourceNumber><![CDATA[907654]]></sourceNumber>
+			<sourceNotes>
+				<code><![CDATA[2015|1040-0397|27|5|1195|ONESTEPFABRICAT]]></code>
+				<code><![CDATA[2015|1521-4109|27|5|1195|ONESTEPFABRICAT]]></code>
+			</sourceNotes>
+		</functionalInfo>
+	</document>
+</ftx:documentContainer>
