@@ -323,6 +323,30 @@ public class XMLTransformationFlowTest extends GuicedTest {
 		testXMLTaskWithTuples("sqlmap.lookup.task.result.json", "sqlmap.mabxml.tuples.json", task);
 	}
 
+	@Test
+	public void testSqlDbRequestTask() throws Exception {
+
+		final Task task = getTask("sqldbrequest.task.json");
+		final Job job = task.getJob();
+		final Set<Mapping> mappings = job.getMappings();
+		final Mapping mapping = mappings.iterator().next();
+		final Component mappingTransformationComponent = mapping.getTransformation();
+		final Transformation mappingTransformationComponentFunction = (Transformation) mappingTransformationComponent.getFunction();
+		final Set<Component> mappingTransformationComponentFunctionComponents = mappingTransformationComponentFunction.getComponents();
+		final Component sqlMapLookup = mappingTransformationComponentFunctionComponents.iterator().next();
+		final Map<String, String> sqlMapLookupParameterMappings = sqlMapLookup.getParameterMappings();
+
+		final String user = readManuallyFromTypeSafeConfig("dswarm.db.metadata.username");
+		final String pass = readManuallyFromTypeSafeConfig("dswarm.db.metadata.password");
+		final String db = readManuallyFromTypeSafeConfig("dswarm.db.metadata.schema");
+
+		sqlMapLookupParameterMappings.put("login", user);
+		sqlMapLookupParameterMappings.put("password", pass);
+		sqlMapLookupParameterMappings.put("database", db);
+
+		testXMLTaskWithTuples("sqldbrequest.task.result.json", "sqldbrequest.mabxml.tuples.json", task);
+	}
+
 	/**
 	 * should emit the values of the else-branch
 	 *
