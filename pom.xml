@@ -95,7 +95,7 @@
 		<version.typesafe-config>1.3.0</version.typesafe-config>
 		<version.umlgraph-doclet>5.1</version.umlgraph-doclet>
 		<version.xmlunit>2.2.1</version.xmlunit>
-		<version.xmlenhancer>0.0.1-SNAPSHOT</version.xmlenhancer>
+		<version.xmlenhancer>0.0.2-SNAPSHOT</version.xmlenhancer>
 	</properties>
 
 	<repositories>
