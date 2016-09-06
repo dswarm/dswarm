@@ -340,6 +340,30 @@ public class DataModelsResourceTest2 extends
 	}
 
 	@Test
+	public void testXMLWDOCTYPEData() throws Exception {
+
+		DataModelsResourceTest2.LOG.debug("start get XML with DOCTYPE data test");
+
+		final String dataResourceResourceFileName = "xml_w_doctype_resource.json";
+		final String dataResourceFileName = "xml_w_doctype.xml";
+		final String configurationFileName = "xml_w_doctype_config.json";
+		final String dataModelName = "XML with DOCTYPE";
+
+		final Tuple<JsonNode, JsonNode> resultTuple = testXMLDataInternal(dataResourceResourceFileName, dataResourceFileName,
+				configurationFileName, dataModelName);
+
+		final JsonNode json = resultTuple.v1();
+		final JsonNode expectedJson = resultTuple.v2();
+
+		Assert.assertNotNull("the expected data JSON shouldn't be null", expectedJson);
+
+		Assert.assertThat(getValue("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", json),
+				CoreMatchers.equalTo(getValue("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", expectedJson)));
+
+		DataModelsResourceTest2.LOG.debug("end get ML with DOCTYPE data test");
+	}
+
+	@Test
 	public void testJSONData() throws Exception {
 
 		DataModelsResourceTest2.LOG.debug("start get JSON data test");
