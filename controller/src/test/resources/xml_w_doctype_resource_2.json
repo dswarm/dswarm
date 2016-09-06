@@ -1,0 +1,11 @@
+{
+  "name" : "xml_w_doctype_2.xml",
+  "type" : "FILE",
+  "description" : "this is a description",
+  "resource_attributes" : {
+    "path" : "dummy/path/to/xml_w_doctype_2.xml",
+    "filesize" : 2279,
+    "filetype" : "application/xml"
+  },
+  "uuid" : "10124"
+}

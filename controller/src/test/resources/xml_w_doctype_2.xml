@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE documentContainer SYSTEM "http://inprox.wti-frankfurt.de/isolat1.ent">
+<ftx:documentContainer
+		xmlns:ftx="http://www.tib-hannover.de/ext/schema/2007-06-26/fiz-tib-schema.xsd"
+		xmlns:dc="http://purl.org/dc/elements/1.1/"
+		xmlns:dcterms="http://purl.org/dc/terms/"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.tib-hannover.de/ext/schema/2007-06-26/fiz-tib-schema.xsd http://www.tib-hannover.de/ext/schema/2007-06-26/fiz-tib-schema.xsd http://www.w3.org/XML/1998/namespace http://www.w3.org/2001/xml.xsd http://purl.org/dc/elements/1.1/ http://dublincore.org/schemas/xmls/qdc/2003/04/02/dc.xsd http://purl.org/dc/terms/ http://dublincore.org/schemas/xmls/qdc/2003/04/02/dcterms.xsd">
+	<document id="TEMA20150103837">
+		<systemInfo>
+			<metadataCopyright>
+				<dc:rights>TEMA, Copyright WTI-Frankfurt eG</dc:rights>
+				<dcterms:dateCopyrighted>2015-06-24</dcterms:dateCopyrighted>
+			</metadataCopyright>
+			<databaseDate>2015-06-22</databaseDate>
+			<documentID>20150103837</documentID>
+			<changeDate>2015-06-15</changeDate>
+		</systemInfo>
+		<formalInfo>
+			<copyright>
+				<dc:rights>(C) Alle Rechte beim Herausgeber</dc:rights>
+				<dcterms:dateCopyrighted>201506</dcterms:dateCopyrighted>
+			</copyright>
+			<sizes>
+				<size unit="undefined">246 Seiten, Bilder, Tabellen, 280 Quellen</size>
+			</sizes>
+			<identifiers>
+				<identifier type="isbn13">978-3-8439-1707-0</identifier>
+				<identifier type="FIZ-J-Code">9216</identifier>
+				<identifier type="datasource">WTI</identifier>
+				<identifier type="targetpool">W</identifier>
+				<identifier type="multipool">CEMA</identifier>
+				<identifier type="multipool">DOMA</identifier>
+				<identifier type="multipool">WEMA</identifier>
+			</identifiers>
+			<documentLanguages>
+				<documentLanguage>
+					<languageCodes>
+						<code iso="639-1">DE</code>
+					</languageCodes>
+				</documentLanguage>
+			</documentLanguages>
+			<localHoldings>
+				<localHolding>
+					<location type="tibShelfmark">TIB-U14B1338</location>
+				</localHolding>
+			</localHoldings>
+			<documentTypes>
+				<documentAdvancedType>
+					<documentGenreGroup>
+						<documentGenre>
+							<documentGenreCode>B</documentGenreCode>
+						</documentGenre>
+						<documentGenre>
+							<documentGenreCode>D</documentGenreCode>
+						</documentGenre>
+					</documentGenreGroup>
+				</documentAdvancedType>
+			</documentTypes>
+		</formalInfo>
+		<bibliographicInfo dependend="false">
+			<dc:title xml:lang="DE">Alternative Vorstufenbibliotheken der Metalle Eisen, Mangan, Cobalt und Nickel sowie deren Einsatz in der Materialsynthese</dc:title>
+			<abstracts>
+				<abstract xml:lang="DE">F&uuml;r die Synthese neuartiger, eisenhaltiger Vorstufenverbindungen wurde eine Reihe zweiz&auml;hniger Heteroarylalkenole (L = DMOTFP, DMTTFP, BzOTFP, BzITFP, BzTTFP, 2PyTFP, 2PyTFA) verwendet, wodurch Komplexe der allgemeinen Formeln [Fe<sup>ll</sup>(L)<sub>2</sub>], [Fe<sup>lll</sup>(L)<sub>2</sub>(OBu<sup>t</sup>]f [Fe<sup>lll</sup>(L)<sub>3</sub>] und [Fe<sup>lll</sup><sub>2</sub>(&micro;-O)(L)<sub>4</sub>] erhalten wurden. Die Verbindungen wurden durch Einkristallr&ouml;ntgendiffraktometrie sowie magnetische Messungen strukturell charakterisiert. Sowohl homoleptische Eisen(ll)- als auch heteroleptische Eisen(lll)-Derivate zeigten neben ihrer Fl&uuml;chtigkeit saubere Zersetzungsmechanismen, die mittels TG/DTA aufgekl&auml;rt wurden. Jedoch konnte lediglich durch Nutzung der Alkoxo-Verbindungen Eisenoxid mittels chemischer Gasphasenabscheidung (CVD) dargestellt werden. Zus&auml;tzlich wurde eine neue Gruppe an vierz&auml;hnigen Schiff-Base-artigen Liganden der Form [R(CO)(CH)<sub>2</sub>(NH)CH<sub>2</sub>]<sub>2</sub> mit unterschiedlichen Fluoranteilen (R = CF<sub>2</sub>H, CF<sub>3</sub>, C<sub>2</sub>F<sub>5</sub>, C<sub>3</sub>F<sub>7</sub>, CH<sub>3</sub>) synthetisiert. Das Verhalten der Liganden in L&ouml;sung wurde durch NMR-spektroskopische Messungen untersucht, w&auml;hrend die Festk&ouml;rperstrukturen mittels Einkristallr&ouml;ntgendiffraktometrie aufgekl&auml;rt wurden. Salzeliminierungsreaktionen mit Eisen(lll)-chlorid lieferten f&uuml;nffach koordinierte Monochloro-Derivate der Form [Fe(L)(Cl)], welche durch Reaktion mit KOBu<sup>t</sup> in chloridfreie Komplexe der Form [Fe(L)(OBu<sup>t</sup>)] &uuml;berf&uuml;hrt wurden. Die dadurch erhaltenen Verbindungen zeigten eine gute Fl&uuml;chtigkeit in Abh&auml;ngigkeit ihres Fluorgehalts. Sowohl die Monochloro- als auch die Alkoxo-Derivate wurden mittels Einkristallstrukturanalyse sowie magnetischen Messungen charakterisiert. Durch die unzureichende Zersetzung in der Gasphase, die wahrscheinlich auf den starken Chelat-Effekt des vierz&auml;hnigen Liganden zur&uuml;ckzuf&uuml;hren ist, wurden die Verbindungen zur mikrowellengest&uuml;tzten Solvothermalsynthese von Eisenoxid- und Eisenfluorid-Nanopartikeln eingesetzt. Die Abh&auml;ngigkeit der Morphologie und der Phasenzusammensetzung von den Parametern Reaktionszeit, Prozesstemperatur und Fluorgehalt in der Ligandensph&auml;re wurde systematisch untersucht. Des Weiteren wurde, gem&auml;&szlig; des Prinzips der Abs&auml;ttigung des Zentralatoms sowie einer geringen Molmasse, der dreiz&auml;hnige Enaminonligand N-(4,4,4-Trifluorobut-1-en-3-on)-methoxyethylamin (tfb-mea) entwickelt. Dieser wurde zur Synthese zweiwertiger Komplexe, welche die Metalle Eisen, Mangan, Cobalt und Nickel enthalten, in Salzeliminierungsreaktionen unter Nutzung der entsprechenden Metallchloride eingesetzt. Geeignete Kristalle der homoleptischen Mangan- und Nickel-Derivate ([M(L)<sub>2</sub>]) wurden aus der Gasphase gez&uuml;chtet, w&auml;hrend die entsprechenden Eisen- und Cobaltverbindungen stabile Addukte ([M(L)<sub>2</sub>(Py)<sub>2</sub>]) mit Pyridin bildeten. Die jeweiligen Molek&uuml;lstrukturen wurden mittels Einkristallr&ouml;ntgendiffraktometrie aufgekl&auml;rt. Durch ihre hohe Fl&uuml;chtigkeit sowie die sauberen Zersetzungen, die durch TG/DTA nachgewiesen wurden, dienten diese Verbindungen als Vorstufen in CVD-Experimenten, die zu den phasenreinen Materialien Mn<sub>2</sub>C<sub>3</sub>, Fe<sub>2</sub>O<sub>3</sub>, CO<sub>3</sub>O<sub>4</sub> und NiO f&uuml;hrten, welche durch R&ouml;ntgendiffraktometrie und R&ouml;ntgenphotoelektronenspektroskopie charakterisiert wurden.</abstract>
+				<abstract xml:lang="EN">The synthesis of novel iron containing precursor compounds was achieved by application of numerous heteroarylalkenols (L = DMOTFP, DMTTFP, BzOTFP, BzlTFP, BzTTFP, 2PyTFP, 2PyTFA) as bidentate ligands, which produced stable iron(ll) and iron(lll) complexes of general formulae [Fe<sup>ll</sup>(L)<sub>2</sub>], [Fe<sup>lll</sup>(L)<sub>2</sub>(OBu<sup>t</sup>]f [Fe<sup>lll</sup>(L)<sub>3</sub>] and [Fe<sup>lll</sup><sub>2</sub>(&micro;-O)(L)<sub>4</sub>]. The new compounds were structurally characterized via single crystal X-ray diffraction and magnetic measurements. Both homoleptic iron (ll) and heteroleptic iron(lll) compounds showed significant volatility together with clean decomposition mechanisms that were verified via TG/DTA experiments. However, when used in chemical vapor deposition (CVD) only the alkoxo derivatives yielded iron oxide materials. In addition a new set of tetradentate Schiff base-like ligands of the type of [R(CO)(CH)<sub>2</sub>(NH)CH<sub>2</sub>]<sub>2</sub> with different amounts of fluorine (R = CF<sub>2</sub>H, CF<sub>3</sub>, C<sub>2</sub>F<sub>5</sub>, C<sub>3</sub>F<sub>7</sub>, CH<sub>3</sub>) was synthesized. Their behavior in solution was examined by NMR spectroscopy, additional structural data was obtained by single crystal X-ray diffraction studies. Salt metathesis reactions with iron(lll) chloride delivered five-fold coordinated monochloro derivatives [Fe(L)(Cl)], that were converted to the halide-free complexes [Fe(L)(OBu<sup>t</sup>)] by reacting with KOBu<sup>t</sup> The so obtained compounds showed good volatility depending highly on their fluorine contents. Both monochloro and alkoxo derivatives were fully characterized by single crystal X-ray diffraction and magnetic measurements. Since there was no sufficient decomposition observable in the gas phase, probably due to the chelate effect of the tetradentate ligand, the terf-butoxo derivatives were also used in microwave-assisted solvothermal synthesis of iron oxide and iron fluoride nanoparticles. The dependence of morphology and phase composition on synthesis temperature, reaction time and fluorine amount in the ligand sphere was systematically studied. New tridentate enaminone ligand, N-(4,4,4-Trifluorobut-1-en-3-on)-methoxyethylamin (tfb-mea), was developed based on the principle of effective saturation and low molecular weight. It was used for the synthesis of divalent metal complexes containing Iron, manganese, cobalt and nickel via salt metathesis reactions using corresponding chlorides as starting materials. Suitable crystals of homoleptic Mn and Ni derivatives [M(L)<sub>2</sub>] were obtained from the gas phase, while Fe and Co compounds formed stable adducts [M(L)<sub>2</sub>(Py)<sub>2</sub>] with pyridine. Both homoleptic and adduct complexes were characterized by single crystal X-ray diffraction. Due to their good volatility and clean deposition steps, as shown by TG/DTA, the compounds served as precursors in CVD experiments leading to phase pure Mn<sub>2</sub>C<sub>3</sub>, Fe<sub>2</sub>O<sub>3</sub>, CO<sub>3</sub>O<sub>4</sub> and NiO films, which were characterized via X-ray diffraction and X-ray photoelectron spectroscopy.</abstract>
+			</abstracts>
+			<creators>
+				<creator>
+					<dc:creator>Fornalczyk, Gregor</dc:creator>
+					<alternativeCreator>
+						<dc:creator>Fornalczyk-Gregor</dc:creator>
+					</alternativeCreator>
+				</creator>
+			</creators>
+			<authorsAffiliations>
+				<authorsAffiliation>
+					<affiliation>Mathematisch-Naturwissenschaftliche Fakult&auml;t, Universit&auml;t K&ouml;ln, DE</affiliation>
+				</authorsAffiliation>
+			</authorsAffiliations>
+			<additionalDocumentInfo>
+				<articleInfo>
+					<firstPage>0</firstPage>
+				</articleInfo>
+				<journalInfo>
+					<dc:title>Anorganische Chemie</dc:title>
+					<coverDate>2014</coverDate>
+				</journalInfo>
+			</additionalDocumentInfo>
+			<publicationInfo>
+				<dc:publisher>Verlag Dr. Hut</dc:publisher>
+				<publicationPlace>M&uuml;nchen</publicationPlace>
+				<publicationURL>http://www.dr.hut-verlag.de</publicationURL>
+				<dcterms:Issued>2014</dcterms:Issued>
+			</publicationInfo>
+		</bibliographicInfo>
+		<classificationInfo>
+			<classifications>
+				<classification classificationName="FIZTtc">
+					<class>
+						<code>E</code>
+					</class>
+				</classification>
+				<classification classificationName="FON2006">
+					<class>
+						<code>3BX</code>
+					</class>
+					<class>
+						<code>3PLC</code>
+					</class>
+					<class>
+						<code>3PLA</code>
+					</class>
+					<class>
+						<code>3KXU</code>
+					</class>
+				</classification>
+			</classifications>
+			<subjects>
+				<dc:subject>Eisen</dc:subject>
+				<dc:subject>magnetisches Messen</dc:subject>
+				<dc:subject>chemische Gasphasenabscheidung</dc:subject>
+				<dc:subject>Mangan</dc:subject>
+				<dc:subject>Cobalt</dc:subject>
+				<dc:subject>Nickel</dc:subject>
+				<dc:subject>Eisenoxid</dc:subject>
+				<dc:subject>Festk&ouml;rper</dc:subject>
+				<dc:subject>Strukturanalyse</dc:subject>
+				<dc:subject>Eisenfluorid</dc:subject>
+				<dc:subject>Cobaltverbindung</dc:subject>
+				<dc:subject>Pyridin</dc:subject>
+				<dc:subject>Monokristall</dc:subject>
+				<dc:subject>Fluor</dc:subject>
+			</subjects>
+		</classificationInfo>
+		<functionalInfo>
+			<abstractLanguage>DE</abstractLanguage>
+			<abstractLanguage>EN</abstractLanguage>
+			<geographicTerms>
+				<affiliationsCountryCode>DE</affiliationsCountryCode>
+			</geographicTerms>
+			<thesaurusTerms>
+				<synonyms>
+					<synonym xml:lang="DE" type="DES">EISEN</synonym>
+					<synonym xml:lang="EN" type="SYN">IRON</synonym>
+					<synonym xml:lang="DE" type="SUP">SCHWERMETALLE</synonym>
+					<synonym xml:lang="DE" type="SUP">SCHWERMETALL</synonym>
+					<synonym xml:lang="EN" type="SUP">HEAVY-METAL-ELEMENTS</synonym>
+					<synonym xml:lang="EN" type="SUP">HEAVY-METALS</synonym>
+					<synonym xml:lang="DE" type="SUP">METALLE</synonym>
+					<synonym xml:lang="DE" type="SUP">METALL:ELEMENT</synonym>
+					<synonym xml:lang="DE" type="SUP">METALLISCHES-ELEMENT</synonym>
+					<synonym xml:lang="EN" type="SUP">METAL-ELEMENTS</synonym>
+					<synonym xml:lang="EN" type="SUP">METALS</synonym>
+					<synonym xml:lang="DE" type="SUP">CHEMISCHES-ELEMENT</synonym>
+					<synonym xml:lang="DE" type="SUP">ELEMENT:CHEMIE</synonym>
+					<synonym xml:lang="EN" type="SUP">CHEMICAL-ELEMENTS</synonym>
+					<synonym xml:lang="EN" type="SUP">ELEMENTS:CHEMICAL</synonym>
+					<synonym xml:lang="DE" type="SUP">ELEMENT</synonym>
+					<synonym xml:lang="EN" type="SUP">ELEMENTS</synonym>
+					<synonym xml:lang="DE" type="SUP">UEBERGANGSMETALLE</synonym>
+					<synonym xml:lang="DE" type="SUP">UEBERGANGSELEMENT</synonym>
+					<synonym xml:lang="EN" type="SUP">TRANSITION-ELEMENTS</synonym>
+					<synonym xml:lang="EN" type="SUP">TRANSITION-METALS</synonym>
+					<synonym xml:lang="DE" type="SYN">MAGNETISCHES-MESSVERFAHREN</synonym>
+					<synonym xml:lang="DE" type="SYN">ELEKTROMAGNETISCHES-MESSVERFAHREN</synonym>
+					<synonym xml:lang="DE" type="DES">MAGNETISCHES-MESSEN</synonym>
+					<synonym xml:lang="DE" type="SYN">MAGNETOMETRIE</synonym>
+					<synonym xml:lang="EN" type="SYN">MAGNETIC-MEASUREMENT</synonym>
+					<synonym xml:lang="EN" type="SYN">MAGNETIC-MEASUREMENT-METHOD</synonym>
+					<synonym xml:lang="EN" type="SYN">MAGNETIC-MEASURING-METHOD</synonym>
+					<synonym xml:lang="DE" type="SUP">MESSVERFAHREN</synonym>
+					<synonym xml:lang="DE" type="SUP">MESSMETHODE</synonym>
+					<synonym xml:lang="DE" type="SUP">MESSPRINZIP</synonym>
+					<synonym xml:lang="DE" type="SUP">MESSSTRATEGIE</synonym>
+					<synonym xml:lang="EN" type="SUP">MEASUREMENT-METHOD</synonym>
+					<synonym xml:lang="EN" type="SUP">MEASUREMENT-PROCEDURE</synonym>
+					<synonym xml:lang="EN" type="SUP">MEASUREMENT-PROCESS</synonym>
+					<synonym xml:lang="EN" type="SUP">MEASURING-METHOD</synonym>
+					<synonym xml:lang="EN" type="SUP">MEASURING-PRINCIPLE</synonym>
+					<synonym xml:lang="EN" type="SUP">MEASURING-TECHNIQUE</synonym>
+					<synonym xml:lang="DE" type="SUP">VERFAHREN</synonym>
+					<synonym xml:lang="EN" type="SUP">PROCESS</synonym>
+					<synonym xml:lang="DE" type="DES">CHEMISCHE-GASPHASENABSCHEIDUNG</synonym>
+					<synonym xml:lang="DE" type="SYN">CHEMISCHE-DAMPFPHASENBESCHICHTUNG</synonym>
+					<synonym xml:lang="DE" type="SYN">CHEMISCHES-AUFDAMPFEN</synonym>
+					<synonym xml:lang="DE" type="SYN">CVD-ABSCHEIDUNG</synonym>
+					<synonym xml:lang="DE" type="SYN">CVD-BESCHICHTEN</synonym>
+					<synonym xml:lang="EN" type="SYN">CHEMICAL-VAPOR-DEPOSITION</synonym>
+					<synonym xml:lang="EN" type="SYN">CHEMICAL-VAPOUR-DEPOSITION</synonym>
+					<synonym xml:lang="EN" type="SYN">CVD:CHEMICAL-VAPOUR-DEPOSITION</synonym>
+					<synonym xml:lang="EN" type="SYN">CVD-DEPOSITION</synonym>
+					<synonym xml:lang="DE" type="SUP">AUFDAMPFEN</synonym>
+					<synonym xml:lang="DE" type="SUP">ABSCHEIDEN-AUS-DER-DAMPFPHASE</synonym>
+					<synonym xml:lang="DE" type="SUP">AUFDAMPFVERFAHREN</synonym>
+					<synonym xml:lang="DE" type="SUP">BEDAMPFEN</synonym>
+					<synonym xml:lang="EN" type="SUP">EVAPORATING</synonym>
+					<synonym xml:lang="EN" type="SUP">EVAPORATION-DEPOSITION</synonym>
+					<synonym xml:lang="EN" type="SUP">EVAPORATION-TECHNIQUE</synonym>
+					<synonym xml:lang="EN" type="SUP">VAPOR-COATING</synonym>
+					<synonym xml:lang="EN" type="SUP">VAPOR-DEPOSITION</synonym>
+					<synonym xml:lang="EN" type="SUP">VAPOR-PHASE-DEPOSITION</synonym>
+					<synonym xml:lang="EN" type="SUP">VAPOUR-COATING</synonym>
+					<synonym xml:lang="EN" type="SUP">VAPOUR-DEPOSITION</synonym>
+					<synonym xml:lang="EN" type="SUP">VAPOUR-PHASE-DEPOSITION</synonym>
+					<synonym xml:lang="DE" type="SUP">ABSCHEIDEN:BESCHICHTEN</synonym>
+					<synonym xml:lang="DE" type="SUP">ABSCHEIDUNG:BESCHICHTEN</synonym>
+					<synonym xml:lang="EN" type="SUP">DEPOSITION:COATING</synonym>
+					<synonym xml:lang="DE" type="SUP">BESCHICHTUNGSMETHODE</synonym>
+					<synonym xml:lang="DE" type="SUP">BESCHICHTUNGSTECHNIK</synonym>
+					<synonym xml:lang="DE" type="SUP">BESCHICHTUNGSVERFAHREN</synonym>
+					<synonym xml:lang="EN" type="SUP">COATING-METHOD</synonym>
+					<synonym xml:lang="EN" type="SUP">COATING-PROCESS</synonym>
+					<synonym xml:lang="EN" type="SUP">DEPOSITION-METHOD</synonym>
+					<synonym xml:lang="EN" type="SUP">DEPOSITION-PROCESS</synonym>
+					<synonym xml:lang="EN" type="SUP">DEPOSITION-TECHNIQUE</synonym>
+					<synonym xml:lang="EN" type="SUP">DEPOSITION-TECHNOLOGY</synonym>
+					<synonym xml:lang="DE" type="SUP">GASPHASENABSCHEIDUNG</synonym>
+					<synonym xml:lang="DE" type="SUP">ABSCHEIDEN-AUS-DER-GASPHASE</synonym>
+					<synonym xml:lang="DE" type="SUP">BESCHICHTEN-AUS-DER-GASPHASE</synonym>
+					<synonym xml:lang="EN" type="SUP">GAS-PHASE-DEPOSITION</synonym>
+					<synonym xml:lang="EN" type="SUP">GAS-PLATING</synonym>
+					<synonym xml:lang="EN" type="SUP">GASEOUS-PHASE-DEPOSITION</synonym>
+					<synonym xml:lang="DE" type="DES">MANGAN</synonym>
+					<synonym xml:lang="EN" type="SYN">MANGANESE</synonym>
+					<synonym xml:lang="DE" type="SUP">NICHTEISENMETALLE</synonym>
+					<synonym xml:lang="DE" type="SUP">NE-METALL</synonym>
+					<synonym xml:lang="EN" type="SUP">NON-FERROUS-METALS</synonym>
+					<synonym xml:lang="EN" type="SUP">NONFERROUS-METALS</synonym>
+					<synonym xml:lang="DE" type="DES">COBALT</synonym>
+					<synonym xml:lang="DE" type="SYN">CO:COBALT</synonym>
+					<synonym xml:lang="DE" type="SYN">KOBALT</synonym>
+					<synonym xml:lang="DE" type="SUP">BUNTMETALLE</synonym>
+					<synonym xml:lang="EN" type="SUP">NONFERROUS-HEAVY-METALS</synonym>
+					<synonym xml:lang="DE" type="DES">NICKEL</synonym>
+					<synonym xml:lang="DE" type="SYN">REINNICKEL</synonym>
+					<synonym xml:lang="DE" type="DES">EISENOXID</synonym>
+					<synonym xml:lang="DE" type="SYN">FE2O3</synonym>
+					<synonym xml:lang="DE" type="SYN">FE3O4</synonym>
+					<synonym xml:lang="DE" type="SYN">FEO:EISENOXID</synonym>
+					<synonym xml:lang="DE" type="SYN">EISENOXYD</synonym>
+					<synonym xml:lang="EN" type="SYN">FERRIC-OXIDE</synonym>
+					<synonym xml:lang="EN" type="SYN">IRON-OXIDE</synonym>
+					<synonym xml:lang="DE" type="SUP">EISENVERBINDUNG</synonym>
+					<synonym xml:lang="EN" type="SUP">IRON-COMPOUNDS</synonym>
+					<synonym xml:lang="DE" type="SUP">UEBERGANGSMETALLVERBINDUNG</synonym>
+					<synonym xml:lang="EN" type="SUP">TRANSITION-METAL-COMPOUNDS</synonym>
+					<synonym xml:lang="DE" type="SUP">METALLVERBINDUNG</synonym>
+					<synonym xml:lang="EN" type="SUP">METALLIC-COMPOUNDS</synonym>
+					<synonym xml:lang="DE" type="SUP">CHEMISCHE-VERBINDUNG</synonym>
+					<synonym xml:lang="DE" type="SUP">VERBINDUNG:CHEMISCH</synonym>
+					<synonym xml:lang="EN" type="SUP">CHEMICAL-COMPOUNDS</synonym>
+					<synonym xml:lang="EN" type="SUP">COMPOUNDS:CHEMICAL</synonym>
+					<synonym xml:lang="DE" type="SUP">METALLOXID</synonym>
+					<synonym xml:lang="DE" type="SUP">METALLOXYD</synonym>
+					<synonym xml:lang="EN" type="SUP">METAL-OXIDES</synonym>
+					<synonym xml:lang="EN" type="SUP">METALLIC-OXIDES</synonym>
+					<synonym xml:lang="DE" type="SUP">OXID</synonym>
+					<synonym xml:lang="DE" type="SUP">OXYD</synonym>
+					<synonym xml:lang="EN" type="SUP">OXIDE</synonym>
+					<synonym xml:lang="DE" type="SUP">SAUERSTOFFVERBINDUNG</synonym>
+					<synonym xml:lang="EN" type="SUP">OXYGEN-COMPOUNDS</synonym>
+					<synonym xml:lang="DE" type="SUP">ROST:OXID</synonym>
+					<synonym xml:lang="EN" type="SUP">RUST:IRON-RUST</synonym>
+					<synonym xml:lang="DE" type="SUP">KORROSIONSPRODUKT</synonym>
+					<synonym xml:lang="EN" type="SUP">CORROSION-PRODUCTS</synonym>
+					<synonym xml:lang="DE" type="SUP">PRODUKT</synonym>
+					<synonym xml:lang="EN" type="SUP">PRODUCT</synonym>
+					<synonym xml:lang="DE" type="DES">FESTKOERPER</synonym>
+					<synonym xml:lang="DE" type="SYN">FESTER-KOERPER</synonym>
+					<synonym xml:lang="EN" type="SYN">SOLID-BODIES</synonym>
+					<synonym xml:lang="EN" type="SYN">SOLIDS</synonym>
+					<synonym xml:lang="DE" type="DES">STRUKTURANALYSE</synonym>
+					<synonym xml:lang="DE" type="SYN">STRUKTURAUFKLAERUNG</synonym>
+					<synonym xml:lang="DE" type="SYN">STRUKTURBESTIMMUNG</synonym>
+					<synonym xml:lang="DE" type="SYN">STRUKTURUNTERSUCHUNG</synonym>
+					<synonym xml:lang="EN" type="SYN">STRUCTURAL-ANALYSIS</synonym>
+					<synonym xml:lang="EN" type="SYN">STRUCTURE-ANALYSIS</synonym>
+					<synonym xml:lang="EN" type="SYN">STRUCTURE-DETERMINATION</synonym>
+					<synonym xml:lang="DE" type="SUP">ANALYSE:ALLGEMEIN</synonym>
+					<synonym xml:lang="EN" type="SUP">ANALYSIS:GENERAL</synonym>
+					<synonym xml:lang="DE" type="DES">EISENFLUORID</synonym>
+					<synonym xml:lang="EN" type="SYN">IRON-FLUORIDE</synonym>
+					<synonym xml:lang="DE" type="SUP">FLUORID</synonym>
+					<synonym xml:lang="EN" type="SUP">FLUORIDES</synonym>
+					<synonym xml:lang="DE" type="SUP">ANORGANISCHE-FLUORVERBINDUNG</synonym>
+					<synonym xml:lang="EN" type="SUP">INORGANIC-FLUORINE-COMPOUNDS</synonym>
+					<synonym xml:lang="EN" type="SUP">INORGANIC-FLUORO-COMPOUNDS</synonym>
+					<synonym xml:lang="DE" type="SUP">ANORGANISCHE-HALOGENVERBINDUNG</synonym>
+					<synonym xml:lang="EN" type="SUP">INORGANIC-HALOGEN-COMPOUNDS</synonym>
+					<synonym xml:lang="DE" type="SUP">HALOGENVERBINDUNG</synonym>
+					<synonym xml:lang="EN" type="SUP">HALOGEN-COMPOUNDS</synonym>
+					<synonym xml:lang="DE" type="SUP">ANORGANISCHE-VERBINDUNG</synonym>
+					<synonym xml:lang="EN" type="SUP">INORGANIC-COMPOUNDS</synonym>
+					<synonym xml:lang="DE" type="SUP">HALOGENID</synonym>
+					<synonym xml:lang="DE" type="SUP">HALID</synonym>
+					<synonym xml:lang="DE" type="SUP">HALOGENIDVERBINDUNG</synonym>
+					<synonym xml:lang="EN" type="SUP">HALIDES</synonym>
+					<synonym xml:lang="EN" type="SUP">HALOGENIDES</synonym>
+					<synonym xml:lang="DE" type="SUP">ANORGANISCHES-SALZ</synonym>
+					<synonym xml:lang="EN" type="SUP">INORGANIC-SALT</synonym>
+					<synonym xml:lang="EN" type="SUP">SALT:INORGANIC-COMPOUND</synonym>
+					<synonym xml:lang="DE" type="SUP">SALZE</synonym>
+					<synonym xml:lang="EN" type="SUP">SALTS</synonym>
+					<synonym xml:lang="DE" type="DES">COBALTVERBINDUNG</synonym>
+					<synonym xml:lang="DE" type="SYN">KOBALTVERBINDUNG</synonym>
+					<synonym xml:lang="EN" type="SYN">COBALT-COMPOUNDS</synonym>
+					<synonym xml:lang="DE" type="SUP">SCHWERMETALLVERBINDUNG</synonym>
+					<synonym xml:lang="EN" type="SUP">HEAVY-METAL-COMPOUNDS</synonym>
+					<synonym xml:lang="DE" type="DES">PYRIDIN</synonym>
+					<synonym xml:lang="EN" type="SYN">PYRIDINE</synonym>
+					<synonym xml:lang="DE" type="SUP">HETEROCYCLISCHE-AROMATISCHE-VERBINDUNGEN</synonym>
+					<synonym xml:lang="DE" type="SUP">HETEROAROMATEN</synonym>
+					<synonym xml:lang="DE" type="SUP">HETEROCYKLISCHE-AROMATISCHE-VERBINDUNGEN</synonym>
+					<synonym xml:lang="DE" type="SUP">HETEROZYCLISCHE-AROMATISCHE-VERBINDUNGEN</synonym>
+					<synonym xml:lang="DE" type="SUP">HETEROZYKLISCHE-AROMATISCHE-VERBINDUNGEN</synonym>
+					<synonym xml:lang="EN" type="SUP">HETEROAROMATICS</synonym>
+					<synonym xml:lang="DE" type="SUP">HETEROCYCLISCHE-ORGANISCHE-VERBINDUNGEN</synonym>
+					<synonym xml:lang="DE" type="SUP">HETEROZYKLISCHE-ORGANISCHE-VERBINDUNGEN</synonym>
+					<synonym xml:lang="EN" type="SUP">HETEROCYCLIC-ORGANIC-COMPOUNDS</synonym>
+					<synonym xml:lang="DE" type="SUP">HETEROCYCLISCHE-VERBINDUNGEN</synonym>
+					<synonym xml:lang="DE" type="SUP">HETEROCYCLEN</synonym>
+					<synonym xml:lang="DE" type="SUP">HETEROCYKLISCHE-VERBINDUNGEN</synonym>
+					<synonym xml:lang="DE" type="SUP">HETEROZYKLISCHE-VERBINDUNGEN</synonym>
+					<synonym xml:lang="DE" type="SUP">HETEROZYCLISCHE-VERBINDUNGEN</synonym>
+					<synonym xml:lang="EN" type="SUP">HETEROCYCLIC-COMPOUNDS</synonym>
+					<synonym xml:lang="EN" type="SUP">HETEROCYCLICS</synonym>
+					<synonym xml:lang="DE" type="SUP">HETEROVERBINDUNGEN</synonym>
+					<synonym xml:lang="EN" type="SUP">HETERO-COMPOUNDS</synonym>
+					<synonym xml:lang="DE" type="SUP">ZYKLISCHE-ORGANISCHE-VERBINDUNGEN</synonym>
+					<synonym xml:lang="DE" type="SUP">CYCLISCHE-ORGANISCHE-VERBINDUNGEN</synonym>
+					<synonym xml:lang="DE" type="SUP">RINGFOERMIGE-ORGANISCHE-VERBINDUNGEN</synonym>
+					<synonym xml:lang="EN" type="SUP">CYCLIC-ORGANIC-COMPOUNDS</synonym>
+					<synonym xml:lang="DE" type="SUP">ORGANISCHE-VERBINDUNG</synonym>
+					<synonym xml:lang="EN" type="SUP">ORGANIC-COMPOUNDS</synonym>
+					<synonym xml:lang="DE" type="SUP">ZYKLISCHE-VERBINDUNG</synonym>
+					<synonym xml:lang="DE" type="SUP">CYCLISCHE-VERBINDUNG</synonym>
+					<synonym xml:lang="EN" type="SUP">CYCLIC-COMPOUNDS</synonym>
+					<synonym xml:lang="DE" type="SUP">HETEROCYCLISCHE-STICKSTOFFVERBINDUNGEN</synonym>
+					<synonym xml:lang="DE" type="SUP">HETEROZYKLISCHE-STICKSTOFFVERBINDUNGEN</synonym>
+					<synonym xml:lang="DE" type="SUP">HETEROZYCLISCHE-STICKSTOFFVERBINDUNGEN</synonym>
+					<synonym xml:lang="EN" type="SUP">HETEROCYCLIC-NITROGEN-COMPOUNDS</synonym>
+					<synonym xml:lang="DE" type="SYN">EINKRISTALL</synonym>
+					<synonym xml:lang="DE" type="DES">MONOKRISTALL</synonym>
+					<synonym xml:lang="EN" type="SYN">MONOCRYSTAL</synonym>
+					<synonym xml:lang="EN" type="SYN">SINGLE-CRYSTAL</synonym>
+					<synonym xml:lang="EN" type="SYN">SINGLE-CRYSTALS</synonym>
+					<synonym xml:lang="DE" type="SUP">KRISTALL</synonym>
+					<synonym xml:lang="EN" type="SUP">CRYSTALS</synonym>
+					<synonym xml:lang="DE" type="DES">FLUOR</synonym>
+					<synonym xml:lang="EN" type="SYN">FLUORINE</synonym>
+					<synonym xml:lang="DE" type="SUP">HALOGENE</synonym>
+					<synonym xml:lang="DE" type="SUP">HALOGEN</synonym>
+					<synonym xml:lang="EN" type="SUP">HALOGENS</synonym>
+					<synonym xml:lang="DE" type="SUP">NICHTMETALLE</synonym>
+					<synonym xml:lang="DE" type="SUP">NICHTMETALL:ELEMENT</synonym>
+					<synonym xml:lang="DE" type="SUP">NICHTMETALLISCHES-ELEMENT</synonym>
+					<synonym xml:lang="EN" type="SUP">NON-METALS</synonym>
+					<synonym xml:lang="EN" type="SUP">NONMETALS</synonym>
+				</synonyms>
+			</thesaurusTerms>
+			<freeTerms>
+				<freeTerm>Fluoranteil</freeTerm>
+				<freeTerm>Materialsynthese</freeTerm>
+				<freeTerm>Einkristallstrukturanalyse</freeTerm>
+				<freeTerm>Metallchlorid</freeTerm>
+				<freeTerm>R&ouml;ntgendiffraktometrie</freeTerm>
+				<freeTerm>low molecular weight</freeTerm>
+				<freeTerm>TG/DTA</freeTerm>
+			</freeTerms>
+			<indexerCode>0702</indexerCode>
+			<sourceNumber>899413</sourceNumber>
+			<sourceNotes>
+				<code>2014|978-3-8439-1707-0|0|0|0|ALTERNATIVEVORS</code>
+			</sourceNotes>
+		</functionalInfo>
+	</document>
+</ftx:documentContainer>
