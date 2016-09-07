@@ -1,0 +1,34 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+    <meta>
+        <name>mapping5c19760c-b2b1-d541-66a4-76e6aeebb1fa</name>
+    </meta>
+    <rules>
+        <data name="@leader_value__c1437cd4-b391-6e7a-2cb6-b7d75ab97a6e__0__" source="http://www.loc.gov/MARC21/slim#leader&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+        <combine flushWith="http://www.loc.gov/MARC21/slim#controlfield" includeSubEntities="true" name="@controlfield_value__d933eb95-4bc6-431e-1643-82a5f04f35f1__0__" reset="true" sameEntity="true" value="${controlfield_value__d933eb95-4bc6-431e-1643-82a5f04f35f1__0__.filtered}">
+            <if>
+                <all flushWith="http://www.loc.gov/MARC21/slim#controlfield&#30;http://www.loc.gov/MARC21/slim#tag" includeSubEntities="true" name="CONDITION_ALL" reset="true">
+                    <data source="http://www.loc.gov/MARC21/slim#controlfield&#30;http://www.loc.gov/MARC21/slim#tag">
+                        <equals string="001"/>
+                    </data>
+                </all>
+            </if>
+            <data name="controlfield_value__d933eb95-4bc6-431e-1643-82a5f04f35f1__0__.filtered" source="http://www.loc.gov/MARC21/slim#controlfield&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+        </combine>
+        <data name="http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/id" source="@__TRANSFORMATION_OUTPUT_VARIABLE__9224501e-d371-6659-8089-32d1f50ef94f"/>
+        <data name="@componentf0e57174-04bf-dd18-a357-5b5912cbd8dd" source="@leader_value__c1437cd4-b391-6e7a-2cb6-b7d75ab97a6e__0__">
+            <lookup in="componentf0e57174-04bf-dd18-a357-5b5912cbd8dd"/>
+        </data>
+        <combine name="@__TRANSFORMATION_OUTPUT_VARIABLE__9224501e-d371-6659-8089-32d1f50ef94f" value="${componentf0e57174-04bf-dd18-a357-5b5912cbd8dd} &gt;&gt;&gt;&gt; ${componentaffb6c1d-61fe-aa8d-7624-313132090cc2}">
+            <data name="componentf0e57174-04bf-dd18-a357-5b5912cbd8dd" source="@componentf0e57174-04bf-dd18-a357-5b5912cbd8dd"/>
+            <data name="componentaffb6c1d-61fe-aa8d-7624-313132090cc2" source="@componentaffb6c1d-61fe-aa8d-7624-313132090cc2"/>
+        </combine>
+        <data name="@componentaffb6c1d-61fe-aa8d-7624-313132090cc2" source="@controlfield_value__d933eb95-4bc6-431e-1643-82a5f04f35f1__0__">
+            <lookup in="componentaffb6c1d-61fe-aa8d-7624-313132090cc2"/>
+        </data>
+    </rules>
+    <maps>
+        <sqlmap database="dmp" host="localhost" login="dmp" name="componentf0e57174-04bf-dd18-a357-5b5912cbd8dd" password="dmp" query="SELECT name FROM DATA_SCHEMA WHERE uuid = ?"/>
+        <sqlmap database="dmp" host="localhost" login="dmp" name="componentaffb6c1d-61fe-aa8d-7624-313132090cc2" password="dmp" query="SELECT name FROM DATA_MODEL WHERE uuid = ?"/>
+    </maps>
+</metamorph>
