@@ -1,0 +1,12 @@
+[
+  {
+    "http://data.slub-dresden.de/datamodels/DataModel-79021e85-02df-45f6-9c0f-73bf21970f50/records/edc8b99d-9eeb-495b-b66e-ea3f468f3015": [
+      {
+        "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/id": "foaf:Person-Schema >>>> Internal Data Model PICA+ XML 'global'"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/RecordType"
+      }
+    ]
+  }
+]
