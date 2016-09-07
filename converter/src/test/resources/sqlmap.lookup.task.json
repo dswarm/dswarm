@@ -57,7 +57,7 @@
                   "password": "dmp",
                   "query": "SELECT name FROM DATA_SCHEMA WHERE uuid = ?",
                   "driver": "com.mysql.jdbc.Driver",
-                  "inputString": "WON'T BE REALLY NEEDED HERE (I.E. SHALL BE REMOVED LATER)"
+                  "inputString": "feld_value__0__"
                 },
                 "uuid": "-1402409200649"
               }

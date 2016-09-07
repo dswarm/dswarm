@@ -145,6 +145,11 @@ public class MorphScriptBuilderTest extends GuicedTest {
 		compareTaskGeneratedMorphscript("dd-1386.task.json", "dd-1386.task.morph.xml");
 	}
 
+	@Test
+	public void testSqlMapTask3() throws Exception {
+
+		compareTaskGeneratedMorphscript("dd-1386.task.2.json", "dd-1386.task.2.morph.xml");
+	}
 
 	@Test
 	public void testConvertValueTask() throws Exception {
