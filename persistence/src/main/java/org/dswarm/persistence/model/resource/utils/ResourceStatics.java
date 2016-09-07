@@ -25,6 +25,7 @@ public final class ResourceStatics {
 	 */
 	public static final String PATH = "path";
 
+	public static final String ORIGINAL_PATH = "original_path";
 
 	public static final String FILE_SIZE = "filesize";
 

@@ -525,7 +525,19 @@ public class ResourcesResource extends AbstractBaseResource {
 
 		final Resource resource = resourceOptional.get();
 
-		final JsonNode path = resource.getAttributes().get(ResourceStatics.PATH);
+		final JsonNode path;
+
+		final JsonNode originalPath = resource.getAttributes().get(ResourceStatics.ORIGINAL_PATH);
+
+		if(originalPath != null) {
+
+			// take original path
+
+			path = originalPath;
+		} else {
+
+			path= resource.getAttributes().get(ResourceStatics.PATH);
+		}
 
 		if (path == null) {
 

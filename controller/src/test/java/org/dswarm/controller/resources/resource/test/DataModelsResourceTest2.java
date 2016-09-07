@@ -312,6 +312,34 @@ public class DataModelsResourceTest2 extends
 	}
 
 	@Test
+	public void testMabxmlXMLData2() throws Exception {
+
+		DataModelsResourceTest2.LOG.debug("start get mabxml XML data 2 test");
+
+		final String dataResourceResourceFileName = "test-mabxml-resource.json";
+		final String dataResourceFileName = "controller_test-mabxml.xml";
+		final String configurationFileName = "xml-configuration.json";
+		final String dataModelName = "mabxml";
+
+		final Tuple<JsonNode, JsonNode> resultTuple = testXMLDataInternal(dataResourceResourceFileName, dataResourceFileName,
+				configurationFileName, dataModelName, true, true);
+
+		final JsonNode json = resultTuple.v1();
+		final JsonNode expectedJson = resultTuple.v2();
+
+		Assert.assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", json),
+				CoreMatchers.equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", expectedJson)));
+		Assert.assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion", json),
+				CoreMatchers.equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion", expectedJson)));
+		Assert.assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ", json),
+				CoreMatchers.equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ", expectedJson)));
+		Assert.assertThat(getValueNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld", json).size(),
+				CoreMatchers.equalTo(getValueNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld", expectedJson).size()));
+
+		DataModelsResourceTest2.LOG.debug("end get mabxml XML data 2 test");
+	}
+
+	@Test
 	public void testOaipmhMetsModsXMLData() throws Exception {
 
 		DataModelsResourceTest2.LOG.debug("start get OAI-PMH + Mets + Mods + X XML data test");

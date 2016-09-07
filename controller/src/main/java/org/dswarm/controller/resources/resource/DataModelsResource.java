@@ -121,6 +121,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	public static final String DO_INGEST_QUERY_PARAM_IDENTIFIER             = "doIngest";
 	public static final String ENHANCE_DATA_RESOURCE                        = "enhance_data_resource";
 	public static final String ENHANCE_DATA_RESOURCE_QUERY_PARAM_IDENTIFIER = "enhanceDataResource";
+	private static final String ENHANCED = "enhanced";
 
 	/**
 	 * The data model util
@@ -798,9 +799,10 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 	 * @return
 	 * @throws DMPControllerException
 	 */
-	private ProxyDataModel updateDataModel(final ProxyDataModel proxyDataModel, final DataModel dataModel, final boolean enableVersioning,
-			final boolean enhanceDataResource)
-			throws DMPControllerException {
+	private ProxyDataModel updateDataModel(final ProxyDataModel proxyDataModel,
+	                                       final DataModel dataModel,
+	                                       final boolean enableVersioning,
+	                                       final boolean enhanceDataResource) throws DMPControllerException {
 
 		final ProxyDataModel newProxyDataModel = addConfigurationToDataResource(proxyDataModel, dataModel);
 
@@ -825,9 +827,75 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 				throw new DMPControllerException(message);
 			}
+		} else {
+
+			refreshDataResourcePath(newDataModel);
 		}
 
-		return updateDataModelContent(newProxyDataModel, newDataModel, UpdateFormat.FULL, enableVersioning);
+		// TODO: not sure, whether this is really necessary here or whether this will always be done later again
+		final ProxyDataModel refreshedProxyDataModel = refreshDataModel(newProxyDataModel, newDataModel);
+		final DataModel refreshedDataModel = refreshedProxyDataModel.getObject();
+
+		return updateDataModelContent(refreshedProxyDataModel, refreshedDataModel, UpdateFormat.FULL, enableVersioning);
+	}
+
+	private void refreshDataResourcePath(final DataModel newDataModel) {
+
+		final Resource dataResource = newDataModel.getDataResource();
+
+		if(dataResource == null) {
+
+			return;
+		}
+
+		final JsonNode originalPathNode = dataResource.getAttribute(ResourceStatics.ORIGINAL_PATH);
+
+		if(originalPathNode == null) {
+
+			// nothing to do, original path is not set
+
+			return;
+		}
+
+		dataResource.addAttribute(ResourceStatics.PATH, originalPathNode.asText());
+	}
+
+	private ProxyDataModel refreshDataModel(final ProxyDataModel proxyDataModel, final DataModel dataModel) throws DMPControllerException {
+
+		final Resource dataResource = dataModel.getDataResource();
+
+		if(dataResource == null) {
+
+			return proxyDataModel;
+		}
+
+		try {
+
+			final ProxyDataModel proxyUpdatedDataModel = persistenceServiceProvider.get().updateObjectTransactional(dataModel);
+
+			if (proxyUpdatedDataModel == null) {
+
+				final String message = String
+						.format("something went wrong, when trying to refresh data resource '%s' of data model '%s'", dataResource.getUuid(), dataModel.getUuid());
+
+				DataModelsResource.LOG.error(message);
+
+				throw new DMPControllerException(message);
+			}
+
+			final RetrievalType type = proxyDataModel.getType();
+
+			return new ProxyDataModel(proxyUpdatedDataModel.getObject(), type);
+
+		} catch (final DMPPersistenceException e) {
+
+			final String message = String
+					.format("something went wrong, when trying to refresh data resource '%s' of data model '%s'", dataResource.getUuid(), dataModel.getUuid());
+
+			DataModelsResource.LOG.error(message, e);
+
+			throw new DMPControllerException(message, e);
+		}
 	}
 
 	private ProxyDataModel addConfigurationToDataResource(final ProxyDataModel proxyDataModel, final DataModel dataModel)
@@ -1074,24 +1142,6 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			return;
 		}
 
-		final JsonNode pathAttributeJSON = dataResource.getAttribute(ResourceStatics.PATH);
-
-		if (pathAttributeJSON == null) {
-
-			LOG.debug("cannot enhance data resource '{}', because there is no path given.", dataResource.getUuid());
-
-			return;
-		}
-
-		final String path = pathAttributeJSON.asText();
-
-		if (path == null || path.trim().isEmpty()) {
-
-			LOG.debug("cannot enhance data resource '{}', because there is no path given.", dataResource.getUuid());
-
-			return;
-		}
-
 		final JsonNode storageTypeParameterJSON = configuration.getParameter(ConfigurationStatics.STORAGE_TYPE);
 
 		if (storageTypeParameterJSON == null) {
@@ -1117,6 +1167,8 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
 			case ConfigurationStatics.SRU_11_PICAPLUSXML_GLOBAL_STORAGE_TYPE:
 
+				// found XML data resource
+
 				break;
 			default:
 
@@ -1125,20 +1177,69 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 				return;
 		}
 
+		final JsonNode originalPathAttributeJSON = dataResource.getAttribute(ResourceStatics.ORIGINAL_PATH);
+
+		final JsonNode pathAttributeJSON;
+
+		if(originalPathAttributeJSON != null) {
+
+			// take original path
+
+			pathAttributeJSON = originalPathAttributeJSON;
+		} else {
+
+			pathAttributeJSON = dataResource.getAttribute(ResourceStatics.PATH);
+		}
+
+		if (pathAttributeJSON == null) {
+
+			LOG.debug("cannot enhance data resource '{}', because there is no path given.", dataResource.getUuid());
+
+			return;
+		}
+
+		final String path = pathAttributeJSON.asText();
+
+		if (path == null || path.trim().isEmpty()) {
+
+			LOG.debug("cannot enhance data resource '{}', because there is no path given.", dataResource.getUuid());
+
+			return;
+		}
+
 		LOG.debug("try to enhance data resource '{}'", dataResource.getUuid());
 
 		final java.nio.file.Path dataResourcePath = Paths.get(path);
 		final java.nio.file.Path dataResourceFileNamePath = dataResourcePath.getFileName();
 		final String dataResourceFileName = dataResourceFileNamePath.toString();
 
-		final String newDataResourcePathString = OS_TEMP_DIR + File.separator + dataResourceFileName;
+		final String enhanceDataResourceFileName = String.format("%s_%s", ENHANCED, dataResourceFileName);
+
+		final String newDataResourcePathString = OS_TEMP_DIR + File.separator + enhanceDataResourceFileName;
 
 		XMLEnhancer.enhanceXML(path, newDataResourcePathString);
 
 		final java.nio.file.Path newDataResourcePath = Paths.get(newDataResourcePathString);
+		final java.nio.file.Path enhancedDataResourcePath;
+
+		final java.nio.file.Path dataResourceParentPath = dataResourcePath.getParent();
+
+		if(dataResourceParentPath != null) {
+
+			enhancedDataResourcePath = Paths.get(dataResourceParentPath.toString(), enhanceDataResourceFileName);
+		} else {
+
+			enhancedDataResourcePath = Paths.get(enhanceDataResourceFileName);
+		}
 
 		// move enhanced content to original place
-		Files.copy(newDataResourcePath, dataResourcePath, StandardCopyOption.REPLACE_EXISTING);
+		Files.copy(newDataResourcePath, enhancedDataResourcePath, StandardCopyOption.REPLACE_EXISTING);
+
+		dataResource.addAttribute(ResourceStatics.ORIGINAL_PATH, path);
+
+		final String enhancedDataResourcePathString = enhancedDataResourcePath.toString();
+
+		dataResource.addAttribute(ResourceStatics.PATH, enhancedDataResourcePathString);
 
 		LOG.debug("enhanced data resource '{}'", dataResource.getUuid());
 	}
