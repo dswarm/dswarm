@@ -960,8 +960,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 		final Map<String, String> componentParameterMapping = component.getParameterMappings();
 
-		// input variable don't need to be processed @ sqlmap function
-		if (!METAMORPH_FUNCTION_SQLMAP.equals(functionName) && componentParameterMapping != null) {
+		if (componentParameterMapping != null) {
 
 			for (final Entry<String, String> parameterMapping : componentParameterMapping.entrySet()) {
 
