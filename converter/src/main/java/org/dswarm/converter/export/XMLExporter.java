@@ -16,11 +16,12 @@
 package org.dswarm.converter.export;
 
 import java.io.OutputStream;
-import java.util.HashMap;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Stack;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -30,7 +31,6 @@ import javax.xml.stream.XMLStreamWriter;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.google.common.base.Charsets;
 import org.apache.jena.vocabulary.RDF;
 import org.codehaus.stax2.XMLOutputFactory2;
 import org.slf4j.Logger;
@@ -70,9 +70,9 @@ public class XMLExporter implements Exporter<JsonNode> {
 		xmlOutputFactory.configureForSpeed();
 	}
 
-	private final Map<String, URI>           predicates                 = new HashMap<>();
-	private final Map<String, String>        namespacesPrefixesMap      = new HashMap<>();
-	private final Map<String, String>        nameMap                    = new HashMap<>();
+	private final Map<String, URI>           predicates                 = new ConcurrentHashMap<>();
+	private final Map<String, String>        namespacesPrefixesMap      = new ConcurrentHashMap<>();
+	private final Map<String, String>        nameMap                    = new ConcurrentHashMap<>();
 	private final Stack<Map<String, String>> namespacesPrefixesMapStack = new Stack<>();
 
 	private boolean isElementOpen = false;
@@ -82,8 +82,10 @@ public class XMLExporter implements Exporter<JsonNode> {
 	private final Optional<AttributePath> optionalRootAttributePath;
 	private final boolean                 originalDataTypeIsXML;
 
-	public XMLExporter(final Optional<String> optionalRecordTagArg, final String recordClassUriArg,
-			final Optional<String> optionalRootAttributePathArg, final Optional<String> optionalOriginalDataType) {
+	public XMLExporter(final Optional<String> optionalRecordTagArg,
+	                   final String recordClassUriArg,
+	                   final Optional<String> optionalRootAttributePathArg,
+	                   final Optional<String> optionalOriginalDataType) {
 
 		recordClassURI = new URI(recordClassUriArg);
 
@@ -111,13 +113,14 @@ public class XMLExporter implements Exporter<JsonNode> {
 		originalDataTypeIsXML = optionalOriginalDataType.isPresent() && DMPStatics.XML_DATA_TYPE.equals(optionalOriginalDataType.get());
 	}
 
-	public Observable<JsonNode> generate(final Observable<JsonNode> recordGDM, final OutputStream outputStream) throws XMLStreamException {
+	public Observable<JsonNode> generate(final Observable<JsonNode> recordGDM,
+	                                     final OutputStream outputStream) throws XMLStreamException {
 
 		LOG.debug("start generating XML out of GDM");
 
 		final XMLStreamWriter writer = xmlOutputFactory.createXMLStreamWriter(outputStream);
 
-		writer.writeStartDocument(Charsets.UTF_8.toString(), XML_VERSION);
+		writer.writeStartDocument(StandardCharsets.UTF_8.toString(), XML_VERSION);
 
 		// process records to XML
 
@@ -170,7 +173,8 @@ public class XMLExporter implements Exporter<JsonNode> {
 	 * @return
 	 * @throws XMLStreamException
 	 */
-	private URI determineAndWriteXMLElementAndNamespace(final URI uri, final XMLStreamWriter writer) throws XMLStreamException {
+	private URI determineAndWriteXMLElementAndNamespace(final URI uri,
+	                                                    final XMLStreamWriter writer) throws XMLStreamException {
 
 		final String prefix;
 		final String namespace;
@@ -215,7 +219,8 @@ public class XMLExporter implements Exporter<JsonNode> {
 		private final XMLNodeHandler     startNodeHandler;
 		private       Optional<JsonNode> optionalFirstSingleRecordGDM;
 
-		private XMLExportOperator(final XMLStreamWriter writerArg, final XMLNodeHandler startNodeHandlerArg) {
+		private XMLExportOperator(final XMLStreamWriter writerArg,
+		                          final XMLNodeHandler startNodeHandlerArg) {
 
 			writer = writerArg;
 			startNodeHandler = startNodeHandlerArg;
@@ -371,7 +376,7 @@ public class XMLExporter implements Exporter<JsonNode> {
 				}
 
 				// add all namespace from the root to the first level
-				namespacesPrefixesMapStack.push(new HashMap<>());
+				namespacesPrefixesMapStack.push(new ConcurrentHashMap<>());
 				namespacesPrefixesMapStack.peek().putAll(namespacesPrefixesMap);
 			} catch (final XMLStreamException e) {
 
@@ -429,7 +434,8 @@ public class XMLExporter implements Exporter<JsonNode> {
 		}
 
 		@Override
-		public void handleNode(final URI previousPredicateURI, final JsonNode node) throws DMPConverterException, XMLStreamException {
+		public void handleNode(final URI previousPredicateURI,
+		                       final JsonNode node) throws DMPConverterException, XMLStreamException {
 
 			// record body is a JSON array, where each attribute has its own JSON object, i.e., each key/value pair is a single JSON object
 			if (node.isArray()) {
@@ -480,14 +486,16 @@ public class XMLExporter implements Exporter<JsonNode> {
 		private final XMLStreamWriter writer;
 		private final XMLNodeHandler  recordHandler;
 
-		protected CBDStartNodeHandler(final XMLNodeHandler recordHandlerArg, final XMLStreamWriter writerArg) {
+		protected CBDStartNodeHandler(final XMLNodeHandler recordHandlerArg,
+		                              final XMLStreamWriter writerArg) {
 
 			recordHandler = recordHandlerArg;
 			writer = writerArg;
 		}
 
 		@Override
-		public void handleNode(final URI previousPredicateURI, final JsonNode record) throws DMPConverterException, XMLStreamException {
+		public void handleNode(final URI previousPredicateURI,
+		                       final JsonNode record) throws DMPConverterException, XMLStreamException {
 
 			// GDMModel overall node is a JSON object
 			if (record.isObject()) {
@@ -531,7 +539,8 @@ public class XMLExporter implements Exporter<JsonNode> {
 		}
 
 		@Override
-		public void handleRelationship(final URI predicateURI, final JsonNode node) throws DMPConverterException, XMLStreamException {
+		public void handleRelationship(final URI predicateURI,
+		                               final JsonNode node) throws DMPConverterException, XMLStreamException {
 
 			// object => XML Element value or XML attribute value or further recursion
 
@@ -591,7 +600,8 @@ public class XMLExporter implements Exporter<JsonNode> {
 			return true;
 		}
 
-		protected void writeKeyValue(final URI predicateURI, final JsonNode objectGDMNode) throws XMLStreamException {
+		protected void writeKeyValue(final URI predicateURI,
+		                             final JsonNode objectGDMNode) throws XMLStreamException {
 
 			// default handling: don't export RDF types and write literal objects as XML elements
 			if (!RDF.type.getURI().equals(predicateURI.toString())) {
@@ -623,7 +633,8 @@ public class XMLExporter implements Exporter<JsonNode> {
 		}
 
 		@Override
-		protected void writeKeyValue(final URI predicateURI, final JsonNode objectGDMNode) throws XMLStreamException {
+		protected void writeKeyValue(final URI predicateURI,
+		                             final JsonNode objectGDMNode) throws XMLStreamException {
 
 			if (!(RDF.type.getURI().equals(predicateURI.toString()) || RDF.value.getURI().equals(predicateURI.toString()))) {
 

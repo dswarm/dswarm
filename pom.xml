@@ -47,7 +47,7 @@
 		<version.apache.commons>3.4</version.apache.commons>
 		<version.commons-csv>1.4</version.commons-csv>
 		<version.commons-io>2.5</version.commons-io>
-		<version.dswarm.common>0.0.3.1-SNAPSHOT</version.dswarm.common>
+		<version.dswarm.common>0.0.3.2-SNAPSHOT</version.dswarm.common>
 		<version.dswarm.graph.json>0.0.4-SNAPSHOT</version.dswarm.graph.json>
 		<version.findebugs.jsr305>3.0.1</version.findebugs.jsr305>
 		<version.google-collections>1.0</version.google-collections>
