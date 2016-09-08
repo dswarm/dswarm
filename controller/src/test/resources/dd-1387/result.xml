@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ns1:RecordTypes xmlns:ns1="http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/">
+	<ns1:RecordType>
+		<ns1:recordtype><![CDATA[propPubXml]]></ns1:recordtype>
+		<ns1:format_de14><![CDATA[Article, E-Article]]></ns1:format_de14>
+		<ns1:format_de15><![CDATA[Article, E-Article]]></ns1:format_de15>
+		<ns1:format><![CDATA[ElectronicArticle]]></ns1:format>
+		<ns1:institution><![CDATA[ ]]></ns1:institution>
+		<ns1:source_id><![CDATA[105]]></ns1:source_id>
+		<ns1:mega_collection><![CDATA[Springer Journals]]></ns1:mega_collection>
+		<ns1:access_facet><![CDATA[Electronic Resources]]></ns1:access_facet>
+	</ns1:RecordType>
+	<ns1:RecordType>
+		<ns1:recordtype><![CDATA[propPubXml]]></ns1:recordtype>
+		<ns1:format_de14><![CDATA[Article, E-Article]]></ns1:format_de14>
+		<ns1:format_de15><![CDATA[Article, E-Article]]></ns1:format_de15>
+		<ns1:format><![CDATA[ElectronicArticle]]></ns1:format>
+		<ns1:institution><![CDATA[ ]]></ns1:institution>
+		<ns1:source_id><![CDATA[105]]></ns1:source_id>
+		<ns1:mega_collection><![CDATA[Springer Journals]]></ns1:mega_collection>
+		<ns1:access_facet><![CDATA[Electronic Resources]]></ns1:access_facet>
+	</ns1:RecordType>
+</ns1:RecordTypes>

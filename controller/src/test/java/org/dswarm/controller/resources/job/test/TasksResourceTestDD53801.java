@@ -26,7 +26,12 @@ public class TasksResourceTestDD53801 extends TasksResourceTestDD538 {
 
 	public TasksResourceTestDD53801() {
 
-		super("dd-538/oai-pmh_marcxml_controller_task.01.json", "dd-538/oai-pmh_marcxml_controller_task.01.input_data_resource.xml", "record",
-				ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE, "dd-538/oai-pmh_marcxml_controller_task.01.result.xml", "01");
+		super("dd-538/oai-pmh_marcxml_controller_task.01.json",
+				"dd-538/oai-pmh_marcxml_controller_task.01.input_data_resource.xml",
+				"record",
+				ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE,
+				"dd-538/oai-pmh_marcxml_controller_task.01.result.xml",
+				"01",
+				false);
 	}
 }

@@ -43,10 +43,15 @@ public abstract class TasksResourceTestDD538 extends AbstractXMLTasksResourceTes
 
 	protected final String expectedResultXMLFileName;
 
-	public TasksResourceTestDD538(final String taskJSONFileNameArg, final String inputDataResourceFileNameArg, final String recordTagArg,
-			final String storageTypeArg, final String expectedResultXMLFileNameArg, final String testPostfixArg) {
+	public TasksResourceTestDD538(final String taskJSONFileNameArg,
+	                              final String inputDataResourceFileNameArg,
+	                              final String recordTagArg,
+	                              final String storageTypeArg,
+	                              final String expectedResultXMLFileNameArg,
+	                              final String testPostfixArg,
+	                              final boolean utiliseExistingInputSchema) {
 
-		super(taskJSONFileNameArg, inputDataResourceFileNameArg, recordTagArg, storageTypeArg, testPostfixArg, true, false);
+		super(taskJSONFileNameArg, inputDataResourceFileNameArg, recordTagArg, storageTypeArg, testPostfixArg, true, utiliseExistingInputSchema);
 
 		expectedResultXMLFileName = expectedResultXMLFileNameArg;
 	}

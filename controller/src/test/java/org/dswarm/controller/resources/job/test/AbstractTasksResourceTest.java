@@ -69,8 +69,11 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 	protected final boolean prepareInputDataResource;
 	private final   boolean utiliseExistingInputSchema;
 
-	public AbstractTasksResourceTest(final String taskJSONFileNameArg, final String inputDataResourceFileNameArg, final String testPostfixArg,
-			final boolean prepareInputDataResourceArg, final boolean utiliseExistingInputSchemaArg) {
+	public AbstractTasksResourceTest(final String taskJSONFileNameArg,
+	                                 final String inputDataResourceFileNameArg,
+	                                 final String testPostfixArg,
+	                                 final boolean prepareInputDataResourceArg,
+	                                 final boolean utiliseExistingInputSchemaArg) {
 
 		super("tasks");
 
@@ -149,8 +152,9 @@ public abstract class AbstractTasksResourceTest extends ResourceTest {
 		return requestJSON;
 	}
 
-	private DataModel prepareDataModel(final PrepareResource prepareResource, final PrepareConfiguration prepareConfiguration,
-			final boolean utiliseExistingInputSchema) throws Exception {
+	private DataModel prepareDataModel(final PrepareResource prepareResource,
+	                                   final PrepareConfiguration prepareConfiguration,
+	                                   final boolean utiliseExistingInputSchema) throws Exception {
 
 		final Resource resource = prepareResource.getResource();
 		final Resource res1 = prepareResource.getRes1();

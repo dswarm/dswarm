@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<clip>
+	<Publisher>
+		<PublisherInfo>
+			<PublisherName>Springer Netherlands</PublisherName>
+			<PublisherLocation>Dordrecht</PublisherLocation>
+			<PublisherImprintName>Springer</PublisherImprintName>
+		</PublisherInfo>
+		<Journal OutputMedium="All">
+			<JournalInfo JournalProductType="NonStandardArchiveJournal" NumberingStyle="ContentOnly">
+				<JournalID>10509</JournalID>
+				<JournalDOI>10.1007/10509.1572-946X</JournalDOI>
+				<JournalPrintISSN>0004-640X</JournalPrintISSN>
+				<JournalElectronicISSN>1572-946X</JournalElectronicISSN>
+				<JournalTitle>Astrophysics and Space Science</JournalTitle>
+				<JournalSubTitle>An International Journal of Astronomy, Astrophysics and Space Science</JournalSubTitle>
+				<JournalAbbreviatedTitle>Astrophys Space Sci</JournalAbbreviatedTitle>
+				<JournalSubjectGroup>
+					<JournalSubject Code="SCP" Type="Primary">Physics</JournalSubject>
+					<JournalSubject Code="SCP22022" Priority="1" Type="Secondary">Astrophysics and Astroparticles</JournalSubject>
+					<JournalSubject Code="SCP22014" Priority="2" Type="Secondary">Astronomy, Observations and Techniques</JournalSubject>
+					<JournalSubject Code="SCP22049" Priority="3" Type="Secondary">Cosmology</JournalSubject>
+					<JournalSubject Code="SCP22030" Priority="4" Type="Secondary">Extraterrestrial Physics, Space Sciences</JournalSubject>
+					<JournalSubject Code="SCP22057" Priority="5" Type="Secondary">Astrobiology</JournalSubject>
+					<SubjectCollection Code="Physics and Astronomy">SC12</SubjectCollection>
+				</JournalSubjectGroup>
+			</JournalInfo>
+			<Volume OutputMedium="All">
+				<VolumeInfo TocLevels="0" VolumeType="Regular">
+					<VolumeIDStart>361</VolumeIDStart>
+					<VolumeIDEnd>361</VolumeIDEnd>
+					<VolumeIssueCount>12</VolumeIssueCount>
+				</VolumeInfo>
+				<Issue IssueType="Regular" OutputMedium="All">
+					<IssueInfo IssueType="Regular" TocLevels="0">
+						<IssueIDStart>7</IssueIDStart>
+						<IssueIDEnd>7</IssueIDEnd>
+						<IssueArticleCount>0</IssueArticleCount>
+						<IssueHistory>
+							<CoverDate>
+								<Year>2016</Year>
+								<Month>7</Month>
+							</CoverDate>
+							<PricelistYear>2016</PricelistYear>
+						</IssueHistory>
+						<IssueCopyright>
+							<CopyrightHolderName>Springer Science+Business Media Dordrecht</CopyrightHolderName>
+							<CopyrightYear>2016</CopyrightYear>
+						</IssueCopyright>
+					</IssueInfo>
+					<Article ID="s10509-016-2787-z" OutputMedium="All">
+						<ArticleInfo ArticleType="OriginalPaper" ContainsESM="No" Language="En" NumberingStyle="ContentOnly" TocLevels="0">
+							<ArticleID>2787</ArticleID>
+							<ArticleDOI>10.1007/s10509-016-2787-z</ArticleDOI>
+							<ArticleCitationID>205</ArticleCitationID>
+							<ArticleSequenceNumber>1</ArticleSequenceNumber>
+							<ArticleTitle Language="En"><![CDATA[Spatial frequencies associated with the latitudinal structures of ionospheric currents seen by CHAMP satellite]]></ArticleTitle><ArticleTitle_plain Language="En"><![CDATA[Spatial frequencies associated with the latitudinal structures of ionospheric currents seen by CHAMP satellite]]></ArticleTitle_plain>
+							<ArticleCategory>Original Article</ArticleCategory>
+							<ArticleFirstPage>1</ArticleFirstPage>
+							<ArticleLastPage>13</ArticleLastPage>
+							<ArticleHistory>
+								<RegistrationDate>
+									<Year>2016</Year>
+									<Month>5</Month>
+									<Day>17</Day>
+								</RegistrationDate>
+								<Received>
+									<Year>2015</Year>
+									<Month>12</Month>
+									<Day>9</Day>
+								</Received>
+								<Accepted>
+									<Year>2016</Year>
+									<Month>5</Month>
+									<Day>17</Day>
+								</Accepted>
+								<OnlineDate>
+									<Year>2016</Year>
+									<Month>6</Month>
+									<Day>1</Day>
+								</OnlineDate>
+							</ArticleHistory>
+							<ArticleCopyright>
+								<CopyrightHolderName>Springer Science+Business Media Dordrecht</CopyrightHolderName>
+								<CopyrightYear>2016</CopyrightYear>
+							</ArticleCopyright>
+							<ArticleGrants Type="Regular">
+								<MetadataGrant Grant="OpenAccess"/>
+								<AbstractGrant Grant="OpenAccess"/>
+								<BodyPDFGrant Grant="Restricted"/>
+								<BodyHTMLGrant Grant="Restricted"/>
+								<BibliographyGrant Grant="Restricted"/>
+								<ESMGrant Grant="Restricted"/>
+							</ArticleGrants>
+						</ArticleInfo>
+						<ArticleHeader>
+							<AuthorGroup>
+								<Author AffiliationIDS="Aff1" CorrespondingAffiliationID="Aff1" ID="Au1">
+									<AuthorName DisplayOrder="Western">
+										<GivenName>Neethal</GivenName>
+										<FamilyName>Thomas</FamilyName>
+									</AuthorName>
+									<Contact>
+										<Email>neethalmariyathomas@gmail.com</Email>
+									</Contact>
+								</Author>
+								<Author AffiliationIDS="Aff1" ID="Au2">
+									<AuthorName DisplayOrder="Western">
+										<GivenName>Geeta</GivenName>
+										<FamilyName>Vichare</FamilyName>
+									</AuthorName>
+								</Author>
+								<Author AffiliationIDS="Aff1" ID="Au3">
+									<AuthorName DisplayOrder="Western">
+										<GivenName>A.</GivenName>
+										<GivenName>K.</GivenName>
+										<FamilyName>Sinha</FamilyName>
+									</AuthorName>
+								</Author>
+								<Affiliation ID="Aff1">
+									<OrgName>Indian Institute of Geomagnetism</OrgName>
+									<OrgAddress>
+										<Street>Plot 5, Sector 18, New Panvel (W)</Street>
+										<City>Navi Mumbai</City>
+										<Postcode>410218</Postcode>
+										<Country Code="IN">India</Country>
+									</OrgAddress>
+								</Affiliation>
+							</AuthorGroup>
+							<Abstract ID="Abs1" Language="En" OutputMedium="All">
+								<Heading>Abstract</Heading>
+								<Para ID="Par1"><![CDATA[The CHAMP magnetic field variations during international quiet days of low solar activity period 2008–2009 are investigated. The present paper reports the existence of frequency peaks ≤20 mHz in the compressional component of the magnetic field in almost all CHAMP passes. The magnetic field variations associated with these frequencies have amplitude of a few tens of nT during the daytime. The geomagnetic activity and interplanetary magnetic field parameters were observed to be low during the period of study. The spectral powers of the observed frequencies show no dependence on solar wind velocity and cone angle; hence, the reported frequencies are not related to the geomagnetic pulsations. For frequency-peaks ≤15 mHz, strong local time dependence is observed with maximum power near noon and minimum at night. The longitudinal and seasonal variation of the powers of these frequency peaks match well with those of the equator-to-middle latitude ionospheric currents derived by the earlier studies. As a polar Low Earth Orbiting (LEO) satellite spans the entire range of latitudes within few minutes, it monitors the geomagnetic field variations caused by the quiet-time ionospheric currents flowing at different latitudes. This can result in certain frequencies in the magnetic field recorded by LEO satellites. We demonstrate that the frequencies &lt;10 mHz are mainly due to the latitudinal structure of the equatorial electrojet. The observed frequencies in CHAMP data are therefore attributed to the latitudinal structures of the ionospheric currents that are monitored only by the polar LEO satellites and are found to alter the observations of geomagnetic pulsations (Pc4–5 and Pi2) significantly.]]></Para><Para_plain ID="Par1"><![CDATA[The CHAMP magnetic field variations during international quiet days of low solar activity period 2008–2009 are investigated. The present paper reports the existence of frequency peaks ≤20 mHz in the compressional component of the magnetic field in almost all CHAMP passes. The magnetic field variations associated with these frequencies have amplitude of a few tens of nT during the daytime. The geomagnetic activity and interplanetary magnetic field parameters were observed to be low during the period of study. The spectral powers of the observed frequencies show no dependence on solar wind velocity and cone angle; hence, the reported frequencies are not related to the geomagnetic pulsations. For frequency-peaks ≤15 mHz, strong local time dependence is observed with maximum power near noon and minimum at night. The longitudinal and seasonal variation of the powers of these frequency peaks match well with those of the equator-to-middle latitude ionospheric currents derived by the earlier studies. As a polar Low Earth Orbiting (LEO) satellite spans the entire range of latitudes within few minutes, it monitors the geomagnetic field variations caused by the quiet-time ionospheric currents flowing at different latitudes. This can result in certain frequencies in the magnetic field recorded by LEO satellites. We demonstrate that the frequencies <10 mHz are mainly due to the latitudinal structure of the equatorial electrojet. The observed frequencies in CHAMP data are therefore attributed to the latitudinal structures of the ionospheric currents that are monitored only by the polar LEO satellites and are found to alter the observations of geomagnetic pulsations (Pc4–5 and Pi2) significantly.]]></Para_plain>
+							</Abstract>
+							<KeywordGroup Language="En">
+								<Heading>Keywords</Heading>
+								<Keyword><![CDATA[Spatial frequencies in polar LEO satellite]]></Keyword><Keyword_plain><![CDATA[Spatial frequencies in polar LEO satellite]]></Keyword_plain>
+								<Keyword><![CDATA[Ionospheric currents]]></Keyword><Keyword_plain><![CDATA[Ionospheric currents]]></Keyword_plain>
+								<Keyword><![CDATA[LEO satellites]]></Keyword><Keyword_plain><![CDATA[LEO satellites]]></Keyword_plain>
+								<Keyword><![CDATA[Pulsations at LEO]]></Keyword><Keyword_plain><![CDATA[Pulsations at LEO]]></Keyword_plain>
+							</KeywordGroup>
+							<ArticleNote Type="Misc">
+								<SimplePara>Geeta Vichare, formerly Geeta Jadhav.</SimplePara>
+							</ArticleNote>
+						</ArticleHeader>
+						<NoBody/>
+					</Article>
+				</Issue>
+			</Volume>
+		</Journal>
+	</Publisher>
+	<Publisher>
+		<PublisherInfo>
+			<PublisherName>Springer Netherlands</PublisherName>
+			<PublisherLocation>Dordrecht</PublisherLocation>
+			<PublisherImprintName>Springer</PublisherImprintName>
+		</PublisherInfo>
+		<Journal OutputMedium="All">
+			<JournalInfo JournalProductType="NonStandardArchiveJournal" NumberingStyle="ContentOnly">
+				<JournalID>10509</JournalID>
+				<JournalDOI>10.1007/10509.1572-946X</JournalDOI>
+				<JournalPrintISSN>0004-640X</JournalPrintISSN>
+				<JournalElectronicISSN>1572-946X</JournalElectronicISSN>
+				<JournalTitle>Astrophysics and Space Science</JournalTitle>
+				<JournalSubTitle>An International Journal of Astronomy, Astrophysics and Space Science</JournalSubTitle>
+				<JournalAbbreviatedTitle>Astrophys Space Sci</JournalAbbreviatedTitle>
+				<JournalSubjectGroup>
+					<JournalSubject Code="SCP" Type="Primary">Physics</JournalSubject>
+					<JournalSubject Code="SCP22022" Priority="1" Type="Secondary">Astrophysics and Astroparticles</JournalSubject>
+					<JournalSubject Code="SCP22014" Priority="2" Type="Secondary">Astronomy, Observations and Techniques</JournalSubject>
+					<JournalSubject Code="SCP22049" Priority="3" Type="Secondary">Cosmology</JournalSubject>
+					<JournalSubject Code="SCP22030" Priority="4" Type="Secondary">Extraterrestrial Physics, Space Sciences</JournalSubject>
+					<JournalSubject Code="SCP22057" Priority="5" Type="Secondary">Astrobiology</JournalSubject>
+					<SubjectCollection Code="Physics and Astronomy">SC12</SubjectCollection>
+				</JournalSubjectGroup>
+			</JournalInfo>
+			<Volume OutputMedium="All">
+				<VolumeInfo TocLevels="0" VolumeType="Regular">
+					<VolumeIDStart>361</VolumeIDStart>
+					<VolumeIDEnd>361</VolumeIDEnd>
+					<VolumeIssueCount>12</VolumeIssueCount>
+				</VolumeInfo>
+				<Issue IssueType="Regular" OutputMedium="All">
+					<IssueInfo IssueType="Regular" TocLevels="0">
+						<IssueIDStart>7</IssueIDStart>
+						<IssueIDEnd>7</IssueIDEnd>
+						<IssueArticleCount>41</IssueArticleCount>
+						<IssueHistory>
+							<OnlineDate>
+								<Year>2016</Year>
+								<Month>7</Month>
+								<Day>14</Day>
+							</OnlineDate>
+							<PrintDate>
+								<Year>2016</Year>
+								<Month>7</Month>
+								<Day>14</Day>
+							</PrintDate>
+							<CoverDate>
+								<Year>2016</Year>
+								<Month>7</Month>
+							</CoverDate>
+							<PricelistYear>2016</PricelistYear>
+						</IssueHistory>
+						<IssueCopyright>
+							<CopyrightHolderName>Springer Science+Business Media Dordrecht</CopyrightHolderName>
+							<CopyrightYear>2016</CopyrightYear>
+						</IssueCopyright>
+					</IssueInfo>
+					<Article ID="s10509-016-2787-z" OutputMedium="All">
+						<ArticleInfo ArticleType="OriginalPaper" ContainsESM="No" Language="En" NumberingStyle="ContentOnly" TocLevels="0">
+							<ArticleID>2787</ArticleID>
+							<ArticleDOI>10.1007/s10509-016-2787-z</ArticleDOI>
+							<ArticleCitationID>205</ArticleCitationID>
+							<ArticleSequenceNumber>1</ArticleSequenceNumber>
+							<ArticleTitle Language="En"><![CDATA[Spatial frequencies associated with the latitudinal structures of ionospheric currents seen by CHAMP satellite]]></ArticleTitle><ArticleTitle_plain Language="En"><![CDATA[Spatial frequencies associated with the latitudinal structures of ionospheric currents seen by CHAMP satellite]]></ArticleTitle_plain>
+							<ArticleCategory>Original Article</ArticleCategory>
+							<ArticleFirstPage>1</ArticleFirstPage>
+							<ArticleLastPage>13</ArticleLastPage>
+							<ArticleHistory>
+								<RegistrationDate>
+									<Year>2016</Year>
+									<Month>5</Month>
+									<Day>17</Day>
+								</RegistrationDate>
+								<Received>
+									<Year>2015</Year>
+									<Month>12</Month>
+									<Day>9</Day>
+								</Received>
+								<Accepted>
+									<Year>2016</Year>
+									<Month>5</Month>
+									<Day>17</Day>
+								</Accepted>
+								<OnlineDate>
+									<Year>2016</Year>
+									<Month>6</Month>
+									<Day>1</Day>
+								</OnlineDate>
+							</ArticleHistory>
+							<ArticleCopyright>
+								<CopyrightHolderName>Springer Science+Business Media Dordrecht</CopyrightHolderName>
+								<CopyrightYear>2016</CopyrightYear>
+							</ArticleCopyright>
+							<ArticleGrants Type="Regular">
+								<MetadataGrant Grant="OpenAccess"/>
+								<AbstractGrant Grant="OpenAccess"/>
+								<BodyPDFGrant Grant="Restricted"/>
+								<BodyHTMLGrant Grant="Restricted"/>
+								<BibliographyGrant Grant="Restricted"/>
+								<ESMGrant Grant="Restricted"/>
+							</ArticleGrants>
+						</ArticleInfo>
+						<ArticleHeader>
+							<AuthorGroup>
+								<Author AffiliationIDS="Aff1" CorrespondingAffiliationID="Aff1" ID="Au1">
+									<AuthorName DisplayOrder="Western">
+										<GivenName>Neethal</GivenName>
+										<FamilyName>Thomas</FamilyName>
+									</AuthorName>
+									<Contact>
+										<Email>neethalmariyathomas@gmail.com</Email>
+									</Contact>
+								</Author>
+								<Author AffiliationIDS="Aff1" ID="Au2">
+									<AuthorName DisplayOrder="Western">
+										<GivenName>Geeta</GivenName>
+										<FamilyName>Vichare</FamilyName>
+									</AuthorName>
+								</Author>
+								<Author AffiliationIDS="Aff1" ID="Au3">
+									<AuthorName DisplayOrder="Western">
+										<GivenName>A.</GivenName>
+										<GivenName>K.</GivenName>
+										<FamilyName>Sinha</FamilyName>
+									</AuthorName>
+								</Author>
+								<Affiliation ID="Aff1">
+									<OrgName>Indian Institute of Geomagnetism</OrgName>
+									<OrgAddress>
+										<Street>Plot 5, Sector 18, New Panvel (W)</Street>
+										<City>Navi Mumbai</City>
+										<Postcode>410218</Postcode>
+										<Country Code="IN">India</Country>
+									</OrgAddress>
+								</Affiliation>
+							</AuthorGroup>
+							<Abstract ID="Abs1" Language="En" OutputMedium="All">
+								<Heading>Abstract</Heading>
+								<Para ID="Par1"><![CDATA[The CHAMP magnetic field variations during international quiet days of low solar activity period 2008–2009 are investigated. The present paper reports the existence of frequency peaks ≤20 mHz in the compressional component of the magnetic field in almost all CHAMP passes. The magnetic field variations associated with these frequencies have amplitude of a few tens of nT during the daytime. The geomagnetic activity and interplanetary magnetic field parameters were observed to be low during the period of study. The spectral powers of the observed frequencies show no dependence on solar wind velocity and cone angle; hence, the reported frequencies are not related to the geomagnetic pulsations. For frequency-peaks ≤15 mHz, strong local time dependence is observed with maximum power near noon and minimum at night. The longitudinal and seasonal variation of the powers of these frequency peaks match well with those of the equator-to-middle latitude ionospheric currents derived by the earlier studies. As a polar Low Earth Orbiting (LEO) satellite spans the entire range of latitudes within few minutes, it monitors the geomagnetic field variations caused by the quiet-time ionospheric currents flowing at different latitudes. This can result in certain frequencies in the magnetic field recorded by LEO satellites. We demonstrate that the frequencies &lt;10 mHz are mainly due to the latitudinal structure of the equatorial electrojet. The observed frequencies in CHAMP data are therefore attributed to the latitudinal structures of the ionospheric currents that are monitored only by the polar LEO satellites and are found to alter the observations of geomagnetic pulsations (Pc4–5 and Pi2) significantly.]]></Para><Para_plain ID="Par1"><![CDATA[The CHAMP magnetic field variations during international quiet days of low solar activity period 2008–2009 are investigated. The present paper reports the existence of frequency peaks ≤20 mHz in the compressional component of the magnetic field in almost all CHAMP passes. The magnetic field variations associated with these frequencies have amplitude of a few tens of nT during the daytime. The geomagnetic activity and interplanetary magnetic field parameters were observed to be low during the period of study. The spectral powers of the observed frequencies show no dependence on solar wind velocity and cone angle; hence, the reported frequencies are not related to the geomagnetic pulsations. For frequency-peaks ≤15 mHz, strong local time dependence is observed with maximum power near noon and minimum at night. The longitudinal and seasonal variation of the powers of these frequency peaks match well with those of the equator-to-middle latitude ionospheric currents derived by the earlier studies. As a polar Low Earth Orbiting (LEO) satellite spans the entire range of latitudes within few minutes, it monitors the geomagnetic field variations caused by the quiet-time ionospheric currents flowing at different latitudes. This can result in certain frequencies in the magnetic field recorded by LEO satellites. We demonstrate that the frequencies <10 mHz are mainly due to the latitudinal structure of the equatorial electrojet. The observed frequencies in CHAMP data are therefore attributed to the latitudinal structures of the ionospheric currents that are monitored only by the polar LEO satellites and are found to alter the observations of geomagnetic pulsations (Pc4–5 and Pi2) significantly.]]></Para_plain>
+							</Abstract>
+							<KeywordGroup Language="En">
+								<Heading>Keywords</Heading>
+								<Keyword><![CDATA[Spatial frequencies in polar LEO satellite]]></Keyword><Keyword_plain><![CDATA[Spatial frequencies in polar LEO satellite]]></Keyword_plain>
+								<Keyword><![CDATA[Ionospheric currents]]></Keyword><Keyword_plain><![CDATA[Ionospheric currents]]></Keyword_plain>
+								<Keyword><![CDATA[LEO satellites]]></Keyword><Keyword_plain><![CDATA[LEO satellites]]></Keyword_plain>
+								<Keyword><![CDATA[Pulsations at LEO]]></Keyword><Keyword_plain><![CDATA[Pulsations at LEO]]></Keyword_plain>
+							</KeywordGroup>
+							<ArticleNote Type="Misc">
+								<SimplePara>Geeta Vichare, formerly Geeta Jadhav.</SimplePara>
+							</ArticleNote>
+						</ArticleHeader>
+						<NoBody/>
+					</Article>
+				</Issue>
+			</Volume>
+		</Journal>
+	</Publisher>
+</clip>
