@@ -306,4 +306,224 @@
 			</Volume>
 		</Journal>
 	</Publisher>
+	<Publisher>
+		<PublisherInfo>
+			<PublisherName>Springer US</PublisherName>
+			<PublisherLocation>New York</PublisherLocation>
+			<PublisherImprintName>Springer</PublisherImprintName>
+			<PublisherURL>http://www.springer-ny.com</PublisherURL>
+		</PublisherInfo>
+		<Journal OutputMedium="All">
+			<JournalInfo JournalProductType="ArchiveJournal" NumberingStyle="ContentOnly">
+				<JournalID>10765</JournalID>
+				<JournalDOI>10.1007/10765.1572-9567</JournalDOI>
+				<JournalPrintISSN>0195-928X</JournalPrintISSN>
+				<JournalElectronicISSN>1572-9567</JournalElectronicISSN>
+				<JournalTitle>International Journal of Thermophysics</JournalTitle>
+				<JournalSubTitle>Journal of Thermophysical Properties and Thermophysics and Its Applications</JournalSubTitle>
+				<JournalAbbreviatedTitle>Int J Thermophys</JournalAbbreviatedTitle>
+				<JournalSubjectGroup>
+					<JournalSubject Code="SCP" Type="Primary">Physics</JournalSubject>
+					<JournalSubject Code="SCP25005" Priority="1" Type="Secondary">Condensed Matter Physics</JournalSubject>
+					<JournalSubject Code="SCP21018" Priority="2" Type="Secondary">Mechanics</JournalSubject>
+					<JournalSubject Code="SCC27000" Priority="3" Type="Secondary">Industrial Chemistry/Chemical Engineering</JournalSubject>
+					<JournalSubject Code="SCC21001" Priority="4" Type="Secondary">Physical Chemistry</JournalSubject>
+					<SubjectCollection Code="Physics and Astronomy">SC12</SubjectCollection>
+				</JournalSubjectGroup>
+			</JournalInfo>
+			<Volume OutputMedium="All">
+				<VolumeInfo TocLevels="0" VolumeType="Regular">
+					<VolumeIDStart>37</VolumeIDStart>
+					<VolumeIDEnd>37</VolumeIDEnd>
+					<VolumeIssueCount>12</VolumeIssueCount>
+				</VolumeInfo>
+				<Issue IssueType="Regular" OutputMedium="All">
+					<IssueInfo IssueType="Regular" TocLevels="0">
+						<IssueIDStart>3</IssueIDStart>
+						<IssueIDEnd>3</IssueIDEnd>
+						<IssueArticleCount>11</IssueArticleCount>
+						<IssueHistory>
+							<OnlineDate>
+								<Year>2016</Year>
+								<Month>2</Month>
+								<Day>16</Day>
+							</OnlineDate>
+							<PrintDate>
+								<Year>2016</Year>
+								<Month>2</Month>
+								<Day>16</Day>
+							</PrintDate>
+							<CoverDate>
+								<Year>2016</Year>
+								<Month>3</Month>
+							</CoverDate>
+							<PricelistYear>2016</PricelistYear>
+						</IssueHistory>
+						<IssueCopyright>
+							<CopyrightHolderName>Springer Science+Business Media New York</CopyrightHolderName>
+							<CopyrightYear>2016</CopyrightYear>
+						</IssueCopyright>
+					</IssueInfo>
+					<Article ID="s10765-016-2040-6" OutputMedium="All">
+						<ArticleInfo ArticleType="OriginalPaper" ContainsESM="No" Language="En" NumberingStyle="ContentOnly" TocLevels="0">
+							<ArticleID>2040</ArticleID>
+							<ArticleDOI>10.1007/s10765-016-2040-6</ArticleDOI>
+							<ArticleCitationID>28</ArticleCitationID>
+							<ArticleSequenceNumber>2</ArticleSequenceNumber>
+							<ArticleTitle Language="En" OutputMedium="All"><![CDATA[Equation of State for the Thermodynamic Properties of <Emphasis Type="Italic">trans</Emphasis>-1,3,3,3-Tetrafluoropropene [R-1234ze(E)]]]></ArticleTitle><ArticleTitle_plain Language="En" OutputMedium="All"><![CDATA[Equation of State for the Thermodynamic Properties of trans-1,3,3,3-Tetrafluoropropene [R-1234ze(E)]]]></ArticleTitle_plain>
+							<ArticleFirstPage>1</ArticleFirstPage>
+							<ArticleLastPage>16</ArticleLastPage>
+							<ArticleHistory>
+								<RegistrationDate>
+									<Year>2016</Year>
+									<Month>1</Month>
+									<Day>4</Day>
+								</RegistrationDate>
+								<Received>
+									<Year>2015</Year>
+									<Month>8</Month>
+									<Day>27</Day>
+								</Received>
+								<Accepted>
+									<Year>2016</Year>
+									<Month>1</Month>
+									<Day>4</Day>
+								</Accepted>
+								<OnlineDate>
+									<Year>2016</Year>
+									<Month>1</Month>
+									<Day>25</Day>
+								</OnlineDate>
+							</ArticleHistory>
+							<ArticleCopyright>
+								<CopyrightHolderName>Springer Science+Business Media New York (Outside the USA)</CopyrightHolderName>
+								<CopyrightYear>2016</CopyrightYear>
+							</ArticleCopyright>
+							<ArticleGrants Type="Regular">
+								<MetadataGrant Grant="OpenAccess"/>
+								<AbstractGrant Grant="OpenAccess"/>
+								<BodyPDFGrant Grant="Restricted"/>
+								<BodyHTMLGrant Grant="Restricted"/>
+								<BibliographyGrant Grant="Restricted"/>
+								<ESMGrant Grant="Restricted"/>
+							</ArticleGrants>
+						</ArticleInfo>
+						<ArticleHeader>
+							<AuthorGroup>
+								<Author AffiliationIDS="Aff1" ID="Au1">
+									<AuthorName DisplayOrder="Western">
+										<GivenName>Monika</GivenName>
+										<FamilyName>Thol</FamilyName>
+									</AuthorName>
+								</Author>
+								<Author AffiliationIDS="Aff2" CorrespondingAffiliationID="Aff2" ID="Au2">
+									<AuthorName DisplayOrder="Western">
+										<GivenName>Eric</GivenName>
+										<GivenName>W.</GivenName>
+										<FamilyName>Lemmon</FamilyName>
+									</AuthorName>
+									<Contact>
+										<Phone>303-497-7939</Phone>
+										<Email>Eric.Lemmon@nist.gov</Email>
+									</Contact>
+								</Author>
+								<Affiliation ID="Aff1">
+									<OrgDivision>Thermodynamics</OrgDivision>
+									<OrgName>Ruhr-Universität Bochum</OrgName>
+									<OrgAddress>
+										<City>Bochum</City>
+										<Country Code="DE">Germany</Country>
+									</OrgAddress>
+								</Affiliation>
+								<Affiliation ID="Aff2">
+									<OrgDivision>Applied Chemicals and Materials Division</OrgDivision>
+									<OrgName>National Institute of Standards and Technology</OrgName>
+									<OrgAddress>
+										<City>Boulder</City>
+										<State>CO</State>
+										<Country Code="US">USA</Country>
+									</OrgAddress>
+								</Affiliation>
+							</AuthorGroup>
+							<Abstract ID="Abs1" Language="En" OutputMedium="All">
+								<Heading>Abstract</Heading>
+								<Para ID="Par1"><![CDATA[An equation of state for the calculation of the thermodynamic properties of the hydrofluoroolefin refrigerant R-1234ze(E) is presented. The equation of state (EOS) is expressed in terms of the Helmholtz energy as a function of temperature and density. The formulation can be used for the calculation of all thermodynamic properties through the use of derivatives of the Helmholtz energy. Comparisons to experimental data are given to establish the uncertainty of the EOS. The equation of state is valid from the triple point (169 K) to 420 K, with pressures to 100 MPa. The uncertainty in density in the liquid and vapor phases is 0.1 % from 200 K to 420 K at all pressures. The uncertainty increases outside of this temperature region and in the critical region. In the gaseous phase, speeds of sound can be calculated with an uncertainty of 0.05 %. In the liquid phase, the uncertainty in speed of sound increases to 0.1 %. The estimated uncertainty for liquid heat capacities is 5 %. The uncertainty in vapor pressure is 0.1 %.]]></Para><Para_plain ID="Par1"><![CDATA[An equation of state for the calculation of the thermodynamic properties of the hydrofluoroolefin refrigerant R-1234ze(E) is presented. The equation of state (EOS) is expressed in terms of the Helmholtz energy as a function of temperature and density. The formulation can be used for the calculation of all thermodynamic properties through the use of derivatives of the Helmholtz energy. Comparisons to experimental data are given to establish the uncertainty of the EOS. The equation of state is valid from the triple point (169 K) to 420 K, with pressures to 100 MPa. The uncertainty in density in the liquid and vapor phases is 0.1 % from 200 K to 420 K at all pressures. The uncertainty increases outside of this temperature region and in the critical region. In the gaseous phase, speeds of sound can be calculated with an uncertainty of 0.05 %. In the liquid phase, the uncertainty in speed of sound increases to 0.1 %. The estimated uncertainty for liquid heat capacities is 5 %. The uncertainty in vapor pressure is 0.1 %.]]></Para_plain>
+							</Abstract>
+							<KeywordGroup Language="En" OutputMedium="All">
+								<Heading>Keywords</Heading>
+								<Keyword><![CDATA[Equation of state]]></Keyword><Keyword_plain><![CDATA[Equation of state]]></Keyword_plain>
+								<Keyword><![CDATA[Helmholtz energy]]></Keyword><Keyword_plain><![CDATA[Helmholtz energy]]></Keyword_plain>
+								<Keyword><![CDATA[R-1234ze(E)]]></Keyword><Keyword_plain><![CDATA[R-1234ze(E)]]></Keyword_plain>
+								<Keyword><![CDATA[Thermodynamic properties]]></Keyword><Keyword_plain><![CDATA[Thermodynamic properties]]></Keyword_plain>
+								<Keyword><![CDATA[&lt;![CDATA[
+                        &lt;Emphasis Type=&quot;Italic&quot;&gt;trans&lt;/Emphasis&gt;-1&lt;InlineEquation ID=&quot;IEq1&quot;&gt;
+                           &lt;InlineMediaObject&gt;
+                              &lt;ImageObject Color=&quot;BlackWhite&quot; FileRef=&quot;10765_2016_2040_Article_IEq1.gif&quot; Format=&quot;GIF&quot; Rendition=&quot;HTML&quot; Type=&quot;Linedraw&quot;/&gt;
+                           &lt;/InlineMediaObject&gt;
+                           &lt;EquationSource Format=&quot;TEX&quot;&gt;&lt;![CDATA[$$, $$]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;
+                           &lt;EquationSource Format=&quot;MATHML&quot;&gt;&lt;![CDATA[
+                    ]]]]&gt;&lt;![CDATA[&gt;&lt;math xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;&gt;
+                                 &lt;mo&gt;,&lt;/mo&gt;
+                              &lt;/math&gt;&lt;![CDATA[
+                  ]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;
+                        &lt;/InlineEquation&gt;3&lt;InlineEquation ID=&quot;IEq2&quot;&gt;
+                           &lt;InlineMediaObject&gt;
+                              &lt;ImageObject Color=&quot;BlackWhite&quot; FileRef=&quot;10765_2016_2040_Article_IEq2.gif&quot; Format=&quot;GIF&quot; Rendition=&quot;HTML&quot; Type=&quot;Linedraw&quot;/&gt;
+                           &lt;/InlineMediaObject&gt;
+                           &lt;EquationSource Format=&quot;TEX&quot;&gt;&lt;![CDATA[$$, $$]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;
+                           &lt;EquationSource Format=&quot;MATHML&quot;&gt;&lt;![CDATA[
+                    ]]]]&gt;&lt;![CDATA[&gt;&lt;math xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;&gt;
+                                 &lt;mo&gt;,&lt;/mo&gt;
+                              &lt;/math&gt;&lt;![CDATA[
+                  ]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;
+                        &lt;/InlineEquation&gt;3&lt;InlineEquation ID=&quot;IEq3&quot;&gt;
+                           &lt;InlineMediaObject&gt;
+                              &lt;ImageObject Color=&quot;BlackWhite&quot; FileRef=&quot;10765_2016_2040_Article_IEq3.gif&quot; Format=&quot;GIF&quot; Rendition=&quot;HTML&quot; Type=&quot;Linedraw&quot;/&gt;
+                           &lt;/InlineMediaObject&gt;
+                           &lt;EquationSource Format=&quot;TEX&quot;&gt;&lt;![CDATA[$$, $$]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;
+                           &lt;EquationSource Format=&quot;MATHML&quot;&gt;&lt;![CDATA[
+                    ]]]]&gt;&lt;![CDATA[&gt;&lt;math xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;&gt;
+                                 &lt;mo&gt;,&lt;/mo&gt;
+                              &lt;/math&gt;&lt;![CDATA[
+                  ]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;
+                        &lt;/InlineEquation&gt;3-Tetrafluoroprop-1-ene]]&gt;]]></Keyword><Keyword_plain><![CDATA[
+                        trans-1
+
+
+
+                           $$, $$
+
+
+                                 ,
+
+
+                        3
+
+
+
+                           $$, $$
+
+
+                                 ,
+
+
+                        3
+
+
+
+                           $$, $$
+
+
+                                 ,
+
+
+                        3-Tetrafluoroprop-1-ene]]></Keyword_plain>
+							</KeywordGroup>
+						</ArticleHeader>
+						<NoBody/>
+					</Article>
+				</Issue>
+			</Volume>
+		</Journal>
+	</Publisher>
 </clip>
