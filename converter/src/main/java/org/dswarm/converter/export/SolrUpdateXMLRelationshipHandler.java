@@ -13,28 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dswarm.controller.resources.job.test;
+package org.dswarm.converter.export;
 
-import javax.ws.rs.core.MediaType;
+import javax.xml.stream.XMLStreamException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.fasterxml.jackson.databind.JsonNode;
 
-import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
+import org.dswarm.common.web.URI;
+import org.dswarm.converter.DMPConverterException;
 
-public class TasksResourceTestDD1387 extends TasksResourceTestDD538 {
+/**
+ * @author tgaengler
+ */
+public interface SolrUpdateXMLRelationshipHandler {
 
-	private static final Logger LOG = LoggerFactory.getLogger(TasksResourceTestDD1387.class);
-
-	public TasksResourceTestDD1387() {
-
-		super("dd-1387/task.json",
-				"dd-1387/input.xml",
-				"Publisher",
-				ConfigurationStatics.XML_STORAGE_TYPE,
-				"dd-1387/result.xml",
-				"01",
-				true,
-				MediaType.APPLICATION_XML_TYPE);
-	}
+	void handleRelationship(final String predicateTag, final JsonNode node) throws DMPConverterException, XMLStreamException;
 }

@@ -34,6 +34,7 @@ import org.dswarm.controller.utils.ResourceUtils;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.export.QuadRDFExporter;
 import org.dswarm.converter.export.RDFExporter;
+import org.dswarm.converter.export.SolrUpdateXMLExporter;
 import org.dswarm.converter.export.TripleRDFExporter;
 import org.dswarm.converter.export.XMLExporter;
 import org.dswarm.converter.flow.GDMModelTransformationFlow;
@@ -185,7 +186,7 @@ public class TasksResource {
 	 * - at_most: the number of result records that should be returned at most (optional)
 	 * - persist: flag that indicates whether the result should be persisted in the datahub or not (optional)
 	 * <p>
-	 * returns the result of the task execution in the requested format (media type, e.g., "application/json", "application/xml", "application/n-triples", "application/n-quads", "application/trig")
+	 * returns the result of the task execution in the requested format (media type, e.g., "application/json", "application/solr+update+xml", "application/xml", "application/n-triples", "application/n-quads", "application/trig")
 	 *
 	 * @param jsonObjectString a JSON representation of the request JSON (incl. task)
 	 * @throws IOException
@@ -199,6 +200,7 @@ public class TasksResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces({MediaType.APPLICATION_JSON,
+			MediaTypeUtil.SOLR_UPDATE_XML,
 			MediaType.APPLICATION_XML,
 			MediaTypeUtil.N_TRIPLES,
 			MediaTypeUtil.TURTLE,
@@ -525,6 +527,11 @@ public class TasksResource {
 
 			switch (responseMediaType.toString()) {
 
+				case MediaTypeUtil.SOLR_UPDATE_XML:
+
+					resultObservable = doSolrUpdateXMLExport(connectableResult.observeOn(EXPORT_SCHEDULER), responseMediaType, bos);
+
+					break;
 				case MediaType.APPLICATION_XML:
 
 					resultObservable = doXMLExport(connectableResult.observeOn(EXPORT_SCHEDULER), responseMediaType, bos, task);
@@ -637,6 +644,23 @@ public class TasksResource {
 
 			asyncResponse.resume(new DMPControllerException(message, e));
 		}
+	}
+
+	private Observable<Void> doSolrUpdateXMLExport(final Observable<GDMModel> result,
+	                                               final MediaType responseMediaType,
+	                                               final BufferedOutputStream bos) throws XMLStreamException, DMPConverterException {
+
+		final SolrUpdateXMLExporter solrUpdateXMLExporter = new SolrUpdateXMLExporter();
+
+		LOG.debug("trigger {} export", responseMediaType.toString());
+
+		final ConnectableObservable<JsonNode> jsonResult = generateJSONResult(result);
+
+		final Observable<Void> resultObservable = solrUpdateXMLExporter.generate(jsonResult, bos).ignoreElements().cast(Void.class);
+
+		jsonResult.connect();
+
+		return resultObservable;
 	}
 
 	private Observable<Void> doXMLExport(final Observable<GDMModel> result,
@@ -753,7 +777,8 @@ public class TasksResource {
 		}
 
 		final Optional<MediaType> mediaTypeOptional = acceptableMediaTypes.stream()
-				.filter(mediaType -> MediaType.APPLICATION_XML_TYPE.equals(mediaType)
+				.filter(mediaType -> MediaTypeUtil.SOLR_UPDATE_XML_TYPE.equals(mediaType)
+						|| MediaType.APPLICATION_XML_TYPE.equals(mediaType)
 						|| MediaTypeUtil.N_TRIPLES_TYPE.equals(mediaType)
 						|| MediaTypeUtil.TURTLE_TYPE.equals(mediaType)
 						|| MediaTypeUtil.N_QUADS_TYPE.equals(mediaType)

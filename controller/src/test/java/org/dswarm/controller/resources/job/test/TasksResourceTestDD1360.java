@@ -15,26 +15,25 @@
  */
 package org.dswarm.controller.resources.job.test;
 
-import javax.ws.rs.core.MediaType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.dswarm.common.MediaTypeUtil;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 
-public class TasksResourceTestDD53801 extends TasksResourceTestDD538 {
+public class TasksResourceTestDD1360 extends TasksResourceTestDD538 {
 
-	private static final Logger LOG = LoggerFactory.getLogger(TasksResourceTestDD53801.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TasksResourceTestDD1360.class);
 
-	public TasksResourceTestDD53801() {
+	public TasksResourceTestDD1360() {
 
-		super("dd-538/oai-pmh_marcxml_controller_task.01.json",
-				"dd-538/oai-pmh_marcxml_controller_task.01.input_data_resource.xml",
-				"record",
-				ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE,
-				"dd-538/oai-pmh_marcxml_controller_task.01.result.xml",
+		super("dd-1387/task.json",
+				"dd-1387/input.xml",
+				"Publisher",
+				ConfigurationStatics.XML_STORAGE_TYPE,
+				"dd-1360/result.xml",
 				"01",
-				false,
-				MediaType.APPLICATION_XML_TYPE);
+				true,
+				MediaTypeUtil.SOLR_UPDATE_XML_TYPE);
 	}
 }

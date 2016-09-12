@@ -17,6 +17,7 @@ package org.dswarm.controller.resources.job.test;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import javax.ws.rs.client.Entity;
@@ -43,17 +44,21 @@ public abstract class TasksResourceTestDD538 extends AbstractXMLTasksResourceTes
 
 	protected final String expectedResultXMLFileName;
 
+	private MediaType mediaType;
+
 	public TasksResourceTestDD538(final String taskJSONFileNameArg,
 	                              final String inputDataResourceFileNameArg,
 	                              final String recordTagArg,
 	                              final String storageTypeArg,
 	                              final String expectedResultXMLFileNameArg,
 	                              final String testPostfixArg,
-	                              final boolean utiliseExistingInputSchema) {
+	                              final boolean utiliseExistingInputSchema,
+	                              final MediaType mediaTypeArg) {
 
 		super(taskJSONFileNameArg, inputDataResourceFileNameArg, recordTagArg, storageTypeArg, testPostfixArg, true, utiliseExistingInputSchema);
 
 		expectedResultXMLFileName = expectedResultXMLFileNameArg;
+		mediaType = mediaTypeArg;
 	}
 
 	/**
@@ -68,7 +73,7 @@ public abstract class TasksResourceTestDD538 extends AbstractXMLTasksResourceTes
 
 		final ObjectNode requestJSON = prepareTask();
 
-		final Response response = target().request(MediaType.APPLICATION_XML_TYPE).post(Entity.json(requestJSON));
+		final Response response = target().request(mediaType).post(Entity.json(requestJSON));
 
 		Assert.assertEquals("200 Created was expected", 200, response.getStatus());
 
