@@ -294,7 +294,7 @@ public class DataModelsResourceTest2 extends
 		final String dataModelName = "mabxml";
 
 		final Tuple<JsonNode, JsonNode> resultTuple = testXMLDataInternal(dataResourceResourceFileName, dataResourceFileName,
-				configurationFileName, dataModelName);
+				configurationFileName, dataModelName, true, false);
 
 		final JsonNode json = resultTuple.v1();
 		final JsonNode expectedJson = resultTuple.v2();
@@ -312,6 +312,34 @@ public class DataModelsResourceTest2 extends
 	}
 
 	@Test
+	public void testMabxmlXMLData2() throws Exception {
+
+		DataModelsResourceTest2.LOG.debug("start get mabxml XML data 2 test");
+
+		final String dataResourceResourceFileName = "test-mabxml-resource.json";
+		final String dataResourceFileName = "controller_test-mabxml.xml";
+		final String configurationFileName = "xml-configuration.json";
+		final String dataModelName = "mabxml";
+
+		final Tuple<JsonNode, JsonNode> resultTuple = testXMLDataInternal(dataResourceResourceFileName, dataResourceFileName,
+				configurationFileName, dataModelName, true, true);
+
+		final JsonNode json = resultTuple.v1();
+		final JsonNode expectedJson = resultTuple.v2();
+
+		Assert.assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", json),
+				CoreMatchers.equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", expectedJson)));
+		Assert.assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion", json),
+				CoreMatchers.equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion", expectedJson)));
+		Assert.assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ", json),
+				CoreMatchers.equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ", expectedJson)));
+		Assert.assertThat(getValueNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld", json).size(),
+				CoreMatchers.equalTo(getValueNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld", expectedJson).size()));
+
+		DataModelsResourceTest2.LOG.debug("end get mabxml XML data 2 test");
+	}
+
+	@Test
 	public void testOaipmhMetsModsXMLData() throws Exception {
 
 		DataModelsResourceTest2.LOG.debug("start get OAI-PMH + Mets + Mods + X XML data test");
@@ -322,7 +350,7 @@ public class DataModelsResourceTest2 extends
 		final String dataModelName = "OAI-PMH + Mets + Mods + X";
 
 		final Tuple<JsonNode, JsonNode> resultTuple = testXMLDataInternal(dataResourceResourceFileName, dataResourceFileName,
-				configurationFileName, dataModelName);
+				configurationFileName, dataModelName, true, false);
 
 		final JsonNode json = resultTuple.v1();
 		final JsonNode expectedJson = resultTuple.v2();
@@ -340,6 +368,60 @@ public class DataModelsResourceTest2 extends
 	}
 
 	@Test
+	public void testXMLWDOCTYPEData() throws Exception {
+
+		DataModelsResourceTest2.LOG.debug("start get XML with DOCTYPE data test");
+
+		final String dataResourceResourceFileName = "xml_w_doctype_resource.json";
+		final String dataResourceFileName = "xml_w_doctype.xml";
+		final String configurationFileName = "xml_w_doctype_config.json";
+		final String dataModelName = "XML with DOCTYPE";
+
+		final Tuple<JsonNode, JsonNode> resultTuple = testXMLDataInternal(dataResourceResourceFileName, dataResourceFileName,
+				configurationFileName, dataModelName, true, false);
+
+		final JsonNode json = resultTuple.v1();
+		final JsonNode expectedJson = resultTuple.v2();
+
+		Assert.assertNotNull("the expected data JSON shouldn't be null", expectedJson);
+
+		Assert.assertThat(getValue("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", json),
+				CoreMatchers.equalTo(getValue("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", expectedJson)));
+
+		DataModelsResourceTest2.LOG.debug("end get ML with DOCTYPE data test");
+	}
+
+	/**
+	 * fails atm, since jsoup parses DOCTYPE SYSTEM a bit strange, see https://github.com/jhy/jsoup/issues/408
+	 *
+	 * @throws Exception
+	 */
+	@Ignore
+	@Test
+	public void testEnhancedXMLWDOCTYPEData() throws Exception {
+
+		DataModelsResourceTest2.LOG.debug("start get enhanced XML with DOCTYPE data test");
+
+		final String dataResourceResourceFileName = "xml_w_doctype_resource_2.json";
+		final String dataResourceFileName = "xml_w_doctype_2.xml";
+		final String configurationFileName = "xml_w_doctype_config.json";
+		final String dataModelName = "XML with DOCTYPE";
+
+		final Tuple<JsonNode, JsonNode> resultTuple = testXMLDataInternal(dataResourceResourceFileName, dataResourceFileName,
+				configurationFileName, dataModelName, true, true);
+
+		final JsonNode json = resultTuple.v1();
+		final JsonNode expectedJson = resultTuple.v2();
+
+		Assert.assertNotNull("the expected data JSON shouldn't be null", expectedJson);
+
+		Assert.assertThat(getValue("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", json),
+				CoreMatchers.equalTo(getValue("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", expectedJson)));
+
+		DataModelsResourceTest2.LOG.debug("end get enhanced XML with DOCTYPE data test");
+	}
+
+	@Test
 	public void testJSONData() throws Exception {
 
 		DataModelsResourceTest2.LOG.debug("start get JSON data test");
@@ -354,7 +436,7 @@ public class DataModelsResourceTest2 extends
 		final String schemaUuid = "Schema-65f19a84-1431-453e-a574-eabc8f2cc515";
 
 		final DataModel dataModel = createDataModel2(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName,
-				dataModelUuid, schemaUuid);
+				dataModelUuid, schemaUuid, true, false);
 
 		// END DATA MODEL CREATION
 
@@ -412,7 +494,7 @@ public class DataModelsResourceTest2 extends
 		final String dataModelUuid = UUIDService.getUUID(DataModel.class.getSimpleName());
 
 		final DataModel dataModel = createDataModel2(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName,
-				dataModelUuid, null);
+				dataModelUuid, null, true, false);
 
 		// END DATA MODEL CREATION
 
@@ -649,13 +731,19 @@ public class DataModelsResourceTest2 extends
 		Assert.assertEquals(expectedResponse, body);
 	}
 
-	private DataModel createDataModel2(final String dataResourceResourceFileName, final String dataResourceFileName,
-			final String configurationFileName, final String dataModelName, final String dataModelUuid, final String schemaUuid) throws Exception {
+	private DataModel createDataModel2(final String dataResourceResourceFileName,
+	                                   final String dataResourceFileName,
+	                                   final String configurationFileName,
+	                                   final String dataModelName,
+	                                   final String dataModelUuid,
+	                                   final String schemaUuid,
+	                                   final boolean doIngest,
+	                                   final boolean enhanceDataResource) throws Exception {
 
 		final String dataModelJSONString = createDataModelInternal(dataResourceResourceFileName, dataResourceFileName, configurationFileName,
 				dataModelName, dataModelUuid, schemaUuid);
 
-		return pojoClassResourceTestUtils.createObjectWithoutComparison(dataModelJSONString);
+		return pojoClassResourceTestUtils.createObjectWithoutComparison(dataModelJSONString, doIngest, enhanceDataResource);
 	}
 
 	private Response createDataModel(final String dataResourceResourceFileName, final String dataResourceFileName,
@@ -780,7 +868,7 @@ public class DataModelsResourceTest2 extends
 		final String schemaUuid = "Schema-55ab9fe2-5fb0-4cfe-bbe4-70bfbef652d8";
 
 		final DataModel dataModel = createDataModel2(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName,
-				dataModelUuid, schemaUuid);
+				dataModelUuid, schemaUuid, true, false);
 
 		// END DATA MODEL CREATION
 
@@ -855,8 +943,12 @@ public class DataModelsResourceTest2 extends
 		return Tuple.tuple(data, assoziativeJsonArray);
 	}
 
-	private Tuple<JsonNode, JsonNode> testXMLDataInternal(final String dataResourceResourceFileName, final String dataResourceFileName,
-			final String configurationFileName, final String dataModelName) throws Exception {
+	private Tuple<JsonNode, JsonNode> testXMLDataInternal(final String dataResourceResourceFileName,
+	                                                      final String dataResourceFileName,
+	                                                      final String configurationFileName,
+	                                                      final String dataModelName,
+	                                                      final boolean doIngest,
+	                                                      final boolean enhanceDataResource) throws Exception {
 
 		// START DATA MODEL CREATION
 
@@ -864,7 +956,7 @@ public class DataModelsResourceTest2 extends
 		final String schemaUuid = UUIDService.getUUID(Schema.class.getSimpleName());
 
 		final DataModel dataModel = createDataModel2(dataResourceResourceFileName, dataResourceFileName, configurationFileName, dataModelName,
-				dataModelUuid, schemaUuid);
+				dataModelUuid, schemaUuid, doIngest, enhanceDataResource);
 
 		// END DATA MODEL CREATION
 
