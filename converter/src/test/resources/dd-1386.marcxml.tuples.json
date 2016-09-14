@@ -1,0 +1,1934 @@
+[
+  {
+    "v1": "http://data.slub-dresden.de/datamodels/DataModel-79021e85-02df-45f6-9c0f-73bf21970f50/records/edc8b99d-9eeb-495b-b66e-ea3f468f3015",
+    "v2": [
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#recordType"
+      },
+      {
+        "http://www.loc.gov/MARC21/slim#leader": [
+          {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#leaderType"
+          },
+          {
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Schema-309e901c-3da9-4d82-a694-bab632eaa340"
+          }
+        ]
+      },
+      {
+        "http://www.loc.gov/MARC21/slim#controlfield": [
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#controlfieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "001"
+            },
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "DataModel-06f5ad75-3519-44c7-9fbd-783974de9351"
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#controlfieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "003"
+            },
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "DE-576"
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#controlfieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "005"
+            },
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "20150211073247.0"
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#controlfieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "007"
+            },
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "tu"
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#controlfieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "008"
+            },
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "880628s1988 xx m 000 0 ger c"
+            }
+          ]
+        ]
+      },
+      {
+        "http://www.loc.gov/MARC21/slim#datafield": [
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "016"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "(OCoLC)310869390"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "035"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "(DE-599)BSZ014243539"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "040"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "a"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "DE-576"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "b"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "ger"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "c"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "DE-576"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "e"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "rakwb"
+                  }
+                ]
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "041"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": "0"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "ger"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "041"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": "0"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": "7"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "dt."
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "100"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": "1"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "a"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Heiden, Christoph von"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "0"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "(DE-576)164869948"
+                  }
+                ]
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "245"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": "1"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": "0"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "a"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Motivation und Kommunikation :"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "b"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "kritische Bilanz und Modifikation einer theoretischen Perspektive /"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "c"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "vorgelegt von Christoph von der Heiden"
+                  }
+                ]
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "260"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "c"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "1988"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "300"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "a"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "390 S. :"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "b"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "graph. Darst."
+                  }
+                ]
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "502"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Münster, Univ., Diss., 1987."
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "591"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "580 ff. bvb"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "689"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": "0"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": "0"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "D"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "s"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "0"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "(DE-588)4031883-7"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "0"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "(DE-576)208994653"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "2"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "gnd"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "a"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Kommunikation"
+                  }
+                ]
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "689"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": "0"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": "1"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "D"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "s"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "0"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "(DE-588)4040364-6"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "0"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "(DE-576)209039698"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "2"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "gnd"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "a"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Motivation"
+                  }
+                ]
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "689"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": "0"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "5"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "DE-576"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "689"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": "1"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": "0"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "D"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "s"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "0"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "(DE-588)4059360-5"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "0"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "(DE-576)209130482"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "2"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "gnd"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "a"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Telekommunikation"
+                  }
+                ]
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "689"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": "1"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": "1"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "D"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "s"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "0"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "(DE-588)4026927-9"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "0"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "(DE-576)208968555"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "2"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "gnd"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "a"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Informationstheorie"
+                  }
+                ]
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "689"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": "1"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "5"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "DE-576"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "751"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "a"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Münster (Westf)"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "4"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "uvp"
+                  }
+                ]
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "856"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": "4"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": "2"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "m"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "V:DE-605;X:Imageware"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "q"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "application/pdf"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "u"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "http://digitool.hbz-nrw.de:1801/webclient/DeliveryManager?pid=3143028"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "3"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Inhaltsverzeichnis"
+                  }
+                ]
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "935"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "b"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "druck"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "935"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "c"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "hs"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "983"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "(DE-14)1311412"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "984"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "c"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "B"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "982"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "a"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "(DE-15)0012068830"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "x"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "1"
+                  }
+                ]
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "969"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "b"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Keine"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "x"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "1"
+                  }
+                ]
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "983"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "(DE-15)1406250"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "969"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "c"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "HS"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "900"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "VonDerHeiden, Christoph"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "900"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "DerHeiden, Christoph von"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "950"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Nachrichtentheorie"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "950"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Kybernetik"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "950"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Motiv"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "950"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Verhalten"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "950"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Motivation"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "950"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Verhaltensmotivation"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "950"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Selbstmotivation"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "950"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Selbstmotivierung"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "950"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Antrieb"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "950"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Telekommunikationstechnik"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "950"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Telekommunikationstechnologie"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "950"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Kommunikation"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "950"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Nachrichtenwesen"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "950"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Informationstechnik"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "950"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Fernmeldewesen"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "950"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Neue Medien"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "950"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Nachrichtentechnik"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "950"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Kommunikationsprozess"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "950"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Informationsprozess"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "950"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Informationsaustausch"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "950"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Kommunikationssystem"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "950"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                },
+                {
+                  "http://www.loc.gov/MARC21/slim#code": "a"
+                },
+                {
+                  "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "Kommunikationspartner"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "852"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "a"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "DE-14"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "z"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "2014-03-15T18:29:00Z"
+                  }
+                ]
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "852"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "a"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "DE-15"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "z"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "2005-06-21T00:00:00Z"
+                  }
+                ]
+              ]
+            }
+          ],
+          [
+            {
+              "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#datafieldType"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#tag": "980"
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind1": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#ind2": " "
+            },
+            {
+              "http://www.loc.gov/MARC21/slim#subfield": [
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "a"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "014243539"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "b"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "0"
+                  }
+                ],
+                [
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://www.loc.gov/MARC21/slim#subfieldType"
+                  },
+                  {
+                    "http://www.loc.gov/MARC21/slim#code": "c"
+                  },
+                  {
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": "201502120428"
+                  }
+                ]
+              ]
+            }
+          ]
+        ]
+      }
+    ]
+  }
+]

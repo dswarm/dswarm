@@ -16,6 +16,7 @@
 package org.dswarm.converter.flow.test.xml;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -316,9 +317,7 @@ public class XMLTransformationFlowTest extends GuicedTest {
 		final String pass = readManuallyFromTypeSafeConfig("dswarm.db.metadata.password");
 		final String db = readManuallyFromTypeSafeConfig("dswarm.db.metadata.schema");
 
-		sqlMapLookupParameterMappings.put("login", user);
-		sqlMapLookupParameterMappings.put("password", pass);
-		sqlMapLookupParameterMappings.put("database", db);
+		setSqlMapParameterMappings(sqlMapLookupParameterMappings, user, pass, db);
 
 		testXMLTaskWithTuples("sqlmap.lookup.task.result.json", "sqlmap.mabxml.tuples.json", task);
 	}
@@ -340,11 +339,40 @@ public class XMLTransformationFlowTest extends GuicedTest {
 		final String pass = readManuallyFromTypeSafeConfig("dswarm.db.metadata.password");
 		final String db = readManuallyFromTypeSafeConfig("dswarm.db.metadata.schema");
 
-		sqlMapLookupParameterMappings.put("login", user);
-		sqlMapLookupParameterMappings.put("password", pass);
-		sqlMapLookupParameterMappings.put("database", db);
+		setSqlMapParameterMappings(sqlMapLookupParameterMappings, user, pass, db);
 
 		testXMLTaskWithTuples("sqldbrequest.task.result.json", "sqldbrequest.mabxml.tuples.json", task);
+	}
+
+	@Test
+	public void testSqlMapSTask() throws Exception {
+
+		final Task task = getTask("dd-1386.task.json");
+		final Job job = task.getJob();
+		final Set<Mapping> mappings = job.getMappings();
+		final Mapping mapping = mappings.iterator().next();
+		final Component mappingTransformationComponent = mapping.getTransformation();
+		final Transformation mappingTransformationComponentFunction = (Transformation) mappingTransformationComponent.getFunction();
+		final Set<Component> mappingTransformationComponentFunctionComponents = mappingTransformationComponentFunction.getComponents();
+		final Iterator<Component> iterator = mappingTransformationComponentFunctionComponents.iterator();
+
+		final String user = readManuallyFromTypeSafeConfig("dswarm.db.metadata.username");
+		final String pass = readManuallyFromTypeSafeConfig("dswarm.db.metadata.password");
+		final String db = readManuallyFromTypeSafeConfig("dswarm.db.metadata.schema");
+
+		while(iterator.hasNext()) {
+
+			final Component component = iterator.next();
+
+			if("sqlmap".equals(component.getFunction().getName())) {
+
+				final Map<String, String> sqlMapLookupParameterMappings = component.getParameterMappings();
+
+				setSqlMapParameterMappings(sqlMapLookupParameterMappings, user, pass, db);
+			}
+		}
+
+		testXMLTaskWithTuples("dd-1386.task.result.json", "dd-1386.marcxml.tuples.json", task);
 	}
 
 	/**
@@ -483,5 +511,12 @@ public class XMLTransformationFlowTest extends GuicedTest {
 		final String finalExpected = objectMapper2.writeValueAsString(expectedJSONNode);
 
 		JSONAssert.assertEquals(finalExpected, finalActual, true);
+	}
+
+	private void setSqlMapParameterMappings(final Map<String, String> sqlMapLookupParameterMappings, final String user, final String pass, final String db) {
+
+		sqlMapLookupParameterMappings.put("login", user);
+		sqlMapLookupParameterMappings.put("password", pass);
+		sqlMapLookupParameterMappings.put("database", db);
 	}
 }

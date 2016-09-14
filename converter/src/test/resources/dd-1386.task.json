@@ -1,0 +1,3476 @@
+{
+  "name": "Project: oiuz743fdscvxb (51d341e0-5f70-9c2a-ed4c-469ac6628e23)",
+  "description": "With mappings: hgfhgf",
+  "job": {
+    "mappings": [
+      {
+        "uuid": "1a9fdd34-aace-c60f-5215-373717c76547",
+        "name": "hgfhgf",
+        "transformation": {
+          "uuid": "63106b95-bc41-8cf5-ea5f-8fd34d7e8b58",
+          "name": "transformation",
+          "description": "transformation",
+          "function": {
+            "uuid": "fc9247ac-b740-d46d-0e2f-3ece5df9ded9",
+            "name": "transformation",
+            "description": "transformation",
+            "type": "Transformation",
+            "components": [
+              {
+                "function": {
+                  "uuid": "Function-d1a74720-bb93-4fe9-9523-78a8830e0108",
+                  "name": "sqlmap",
+                  "description": "Performs a SQL lookup for a given key with a given SQL query.",
+                  "function_description": {
+                    "name": "sqlmap",
+                    "dsl": "metafacture",
+                    "reference": "sqlmap",
+                    "description": "Does a lookup in a SQL table via a prepared SQL statement, i.e., the statement needs to include some variable parts. Furthermore, the connection string to the SQL database can be defined via the following attributes: 'databaseType' = the type of the database, e.g., 'mysql'; 'host' = the host of the database, e.g., 'localhost' (default = 'localhost'); 'port' = the port of the database, e.g., '3306' (default = '3306'); 'database' = the name of the database. The credentials for the connection can be defined with the following attributes: 'login' = the username that should be utilised to connect to the database; 'password' = the password that should be utilised to connect to the database. The SQL query statement that should be utilised to retrieve the value for a given key can be defined via 'query', e.g. 'SELECT value FROM mytable WHERE key = ?'. The driver that should be utilised to establish the connection to the database can be defined via 'driver' (default = 'com.mysql.jdbc.Driver'; note: the database driver needs to be part of the classpath of the execution environment).",
+                    "parameters": {
+                      "databaseType": {
+                        "type": "text",
+                        "optional": true,
+                        "description": "default = mysql"
+                      },
+                      "host": {
+                        "type": "text",
+                        "description": "the host of the database, e.g., localhost (default = localhost)"
+                      },
+                      "port": {
+                        "type": "text",
+                        "optional": true,
+                        "description": "the port of the database, e.g., 3306 (default = 3306)"
+                      },
+                      "database": {
+                        "type": "text",
+                        "description": "the name of the database"
+                      },
+                      "login": {
+                        "type": "text",
+                        "description": "the username that should be utilised to connect to the database"
+                      },
+                      "password": {
+                        "type": "text",
+                        "description": "the password that should be utilised to connect to the database"
+                      },
+                      "query": {
+                        "type": "text",
+                        "description": "the prepared SQL statement that should be utilised to retrieve the value for a given key, e.g. 'SELECT value FROM mytable WHERE key = ?'"
+                      },
+                      "driver": {
+                        "type": "text",
+                        "optional": true,
+                        "description": "the JDBC driver that should be utilised to connect to the database (default = com.mysql.jdbc.Driver; note: the database driver needs to be part of the classpath of the execution environment)"
+                      }
+                    }
+                  },
+                  "parameters": [
+                    "databaseType",
+                    "host",
+                    "port",
+                    "database",
+                    "login",
+                    "password",
+                    "query",
+                    "driver"
+                  ],
+                  "type": "Function"
+                },
+                "name": "componentefc71e1f-5a4f-2fba-9673-31a270db2213",
+                "uuid": "963565b7-b446-e708-6fa7-a2511545d164",
+                "output_components": [
+                  {
+                    "uuid": "41e93458-074f-67e1-8ba9-427c5f56cf1b"
+                  }
+                ],
+                "description": "{\"x\":\"leader_value__8aba4aee-489c-f96e-2549-f282531f114c\",\"y\":0}",
+                "parameter_mappings": {
+                  "host": "localhost",
+                  "database": "dmp",
+                  "login": "dmp",
+                  "password": "dmp",
+                  "query": "SELECT name FROM DATA_SCHEMA WHERE uuid = ?",
+                  "inputString": "leader_value__8aba4aee-489c-f96e-2549-f282531f114c__0__"
+                }
+              },
+              {
+                "function": {
+                  "uuid": "Function-d1a74720-bb93-4fe9-9523-78a8830e0108",
+                  "name": "sqlmap",
+                  "description": "Performs a SQL lookup for a given key with a given SQL query.",
+                  "function_description": {
+                    "name": "sqlmap",
+                    "dsl": "metafacture",
+                    "reference": "sqlmap",
+                    "description": "Does a lookup in a SQL table via a prepared SQL statement, i.e., the statement needs to include some variable parts. Furthermore, the connection string to the SQL database can be defined via the following attributes: 'databaseType' = the type of the database, e.g., 'mysql'; 'host' = the host of the database, e.g., 'localhost' (default = 'localhost'); 'port' = the port of the database, e.g., '3306' (default = '3306'); 'database' = the name of the database. The credentials for the connection can be defined with the following attributes: 'login' = the username that should be utilised to connect to the database; 'password' = the password that should be utilised to connect to the database. The SQL query statement that should be utilised to retrieve the value for a given key can be defined via 'query', e.g. 'SELECT value FROM mytable WHERE key = ?'. The driver that should be utilised to establish the connection to the database can be defined via 'driver' (default = 'com.mysql.jdbc.Driver'; note: the database driver needs to be part of the classpath of the execution environment).",
+                    "parameters": {
+                      "databaseType": {
+                        "type": "text",
+                        "optional": true,
+                        "description": "default = mysql"
+                      },
+                      "host": {
+                        "type": "text",
+                        "description": "the host of the database, e.g., localhost (default = localhost)"
+                      },
+                      "port": {
+                        "type": "text",
+                        "optional": true,
+                        "description": "the port of the database, e.g., 3306 (default = 3306)"
+                      },
+                      "database": {
+                        "type": "text",
+                        "description": "the name of the database"
+                      },
+                      "login": {
+                        "type": "text",
+                        "description": "the username that should be utilised to connect to the database"
+                      },
+                      "password": {
+                        "type": "text",
+                        "description": "the password that should be utilised to connect to the database"
+                      },
+                      "query": {
+                        "type": "text",
+                        "description": "the prepared SQL statement that should be utilised to retrieve the value for a given key, e.g. 'SELECT value FROM mytable WHERE key = ?'"
+                      },
+                      "driver": {
+                        "type": "text",
+                        "optional": true,
+                        "description": "the JDBC driver that should be utilised to connect to the database (default = com.mysql.jdbc.Driver; note: the database driver needs to be part of the classpath of the execution environment)"
+                      }
+                    }
+                  },
+                  "parameters": [
+                    "databaseType",
+                    "host",
+                    "port",
+                    "database",
+                    "login",
+                    "password",
+                    "query",
+                    "driver"
+                  ],
+                  "type": "Function"
+                },
+                "name": "component8c3cc5ee-82fc-98ef-0d4c-d26315381e24",
+                "uuid": "d8f7fc6d-8032-dce6-e9dd-5a74135548d4",
+                "output_components": [
+                  {
+                    "uuid": "41e93458-074f-67e1-8ba9-427c5f56cf1b"
+                  }
+                ],
+                "description": "{\"x\":\"controlfield_value__f93d1a41-0d3c-3404-59af-8d8db2d23003\",\"y\":0}",
+                "parameter_mappings": {
+                  "host": "localhost",
+                  "database": "dmp",
+                  "login": "dmp",
+                  "password": "dmp",
+                  "query": "SELECT name FROM DATA_MODEL WHERE uuid = ?",
+                  "inputString": "controlfield_value__f93d1a41-0d3c-3404-59af-8d8db2d23003__0__"
+                }
+              },
+              {
+                "function": {
+                  "uuid": "Function-92855c36-59c4-4b09-a4c8-5a0fb56fa3d9",
+                  "name": "combine",
+                  "description": "Collects all received values and combine them. This function does only emit values, when all sources emit something.",
+                  "function_description": {
+                    "name": "combine",
+                    "dsl": "metafacture",
+                    "reference": "concat",
+                    "description": "Collects all received values and combine them. This function does only emit values, when all sources emit something.",
+                    "parameters": {
+                      "value": {
+                        "type": "text",
+                        "optional": true
+                      }
+                    }
+                  },
+                  "parameters": [
+                    "value"
+                  ],
+                  "type": "Function"
+                },
+                "name": "component3bc07e9c-36b8-c278-cf30-1ff259d3fb9a",
+                "uuid": "41e93458-074f-67e1-8ba9-427c5f56cf1b",
+                "input_components": [
+                  {
+                    "uuid": "963565b7-b446-e708-6fa7-a2511545d164"
+                  },
+                  {
+                    "uuid": "d8f7fc6d-8032-dce6-e9dd-5a74135548d4"
+                  }
+                ],
+                "description": "{\"x\":\"leader_value__8aba4aee-489c-f96e-2549-f282531f114c\",\"y\":1}",
+                "parameter_mappings": {
+                  "value": "${componentefc71e1f-5a4f-2fba-9673-31a270db2213} >>>> ${component8c3cc5ee-82fc-98ef-0d4c-d26315381e24}",
+                  "inputString": "componentefc71e1f-5a4f-2fba-9673-31a270db2213,component8c3cc5ee-82fc-98ef-0d4c-d26315381e24"
+                }
+              }
+            ]
+          },
+          "parameter_mappings": {
+            "__TRANSFORMATION_OUTPUT_VARIABLE__6b36a531-77fe-2129-97bf-9023a5493b17": "__OUTPUT_MAPPING_ATTRIBUTE_PATH_INSTANCE__6b36a531-77fe-2129-97bf-9023a5493b17",
+            "leader_value__8aba4aee-489c-f96e-2549-f282531f114c__0__": "leader_value__8aba4aee-489c-f96e-2549-f282531f114c__0__",
+            "controlfield_value__f93d1a41-0d3c-3404-59af-8d8db2d23003__0__": "controlfield_value__f93d1a41-0d3c-3404-59af-8d8db2d23003__0__"
+          }
+        },
+        "input_attribute_paths": [
+          {
+            "type": "MappingAttributePathInstance",
+            "name": "leader_value__8aba4aee-489c-f96e-2549-f282531f114c__0__",
+            "uuid": "8aba4aee-489c-f96e-2549-f282531f114c",
+            "attribute_path": {
+              "uuid": "AttributePath-e7a3f55e-2726-4b5a-a03e-41cb177cde32",
+              "attributes": [
+                {
+                  "uuid": "Attribute-fae3e549-c8f4-4210-b667-f47049cb12b8",
+                  "name": "leader",
+                  "uri": "http://www.loc.gov/MARC21/slim#leader"
+                },
+                {
+                  "uuid": "Attribute-06d09c8d-465d-417c-9b7f-0a3a2ca78b2d",
+                  "name": "value",
+                  "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+                }
+              ]
+            }
+          },
+          {
+            "type": "MappingAttributePathInstance",
+            "name": "controlfield_value__f93d1a41-0d3c-3404-59af-8d8db2d23003__0__",
+            "uuid": "f93d1a41-0d3c-3404-59af-8d8db2d23003",
+            "attribute_path": {
+              "uuid": "AttributePath-8646a949-f1d2-4bac-9eba-8a0cd84ca4f9",
+              "attributes": [
+                {
+                  "uuid": "Attribute-6ff2d19f-7028-4a2f-99ef-954fa27df505",
+                  "name": "controlfield",
+                  "uri": "http://www.loc.gov/MARC21/slim#controlfield"
+                },
+                {
+                  "uuid": "Attribute-06d09c8d-465d-417c-9b7f-0a3a2ca78b2d",
+                  "name": "value",
+                  "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+                }
+              ]
+            },
+            "filter": {
+              "uuid": "9b428c61-4c48-459c-2800-16650ea6aec0",
+              "expression": "[{\"http://www.loc.gov/MARC21/slim#controlfield\\u001ehttp://www.loc.gov/MARC21/slim#tag\":{\"type\":\"EQUALS\",\"expression\":\"001\"}}]"
+            }
+          }
+        ],
+        "output_attribute_path": {
+          "type": "MappingAttributePathInstance",
+          "name": "__OUTPUT_MAPPING_ATTRIBUTE_PATH_INSTANCE__6b36a531-77fe-2129-97bf-9023a5493b17",
+          "uuid": "6b36a531-77fe-2129-97bf-9023a5493b17",
+          "attribute_path": {
+            "uuid": "AttributePath-b6d40691-cffd-4716-b417-6d4e7204d8d2",
+            "attributes": [
+              {
+                "uuid": "Attribute-7e5995f2-a3e1-4807-b570-bb938de6a4e0",
+                "name": "id",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/id"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "input_data_model": {
+    "uuid": "ed5fdefb-a3b7-a6db-4194-e57830d1aef4",
+    "name": "ruztrurwtrew",
+    "description": null,
+    "configuration": {
+      "uuid": "dde39497-b72c-8304-ce3d-d90ebdb3e33a",
+      "name": null,
+      "description": null,
+      "resources": [
+        {
+          "uuid": "Resource-84406814-bfa6-4a5a-953f-ac193e2f3009"
+        }
+      ],
+      "parameters": {
+        "storage_type": "marcxml",
+        "record_tag": "record"
+      }
+    },
+    "schema": {
+      "uuid": "Schema-781d73f0-d115-462e-9b4c-ec23e4251c8d",
+      "name": "MARCXML schema",
+      "attribute_paths": [
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-c430826b-4bd6-4e29-9005-7eb795778076",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-0f13ed14-7920-4832-ac67-5ceca147bd87",
+            "attributes": [
+              {
+                "uuid": "Attribute-940425c7-cf49-4c52-a8e4-7b22506b475f",
+                "name": "type",
+                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-ed6b3e41-d208-48cf-966a-9ea0e52ccd57",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-a2eab260-c941-4fdc-960b-1eb457cee43b",
+            "attributes": [
+              {
+                "uuid": "Attribute-91326f5c-06db-4866-99c2-81fc27602267",
+                "name": "type",
+                "uri": "http://www.loc.gov/MARC21/slim#type"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-0658cf97-4496-4b55-ab00-568b77ca7d93",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-5ce0f899-83ba-4c3f-a66a-9c9b11dfcdc1",
+            "attributes": [
+              {
+                "uuid": "Attribute-6de82e43-d0a0-496a-a728-4bf393a35eba",
+                "name": "id",
+                "uri": "http://www.loc.gov/MARC21/slim#id"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-27b90dc4-fd53-414e-b389-76973ce68fb4",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-42e72690-79c1-435f-8aad-faa6fd7da855",
+            "attributes": [
+              {
+                "uuid": "Attribute-fae3e549-c8f4-4210-b667-f47049cb12b8",
+                "name": "leader",
+                "uri": "http://www.loc.gov/MARC21/slim#leader"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-f9d32093-3689-4ddf-82b9-f1b0bbd232a8",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-c3c678a8-1fcc-4208-ac54-cb62cf2447d4",
+            "attributes": [
+              {
+                "uuid": "Attribute-fae3e549-c8f4-4210-b667-f47049cb12b8",
+                "name": "leader",
+                "uri": "http://www.loc.gov/MARC21/slim#leader"
+              },
+              {
+                "uuid": "Attribute-940425c7-cf49-4c52-a8e4-7b22506b475f",
+                "name": "type",
+                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-ab0885ce-f6e9-4e5b-9a4b-d81750141afc",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-d7d218fa-cc94-4974-a3eb-4d4529e4d93f",
+            "attributes": [
+              {
+                "uuid": "Attribute-fae3e549-c8f4-4210-b667-f47049cb12b8",
+                "name": "leader",
+                "uri": "http://www.loc.gov/MARC21/slim#leader"
+              },
+              {
+                "uuid": "Attribute-6de82e43-d0a0-496a-a728-4bf393a35eba",
+                "name": "id",
+                "uri": "http://www.loc.gov/MARC21/slim#id"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-1a1fdc71-10ea-4cb3-92ad-f5537c73dad4",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-e7a3f55e-2726-4b5a-a03e-41cb177cde32",
+            "attributes": [
+              {
+                "uuid": "Attribute-fae3e549-c8f4-4210-b667-f47049cb12b8",
+                "name": "leader",
+                "uri": "http://www.loc.gov/MARC21/slim#leader"
+              },
+              {
+                "uuid": "Attribute-06d09c8d-465d-417c-9b7f-0a3a2ca78b2d",
+                "name": "value",
+                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-9d24e826-c70e-4691-921c-e2022ec13d5c",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-5560885f-b1d3-41d3-9914-e2eb6c7301cb",
+            "attributes": [
+              {
+                "uuid": "Attribute-6ff2d19f-7028-4a2f-99ef-954fa27df505",
+                "name": "controlfield",
+                "uri": "http://www.loc.gov/MARC21/slim#controlfield"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-bc9c0051-4d1d-4c16-ab7a-ae722457f636",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-b132ca2c-94d5-4db9-9c3c-f6046b78d9c5",
+            "attributes": [
+              {
+                "uuid": "Attribute-6ff2d19f-7028-4a2f-99ef-954fa27df505",
+                "name": "controlfield",
+                "uri": "http://www.loc.gov/MARC21/slim#controlfield"
+              },
+              {
+                "uuid": "Attribute-940425c7-cf49-4c52-a8e4-7b22506b475f",
+                "name": "type",
+                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-74492463-6ee5-4ca5-b2d5-ad534babca8c",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-c02508a4-3022-4023-8fb9-ff56d3de3ab7",
+            "attributes": [
+              {
+                "uuid": "Attribute-6ff2d19f-7028-4a2f-99ef-954fa27df505",
+                "name": "controlfield",
+                "uri": "http://www.loc.gov/MARC21/slim#controlfield"
+              },
+              {
+                "uuid": "Attribute-6de82e43-d0a0-496a-a728-4bf393a35eba",
+                "name": "id",
+                "uri": "http://www.loc.gov/MARC21/slim#id"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-0f4bb69d-03e2-4685-9d5d-22b26eb7d83e",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-bf27673a-71d9-44b9-aecd-ad241456478c",
+            "attributes": [
+              {
+                "uuid": "Attribute-6ff2d19f-7028-4a2f-99ef-954fa27df505",
+                "name": "controlfield",
+                "uri": "http://www.loc.gov/MARC21/slim#controlfield"
+              },
+              {
+                "uuid": "Attribute-fe4a7309-e300-4b3d-96f8-e2c72e2242dc",
+                "name": "tag",
+                "uri": "http://www.loc.gov/MARC21/slim#tag"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-bc053aae-512b-4a19-9192-81496833e81e",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-8646a949-f1d2-4bac-9eba-8a0cd84ca4f9",
+            "attributes": [
+              {
+                "uuid": "Attribute-6ff2d19f-7028-4a2f-99ef-954fa27df505",
+                "name": "controlfield",
+                "uri": "http://www.loc.gov/MARC21/slim#controlfield"
+              },
+              {
+                "uuid": "Attribute-06d09c8d-465d-417c-9b7f-0a3a2ca78b2d",
+                "name": "value",
+                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-f40b07e0-a6d7-486c-a1e5-362b7afdff34",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-c4043365-18b4-408a-9aa4-6de7a5d4d007",
+            "attributes": [
+              {
+                "uuid": "Attribute-431c0960-da78-485d-bb7e-f6645b3dd52a",
+                "name": "datafield",
+                "uri": "http://www.loc.gov/MARC21/slim#datafield"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-ec4e249f-9b56-4206-bcfb-60d45f268636",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-33e9a9cb-ccfc-4d77-89b2-503f09d448e8",
+            "attributes": [
+              {
+                "uuid": "Attribute-431c0960-da78-485d-bb7e-f6645b3dd52a",
+                "name": "datafield",
+                "uri": "http://www.loc.gov/MARC21/slim#datafield"
+              },
+              {
+                "uuid": "Attribute-940425c7-cf49-4c52-a8e4-7b22506b475f",
+                "name": "type",
+                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-5f0bd291-d311-404b-a1d8-c15426e0111c",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-70352f17-81c3-4854-84b0-a3dd850317ba",
+            "attributes": [
+              {
+                "uuid": "Attribute-431c0960-da78-485d-bb7e-f6645b3dd52a",
+                "name": "datafield",
+                "uri": "http://www.loc.gov/MARC21/slim#datafield"
+              },
+              {
+                "uuid": "Attribute-6de82e43-d0a0-496a-a728-4bf393a35eba",
+                "name": "id",
+                "uri": "http://www.loc.gov/MARC21/slim#id"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-eb34d1aa-b76e-4ca2-93b6-cfcbad7a849b",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-7b6ea240-aa91-444a-937f-6efc36d0ddc1",
+            "attributes": [
+              {
+                "uuid": "Attribute-431c0960-da78-485d-bb7e-f6645b3dd52a",
+                "name": "datafield",
+                "uri": "http://www.loc.gov/MARC21/slim#datafield"
+              },
+              {
+                "uuid": "Attribute-fe4a7309-e300-4b3d-96f8-e2c72e2242dc",
+                "name": "tag",
+                "uri": "http://www.loc.gov/MARC21/slim#tag"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-3c325fcd-5f86-4d93-8530-468872c426a6",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-debd4384-3258-4e4b-a925-f0f32702fec8",
+            "attributes": [
+              {
+                "uuid": "Attribute-431c0960-da78-485d-bb7e-f6645b3dd52a",
+                "name": "datafield",
+                "uri": "http://www.loc.gov/MARC21/slim#datafield"
+              },
+              {
+                "uuid": "Attribute-7eb8941b-59a4-434d-a443-4540a2b896bf",
+                "name": "ind1",
+                "uri": "http://www.loc.gov/MARC21/slim#ind1"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-275b376d-ae3a-4f3f-8705-0a13f86c6aba",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-1db98d03-ab89-4d28-8f13-6c87cf7cd3b9",
+            "attributes": [
+              {
+                "uuid": "Attribute-431c0960-da78-485d-bb7e-f6645b3dd52a",
+                "name": "datafield",
+                "uri": "http://www.loc.gov/MARC21/slim#datafield"
+              },
+              {
+                "uuid": "Attribute-8653be0d-5384-4110-bf66-8c4998072c3c",
+                "name": "ind2",
+                "uri": "http://www.loc.gov/MARC21/slim#ind2"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-e2401b88-3a04-4f23-81d4-2e16a38522e0",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-5a6f915f-8fac-45d7-93d5-68b236cb376c",
+            "attributes": [
+              {
+                "uuid": "Attribute-431c0960-da78-485d-bb7e-f6645b3dd52a",
+                "name": "datafield",
+                "uri": "http://www.loc.gov/MARC21/slim#datafield"
+              },
+              {
+                "uuid": "Attribute-59f8187e-5ac3-4ef9-82cc-35212a5f9a1b",
+                "name": "subfield",
+                "uri": "http://www.loc.gov/MARC21/slim#subfield"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-ace8ef6b-a082-46f8-82cf-89e4ff36b968",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-7b18b43f-1c59-4c25-a44b-088b9304e663",
+            "attributes": [
+              {
+                "uuid": "Attribute-431c0960-da78-485d-bb7e-f6645b3dd52a",
+                "name": "datafield",
+                "uri": "http://www.loc.gov/MARC21/slim#datafield"
+              },
+              {
+                "uuid": "Attribute-59f8187e-5ac3-4ef9-82cc-35212a5f9a1b",
+                "name": "subfield",
+                "uri": "http://www.loc.gov/MARC21/slim#subfield"
+              },
+              {
+                "uuid": "Attribute-940425c7-cf49-4c52-a8e4-7b22506b475f",
+                "name": "type",
+                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-12358ff1-0183-4201-a163-011c5fc7b4d9",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-e9df1173-1792-4d25-927e-cd2abad97688",
+            "attributes": [
+              {
+                "uuid": "Attribute-431c0960-da78-485d-bb7e-f6645b3dd52a",
+                "name": "datafield",
+                "uri": "http://www.loc.gov/MARC21/slim#datafield"
+              },
+              {
+                "uuid": "Attribute-59f8187e-5ac3-4ef9-82cc-35212a5f9a1b",
+                "name": "subfield",
+                "uri": "http://www.loc.gov/MARC21/slim#subfield"
+              },
+              {
+                "uuid": "Attribute-6de82e43-d0a0-496a-a728-4bf393a35eba",
+                "name": "id",
+                "uri": "http://www.loc.gov/MARC21/slim#id"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-bc28eb70-8167-4c1b-98c4-4609f7255866",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-81bdf315-f7fd-4e23-b9da-a7c5381d4f31",
+            "attributes": [
+              {
+                "uuid": "Attribute-431c0960-da78-485d-bb7e-f6645b3dd52a",
+                "name": "datafield",
+                "uri": "http://www.loc.gov/MARC21/slim#datafield"
+              },
+              {
+                "uuid": "Attribute-59f8187e-5ac3-4ef9-82cc-35212a5f9a1b",
+                "name": "subfield",
+                "uri": "http://www.loc.gov/MARC21/slim#subfield"
+              },
+              {
+                "uuid": "Attribute-01a2281f-dbe9-4c9a-8cc0-47576b48261a",
+                "name": "code",
+                "uri": "http://www.loc.gov/MARC21/slim#code"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-3cf47be1-0929-42b0-85c3-eb911c2534ec",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-38b331c3-9d18-404b-bbd2-c20d61a1820a",
+            "attributes": [
+              {
+                "uuid": "Attribute-431c0960-da78-485d-bb7e-f6645b3dd52a",
+                "name": "datafield",
+                "uri": "http://www.loc.gov/MARC21/slim#datafield"
+              },
+              {
+                "uuid": "Attribute-59f8187e-5ac3-4ef9-82cc-35212a5f9a1b",
+                "name": "subfield",
+                "uri": "http://www.loc.gov/MARC21/slim#subfield"
+              },
+              {
+                "uuid": "Attribute-06d09c8d-465d-417c-9b7f-0a3a2ca78b2d",
+                "name": "value",
+                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+              }
+            ]
+          },
+          "sub_schema": null
+        }
+      ],
+      "record_class": {
+        "uuid": "Clasz-2e24c5d4-db16-48b9-a8e7-f229287c55e4",
+        "name": "recordType",
+        "uri": "http://www.loc.gov/MARC21/slim#recordType"
+      },
+      "content_schema": {
+        "uuid": "ContentSchema-7bdcaacc-e0e4-43fd-949c-4a42fb54d99d",
+        "name": "MARC21 content schema",
+        "record_identifier_attribute_path": {
+          "uuid": "AttributePath-5ce0f899-83ba-4c3f-a66a-9c9b11dfcdc1",
+          "attributes": [
+            {
+              "uuid": "Attribute-6de82e43-d0a0-496a-a728-4bf393a35eba",
+              "name": "id",
+              "uri": "http://www.loc.gov/MARC21/slim#id"
+            }
+          ]
+        },
+        "key_attribute_paths": [
+          {
+            "uuid": "AttributePath-7b6ea240-aa91-444a-937f-6efc36d0ddc1",
+            "attributes": [
+              {
+                "uuid": "Attribute-431c0960-da78-485d-bb7e-f6645b3dd52a",
+                "name": "datafield",
+                "uri": "http://www.loc.gov/MARC21/slim#datafield"
+              },
+              {
+                "uuid": "Attribute-fe4a7309-e300-4b3d-96f8-e2c72e2242dc",
+                "name": "tag",
+                "uri": "http://www.loc.gov/MARC21/slim#tag"
+              }
+            ]
+          },
+          {
+            "uuid": "AttributePath-debd4384-3258-4e4b-a925-f0f32702fec8",
+            "attributes": [
+              {
+                "uuid": "Attribute-431c0960-da78-485d-bb7e-f6645b3dd52a",
+                "name": "datafield",
+                "uri": "http://www.loc.gov/MARC21/slim#datafield"
+              },
+              {
+                "uuid": "Attribute-7eb8941b-59a4-434d-a443-4540a2b896bf",
+                "name": "ind1",
+                "uri": "http://www.loc.gov/MARC21/slim#ind1"
+              }
+            ]
+          },
+          {
+            "uuid": "AttributePath-1db98d03-ab89-4d28-8f13-6c87cf7cd3b9",
+            "attributes": [
+              {
+                "uuid": "Attribute-431c0960-da78-485d-bb7e-f6645b3dd52a",
+                "name": "datafield",
+                "uri": "http://www.loc.gov/MARC21/slim#datafield"
+              },
+              {
+                "uuid": "Attribute-8653be0d-5384-4110-bf66-8c4998072c3c",
+                "name": "ind2",
+                "uri": "http://www.loc.gov/MARC21/slim#ind2"
+              }
+            ]
+          },
+          {
+            "uuid": "AttributePath-81bdf315-f7fd-4e23-b9da-a7c5381d4f31",
+            "attributes": [
+              {
+                "uuid": "Attribute-431c0960-da78-485d-bb7e-f6645b3dd52a",
+                "name": "datafield",
+                "uri": "http://www.loc.gov/MARC21/slim#datafield"
+              },
+              {
+                "uuid": "Attribute-59f8187e-5ac3-4ef9-82cc-35212a5f9a1b",
+                "name": "subfield",
+                "uri": "http://www.loc.gov/MARC21/slim#subfield"
+              },
+              {
+                "uuid": "Attribute-01a2281f-dbe9-4c9a-8cc0-47576b48261a",
+                "name": "code",
+                "uri": "http://www.loc.gov/MARC21/slim#code"
+              }
+            ]
+          }
+        ],
+        "value_attribute_path": {
+          "uuid": "AttributePath-38b331c3-9d18-404b-bbd2-c20d61a1820a",
+          "attributes": [
+            {
+              "uuid": "Attribute-431c0960-da78-485d-bb7e-f6645b3dd52a",
+              "name": "datafield",
+              "uri": "http://www.loc.gov/MARC21/slim#datafield"
+            },
+            {
+              "uuid": "Attribute-59f8187e-5ac3-4ef9-82cc-35212a5f9a1b",
+              "name": "subfield",
+              "uri": "http://www.loc.gov/MARC21/slim#subfield"
+            },
+            {
+              "uuid": "Attribute-06d09c8d-465d-417c-9b7f-0a3a2ca78b2d",
+              "name": "value",
+              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+            }
+          ]
+        }
+      }
+    },
+    "deprecated": false,
+    "data_resource": {
+      "uuid": "Resource-84406814-bfa6-4a5a-953f-ac193e2f3009",
+      "name": "DEG0000001.xml",
+      "description": "lkjlhdsgfdsagfsd",
+      "type": "FILE",
+      "configurations": [
+        {
+          "uuid": "dde39497-b72c-8304-ce3d-d90ebdb3e33a",
+          "name": null,
+          "description": null,
+          "resources": [
+            {
+              "uuid": "Resource-84406814-bfa6-4a5a-953f-ac193e2f3009"
+            }
+          ],
+          "parameters": {
+            "storage_type": "marcxml",
+            "record_tag": "record"
+          }
+        }
+      ],
+      "resource_attributes": {
+        "path": "/data/workspace/tmp/resources/DEG0000001.xml",
+        "filesize": -1,
+        "filetype": "application/xml"
+      }
+    }
+  },
+  "output_data_model": {
+    "uuid": "5fddf2c5-916b-49dc-a07d-af04020c17f7",
+    "name": "Internal Data Model finc Solr",
+    "description": "Internal Data Model finc Solr",
+    "schema": {
+      "uuid": "Schema-5664ba0e-ccb3-4b71-8823-13281490de30",
+      "name": "finc Solr schema",
+      "attribute_paths": [
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-45510f73-7e52-4298-b527-a63b196e4146",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-4b2a78dd-eb54-4b07-8099-f91cab891ee3",
+            "attributes": [
+              {
+                "uuid": "Attribute-ec24b350-09c3-4cfc-9676-cfba300063a0",
+                "name": "_version_",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/_version_"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-cee4d6ad-7eb9-435c-bdde-10ba3c86d958",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-b6d40691-cffd-4716-b417-6d4e7204d8d2",
+            "attributes": [
+              {
+                "uuid": "Attribute-7e5995f2-a3e1-4807-b570-bb938de6a4e0",
+                "name": "id",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/id"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-a0b9799e-96d1-45a3-86f0-85e1cd628291",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-bd398c12-5a0c-42d5-96ae-e7fdfd02314a",
+            "attributes": [
+              {
+                "uuid": "Attribute-43d75a5b-c1af-4995-acea-612ad4503e51",
+                "name": "fullrecord",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/fullrecord"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-1e30bea1-4f8b-4857-9c43-b86e45084ce8",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-e2347424-50d1-45ff-abf1-12e008831f5a",
+            "attributes": [
+              {
+                "uuid": "Attribute-4ca9d98f-6a94-4314-8dae-5a4a7fb9a982",
+                "name": "itemdata",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/itemdata"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-42a3304f-9419-467e-a78d-7a6f8917f58b",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-1b152978-09fc-4c02-8edb-bed1dbbf0e4f",
+            "attributes": [
+              {
+                "uuid": "Attribute-2c7f665e-9c3d-43c1-826c-63155c7674a7",
+                "name": "marc_error",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/marc_error"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-2cb48c32-e9d4-43db-a01a-be01e83a6250",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-f3bb6525-05c4-4923-8daf-bc3f4c941d81",
+            "attributes": [
+              {
+                "uuid": "Attribute-3526ad77-e01a-4559-baf9-67cad2449850",
+                "name": "allfields",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/allfields"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-82b2aa67-6c2d-41ae-835d-ecb57610a56c",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-72ebf5f4-bd2f-41f0-94b7-64bf82edeb3b",
+            "attributes": [
+              {
+                "uuid": "Attribute-f08f19aa-ae88-432b-bc6d-a6d54ab40b29",
+                "name": "allfields_unstemmed",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/allfields_unstemmed"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-40bd661b-e9f5-4406-8638-8f6dcf242327",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-2e4a9e81-b17c-4da6-ad29-5b9349168a6d",
+            "attributes": [
+              {
+                "uuid": "Attribute-55578b4f-e172-41cd-bdd6-b135630b3449",
+                "name": "fulltext",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/fulltext"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-8f0cd9cc-16f2-4fea-879b-4db11447811f",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-e1673ffa-4c4e-4cb2-9a3f-32cac6f4f6ef",
+            "attributes": [
+              {
+                "uuid": "Attribute-ef5fe1cd-1085-4e87-b572-087ac5f41a32",
+                "name": "fulltext_unstemmed",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/fulltext_unstemmed"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-1c7e8c24-e1e6-459a-95c0-f5ddceec5205",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-846c0d34-f9a1-4a9d-829b-aef771d41dee",
+            "attributes": [
+              {
+                "uuid": "Attribute-c34d6355-3e8a-4db8-95e5-4f821db92804",
+                "name": "spelling",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/spelling"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-70ac78e4-a9d1-4be8-84d3-894a8d46897c",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-6716a9ee-b68c-4f9e-bb4c-cec6150e83bf",
+            "attributes": [
+              {
+                "uuid": "Attribute-ca75340b-7167-4d08-8156-bf0ee2321088",
+                "name": "spellingShingle",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/spellingShingle"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-abe8ada5-e4ce-4c46-b2db-d1e36be5b820",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-bb13fc0d-33cd-4137-a9b4-a080099ccfe8",
+            "attributes": [
+              {
+                "uuid": "Attribute-e2528674-db68-4f5c-86c8-b72d744d941d",
+                "name": "access_facet",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/access_facet"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-492a36cb-e2bf-4e18-8c77-b317eeea2a4f",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-fec00f9e-68ff-41ff-8e4b-cedb25aa0073",
+            "attributes": [
+              {
+                "uuid": "Attribute-f0c2d149-5475-4a00-90e1-0e70f865c358",
+                "name": "mega_collection",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/mega_collection"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-3ed06dd9-64b2-4cad-8bf6-8ce8f27dc99b",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-2d0c7eaf-e894-4d01-824a-3842ef48f3d5",
+            "attributes": [
+              {
+                "uuid": "Attribute-2ecd4759-c655-4d83-8677-9db666095f2b",
+                "name": "record_id",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/record_id"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-5ca5a5ff-767e-4f74-a71e-46567f97ec2f",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-aae45656-4503-4332-8f46-fbea50449f6a",
+            "attributes": [
+              {
+                "uuid": "Attribute-8054f36c-ccd1-4f60-9408-4217f6bf334d",
+                "name": "source_id",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/source_id"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-1321437e-4d17-4e64-a2a3-3988b4a81912",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-09296992-9dab-44c1-9ff8-5caf4e9bb437",
+            "attributes": [
+              {
+                "uuid": "Attribute-07eadaef-5a5f-4bc8-98f1-2fb36fb13a24",
+                "name": "authorized_mode",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/authorized_mode"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-3f05df93-6d8f-44f3-bae8-0d43b1ead319",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-1ae2437a-c3b9-4276-8cbd-1d1ac32cffeb",
+            "attributes": [
+              {
+                "uuid": "Attribute-0be57ff7-b2ee-4346-b4ae-f5049b6bb210",
+                "name": "institution",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/institution"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-61b3543d-ef5a-4656-b5c1-d8c1242c8ab0",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-e8d0c8e3-d417-4bbe-b637-3946b1c22a6c",
+            "attributes": [
+              {
+                "uuid": "Attribute-0af3eb4b-0c42-4fd6-bea7-d427326753cc",
+                "name": "collection",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/collection"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-a8d03163-4292-4575-a039-7555839f30e8",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-1fce2e6f-b79e-4454-a1d7-03fda5967a21",
+            "attributes": [
+              {
+                "uuid": "Attribute-9231e6b8-a5dd-42f8-b5f0-5187bf82ac31",
+                "name": "building",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/building"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-b2d4c8a1-f54c-4203-918b-c447f4977696",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-c7b3f4d3-2c55-4540-bfcd-8c62689bfcfb",
+            "attributes": [
+              {
+                "uuid": "Attribute-a6391a20-786f-48f3-a5fa-9301019104cb",
+                "name": "language",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/language"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-0136c6af-ad95-4a93-91f0-ac88cd3ef1a6",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-e5e0c447-3c5d-43f5-ad5f-1a7d7db14092",
+            "attributes": [
+              {
+                "uuid": "Attribute-6d7733d7-b565-4c21-a6c7-902a86fce5af",
+                "name": "format",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/format"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-cdf8f26a-b0b7-4c45-9a81-4a31ac43a969",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-5f61302b-3a87-454e-9754-1074981248af",
+            "attributes": [
+              {
+                "uuid": "Attribute-62f09731-f931-4cdf-a4ee-cc5e8d46efe3",
+                "name": "signatur",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/signatur"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-e4f31787-e3ea-40ce-8dc6-3ed418c7ca93",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-7e496286-3572-49f8-a3aa-ee9dd640419a",
+            "attributes": [
+              {
+                "uuid": "Attribute-83afc0fa-c857-4b36-88e0-63284b987b69",
+                "name": "barcode",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/barcode"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-863d4278-b6a0-4183-931b-ad770767bcb2",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-a9e0645f-fb30-4283-b2ed-91fa7960c78d",
+            "attributes": [
+              {
+                "uuid": "Attribute-bd455c81-2edf-446e-8107-3d9df42af826",
+                "name": "rsn",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/rsn"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-719aef39-cf1e-48d8-9cbe-16a4db17cbb8",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-21172cc2-b76a-4255-8690-e8e9c76a02dc",
+            "attributes": [
+              {
+                "uuid": "Attribute-c6c48e35-f2a5-4bb3-909a-36b6474f047b",
+                "name": "purchase",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/purchase"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-6970b5a1-de98-4c30-9bad-2320e00459a0",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-bcc2305d-849f-4faa-b345-555fc71aedff",
+            "attributes": [
+              {
+                "uuid": "Attribute-dc9b3971-26f2-490b-b7cc-ac9da9ac8179",
+                "name": "timecode",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/timecode"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-0ed685fe-bb32-4046-9891-0fc477be28e3",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-d553e96d-e70e-4ecf-afe1-35efe5b2f3cc",
+            "attributes": [
+              {
+                "uuid": "Attribute-c19e8e2c-6c45-4093-9145-fd6238d1d4b1",
+                "name": "misc_dech1",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/misc_dech1"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-1d67416c-e1c8-4332-87ce-a99cba0ee2b1",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-0325f60b-41c2-4bde-b962-0a15184f2160",
+            "attributes": [
+              {
+                "uuid": "Attribute-e0c2c6bc-125c-4263-9e40-1b0bb47dec8d",
+                "name": "finc_class_facet",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/finc_class_facet"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-62573309-8896-456a-9de7-05599ba55dc0",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-bfdf59ff-5cf9-48b1-918f-9304a1543306",
+            "attributes": [
+              {
+                "uuid": "Attribute-c650f01f-2039-45e6-ad9f-8f55dba32d9e",
+                "name": "zdb",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/zdb"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-779b98ee-721a-4a7c-90f6-c1d00870735f",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-f6add4d4-153f-4dc3-b86d-48b998ce6ac7",
+            "attributes": [
+              {
+                "uuid": "Attribute-272c8d6e-6bc1-4744-b613-e66469dd23c6",
+                "name": "author_id",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/author_id"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-f9868f45-9b3f-4feb-b2fc-e54ade764941",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-de8fda4c-3da1-446c-a1f4-a0fb3a176278",
+            "attributes": [
+              {
+                "uuid": "Attribute-3bccbb7d-0fd9-4a7d-9fef-f66adcc8a36b",
+                "name": "author_ref",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/author_ref"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-c0ff1dd3-dfa5-46b7-a017-d55ac26137a7",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-5a253efd-6c3e-4143-9d97-704b9c5d35e0",
+            "attributes": [
+              {
+                "uuid": "Attribute-619200ad-9d94-4258-8cf5-8fc125b4b211",
+                "name": "author_corp_ref",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/author_corp_ref"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-0bca34eb-020c-43d6-b08b-7774a134ede3",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-a427e79b-9c0c-45c3-a953-b58b0fe05799",
+            "attributes": [
+              {
+                "uuid": "Attribute-3fe3d35d-0513-4712-8f4c-b0acf5ff9daa",
+                "name": "authorStr",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/authorStr"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-eee6f32d-cd7e-4867-b1bf-b2a1b7b1c3be",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-db6fad77-6e64-403e-8f4b-806e97aad02f",
+            "attributes": [
+              {
+                "uuid": "Attribute-3a8a3149-7306-462f-baa1-68266c8c9460",
+                "name": "author_facet",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/author_facet"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-40ae93ee-39ed-4ad0-9b81-b83b2b29bb71",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-915f1e48-1330-4805-b6b4-d3dd44e0869e",
+            "attributes": [
+              {
+                "uuid": "Attribute-02c6ee32-24bb-4100-8fff-66a0ff2701db",
+                "name": "author_sort",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/author_sort"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-1f4860d3-ed90-4964-811d-933d6e099aa8",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-50115bbd-1823-464a-971f-578cae3f8e32",
+            "attributes": [
+              {
+                "uuid": "Attribute-f9fa25a6-d938-4373-bdd9-3542db2cf540",
+                "name": "vf1_author",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/vf1_author"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-b56b9b6f-28df-48cc-a3c9-ea08fd1fff25",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-22716b6c-4f1b-4ffd-9cbc-94ae316b0cff",
+            "attributes": [
+              {
+                "uuid": "Attribute-a8070aa4-8380-43bb-913f-32fa0695b239",
+                "name": "vf1_author_orig",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/vf1_author_orig"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-804dd146-2a9b-4f5f-9b59-2a0f40123a08",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-0247b0ea-7d48-4e03-947b-ec8c997780b1",
+            "attributes": [
+              {
+                "uuid": "Attribute-f0c8592d-d247-4ea1-bef7-dcca2b2bcfb1",
+                "name": "vf1_author2",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/vf1_author2"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-aabf2ef3-d5bc-4f1b-987d-5d94728ab9b7",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-cfbe5850-2888-48d5-b61c-2e2a0b5f00dc",
+            "attributes": [
+              {
+                "uuid": "Attribute-1cc96781-2a77-4ae4-bafc-f7da8a32deef",
+                "name": "vf1_author2_orig",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/vf1_author2_orig"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-37f3cdab-dbb2-4eb4-b98f-adb080cd5071",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-51837589-261a-4142-81d0-a04c68394c8b",
+            "attributes": [
+              {
+                "uuid": "Attribute-990934f1-f7b9-4089-9c42-49431a0b925c",
+                "name": "vf1_author_corp",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/vf1_author_corp"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-51e3f734-93e3-4f10-b4a4-102514e7037a",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-a951d5a0-85b6-4b9f-af54-65d9f96d3d0a",
+            "attributes": [
+              {
+                "uuid": "Attribute-a8a4ea3e-fa17-4e98-b0f0-b9d6f113a26d",
+                "name": "vf1_author_corp_orig",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/vf1_author_corp_orig"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-73e4dd48-3012-4da7-85e4-cd95a76372d0",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-f88a9cd6-7c8c-4985-9780-24ff4832fb52",
+            "attributes": [
+              {
+                "uuid": "Attribute-451f5962-3210-4393-a000-68e7b3e7dbd7",
+                "name": "vf1_author_corp2",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/vf1_author_corp2"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-1e047779-ad96-40bd-8896-9b151966507f",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-08ee81b3-9053-4668-9e3e-274c229a8e88",
+            "attributes": [
+              {
+                "uuid": "Attribute-ba8e6e63-acbc-480f-87e9-b64368d67e8c",
+                "name": "vf1_author_corp2_orig",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/vf1_author_corp2_orig"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-3682361d-abef-46d7-81ef-6d0b43c57ee0",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-b007c88e-3e9d-4dc1-824b-84d6138a8fa5",
+            "attributes": [
+              {
+                "uuid": "Attribute-8ae3f329-f9ec-4b76-b952-65ba640a9401",
+                "name": "vf1_author2-role",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/vf1_author2-role"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-e3bafb46-a329-46fa-8630-b29f8e645a01",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-f2089462-91a6-447a-bf8d-065093bad8d6",
+            "attributes": [
+              {
+                "uuid": "Attribute-55dd3a58-3321-4431-91db-cea98485a496",
+                "name": "author",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/author"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-2fce5057-48ca-48ad-b6b2-f2c117234cab",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-08a5e77c-777b-4b49-bf34-30dc7e5c0d80",
+            "attributes": [
+              {
+                "uuid": "Attribute-ff02c40b-26bd-40a1-af9f-20e6361c9a2e",
+                "name": "author_orig",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/author_orig"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-a4358179-0d73-483a-b6fc-06a641f33688",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-379af158-a7c0-4103-9c94-b35545b23ebc",
+            "attributes": [
+              {
+                "uuid": "Attribute-30c52bd0-f42e-46c7-9c05-7ac7df16f0e1",
+                "name": "author_variant",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/author_variant"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-3304b79c-7fed-4f58-bb3d-2f9e20795101",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-672ee886-b60c-44aa-b35f-a4012ca4f0c6",
+            "attributes": [
+              {
+                "uuid": "Attribute-496e8cc0-e8cd-44ee-acdf-76c6aa4ef063",
+                "name": "author_role",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/author_role"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-497762b6-dc4f-4457-a6a7-98c6e14bf8cf",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-f3736cc7-ba6d-4a0b-a6b2-5f4c53e36b77",
+            "attributes": [
+              {
+                "uuid": "Attribute-297878f9-8227-4b3d-9eaa-be2043542a6d",
+                "name": "author2",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/author2"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-4ee2b2ba-c619-4fe9-bb14-7ccb49d7cfcd",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-f410d8e5-bbc6-4509-aab9-eda69a5a98c8",
+            "attributes": [
+              {
+                "uuid": "Attribute-d3f4b9ef-627f-48cf-8a52-d7e8624c64a5",
+                "name": "author2_orig",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/author2_orig"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-39c320d0-dbfe-485e-a53c-f0951fc4790d",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-6c4456a5-6abe-4cd9-ba1a-8965f5c8d9d9",
+            "attributes": [
+              {
+                "uuid": "Attribute-39f97b83-7c24-47bf-a4c9-e124912da0b1",
+                "name": "author2_variant",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/author2_variant"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-7329fff6-48ff-445c-9d60-187f88c13c5e",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-4509304c-2eac-4362-a63e-ff4da072b315",
+            "attributes": [
+              {
+                "uuid": "Attribute-97d757b8-9285-4823-b876-080ecddc2a23",
+                "name": "author2_role",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/author2_role"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-1c8a1e7d-fc6d-4231-a0e0-57b26178d34c",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-228423f5-9ce0-48e7-be6c-30011cabf4c5",
+            "attributes": [
+              {
+                "uuid": "Attribute-bef4f353-d939-429a-ab93-0c79f2374a39",
+                "name": "author_corporate",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/author_corporate"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-456e3af2-2318-4291-a16f-7730b9a3dc7d",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-5839fe09-d6f4-4082-be84-a83d75a02646",
+            "attributes": [
+              {
+                "uuid": "Attribute-ec576ac5-ddd1-48dd-93d6-e06597f4c3f2",
+                "name": "author_corporate_orig",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/author_corporate_orig"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-935d0d05-566e-47fe-bb5b-14f0b46a869e",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-6c32b2f0-0a36-4cd0-9fd0-27c4fbe79468",
+            "attributes": [
+              {
+                "uuid": "Attribute-43d5e930-77d0-47ee-99b5-66d7880530c0",
+                "name": "author_corporate_role",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/author_corporate_role"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-6ec6de25-7d19-44ba-af43-ea7c071ff839",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-a8124cab-765c-4291-b295-0c7cd42dbbcb",
+            "attributes": [
+              {
+                "uuid": "Attribute-f3476220-6bb4-4b2c-961c-16ce32082b48",
+                "name": "author_corporate2",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/author_corporate2"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-a3f53580-d93c-4f21-8eea-9ec63f20d555",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-a66070c9-a484-4679-863e-78bcea5fe5b2",
+            "attributes": [
+              {
+                "uuid": "Attribute-92499701-f4e2-4ba2-b0b3-0f603bf6a953",
+                "name": "author_corporate2_orig",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/author_corporate2_orig"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-b645f622-5540-436a-847d-5193008055bc",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-a522e8d4-fd33-4677-aa51-0ee7eda8f2b5",
+            "attributes": [
+              {
+                "uuid": "Attribute-5f6ec827-1add-45e5-b04e-38e080abdd54",
+                "name": "author_corporate2_role",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/author_corporate2_role"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-fa26b9e7-6fb4-4d8e-b4a2-cc8cc86acc6b",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-f848ffca-9bae-4e2f-89c1-661f57b97bea",
+            "attributes": [
+              {
+                "uuid": "Attribute-3d55bf5b-ae72-4820-8d6f-b308eaecca6d",
+                "name": "author_fuller",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/author_fuller"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-b6b187d8-2149-476e-9d87-4d7473205fe5",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-ddf8af6b-57bd-41b2-96c0-042be406f286",
+            "attributes": [
+              {
+                "uuid": "Attribute-d1723013-198a-44a0-a327-c8083278f419",
+                "name": "author2_fuller",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/author2_fuller"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-0b0276e2-1711-4221-99b6-fe0929de28ac",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-25258503-fe96-48e8-a702-38197529f872",
+            "attributes": [
+              {
+                "uuid": "Attribute-f863ec87-d4fc-4c77-991d-c470fcafcc98",
+                "name": "author_additional",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/author_additional"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-46127f6d-2afb-40d5-8fc6-87af711fd31a",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-cd17dd86-8f17-4429-a5a3-896614a06890",
+            "attributes": [
+              {
+                "uuid": "Attribute-487a2007-4046-4389-9090-572269dd6f45",
+                "name": "title",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/title"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-daaf5c43-65b1-4d81-8aca-cbd630904b9a",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-1a875b16-aede-450f-bafe-8a8992470eae",
+            "attributes": [
+              {
+                "uuid": "Attribute-2db2d3c2-b0cb-480d-9a10-4f96c2db9da4",
+                "name": "title_part",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/title_part"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-50248c52-0a79-4604-b413-2daebda95742",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-c0b37a18-45fe-4033-ab03-e24ab531a96f",
+            "attributes": [
+              {
+                "uuid": "Attribute-78641e6d-acbb-4aa1-9227-8e9ea9bc7710",
+                "name": "title_sub",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/title_sub"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-ad984db9-8b89-4d1c-9d84-e5bb7efcf115",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-ec049154-2b01-4e92-a2c6-8bb97c30608a",
+            "attributes": [
+              {
+                "uuid": "Attribute-325bb505-8d38-4601-8a32-4f8a0ab5baae",
+                "name": "title_short",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/title_short"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-7ba1fb02-7674-4145-b26c-74e70cd822b6",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-e0c46b4e-0a5a-430d-af4b-d02afa8fb77f",
+            "attributes": [
+              {
+                "uuid": "Attribute-0c1d94be-ceda-45d5-8077-86178d2ccfd0",
+                "name": "title_full",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/title_full"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-4a932a71-1013-4fb0-8dd9-3ff19756bcc8",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-4c3e93a5-9cc6-4c30-be5e-4b92ee538ea2",
+            "attributes": [
+              {
+                "uuid": "Attribute-04b2a48a-2ccb-45e1-97b0-d045c69d8c55",
+                "name": "title_full_unstemmed",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/title_full_unstemmed"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-e419a38b-56aa-450c-a314-ba499f6ebff5",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-e4a85fb9-772d-47c1-8858-3dc424770bd5",
+            "attributes": [
+              {
+                "uuid": "Attribute-96f5e779-9330-4493-8b25-99f1fee1ddad",
+                "name": "title_fullStr",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/title_fullStr"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-411be3da-3d7e-4e8d-b7f4-b44198a483ca",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-356dacae-f3b5-4090-a381-dbfc181a6d74",
+            "attributes": [
+              {
+                "uuid": "Attribute-9c5cfa10-7d1c-440f-9a1b-3f8678e23125",
+                "name": "title_auth",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/title_auth"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-468a8c5e-6dc7-431d-894a-f06a6a2540f3",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-980ad5ba-adbc-41e0-a917-86fa5cf49f38",
+            "attributes": [
+              {
+                "uuid": "Attribute-177d36df-8648-4442-b92d-53ff99be220d",
+                "name": "title_alt",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/title_alt"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-4623a91f-d71a-48a3-9fe4-2fa725c99135",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-236a98f2-3fb8-40ac-98d4-e0ef31d7ea2f",
+            "attributes": [
+              {
+                "uuid": "Attribute-47d6b213-b227-4eb1-91a2-9d41d4a9abfd",
+                "name": "title_old",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/title_old"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-6afb9715-709a-4ec5-9280-f07cfbc60608",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-52f3ad2e-2a1d-4e9a-b04a-8105f020d216",
+            "attributes": [
+              {
+                "uuid": "Attribute-92540c74-8b68-427b-819d-e27f29563bbf",
+                "name": "title_new",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/title_new"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-73015b22-c520-414f-908e-9e5d511e0d36",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-a3d19067-81a3-47bb-abd9-932a538da843",
+            "attributes": [
+              {
+                "uuid": "Attribute-5970e8a7-2ae7-4b89-bc8c-8a0719269740",
+                "name": "title_uniform",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/title_uniform"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-3e6e3518-6e43-4cc9-851d-06a792320547",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-0953f733-881d-45b3-94af-f4f1646729a7",
+            "attributes": [
+              {
+                "uuid": "Attribute-99fc6669-2c26-46d7-9c25-afadea3cb76e",
+                "name": "title_sort",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/title_sort"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-1a11dbfe-707e-4a42-b117-a49fc378ecd4",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-b3634a12-60dc-49aa-a0ca-1747871a4a80",
+            "attributes": [
+              {
+                "uuid": "Attribute-427d5dc1-3d53-4958-b81b-2912340592cf",
+                "name": "title_orig",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/title_orig"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-6ab15dfd-5b88-4c6d-8572-8ee5f6bf7a1e",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-b8261464-fce9-4a97-900d-3b7063a87b08",
+            "attributes": [
+              {
+                "uuid": "Attribute-67256488-dbbd-4a31-80f1-67248e2eab0e",
+                "name": "physical",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/physical"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-05656f8a-e444-4cca-9030-0b7460c69f5f",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-c997dd61-6389-43da-b9bb-395c6425f9bb",
+            "attributes": [
+              {
+                "uuid": "Attribute-4ccab8d5-7db5-47e4-b8fc-8a287d03b903",
+                "name": "publisher",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/publisher"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-770ad6bf-ac06-4cca-8b5f-1aa372721306",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-fa9a8d4b-a640-466e-af36-65d7147da337",
+            "attributes": [
+              {
+                "uuid": "Attribute-70bd58af-6ac7-4ca0-927d-5a7e49f03e39",
+                "name": "publisherStr",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/publisherStr"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-5d7ff419-3ed2-4b10-9b36-33b085ba365f",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-4ad02801-b206-44bd-8fd1-dcbb3b5001bf",
+            "attributes": [
+              {
+                "uuid": "Attribute-975f6c6f-5cd3-439a-a824-9a299c2eefb6",
+                "name": "publishDate",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/publishDate"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-cdfe71fa-7c9f-4ac7-84aa-cf1a552c7401",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-0ba007e8-1eab-4e35-bf39-3d5a2c296dfd",
+            "attributes": [
+              {
+                "uuid": "Attribute-b1433100-bbb5-4115-b750-d3f99e668a37",
+                "name": "publishDateSort",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/publishDateSort"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-a8fe2609-b86d-4696-ba68-a24108873521",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-53f522af-d7e3-4d46-a17b-c9181f11ffd2",
+            "attributes": [
+              {
+                "uuid": "Attribute-de4b7c7a-79f6-47e4-a272-3b5eb4458cbc",
+                "name": "publishPlace",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/publishPlace"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-1acadceb-4acc-489a-96b3-4667cef4fb13",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-34a5cfdd-749b-479a-8b87-30b091185c36",
+            "attributes": [
+              {
+                "uuid": "Attribute-5b044e3f-44b2-40dd-89a3-173060b6d407",
+                "name": "imprint",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/imprint"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-b524b8c3-df48-4b04-906a-6cdded6b2374",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-636d3312-7182-44be-8cbe-2c55545ab19b",
+            "attributes": [
+              {
+                "uuid": "Attribute-ca72b45b-472e-48b3-ad46-95efaec41d11",
+                "name": "edition",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/edition"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-e6403621-4d9c-4f9b-b9b6-da6d158fba3d",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-574f3fcd-2728-4b40-90a8-263777921757",
+            "attributes": [
+              {
+                "uuid": "Attribute-44ec75bf-12de-4470-b508-3f83ed165f09",
+                "name": "description",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/description"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-6d1bc20b-7e9c-4d7d-a9ff-aa478b76e9c9",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-08560bce-31df-4dcd-ae5d-c0e0f1d806c8",
+            "attributes": [
+              {
+                "uuid": "Attribute-27a96cf4-9d2c-4578-808d-bd85112da750",
+                "name": "contents",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/contents"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-1ad9f73c-58f1-4337-90ae-15448fe02cd5",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-d3b5fd3a-300d-47d8-8ed2-75219ad97e40",
+            "attributes": [
+              {
+                "uuid": "Attribute-c9e6048f-efdb-4338-8d7a-3213a973a0d2",
+                "name": "url",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/url"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-0a6969b7-7ca9-4912-b785-73aa2b6f162c",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-03b6cc52-5510-4971-acfa-5941b5cba97d",
+            "attributes": [
+              {
+                "uuid": "Attribute-fa4f1a2c-622e-439a-b394-b58dfc1c27da",
+                "name": "thumbnail",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/thumbnail"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-2b9e79bd-a58c-4aa8-9fcc-7716b477fd1d",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-ee9db26b-5493-49d4-8a0a-aaa25317cd84",
+            "attributes": [
+              {
+                "uuid": "Attribute-f5003a58-8641-449c-84e1-f1d7bc21f042",
+                "name": "lccn",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/lccn"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-4183e085-2d1b-4a9e-8bbc-a16b16137e12",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-d8e04b7e-5879-4daf-98b9-603640ccdff8",
+            "attributes": [
+              {
+                "uuid": "Attribute-be625d77-bbf8-4a26-b965-0772e045af45",
+                "name": "ctrlnum",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/ctrlnum"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-d09529c3-79a8-4f18-8337-cf7c88a4f721",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-88aca618-9546-459f-849e-f1b95579f93a",
+            "attributes": [
+              {
+                "uuid": "Attribute-c77ea1a6-5e58-4cc2-bdda-244d2952fb58",
+                "name": "urn",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/urn"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-eddac1de-45ed-4798-8821-c24be427528f",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-3a49110f-a49c-4e5b-b154-3a32243bbc43",
+            "attributes": [
+              {
+                "uuid": "Attribute-27041a00-187c-4377-b68d-e7bf3164abfd",
+                "name": "isbn",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/isbn"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-d34e2398-b131-4983-95c3-b194442bfb8e",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-f17a74bc-e030-434e-933f-7cc91c043e6f",
+            "attributes": [
+              {
+                "uuid": "Attribute-48ca955f-736a-41d5-8d9d-b45434e69d08",
+                "name": "issn",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/issn"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-5381addc-1063-4b9d-b6fa-71079433da15",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-509e8d73-5dab-4dae-96da-e6dbcb578ce3",
+            "attributes": [
+              {
+                "uuid": "Attribute-0ac2737b-6b1a-43d8-99b8-7670710a6959",
+                "name": "ismn",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/ismn"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-22be6fc3-070a-40ee-a5ba-88e84b6ee675",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-86dde771-713d-427e-bf93-2c74a08ec0d5",
+            "attributes": [
+              {
+                "uuid": "Attribute-22eb7275-2d2e-468e-bc04-37b562695c97",
+                "name": "oclc_num",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/oclc_num"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-639361cf-4f0d-4aac-a0c4-8604d5264bbd",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-aca74690-2661-411c-947b-557bdd86b4ad",
+            "attributes": [
+              {
+                "uuid": "Attribute-ebb2cca1-f61c-455c-ad1f-798994247e75",
+                "name": "callnumber-first",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/callnumber-first"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-371a5b97-6e64-475f-bddb-4f0a23fffe34",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-848ef037-a6cd-4e98-8962-cb26c2c51b2a",
+            "attributes": [
+              {
+                "uuid": "Attribute-c88e83ba-0755-4498-a19e-0f8f0063095a",
+                "name": "callnumber-subject",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/callnumber-subject"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-6f508d1b-28eb-4108-a4f5-15307090c48b",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-b09aeb5b-50a5-41bc-a511-620b46c43b49",
+            "attributes": [
+              {
+                "uuid": "Attribute-92788be1-900a-4754-89cc-8d17525319cc",
+                "name": "callnumber-label",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/callnumber-label"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-74e53dee-3f6d-4411-bc61-307b058f978a",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-e9c09fa9-e1c0-4803-a8e4-b9d74905bb94",
+            "attributes": [
+              {
+                "uuid": "Attribute-111af548-51da-4f9d-9e18-782588a57b4e",
+                "name": "callnumber-sort",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/callnumber-sort"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-79c87ed1-5596-403f-87c5-ff5d45ac449f",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-94f1584c-5615-489a-b792-dbfb8ff9dab8",
+            "attributes": [
+              {
+                "uuid": "Attribute-5b9e1e38-b63e-49e9-9701-8c0ea13ae3f6",
+                "name": "callnumber-raw",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/callnumber-raw"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-9af8cf5e-017a-4b47-9bc7-a38fe3bb66bd",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-201cd833-8bd7-41ea-b334-5f156e0675aa",
+            "attributes": [
+              {
+                "uuid": "Attribute-6a70dbee-89b0-483f-8e7f-248d721df4ac",
+                "name": "callnumber-search",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/callnumber-search"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-56d5f795-5cf5-4270-ae81-d4d8310add5f",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-33cb8e89-49d0-44df-a5b4-f60fd1983eb4",
+            "attributes": [
+              {
+                "uuid": "Attribute-b98e2493-6877-4f21-9dcd-d727437dde60",
+                "name": "dewey-hundreds",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/dewey-hundreds"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-309621b1-6be5-4af0-a4a4-6ee1e2a520c4",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-09008fb8-40a1-4aee-ad6c-ed14f0b7280d",
+            "attributes": [
+              {
+                "uuid": "Attribute-60741df0-b13d-4cb7-bc94-45960655db9a",
+                "name": "dewey-tens",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/dewey-tens"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-61b82d24-7dba-47b0-aa15-89a2b941264a",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-8a70fbed-efcb-4408-b7ce-8c3363fb579c",
+            "attributes": [
+              {
+                "uuid": "Attribute-3a37045f-956e-4be8-8984-b9ee773a6dbf",
+                "name": "dewey-ones",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/dewey-ones"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-763777a2-2031-4353-a1cc-c7d89195c519",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-64b045d5-1fbd-478e-ba37-59dc4c705ee7",
+            "attributes": [
+              {
+                "uuid": "Attribute-8beba31c-fac7-4619-a907-ef23388570ff",
+                "name": "dewey-full",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/dewey-full"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-fb483db6-9ab3-4d7c-8266-bcbc98680603",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-44bf98f8-1dd7-49bd-8f22-09c91e44549b",
+            "attributes": [
+              {
+                "uuid": "Attribute-8fe04556-7538-43a2-8fe4-6f2d9d399abb",
+                "name": "dewey-sort",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/dewey-sort"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-42959947-742b-4f35-b9b1-a222e151e22f",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-4b5f473e-42cd-4bdb-a162-a0dd53b4d1da",
+            "attributes": [
+              {
+                "uuid": "Attribute-28d63692-1ed8-47a6-a024-4bdfb5819860",
+                "name": "dewey-raw",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/dewey-raw"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-57fe543c-3054-41d4-965d-e7704017c868",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-c1bfb849-e213-4f58-8390-28e9e4a6811d",
+            "attributes": [
+              {
+                "uuid": "Attribute-8bcdeaf9-747c-4002-b8b8-48edde28bf1b",
+                "name": "dewey-search",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/dewey-search"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-0547a298-041c-43bd-9378-c71792b5ff8c",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-1e726577-d19a-4f46-a8a3-f68e3347457a",
+            "attributes": [
+              {
+                "uuid": "Attribute-efb96920-2977-4765-8852-9cfba45ed1d3",
+                "name": "dateSpan",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/dateSpan"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-4facf7ea-9a9b-4a0a-acc7-c4cd77076e1a",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-0b49e4fa-dc96-45d3-a147-75ca4c72cc3a",
+            "attributes": [
+              {
+                "uuid": "Attribute-90405ad9-8e89-4900-969c-9a7d83497380",
+                "name": "series",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/series"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-48dc195c-afbf-4048-aa44-3feaefcf8708",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-ac34bbb0-4766-4129-927d-a315148fc01a",
+            "attributes": [
+              {
+                "uuid": "Attribute-c734c6c5-e450-4b31-b7ac-f65ab0d37fc5",
+                "name": "series2",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/series2"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-85137629-1e06-4d9d-b041-57e2eb36ca24",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-c6c26618-8368-4221-ae1f-505b2d6ecf5c",
+            "attributes": [
+              {
+                "uuid": "Attribute-e34103b2-42b4-4f0f-99f2-c1e9a3357804",
+                "name": "series_orig",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/series_orig"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-3eba4a0d-0a8a-440c-85ea-bb8d9e9fd1a1",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-fe14cfc9-868c-43c9-9b91-65d385b9cd7a",
+            "attributes": [
+              {
+                "uuid": "Attribute-8034ba82-efd4-4d1d-ba43-bfa545b6a7b9",
+                "name": "topic",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-e5824903-4602-4475-b4a5-dddc59c28d30",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-117e6917-2e43-41ef-af45-a575bc42f3ca",
+            "attributes": [
+              {
+                "uuid": "Attribute-6c20d048-81ad-4baa-a510-ca0281e0b51c",
+                "name": "topic_id",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_id"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-f8fa60a4-30b5-4c69-aa98-8fd7cf5ab2f8",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-37d5b54b-224f-486b-8721-22305a7fe912",
+            "attributes": [
+              {
+                "uuid": "Attribute-7fb9dffe-b6a1-46ec-8267-18d2cacedcce",
+                "name": "topic_ref",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_ref"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-763d5e9f-f74a-48ba-860f-033a66f26308",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-5c5bedb5-e0b3-4889-bad9-be6fc06a3146",
+            "attributes": [
+              {
+                "uuid": "Attribute-d6aa9884-eb9f-4475-9bd1-38ebe6f1461f",
+                "name": "topic_unstemmed",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_unstemmed"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-a29ec24c-0912-40f0-98e0-dc3b3ea68514",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-75d71cb1-4c4c-4f39-85e5-7f38f102cd0c",
+            "attributes": [
+              {
+                "uuid": "Attribute-e6d0581d-be80-4549-a095-9cc9722b7a2e",
+                "name": "topic_facet",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-efe11f8c-c30f-46fc-b314-b9358e5bd67d",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-26dcddf6-0033-4439-a739-de02098e6481",
+            "attributes": [
+              {
+                "uuid": "Attribute-dcc2c310-e976-4f29-a096-2ce9022c1bfe",
+                "name": "topic_browse",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_browse"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-46450b18-bd1c-4f66-a414-ef35930cf884",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-e457643a-bb33-4c5d-8010-935be46c72e6",
+            "attributes": [
+              {
+                "uuid": "Attribute-371848c1-ea63-418e-99e1-35955686cd40",
+                "name": "author_browse",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/author_browse"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-86f71771-d075-46a2-9555-0e0837350963",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-be2f38e5-52ad-46a1-993d-a17f0101e2f8",
+            "attributes": [
+              {
+                "uuid": "Attribute-9d184bf2-3311-45e1-beb0-ff9ec8f6fc0c",
+                "name": "genre",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/genre"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-337ef4b9-c077-4dec-aad1-b7d050ba8a10",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-78637180-5f41-4425-92af-ddadb859286b",
+            "attributes": [
+              {
+                "uuid": "Attribute-7b992d71-5be4-4083-832e-f223e620c877",
+                "name": "genre_facet",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/genre_facet"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-34023777-d5a0-4314-9c45-63b34684bcfb",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-7b0c2814-a647-4514-b4e6-a76bfe10345e",
+            "attributes": [
+              {
+                "uuid": "Attribute-82bbebd3-43cb-46d4-bd7a-cdcc23778b81",
+                "name": "geographic",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/geographic"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-a26a4dd8-c43d-4531-95b6-600114576e47",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-afd7b055-24c9-4dbc-9dfa-4be0eba47a14",
+            "attributes": [
+              {
+                "uuid": "Attribute-ae06ddfb-c273-4f2d-8396-0b45cdaf776c",
+                "name": "geographic_facet",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/geographic_facet"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-2e9102fb-d754-4c3a-8c24-4046273bc2b6",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-a392110a-ddb8-4b3e-bc3d-5e312cff0736",
+            "attributes": [
+              {
+                "uuid": "Attribute-6f44cd53-cd16-4940-a6cd-45015f2afe6d",
+                "name": "geogr_code",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/geogr_code"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-910999dd-6064-4bb2-9e8e-ac9ab3e08e89",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-1e4b9c3e-f137-46fd-93d2-d0b19a8de017",
+            "attributes": [
+              {
+                "uuid": "Attribute-e6952569-a1d7-4a67-b09a-3f99a24dc514",
+                "name": "geogr_code_person",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/geogr_code_person"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-70f17c82-bc6f-474b-9fe3-941a720e3154",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-f8fe663b-4cca-46a6-abbf-5e68a7e44f34",
+            "attributes": [
+              {
+                "uuid": "Attribute-e48d34f3-e57d-4d5c-9a57-2f541033458f",
+                "name": "era",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/era"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-4f7a21f9-e57f-4769-a38e-9aa9e5036e7a",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-e56abfe8-df1b-4c0a-aa8b-c2f250d2422e",
+            "attributes": [
+              {
+                "uuid": "Attribute-6bc7137c-f594-4c9b-8212-b12701798b87",
+                "name": "era_facet",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/era_facet"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-e623576c-416a-4ba9-ba7d-b1f1787fcc36",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-ced60eda-c22f-463e-a561-bba8eb68a0f5",
+            "attributes": [
+              {
+                "uuid": "Attribute-ce1bfb8a-725c-41cc-8b4b-7d1b3338d620",
+                "name": "footnote",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/footnote"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-0c36bcb6-e86e-4c38-8aad-3002b745ad02",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-7c8e3dc9-e348-4c80-bc83-2aa8a1630901",
+            "attributes": [
+              {
+                "uuid": "Attribute-1c9321b2-3222-43c7-a837-385e61e100c4",
+                "name": "dissertation_note",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/dissertation_note"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-f6cd9e8a-236c-4b22-a726-7bdc3fafe31b",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-d7ce0263-9757-401f-967e-224911d58e74",
+            "attributes": [
+              {
+                "uuid": "Attribute-80e926e9-0006-47b4-8da2-2dadf45ccfce",
+                "name": "performer_note",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/performer_note"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-1c6b77b1-d85c-42ec-99b9-9d29762e0094",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-a469c3bd-59a7-4f57-a3dc-2b224fe92a19",
+            "attributes": [
+              {
+                "uuid": "Attribute-91b38329-cda8-469b-a544-b5fd99d58d2a",
+                "name": "illustrated",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/illustrated"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-1602bbeb-3bb2-4417-88e3-4998bfa66159",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-fbe23d08-9051-414e-b997-1fb16ee619cd",
+            "attributes": [
+              {
+                "uuid": "Attribute-cde04c75-ebbb-4acd-a4ea-10081d9ae611",
+                "name": "long_lat",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/long_lat"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-77a38ffb-8d50-465e-9c7d-828fec08a52b",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-fd26dbc7-a7ce-4174-ac39-487f47640054",
+            "attributes": [
+              {
+                "uuid": "Attribute-fb79a56c-b730-4224-8020-29523b20f44c",
+                "name": "music_heading",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/music_heading"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-c7ae7ead-a6ba-4afb-a3fc-18c27dae0d9a",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-e013bdd2-a242-4d2c-917b-2f0e8c9514a5",
+            "attributes": [
+              {
+                "uuid": "Attribute-9e028361-0824-4cbb-a857-d88872783401",
+                "name": "music_heading_browse",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/music_heading_browse"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-22fac459-ce7b-4212-8dd1-ae300fedd487",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-cf2ffabb-13e0-4eeb-a1a5-c99816a7799e",
+            "attributes": [
+              {
+                "uuid": "Attribute-e7f51963-01bc-46ad-8b9b-75488cd7b58c",
+                "name": "film_heading",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/film_heading"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-77c22271-8a39-4f2d-959a-9b1e374a296e",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-7a76b8d1-4666-4a39-a2d9-64b0093446b2",
+            "attributes": [
+              {
+                "uuid": "Attribute-b25d0c23-bb48-4c68-b8ad-8277bdde020e",
+                "name": "rvk_facet",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/rvk_facet"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-4660e13e-2a88-4e5b-86ed-432cdc7ec509",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-8deb4cc9-fa96-4e59-ab33-b6b0410975e7",
+            "attributes": [
+              {
+                "uuid": "Attribute-fc57edb2-22c8-4853-9974-a8a027598217",
+                "name": "rvk_label",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/rvk_label"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-82dee949-280e-4e8f-8da1-8e07f877bb59",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-8403bb86-9324-4ab3-822b-c1b26488ce45",
+            "attributes": [
+              {
+                "uuid": "Attribute-9ec2c755-5a1d-4c24-8fe0-200e917ca608",
+                "name": "rvk_path",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/rvk_path"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-d9a75478-c5f3-4fda-a555-6f407baea89d",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-3dbbbe8f-d30c-48b9-baba-358864c4893c",
+            "attributes": [
+              {
+                "uuid": "Attribute-aba9c36f-acb7-4935-928e-519c1a6d68a6",
+                "name": "container_title",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/container_title"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-659cf4f4-e3af-4b0a-bc4b-b7c947326c77",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-17f137a3-89c0-42c7-9382-9dd28c99bc91",
+            "attributes": [
+              {
+                "uuid": "Attribute-e7ea27db-7ded-4d27-bf17-a4b698c1ab4b",
+                "name": "container_volume",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/container_volume"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-6f3f3764-25ec-405f-ba78-3e1cacdce137",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-60fc6d36-f229-4f6f-bd63-67658f2c7cac",
+            "attributes": [
+              {
+                "uuid": "Attribute-785b23b5-72c2-4cf4-8ab6-543b6c7c00e1",
+                "name": "container_issue",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/container_issue"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-571beb5c-aed1-40fc-8f26-2aff6ca483ab",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-8d9aa9b5-4807-4467-8b02-ae044f9907d2",
+            "attributes": [
+              {
+                "uuid": "Attribute-753c3a74-1560-458b-b3aa-d569c296d71f",
+                "name": "container_start_page",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/container_start_page"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-f6947f40-6a19-4d3e-b435-71a72a7b41c2",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-0a73af76-e9f0-4ce4-b852-e0df180fba74",
+            "attributes": [
+              {
+                "uuid": "Attribute-83a14db9-ae35-48e2-9264-0127fbe1b6a9",
+                "name": "container_reference",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/container_reference"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-7874ddeb-5e32-43bd-bb85-53dbb52e3bb0",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-afe323e3-f8e5-4ed1-b0e1-6f090601dd67",
+            "attributes": [
+              {
+                "uuid": "Attribute-187bb5af-b2f5-4fe4-987e-fdfd92ead455",
+                "name": "multipart_set",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/multipart_set"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-ef186d99-ec60-4406-b18e-b24faf18494c",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-32437a46-4773-4d5a-9002-70e0a895ce61",
+            "attributes": [
+              {
+                "uuid": "Attribute-400148f4-05d6-43bb-95bc-9a787047db85",
+                "name": "multipart_link",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/multipart_link"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-92f0483e-859e-499b-8c2d-8cb7ea1014a4",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-af3d5c10-396c-4c41-80ff-4fda7693981b",
+            "attributes": [
+              {
+                "uuid": "Attribute-047349e7-a3a9-4593-a850-c662578f8234",
+                "name": "multipart_part",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/multipart_part"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-d3e466dc-c776-4aca-8954-517f599d89e2",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-5cfe2b1c-3710-4bae-968e-2301799d784f",
+            "attributes": [
+              {
+                "uuid": "Attribute-2e8f4f1e-e346-48c9-aa5f-abfcd158ee77",
+                "name": "hierarchytype",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/hierarchytype"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-20faaea7-5253-4c4d-b3e4-7498a832060c",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-88be106f-8115-435a-9728-52eb1cb774a8",
+            "attributes": [
+              {
+                "uuid": "Attribute-89d67eeb-843d-4449-9abd-ff1d3a81be43",
+                "name": "hierarchy_top_id",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/hierarchy_top_id"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-5b9eac9d-8e8d-4e70-ae0e-5133d52bbed8",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-10d11291-16bc-48ec-93c2-0f7fa66eb366",
+            "attributes": [
+              {
+                "uuid": "Attribute-34345b9d-aea6-4ad5-8568-3f84e80ed254",
+                "name": "hierarchy_top_title",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/hierarchy_top_title"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-faf30109-1d09-4710-a6c4-88493c8951bc",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-f6c9d8c5-8c1d-41f1-b7b8-e7dc93a0c92a",
+            "attributes": [
+              {
+                "uuid": "Attribute-0e424e47-fa90-450a-95e8-b90bb24a8773",
+                "name": "hierarchy_parent_id",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/hierarchy_parent_id"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-5442e5a5-0e18-4755-b48d-52df1e783b1d",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-51fbce44-f7c6-4c9c-a02e-33d74692bb8c",
+            "attributes": [
+              {
+                "uuid": "Attribute-012edad4-f98f-47de-8935-e3b22d7e9166",
+                "name": "hierarchy_parent_title",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/hierarchy_parent_title"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-b0890edf-fcc3-48ba-b70d-4f742bca6cc8",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-fc2137d6-0d94-46a9-a3c2-20cacaac0757",
+            "attributes": [
+              {
+                "uuid": "Attribute-53d34b5b-906b-4ac4-8423-28617ff088b5",
+                "name": "hierarchy_sequence",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/hierarchy_sequence"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-4dec0fc2-ca74-4a62-89f2-85f8d93f422e",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-909adff6-a3ff-4957-9ea5-287cb46aa3a3",
+            "attributes": [
+              {
+                "uuid": "Attribute-1e8679be-06d7-4da9-a4cb-80b7e52ecfb0",
+                "name": "is_hierarchy_id",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/is_hierarchy_id"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-dee9f51c-b6ad-4786-9e02-12e7c077cc66",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-2b040adc-ab6c-45a3-bc17-cb77c9382b61",
+            "attributes": [
+              {
+                "uuid": "Attribute-2a8a468d-71ec-4679-b93a-f0d0ebc67620",
+                "name": "is_hierarchy_title",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/is_hierarchy_title"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-68695988-aa60-4445-9280-516bf56efcfb",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-da2aa84d-a35d-48ce-9fe2-3e19a5aa7db1",
+            "attributes": [
+              {
+                "uuid": "Attribute-b187267e-2fc1-4975-b359-834efcf3049b",
+                "name": "title_in_hierarchy",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/title_in_hierarchy"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-fc020ae7-a53c-4f92-91bf-ab4fb3cb4a99",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-619af7c4-2cfe-4dc9-8a0d-5f61baab379d",
+            "attributes": [
+              {
+                "uuid": "Attribute-a2755a77-e1fd-4157-b644-030e03299ab2",
+                "name": "hierarchy_browse",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/hierarchy_browse"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-f1244815-c0c3-4fdc-bdd0-388dbc7d8a86",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-a0fdd134-0674-4138-9200-b06640862359",
+            "attributes": [
+              {
+                "uuid": "Attribute-e97702dd-f890-4b01-9c94-87eccb54737e",
+                "name": "recordtype",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/recordtype"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-73a5b68a-0b5c-41a3-9b97-eddb872eb272",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-24256e77-c1a5-4293-94ab-507bd2ab0b7a",
+            "attributes": [
+              {
+                "uuid": "Attribute-8c3c512a-e3b4-459b-abc9-f69f70bcdd25",
+                "name": "first_indexed",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/first_indexed"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-b29ccc6d-75ec-4356-aeb2-f7676cf24eea",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-0c66ba87-1cbc-45a3-9d98-2fb517d710a1",
+            "attributes": [
+              {
+                "uuid": "Attribute-50c7bb95-0efc-41e0-8281-38f441bf2482",
+                "name": "last_indexed",
+                "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/last_indexed"
+              }
+            ]
+          },
+          "sub_schema": null
+        }
+      ],
+      "record_class": {
+        "uuid": "Clasz-2b3ddd78-3876-44eb-bdd9-ae817ca563c8",
+        "name": "RecordType",
+        "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/RecordType"
+      },
+      "content_schema": {
+        "uuid": "ContentSchema-b321979d-f31e-45b7-b687-39b00f7cb440",
+        "name": "finc Solr content schema",
+        "record_identifier_attribute_path": {
+          "uuid": "AttributePath-b6d40691-cffd-4716-b417-6d4e7204d8d2",
+          "attributes": [
+            {
+              "uuid": "Attribute-7e5995f2-a3e1-4807-b570-bb938de6a4e0",
+              "name": "id",
+              "uri": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/id"
+            }
+          ]
+        },
+        "key_attribute_paths": null,
+        "value_attribute_path": null
+      }
+    },
+    "deprecated": false
+  }
+}

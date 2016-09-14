@@ -25,6 +25,7 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
@@ -55,13 +56,13 @@ import com.google.common.io.Resources;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.dswarm.common.types.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
+import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.morph.model.FilterExpression;
 import org.dswarm.converter.morph.model.FilterExpressionType;
@@ -258,7 +259,7 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 
 	public String render(final boolean indent) {
 
-		return render(indent, Charsets.UTF_8);
+		return render(indent, StandardCharsets.UTF_8);
 	}
 
 	@Override
@@ -315,12 +316,13 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 		return (MORPHSCRIPTBUILDERIMPL) this;
 	}
 
-	protected Tuple<Optional<Map<String, FilterExpression>>, Optional<FilterExpression>> determineCombineAsFilterDataOutFilter(final Map<String, FilterExpression> filterExpressionMap, final String inputAttributePathStringXMLEscaped) {
+	protected Tuple<Optional<Map<String, FilterExpression>>, Optional<FilterExpression>> determineCombineAsFilterDataOutFilter(final Map<String, FilterExpression> filterExpressionMap,
+	                                                                                                                           final String inputAttributePathStringXMLEscaped) {
 
 		return Tuple.tuple(Optional.ofNullable(filterExpressionMap).filter(filterExpressionMap2 -> !filterExpressionMap2.isEmpty()), Optional.empty());
 	}
 
-	protected Element createFilterFunction(FilterExpression filterExpression) throws DMPConverterException {
+	protected Element createFilterFunction(final FilterExpression filterExpression) throws DMPConverterException {
 
 		final Element combineAsFilterDataFunction;
 
@@ -362,9 +364,11 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 		return combineAsFilterDataFunction;
 	}
 
-	protected void addFilter(final String inputAttributePathStringXMLEscaped, final String variable,
+	protected void addFilter(final String inputAttributePathStringXMLEscaped,
+	                         final String variable,
 	                         final Map<String, FilterExpression> filterExpressionMap,
-	                         final Element rules, final boolean resultNameAsVariable) throws DMPConverterException {
+	                         final Element rules,
+	                         final boolean resultNameAsVariable) throws DMPConverterException {
 
 		final String combineValueVariable = variable + MorphScriptBuilder.FILTER_VARIABLE_POSTFIX;
 
@@ -409,7 +413,9 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 		rules.appendChild(combineAsFilter);
 	}
 
-	private void createFilterIfElement(final String inputAttributePathStringXMLEscaped, final Element combineAsFilter, final Map<String, FilterExpression> newFilterExpressionMap) throws DMPConverterException {
+	private void createFilterIfElement(final String inputAttributePathStringXMLEscaped,
+	                                   final Element combineAsFilter,
+	                                   final Map<String, FilterExpression> newFilterExpressionMap) throws DMPConverterException {
 
 		if(newFilterExpressionMap == null || newFilterExpressionMap.isEmpty()) {
 
@@ -450,7 +456,9 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 		combineAsFilter.appendChild(filterIf);
 	}
 
-	protected abstract Element createFilterDataElement(final String variable, final String attributePathString, final Optional<FilterExpression> optionalCombineAsFilterDataOutFilter) throws DMPConverterException;
+	protected abstract Element createFilterDataElement(final String variable,
+	                                                   final String attributePathString,
+	                                                   final Optional<FilterExpression> optionalCombineAsFilterDataOutFilter) throws DMPConverterException;
 
 	protected String getFilterExpression(final Filter filter) {
 
@@ -538,7 +546,8 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 		}
 	}
 
-	protected String validateCommonAttributePath(final String valueAttributePath, final Set<String> filterAttributePaths) {
+	protected String validateCommonAttributePath(final String valueAttributePath,
+	                                             final Set<String> filterAttributePaths) {
 
 		final String commonAttributePath = determineCommonAttributePath(valueAttributePath, filterAttributePaths);
 
@@ -576,7 +585,8 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 		}
 	}
 
-	protected String determineCommonAttributePath(final String valueAttributePath, final Set<String> filterAttributePaths) {
+	protected String determineCommonAttributePath(final String valueAttributePath,
+	                                              final Set<String> filterAttributePaths) {
 
 		final String[] attributePaths = new String[filterAttributePaths.size() + 1];
 

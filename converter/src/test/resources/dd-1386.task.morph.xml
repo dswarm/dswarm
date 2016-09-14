@@ -1,0 +1,34 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+    <meta>
+        <name>mapping1a9fdd34-aace-c60f-5215-373717c76547</name>
+    </meta>
+    <rules>
+        <combine flushWith="http://www.loc.gov/MARC21/slim#controlfield" includeSubEntities="true" name="@controlfield_value__f93d1a41-0d3c-3404-59af-8d8db2d23003__0__" reset="true" sameEntity="true" value="${controlfield_value__f93d1a41-0d3c-3404-59af-8d8db2d23003__0__.filtered}">
+            <if>
+                <all flushWith="http://www.loc.gov/MARC21/slim#controlfield&#30;http://www.loc.gov/MARC21/slim#tag" includeSubEntities="true" name="CONDITION_ALL" reset="true">
+                    <data source="http://www.loc.gov/MARC21/slim#controlfield&#30;http://www.loc.gov/MARC21/slim#tag">
+                        <equals string="001"/>
+                    </data>
+                </all>
+            </if>
+            <data name="controlfield_value__f93d1a41-0d3c-3404-59af-8d8db2d23003__0__.filtered" source="http://www.loc.gov/MARC21/slim#controlfield&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+        </combine>
+        <data name="@leader_value__8aba4aee-489c-f96e-2549-f282531f114c__0__" source="http://www.loc.gov/MARC21/slim#leader&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+        <data name="http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/id" source="@__TRANSFORMATION_OUTPUT_VARIABLE__6b36a531-77fe-2129-97bf-9023a5493b17"/>
+        <data name="@componentefc71e1f-5a4f-2fba-9673-31a270db2213" source="@leader_value__8aba4aee-489c-f96e-2549-f282531f114c__0__">
+            <lookup in="componentefc71e1f-5a4f-2fba-9673-31a270db2213"/>
+        </data>
+        <data name="@component8c3cc5ee-82fc-98ef-0d4c-d26315381e24" source="@controlfield_value__f93d1a41-0d3c-3404-59af-8d8db2d23003__0__">
+            <lookup in="component8c3cc5ee-82fc-98ef-0d4c-d26315381e24"/>
+        </data>
+        <combine name="@__TRANSFORMATION_OUTPUT_VARIABLE__6b36a531-77fe-2129-97bf-9023a5493b17" value="${componentefc71e1f-5a4f-2fba-9673-31a270db2213} &gt;&gt;&gt;&gt; ${component8c3cc5ee-82fc-98ef-0d4c-d26315381e24}">
+            <data name="componentefc71e1f-5a4f-2fba-9673-31a270db2213" source="@componentefc71e1f-5a4f-2fba-9673-31a270db2213"/>
+            <data name="component8c3cc5ee-82fc-98ef-0d4c-d26315381e24" source="@component8c3cc5ee-82fc-98ef-0d4c-d26315381e24"/>
+        </combine>
+    </rules>
+    <maps>
+        <sqlmap database="dmp" host="localhost" login="dmp" name="componentefc71e1f-5a4f-2fba-9673-31a270db2213" password="dmp" query="SELECT name FROM DATA_SCHEMA WHERE uuid = ?"/>
+        <sqlmap database="dmp" host="localhost" login="dmp" name="component8c3cc5ee-82fc-98ef-0d4c-d26315381e24" password="dmp" query="SELECT name FROM DATA_MODEL WHERE uuid = ?"/>
+    </maps>
+</metamorph>
