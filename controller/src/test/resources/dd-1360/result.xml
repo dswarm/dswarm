@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<add>
+	<doc>
+		<field name="topic"><![CDATA[Physics]]></field>
+		<field name="topic"><![CDATA[Astrophysics and Astroparticles]]></field>
+		<field name="topic"><![CDATA[Astronomy, Observations and Techniques]]></field>
+		<field name="topic"><![CDATA[Cosmology]]></field>
+		<field name="topic"><![CDATA[Extraterrestrial Physics, Space Sciences]]></field>
+		<field name="topic"><![CDATA[Astrobiology]]></field>
+		<field name="topic"><![CDATA[Spatial frequencies in polar LEO satellite]]></field>
+		<field name="topic"><![CDATA[Ionospheric currents]]></field>
+		<field name="topic"><![CDATA[LEO satellites]]></field>
+		<field name="topic"><![CDATA[Pulsations at LEO]]></field>
+		<field name="topic_facet"><![CDATA[Physics]]></field>
+		<field name="topic_facet"><![CDATA[Astrophysics and Astroparticles]]></field>
+		<field name="topic_facet"><![CDATA[Astronomy, Observations and Techniques]]></field>
+		<field name="topic_facet"><![CDATA[Cosmology]]></field>
+		<field name="topic_facet"><![CDATA[Extraterrestrial Physics, Space Sciences]]></field>
+		<field name="topic_facet"><![CDATA[Astrobiology]]></field>
+		<field name="topic_facet"><![CDATA[Spatial frequencies in polar LEO satellite]]></field>
+		<field name="topic_facet"><![CDATA[Ionospheric currents]]></field>
+		<field name="topic_facet"><![CDATA[LEO satellites]]></field>
+		<field name="topic_facet"><![CDATA[Pulsations at LEO]]></field>
+		<field name="recordtype"><![CDATA[propPubXml]]></field>
+		<field name="format_de14"><![CDATA[Article, E-Article]]></field>
+		<field name="mega_collection"><![CDATA[Springer Journals]]></field>
+		<field name="format_de15"><![CDATA[Article, E-Article]]></field>
+		<field name="format"><![CDATA[ElectronicArticle]]></field>
+		<field name="institution"><![CDATA[ ]]></field>
+		<field name="source_id"><![CDATA[105]]></field>
+		<field name="access_facet"><![CDATA[Electronic Resources]]></field>
+		<field name="language"><![CDATA[English]]></field>
+		<field name="publishDate"><![CDATA[2016]]></field>
+		<field name="publishDateSort"><![CDATA[2016]]></field>
+	</doc>
+	<doc>
+		<field name="topic"><![CDATA[Physics]]></field>
+		<field name="topic"><![CDATA[Astrophysics and Astroparticles]]></field>
+		<field name="topic"><![CDATA[Astronomy, Observations and Techniques]]></field>
+		<field name="topic"><![CDATA[Cosmology]]></field>
+		<field name="topic"><![CDATA[Extraterrestrial Physics, Space Sciences]]></field>
+		<field name="topic"><![CDATA[Astrobiology]]></field>
+		<field name="topic"><![CDATA[Spatial frequencies in polar LEO satellite]]></field>
+		<field name="topic"><![CDATA[Ionospheric currents]]></field>
+		<field name="topic"><![CDATA[LEO satellites]]></field>
+		<field name="topic"><![CDATA[Pulsations at LEO]]></field>
+		<field name="topic_facet"><![CDATA[Physics]]></field>
+		<field name="topic_facet"><![CDATA[Astrophysics and Astroparticles]]></field>
+		<field name="topic_facet"><![CDATA[Astronomy, Observations and Techniques]]></field>
+		<field name="topic_facet"><![CDATA[Cosmology]]></field>
+		<field name="topic_facet"><![CDATA[Extraterrestrial Physics, Space Sciences]]></field>
+		<field name="topic_facet"><![CDATA[Astrobiology]]></field>
+		<field name="topic_facet"><![CDATA[Spatial frequencies in polar LEO satellite]]></field>
+		<field name="topic_facet"><![CDATA[Ionospheric currents]]></field>
+		<field name="topic_facet"><![CDATA[LEO satellites]]></field>
+		<field name="topic_facet"><![CDATA[Pulsations at LEO]]></field>
+		<field name="recordtype"><![CDATA[propPubXml]]></field>
+		<field name="format_de14"><![CDATA[Article, E-Article]]></field>
+		<field name="mega_collection"><![CDATA[Springer Journals]]></field>
+		<field name="format_de15"><![CDATA[Article, E-Article]]></field>
+		<field name="format"><![CDATA[ElectronicArticle]]></field>
+		<field name="institution"><![CDATA[ ]]></field>
+		<field name="source_id"><![CDATA[105]]></field>
+		<field name="access_facet"><![CDATA[Electronic Resources]]></field>
+		<field name="language"><![CDATA[English]]></field>
+		<field name="publishDate"><![CDATA[2016]]></field>
+		<field name="publishDateSort"><![CDATA[2016]]></field>
+	</doc>
+	<doc>
+		<field name="topic"><![CDATA[Physics]]></field>
+		<field name="topic"><![CDATA[Condensed Matter Physics]]></field>
+		<field name="topic"><![CDATA[Mechanics]]></field>
+		<field name="topic"><![CDATA[Industrial Chemistry/Chemical Engineering]]></field>
+		<field name="topic"><![CDATA[Physical Chemistry]]></field>
+		<field name="topic"><![CDATA[Equation of state]]></field>
+		<field name="topic"><![CDATA[Helmholtz energy]]></field>
+		<field name="topic"><![CDATA[R-1234ze(E)]]></field>
+		<field name="topic"><![CDATA[Thermodynamic properties]]></field>
+		<field name="topic">
+			<![CDATA[&lt;![CDATA[                         &lt;Emphasis Type=&quot;Italic&quot;&gt;trans&lt;/Emphasis&gt;-1&lt;InlineEquation ID=&quot;IEq1&quot;&gt;                            &lt;InlineMediaObject&gt;                               &lt;ImageObject Color=&quot;BlackWhite&quot; FileRef=&quot;10765_2016_2040_Article_IEq1.gif&quot; Format=&quot;GIF&quot; Rendition=&quot;HTML&quot; Type=&quot;Linedraw&quot;/&gt;                            &lt;/InlineMediaObject&gt;                            &lt;EquationSource Format=&quot;TEX&quot;&gt;&lt;![CDATA[$$, $$]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                            &lt;EquationSource Format=&quot;MATHML&quot;&gt;&lt;![CDATA[                     ]&gt;&lt;![CDATA[&gt;&lt;math xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;&gt;                                  &lt;mo&gt;,&lt;/mo&gt;                               &lt;/math&gt;&lt;![CDATA[                   ]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                         &lt;/InlineEquation&gt;3&lt;InlineEquation ID=&quot;IEq2&quot;&gt;                            &lt;InlineMediaObject&gt;                               &lt;ImageObject Color=&quot;BlackWhite&quot; FileRef=&quot;10765_2016_2040_Article_IEq2.gif&quot; Format=&quot;GIF&quot; Rendition=&quot;HTML&quot; Type=&quot;Linedraw&quot;/&gt;                            &lt;/InlineMediaObject&gt;                            &lt;EquationSource Format=&quot;TEX&quot;&gt;&lt;![CDATA[$$, $$]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                            &lt;EquationSource Format=&quot;MATHML&quot;&gt;&lt;![CDATA[                     ]&gt;&lt;![CDATA[&gt;&lt;math xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;&gt;                                  &lt;mo&gt;,&lt;/mo&gt;                               &lt;/math&gt;&lt;![CDATA[                   ]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                         &lt;/InlineEquation&gt;3&lt;InlineEquation ID=&quot;IEq3&quot;&gt;                            &lt;InlineMediaObject&gt;                               &lt;ImageObject Color=&quot;BlackWhite&quot; FileRef=&quot;10765_2016_2040_Article_IEq3.gif&quot; Format=&quot;GIF&quot; Rendition=&quot;HTML&quot; Type=&quot;Linedraw&quot;/&gt;                            &lt;/InlineMediaObject&gt;                            &lt;EquationSource Format=&quot;TEX&quot;&gt;&lt;![CDATA[$$, $$]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                            &lt;EquationSource Format=&quot;MATHML&quot;&gt;&lt;![CDATA[                     ]&gt;&lt;![CDATA[&gt;&lt;math xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;&gt;                                  &lt;mo&gt;,&lt;/mo&gt;                               &lt;/math&gt;&lt;![CDATA[                   ]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                         &lt;/InlineEquation&gt;3-Tetrafluoroprop-1-ene]&gt;]]></field>
+		<field name="topic_facet"><![CDATA[Physics]]></field>
+		<field name="topic_facet"><![CDATA[Condensed Matter Physics]]></field>
+		<field name="topic_facet"><![CDATA[Mechanics]]></field>
+		<field name="topic_facet"><![CDATA[Industrial Chemistry/Chemical Engineering]]></field>
+		<field name="topic_facet"><![CDATA[Physical Chemistry]]></field>
+		<field name="topic_facet"><![CDATA[Equation of state]]></field>
+		<field name="topic_facet"><![CDATA[Helmholtz energy]]></field>
+		<field name="topic_facet"><![CDATA[R-1234ze(E)]]></field>
+		<field name="topic_facet"><![CDATA[Thermodynamic properties]]></field>
+		<field name="topic_facet">
+			<![CDATA[&lt;![CDATA[                         &lt;Emphasis Type=&quot;Italic&quot;&gt;trans&lt;/Emphasis&gt;-1&lt;InlineEquation ID=&quot;IEq1&quot;&gt;                            &lt;InlineMediaObject&gt;                               &lt;ImageObject Color=&quot;BlackWhite&quot; FileRef=&quot;10765_2016_2040_Article_IEq1.gif&quot; Format=&quot;GIF&quot; Rendition=&quot;HTML&quot; Type=&quot;Linedraw&quot;/&gt;                            &lt;/InlineMediaObject&gt;                            &lt;EquationSource Format=&quot;TEX&quot;&gt;&lt;![CDATA[$$, $$]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                            &lt;EquationSource Format=&quot;MATHML&quot;&gt;&lt;![CDATA[                     ]&gt;&lt;![CDATA[&gt;&lt;math xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;&gt;                                  &lt;mo&gt;,&lt;/mo&gt;                               &lt;/math&gt;&lt;![CDATA[                   ]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                         &lt;/InlineEquation&gt;3&lt;InlineEquation ID=&quot;IEq2&quot;&gt;                            &lt;InlineMediaObject&gt;                               &lt;ImageObject Color=&quot;BlackWhite&quot; FileRef=&quot;10765_2016_2040_Article_IEq2.gif&quot; Format=&quot;GIF&quot; Rendition=&quot;HTML&quot; Type=&quot;Linedraw&quot;/&gt;                            &lt;/InlineMediaObject&gt;                            &lt;EquationSource Format=&quot;TEX&quot;&gt;&lt;![CDATA[$$, $$]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                            &lt;EquationSource Format=&quot;MATHML&quot;&gt;&lt;![CDATA[                     ]&gt;&lt;![CDATA[&gt;&lt;math xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;&gt;                                  &lt;mo&gt;,&lt;/mo&gt;                               &lt;/math&gt;&lt;![CDATA[                   ]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                         &lt;/InlineEquation&gt;3&lt;InlineEquation ID=&quot;IEq3&quot;&gt;                            &lt;InlineMediaObject&gt;                               &lt;ImageObject Color=&quot;BlackWhite&quot; FileRef=&quot;10765_2016_2040_Article_IEq3.gif&quot; Format=&quot;GIF&quot; Rendition=&quot;HTML&quot; Type=&quot;Linedraw&quot;/&gt;                            &lt;/InlineMediaObject&gt;                            &lt;EquationSource Format=&quot;TEX&quot;&gt;&lt;![CDATA[$$, $$]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                            &lt;EquationSource Format=&quot;MATHML&quot;&gt;&lt;![CDATA[                     ]&gt;&lt;![CDATA[&gt;&lt;math xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;&gt;                                  &lt;mo&gt;,&lt;/mo&gt;                               &lt;/math&gt;&lt;![CDATA[                   ]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                         &lt;/InlineEquation&gt;3-Tetrafluoroprop-1-ene]&gt;]]></field>
+		<field name="recordtype"><![CDATA[propPubXml]]></field>
+		<field name="format_de14"><![CDATA[Article, E-Article]]></field>
+		<field name="mega_collection"><![CDATA[Springer Journals]]></field>
+		<field name="format_de15"><![CDATA[Article, E-Article]]></field>
+		<field name="format"><![CDATA[ElectronicArticle]]></field>
+		<field name="institution"><![CDATA[ ]]></field>
+		<field name="source_id"><![CDATA[105]]></field>
+		<field name="access_facet"><![CDATA[Electronic Resources]]></field>
+		<field name="language"><![CDATA[English]]></field>
+		<field name="publishDate"><![CDATA[2016]]></field>
+		<field name="publishDateSort"><![CDATA[2016]]></field>
+	</doc>
+</add>

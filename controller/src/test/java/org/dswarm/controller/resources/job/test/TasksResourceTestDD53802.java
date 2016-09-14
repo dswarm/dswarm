@@ -15,6 +15,8 @@
  */
 package org.dswarm.controller.resources.job.test;
 
+import javax.ws.rs.core.MediaType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +28,13 @@ public class TasksResourceTestDD53802 extends TasksResourceTestDD538 {
 
 	public TasksResourceTestDD53802() {
 
-		super("dd-538/oai-pmh_marcxml_controller_task.02.json", "dd-538/oai-pmh_marcxml_controller_task.01.input_data_resource.xml", "record",
-				ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE, "dd-538/oai-pmh_marcxml_controller_task.01.result.xml", "02");
+		super("dd-538/oai-pmh_marcxml_controller_task.02.json",
+				"dd-538/oai-pmh_marcxml_controller_task.01.input_data_resource.xml",
+				"record",
+				ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE,
+				"dd-538/oai-pmh_marcxml_controller_task.01.result.xml",
+				"02",
+				false,
+				MediaType.APPLICATION_XML_TYPE);
 	}
 }
