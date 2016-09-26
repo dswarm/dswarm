@@ -11,7 +11,11 @@ import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.schema.AbstractJSONSchemaParser;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
+import org.dswarm.persistence.model.schema.AttributePath;
+import org.dswarm.persistence.model.schema.ContentSchema;
 import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.service.UUIDService;
+import org.dswarm.persistence.service.schema.SchemaService;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
@@ -32,8 +36,8 @@ public abstract class AbstractJSONSchemaParserTest extends GuicedTest {
 	public void tearDown3() throws Exception {
 		GuicedTest.tearDown();
 		GuicedTest.startUp();
-		initObjects();
-		maintainDBService.truncateTables();
+		//initObjects();
+		//maintainDBService.truncateTables();
 	}
 
 	static Schema parseSchema(final String schemaFileName,
@@ -121,5 +125,50 @@ public abstract class AbstractJSONSchemaParserTest extends GuicedTest {
 		final String actualAttributePaths = sb.toString();
 
 		Assert.assertEquals(expectedAttributePaths, actualAttributePaths);
+	}
+
+	static Schema fillContentSchemaAndUpdateSchema(final ContentSchema contentSchema,
+	                                               final AttributePath recordIdentifierAP,
+	                                               final AttributePath valueAP,
+	                                               final Schema schema) throws DMPPersistenceException {
+
+		if (recordIdentifierAP != null) {
+
+			contentSchema.setRecordIdentifierAttributePath(recordIdentifierAP);
+		}
+
+		if (valueAP != null) {
+
+			contentSchema.setValueAttributePath(valueAP);
+		}
+
+		schema.setContentSchema(contentSchema);
+
+		final SchemaService schemaService = GuicedTest.injector.getInstance(SchemaService.class);
+
+		schemaService.updateObjectTransactional(schema);
+
+		return schema;
+	}
+
+	static String getOrCreateContentSchemaIdentifier(final Optional<String> optionalContentSchemaIdentifier) {
+
+		return getOrCreateIdentifier(optionalContentSchemaIdentifier, ContentSchema.class.getSimpleName());
+	}
+
+	static String getOrCreateIdentifier(final Optional<String> optionalIdentifier,
+	                                    final String entityPrefix) {
+
+		final String uuid;
+
+		if (optionalIdentifier.isPresent()) {
+
+			uuid = optionalIdentifier.get();
+		} else {
+
+			uuid = UUIDService.getUUID(entityPrefix);
+		}
+
+		return uuid;
 	}
 }

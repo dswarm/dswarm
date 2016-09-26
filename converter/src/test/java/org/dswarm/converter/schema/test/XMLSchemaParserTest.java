@@ -247,9 +247,10 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 		return fillContentSchemaAndUpdateSchema(contentSchema, id, null, schema);
 	}
 
-	public static Schema parseOAIPMHPlusDCElementsSchema() throws DMPPersistenceException {
+	@Test
+	public void parseOAIPMHPlusDCElementsSchema() throws DMPPersistenceException {
 
-		return parseOAIPMHPlusDCElementsSchema(Optional.empty(), Optional.empty());
+		parseOAIPMHPlusDCElementsSchema(Optional.empty(), Optional.empty());
 	}
 
 	public static Schema parseOAIPMHPlusDCElementsAndEDMSchema(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
@@ -279,9 +280,10 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 		return fillContentSchemaAndUpdateSchema(contentSchema, id, null, updatedSchema);
 	}
 
-	public static Schema parseOAIPMHPlusDCElementsAndEDMSchema() throws DMPPersistenceException {
+	@Test
+	public void parseOAIPMHPlusDCElementsAndEDMSchema() throws DMPPersistenceException {
 
-		return parseOAIPMHPlusDCElementsAndEDMSchema(Optional.empty(), Optional.empty());
+		parseOAIPMHPlusDCElementsAndEDMSchema(Optional.empty(), Optional.empty());
 	}
 
 	public static Schema parseOAIPMHPlusDCTermsSchema(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
@@ -302,33 +304,10 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 		return fillContentSchemaAndUpdateSchema(contentSchema, id, null, schema);
 	}
 
-	public static Schema parseOAIPMHPlusDCTermsSchema() throws DMPPersistenceException {
+	@Test
+	public void parseOAIPMHPlusDCTermsSchema() throws DMPPersistenceException {
 
-		return parseOAIPMHPlusDCTermsSchema(Optional.empty(), Optional.empty());
-	}
-
-	private static Schema fillContentSchemaAndUpdateSchema(final ContentSchema contentSchema,
-	                                                       final AttributePath recordIdentifierAP,
-	                                                       final AttributePath valueAP,
-	                                                       final Schema schema) throws DMPPersistenceException {
-
-		if (recordIdentifierAP != null) {
-
-			contentSchema.setRecordIdentifierAttributePath(recordIdentifierAP);
-		}
-
-		if (valueAP != null) {
-
-			contentSchema.setValueAttributePath(valueAP);
-		}
-
-		schema.setContentSchema(contentSchema);
-
-		final SchemaService schemaService = GuicedTest.injector.getInstance(SchemaService.class);
-
-		schemaService.updateObjectTransactional(schema);
-
-		return schema;
+		parseOAIPMHPlusDCTermsSchema(Optional.empty(), Optional.empty());
 	}
 
 	public static Schema parseOAIPMHPlusMARCXMLSchema(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
@@ -397,9 +376,10 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 		return fillContentSchemaAndUpdateSchema(contentSchema, null, globalTagSubfValue, schema);
 	}
 
-	public static Schema parseOAIPMHPlusMARCXMLSchema() throws DMPPersistenceException {
+	@Test
+	public void parseOAIPMHPlusMARCXMLSchema() throws DMPPersistenceException {
 
-		return parseOAIPMHPlusMARCXMLSchema(Optional.empty(), Optional.empty());
+		parseOAIPMHPlusMARCXMLSchema(Optional.empty(), Optional.empty());
 	}
 
 	/**
@@ -428,7 +408,7 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 	public static Schema parseMabxmlSchema(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
 	                                       final Optional<String> optionalContentSchemaIdentifier) throws IOException, DMPPersistenceException {
 
-		final Schema schema = parseSchema("mabxml-1.xsd", "datensatz", SchemaUtils.MABXML_SCHEMA_UUID, "mabxml schema", optionalAttributePathsSAPIUUIDs, XML_SCHEMA_PARSER);
+		final Schema schema = parseSchema("mabxml-1.xsd", "datensatz", SchemaUtils.MABXML_SCHEMA_UUID, "mabxml schema", optionalAttributePathsSAPIUUIDs, GuicedTest.injector.getInstance(XMLSchemaParser.class));
 
 		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(schema);
 
@@ -527,9 +507,10 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 	 * @throws IOException
 	 * @throws DMPPersistenceException
 	 */
-	public static Schema parseMabxmlSchema() throws IOException, DMPPersistenceException {
+	@Test
+	public void parseMabxmlSchema() throws IOException, DMPPersistenceException {
 
-		return parseMabxmlSchema(Optional.empty(), Optional.empty());
+		parseMabxmlSchema(Optional.empty(), Optional.empty());
 	}
 
 	/**
@@ -541,7 +522,7 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 	public static Schema parsePNXSchema(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
 	                                    final Optional<String> optionalContentSchemaIdentifier) throws IOException, DMPPersistenceException {
 
-		final Schema schema = parseSchema("pnx.xsd", "record", SchemaUtils.PNX_SCHEMA_UUID, "pnx schema", optionalAttributePathsSAPIUUIDs, XML_SCHEMA_PARSER);
+		final Schema schema = parseSchema("pnx.xsd", "record", SchemaUtils.PNX_SCHEMA_UUID, "pnx schema", optionalAttributePathsSAPIUUIDs, GuicedTest.injector.getInstance(XMLSchemaParser.class));
 
 		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(schema);
 
@@ -562,9 +543,10 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 	 * @throws IOException
 	 * @throws DMPPersistenceException
 	 */
-	public static Schema parsePNXSchema() throws IOException, DMPPersistenceException {
+	@Test
+	public void parsePNXSchema() throws IOException, DMPPersistenceException {
 
-		return parsePNXSchema(Optional.empty(), Optional.empty());
+		parsePNXSchema(Optional.empty(), Optional.empty());
 	}
 
 	/**
@@ -576,7 +558,7 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 	public static Schema parseMarcXmlSchema(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
 	                                        final Optional<String> optionalContentSchemaIdentifier) throws IOException, DMPPersistenceException {
 
-		final Schema schema = parseSchema("MARC21slim.xsd", "record", SchemaUtils.MARCXML_SCHEMA_UUID, "MARCXML schema", optionalAttributePathsSAPIUUIDs, XML_SCHEMA_PARSER);
+		final Schema schema = parseSchema("MARC21slim.xsd", "record", SchemaUtils.MARCXML_SCHEMA_UUID, "MARCXML schema", optionalAttributePathsSAPIUUIDs, GuicedTest.injector.getInstance(XMLSchemaParser.class));
 
 		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(schema);
 
@@ -611,9 +593,10 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 	 * @throws IOException
 	 * @throws DMPPersistenceException
 	 */
-	public static Schema parseMarcXmlSchema() throws IOException, DMPPersistenceException {
+	@Test
+	public void parseMarcXmlSchema() throws IOException, DMPPersistenceException {
 
-		return parseMarcXmlSchema(Optional.empty(), Optional.empty());
+		parseMarcXmlSchema(Optional.empty(), Optional.empty());
 	}
 
 	private static Schema parseSchema(final String xsdFileName,
@@ -630,7 +613,7 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 	                                                                                     final String schemaUUID,
 	                                                                                     final String schemaName) throws DMPPersistenceException {
 
-		final java.util.Optional<Tuple<Schema, Map<String, AttributePathHelper>>> optionalResult = XML_SCHEMA_PARSER.parseSeparately(xsdFileName,
+		final java.util.Optional<Tuple<Schema, Map<String, AttributePathHelper>>> optionalResult = GuicedTest.injector.getInstance(XMLSchemaParser.class).parseSeparately(xsdFileName,
 				recordIdentifier, schemaUUID, schemaName);
 
 		Assert.assertTrue(optionalResult.isPresent());
@@ -705,7 +688,7 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 		final AttributePathHelper rootAttributePath = rootAttributePaths.get(rootAttributePathIdentifier);
 
 		final Map<String, AttributePathHelper> childAttributePaths = parseAttributePaths(childSchemaFileName, childRecordIdentifier,
-				includeRecordTag, XML_SCHEMA_PARSER);
+				includeRecordTag, GuicedTest.injector.getInstance(XMLSchemaParser.class));
 
 		final Map<String, AttributePathHelper> newAttributePaths = composeAttributePaths(rootAttributePaths, rootAttributePath, childAttributePaths);
 
@@ -755,26 +738,5 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 				attributeServiceProvider, optionalAttributePathsSAPIUUIDs);
 
 		return SchemaUtils.updateSchema(schema, schemaServiceProvider);
-	}
-
-	private static String getOrCreateContentSchemaIdentifier(final Optional<String> optionalContentSchemaIdentifier) {
-
-		return getOrCreateIdentifier(optionalContentSchemaIdentifier, ContentSchema.class.getSimpleName());
-	}
-
-	private static String getOrCreateIdentifier(final Optional<String> optionalIdentifier,
-	                                            final String entityPrefix) {
-
-		final String uuid;
-
-		if (optionalIdentifier.isPresent()) {
-
-			uuid = optionalIdentifier.get();
-		} else {
-
-			uuid = UUIDService.getUUID(entityPrefix);
-		}
-
-		return uuid;
 	}
 }

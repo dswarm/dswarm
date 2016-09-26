@@ -407,6 +407,18 @@ public abstract class AbstractJSONSchemaParser {
 
 		final JsonNode newCurrentJSONSchemaNode = optionalCurrentJSONSchemaNode.get();
 
+		if(recordTag == null) {
+
+			// take everything from the root on (since no record tag was given)
+
+			final ObjectNode rootNode = objectMapperProvider.get().createObjectNode();
+			rootNode.set(AbstractJSONSchemaParser.ROOT_NODE_IDENTIFIER, currentJSONSchemaNode);
+
+			recordTagNodes.add(rootNode);
+
+			return;
+		}
+
 		final Iterator<Map.Entry<String, JsonNode>> iter = newCurrentJSONSchemaNode.fields();
 
 		while (iter.hasNext()) {
