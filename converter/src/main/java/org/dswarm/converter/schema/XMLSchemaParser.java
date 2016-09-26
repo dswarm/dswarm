@@ -17,8 +17,11 @@ package org.dswarm.converter.schema;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.io.ByteSource;
@@ -29,11 +32,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
+import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
+import org.dswarm.persistence.model.internal.helper.AttributePathHelperHelper;
 import org.dswarm.persistence.service.schema.AttributePathService;
 import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.schema.ClaszService;
 import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
 import org.dswarm.persistence.service.schema.SchemaService;
+import org.dswarm.persistence.util.GDMUtil;
 import org.dswarm.xsd2jsonschema.JsonSchemaParser;
 import org.dswarm.xsd2jsonschema.model.JSRoot;
 
@@ -61,11 +67,11 @@ public class XMLSchemaParser extends AbstractJSONSchemaParser {
 	}
 
 	@Override
-	protected Optional<ObjectNode> getJSONSchema(final String xmlSchemaFilePath) {
+	protected Optional<ObjectNode> getJSONSchema(final String schemaFilePath) {
 
 		final JsonSchemaParser schemaParser = new JsonSchemaParser();
 
-		final URL resourceURL = Resources.getResource(xmlSchemaFilePath);
+		final URL resourceURL = Resources.getResource(schemaFilePath);
 		final ByteSource byteSource = Resources.asByteSource(resourceURL);
 
 		try {
@@ -73,12 +79,12 @@ public class XMLSchemaParser extends AbstractJSONSchemaParser {
 			schemaParser.parse(byteSource.openStream());
 		} catch (final SAXException e) {
 
-			LOG.error("couldn't parse XML schema '{}'", xmlSchemaFilePath, e);
+			LOG.error("couldn't parse XML schema '{}'", schemaFilePath, e);
 
 			return Optional.empty();
 		} catch (final IOException e) {
 
-			LOG.error("couldn't read XML schema '{}'", xmlSchemaFilePath, e);
+			LOG.error("couldn't read XML schema '{}'", schemaFilePath, e);
 
 			return Optional.empty();
 		}
@@ -89,7 +95,7 @@ public class XMLSchemaParser extends AbstractJSONSchemaParser {
 			root = schemaParser.apply(XMLSchemaParser.ROOT_NODE_IDENTIFIER);
 		} catch (final SAXException e) {
 
-			LOG.error("couldn't convert XSD to JSON schema for '{}'", xmlSchemaFilePath, e);
+			LOG.error("couldn't convert XSD to JSON schema for '{}'", schemaFilePath, e);
 
 			return Optional.empty();
 		}
@@ -101,11 +107,86 @@ public class XMLSchemaParser extends AbstractJSONSchemaParser {
 			json = root.toJson(objectMapperProvider.get());
 		} catch (final IOException e) {
 
-			LOG.error("couldn't serialize JSON schema for '{}'", xmlSchemaFilePath, e);
+			LOG.error("couldn't serialize JSON schema for '{}'", schemaFilePath, e);
 
 			return Optional.empty();
 		}
 
 		return Optional.ofNullable(json);
+	}
+
+	protected void optionalAddRDFTypeAttributePath(final Set<AttributePathHelper> attributePaths,
+	                                               final String type,
+	                                               final String attribute,
+	                                               final AttributePathHelper finalAttributePathHelper) {
+
+		if ((type.equals(AbstractJSONSchemaParser.STRING_JSON_SCHEMA_ATTRIBUTE_TYPE) || type.equals(OBJECT_JSON_SCHEMA_ATTRIBUTE_TYPE))
+				&& !isXMLAttribute(attribute)) {
+
+			// add rdf:type attribute
+			AttributePathHelperHelper.addAttributePath(GDMUtil.RDF_type, attributePaths, finalAttributePathHelper);
+		}
+	}
+
+	protected void optionalAddRDFValueAttributePath(final boolean addRDFValueAttributePath,
+	                                                final Set<AttributePathHelper> attributePaths,
+	                                                final AttributePathHelper attributePath) {
+
+		if (addRDFValueAttributePath) {
+
+			// add rdf:value attribute
+			AttributePathHelperHelper.addAttributePath(GDMUtil.RDF_value, attributePaths, attributePath);
+		}
+	}
+
+	protected String determineAttributeName(final String attribute) {
+
+		final boolean isXMLAttribute = isXMLAttribute(attribute);
+
+		final String finalAttribute;
+
+		if (isXMLAttribute) {
+
+			finalAttribute = attribute.substring(1, attribute.length());
+		} else {
+
+			finalAttribute = attribute;
+		}
+
+		return finalAttribute;
+	}
+
+	protected boolean doAddRDFValueAttributePath(final JsonNode jsonSchemaAttributeContentNode,
+	                                             final String type,
+	                                             final String attribute) {
+
+		final JsonNode mixedNode = jsonSchemaAttributeContentNode.get(AbstractJSONSchemaParser.JSON_SCHEMA_MIXED_IDENTIFIER);
+
+		final boolean isMixed = mixedNode != null && mixedNode.asBoolean();
+
+		final boolean addRDFValueAttributePath =
+				(type.equals(AbstractJSONSchemaParser.STRING_JSON_SCHEMA_ATTRIBUTE_TYPE) || (type.equals(OBJECT_JSON_SCHEMA_ATTRIBUTE_TYPE) && isMixed))
+						&& !isXMLAttribute(attribute);
+
+		return  addRDFValueAttributePath;
+	}
+
+	protected void addAttributeNode(final List<JsonNode> newAttributeNodes,
+	                                final List<JsonNode> newElementNodes,
+	                                final ObjectNode newJSONSchemaAttributeNode,
+	                                final String newAttribute) {
+
+		if (isXMLAttribute(newAttribute)) {
+
+			newAttributeNodes.add(newJSONSchemaAttributeNode);
+		} else {
+
+			newElementNodes.add(newJSONSchemaAttributeNode);
+		}
+	}
+
+	private boolean isXMLAttribute(final String attribute) {
+
+		return attribute.startsWith("@");
 	}
 }

@@ -29,8 +29,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Provider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.dswarm.common.types.Tuple;
 import org.dswarm.persistence.DMPPersistenceException;
@@ -44,7 +42,6 @@ import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.schema.ClaszService;
 import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
 import org.dswarm.persistence.service.schema.SchemaService;
-import org.dswarm.persistence.util.GDMUtil;
 
 /**
  * @author tgaengler
@@ -65,14 +62,16 @@ public abstract class AbstractJSONSchemaParser {
 
 	protected static final String ROOT_NODE_IDENTIFIER = "__ROOT_NODE__";
 	private static final String UNKNOWN_JSON_SCHEMA_ATTRIBUTE_TYPE = "__UNKNOWN__";
-	private static final String STRING_JSON_SCHEMA_ATTRIBUTE_TYPE = "string";
-	private static final String OBJECT_JSON_SCHEMA_ATTRIBUTE_TYPE = "object";
+	static final String STRING_JSON_SCHEMA_ATTRIBUTE_TYPE = "string";
+	static final String OBJECT_JSON_SCHEMA_ATTRIBUTE_TYPE = "object";
 	private static final String ARRAY_JSON_SCHEMA_ATTRIBUTE_TYPE = "array";
 
 	private static final String JSON_SCHEMA_PROPERTIES_IDENTIFIER = "properties";
 	private static final String JSON_SCHEMA_ITEMS_IDENTIFIER = "items";
 	private static final String JSON_SCHEMA_TYPE_IDENTIFIER = "type";
-	private static final String JSON_SCHEMA_MIXED_IDENTIFIER = "mixed";
+	private static final String JSON_SCHEMA_ENUM_IDENTIFIER = "enum";
+	private static final String JSON_SCHEMA_PATTERN_IDENTIFIER = "pattern";
+	static final String JSON_SCHEMA_MIXED_IDENTIFIER = "mixed";
 	private static final String JSON_SCHEMA_TITLE_IDENTIFIER = "title";
 
 	private boolean includeRecordTag = false;
@@ -437,6 +436,11 @@ public abstract class AbstractJSONSchemaParser {
 
 	abstract protected Optional<ObjectNode> getJSONSchema(final String schemaFilePath);
 
+	protected String determineAttributeName(final String attribute) {
+
+		return attribute;
+	}
+
 	private Set<AttributePathHelper> determineAttributePaths(final JsonNode jsonSchemaAttributeNode,
 	                                                         final Set<AttributePathHelper> attributePaths,
 	                                                         final AttributePathHelper attributePath,
@@ -459,26 +463,52 @@ public abstract class AbstractJSONSchemaParser {
 
 			// do something with the array, i.e., go deeper in hierarchy (via recursion)
 			final JsonNode jsonSchemaAttributeItemsNode = jsonSchemaAttributeContentNode.get(AbstractJSONSchemaParser.JSON_SCHEMA_ITEMS_IDENTIFIER);
-			final Tuple<List<JsonNode>, List<JsonNode>> resultSet = determineAttributeAndElementNodes(jsonSchemaAttributeItemsNode);
 
-			determineAttributePaths(attributePaths, attributePath, resultSet.v1());
-			determineAttributePaths(attributePaths, attributePath, resultSet.v2());
+			if(jsonSchemaAttributeItemsNode == null) {
+
+				return attributePaths;
+			}
+
+			final String arrayType = determineJSONSchemaNodeType(jsonSchemaAttributeItemsNode);
+
+			if(arrayType.equals(AbstractJSONSchemaParser.STRING_JSON_SCHEMA_ATTRIBUTE_TYPE)
+					&& (jsonSchemaAttributeItemsNode.get(AbstractJSONSchemaParser.JSON_SCHEMA_ENUM_IDENTIFIER) != null
+						|| jsonSchemaAttributeItemsNode.get(AbstractJSONSchemaParser.JSON_SCHEMA_PATTERN_IDENTIFIER) != null
+						|| jsonSchemaAttributeItemsNode.size() == 1)) {
+
+				// attribute has enum values, or a pattern, or is simply an array, i.e., simply add the attribute path
+
+				final String finalAttribute = determineAttributeName(attribute);
+				AttributePathHelperHelper.addAttributePath(finalAttribute, attributePaths, attributePath);
+
+				return attributePaths;
+			}
+
+			final JsonNode finalJsonSchemaAttributeItemsNode;
+			final AttributePathHelper finalAttributePath;
+
+			if(arrayType.equals(AbstractJSONSchemaParser.OBJECT_JSON_SCHEMA_ATTRIBUTE_TYPE)) {
+
+				finalJsonSchemaAttributeItemsNode = jsonSchemaAttributeItemsNode.get(AbstractJSONSchemaParser.JSON_SCHEMA_PROPERTIES_IDENTIFIER);
+
+				final String finalAttribute = determineAttributeName(attribute);
+				finalAttributePath = AttributePathHelperHelper.addAttributePath(finalAttribute, attributePaths, attributePath);
+			} else {
+
+				finalJsonSchemaAttributeItemsNode = jsonSchemaAttributeItemsNode;
+				finalAttributePath = attributePath;
+			}
+
+			final Tuple<List<JsonNode>, List<JsonNode>> resultSet = determineAttributeAndElementNodes(finalJsonSchemaAttributeItemsNode);
+
+			determineAttributePaths(attributePaths, finalAttributePath, resultSet.v1());
+			determineAttributePaths(attributePaths, finalAttributePath, resultSet.v2());
 
 			return attributePaths;
 
 		} else {
 
-			final boolean isXMLAttribute = attribute.startsWith("@");
-
-			final String finalAttribute;
-
-			if (isXMLAttribute) {
-
-				finalAttribute = attribute.substring(1, attribute.length());
-			} else {
-
-				finalAttribute = attribute;
-			}
+			final String finalAttribute = determineAttributeName(attribute);
 
 			final AttributePathHelper finalAttributePathHelper;
 
@@ -490,28 +520,17 @@ public abstract class AbstractJSONSchemaParser {
 				finalAttributePathHelper = attributePath;
 			}
 
-			if ((type.equals(AbstractJSONSchemaParser.STRING_JSON_SCHEMA_ATTRIBUTE_TYPE) || type.equals(OBJECT_JSON_SCHEMA_ATTRIBUTE_TYPE))
-					&& !isXMLAttribute) {
-
-				// add rdf:type attribute
-				AttributePathHelperHelper.addAttributePath(GDMUtil.RDF_type, attributePaths, finalAttributePathHelper);
-			}
+			optionalAddRDFTypeAttributePath(attributePaths, type, attribute, finalAttributePathHelper);
 
 			final JsonNode jsonSchemaAttributePropertiesNode = jsonSchemaAttributeContentNode.get(AbstractJSONSchemaParser.JSON_SCHEMA_PROPERTIES_IDENTIFIER);
 
 			final boolean noProperties = jsonSchemaAttributePropertiesNode == null || jsonSchemaAttributePropertiesNode.size() <= 0;
 
-			final JsonNode mixedNode = jsonSchemaAttributeContentNode.get(AbstractJSONSchemaParser.JSON_SCHEMA_MIXED_IDENTIFIER);
-
-			final boolean isMixed = mixedNode != null && mixedNode.asBoolean();
-
-			final boolean addRDFValueAttributePath =
-					(type.equals(AbstractJSONSchemaParser.STRING_JSON_SCHEMA_ATTRIBUTE_TYPE) || (type.equals(OBJECT_JSON_SCHEMA_ATTRIBUTE_TYPE) && isMixed))
-							&& !isXMLAttribute;
+			final boolean addRDFValueAttributePath = doAddRDFValueAttributePath(jsonSchemaAttributeContentNode, type, attribute);
 
 			if (noProperties) {
 
-				addRDFValueAttributePath(addRDFValueAttributePath, attributePaths, finalAttributePathHelper);
+				optionalAddRDFValueAttributePath(addRDFValueAttributePath, attributePaths, finalAttributePathHelper);
 
 				return attributePaths;
 			}
@@ -519,12 +538,25 @@ public abstract class AbstractJSONSchemaParser {
 			final Tuple<List<JsonNode>, List<JsonNode>> resultSet = determineAttributeAndElementNodes(jsonSchemaAttributePropertiesNode);
 
 			determineAttributePaths(attributePaths, finalAttributePathHelper, resultSet.v1());
-			addRDFValueAttributePath(addRDFValueAttributePath, attributePaths, finalAttributePathHelper);
+			optionalAddRDFValueAttributePath(addRDFValueAttributePath, attributePaths, finalAttributePathHelper);
 			determineAttributePaths(attributePaths, finalAttributePathHelper, resultSet.v2());
 
 			return attributePaths;
 		}
 	}
+
+	protected abstract void optionalAddRDFTypeAttributePath(final Set<AttributePathHelper> attributePaths,
+	                                                        final String type,
+	                                                        final String attribute,
+	                                                        final AttributePathHelper finalAttributePathHelper);
+
+	protected abstract boolean doAddRDFValueAttributePath(final JsonNode jsonSchemaAttributeContentNode,
+	                                                      final String type,
+	                                                      final String attribute);
+
+	protected abstract void optionalAddRDFValueAttributePath(final boolean addRDFValueAttributePath,
+	                                                         final Set<AttributePathHelper> attributePaths,
+	                                                         final AttributePathHelper attributePath);
 
 	private void determineAttributePaths(final Set<AttributePathHelper> attributePaths,
 	                                     final AttributePathHelper finalAttributePathHelper,
@@ -546,17 +578,6 @@ public abstract class AbstractJSONSchemaParser {
 		final String attribute = jsonSchemaAttributeNode.fieldNames().next();
 
 		return Optional.ofNullable(attribute);
-	}
-
-	private void addRDFValueAttributePath(final boolean addRDFValueAttributePath,
-	                                      final Set<AttributePathHelper> attributePaths,
-	                                      final AttributePathHelper attributePath) {
-
-		if (addRDFValueAttributePath) {
-
-			// add rdf:value attribute
-			AttributePathHelperHelper.addAttributePath(GDMUtil.RDF_value, attributePaths, attributePath);
-		}
 	}
 
 	private Optional<Schema> createSchema(final String uuid) throws DMPPersistenceException {
@@ -658,17 +679,13 @@ public abstract class AbstractJSONSchemaParser {
 
 			newJSONSchemaAttributeNode.set(newAttribute, entry.getValue());
 
-			if (newAttribute.startsWith("@")) {
-
-				newAttributeNodes.add(newJSONSchemaAttributeNode);
-			} else {
-
-				newElementNodes.add(newJSONSchemaAttributeNode);
-			}
+			addAttributeNode(newAttributeNodes, newElementNodes, newJSONSchemaAttributeNode, newAttribute);
 		}
 
 		return Tuple.tuple(newAttributeNodes, newElementNodes);
 	}
+
+	protected abstract void addAttributeNode(List<JsonNode> newAttributeNodes, List<JsonNode> newElementNodes, ObjectNode newJSONSchemaAttributeNode, String newAttribute);
 
 	private Optional<Map<String, AttributePathHelper>> convertSetToMap(final Optional<Set<AttributePathHelper>> optionalAttributePaths) {
 
