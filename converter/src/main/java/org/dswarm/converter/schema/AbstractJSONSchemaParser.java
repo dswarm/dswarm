@@ -48,6 +48,8 @@ import org.dswarm.persistence.service.schema.SchemaService;
  */
 public abstract class AbstractJSONSchemaParser {
 
+	private static final String DEFAULT_RECORD_CLASS_IDENTIFIER = "Record";
+	private static final String RECORD_CLASS_POSTFIX = "Type";
 	private final Provider<SchemaService> schemaServiceProvider;
 
 	private final Provider<ClaszService> classServiceProvider;
@@ -727,9 +729,19 @@ public abstract class AbstractJSONSchemaParser {
 
 			final String recordTagAttribute = optionalRecordTagAttribute.get();
 
-			final String recordTagAttributeURI = SchemaUtils.mintSchemaTermURI(recordTagAttribute, schema.getUuid());
+			final String finalRecordTagAttribute;
 
-			final String recordClassUri = recordTagAttributeURI + "Type";
+			if(recordTagAttribute.equals(AbstractJSONSchemaParser.ROOT_NODE_IDENTIFIER)) {
+
+				finalRecordTagAttribute = DEFAULT_RECORD_CLASS_IDENTIFIER;
+			} else {
+
+				finalRecordTagAttribute = recordTagAttribute;
+			}
+
+			final String recordTagAttributeURI = SchemaUtils.mintSchemaTermURI(finalRecordTagAttribute, schema.getUuid());
+
+			final String recordClassUri = recordTagAttributeURI + RECORD_CLASS_POSTFIX;
 
 			SchemaUtils.addRecordClass(schema, recordClassUri, classServiceProvider);
 		}
