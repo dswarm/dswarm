@@ -36,8 +36,8 @@ public abstract class AbstractJSONSchemaParserTest extends GuicedTest {
 	public void tearDown3() throws Exception {
 		GuicedTest.tearDown();
 		GuicedTest.startUp();
-		//initObjects();
-		//maintainDBService.truncateTables();
+		initObjects();
+		maintainDBService.truncateTables();
 	}
 
 	static Schema parseSchema(final String schemaFileName,

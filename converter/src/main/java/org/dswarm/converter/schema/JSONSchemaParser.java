@@ -33,11 +33,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
+import org.dswarm.persistence.model.internal.helper.AttributePathHelperHelper;
 import org.dswarm.persistence.service.schema.AttributePathService;
 import org.dswarm.persistence.service.schema.AttributeService;
 import org.dswarm.persistence.service.schema.ClaszService;
 import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
 import org.dswarm.persistence.service.schema.SchemaService;
+import org.dswarm.persistence.util.GDMUtil;
 
 /**
  * @author tgaengler
@@ -85,7 +87,11 @@ public class JSONSchemaParser extends AbstractJSONSchemaParser {
 	                                               final String attribute,
 	                                               final AttributePathHelper finalAttributePathHelper) {
 
-		// do nothing (?)
+		if(type.equals(OBJECT_JSON_SCHEMA_ATTRIBUTE_TYPE)) {
+
+			// add rdf:type attribute
+			AttributePathHelperHelper.addAttributePath(GDMUtil.RDF_type, attributePaths, finalAttributePathHelper);
+		}
 	}
 
 	@Override

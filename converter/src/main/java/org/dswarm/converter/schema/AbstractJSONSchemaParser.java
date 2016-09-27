@@ -505,6 +505,8 @@ public abstract class AbstractJSONSchemaParser {
 
 				final String finalAttribute = determineAttributeName(attribute);
 				finalAttributePath = AttributePathHelperHelper.addAttributePath(finalAttribute, attributePaths, attributePath);
+
+				optionalAddRDFTypeAttributePath(attributePaths, arrayType, attribute, finalAttributePath);
 			} else {
 
 				finalJsonSchemaAttributeItemsNode = jsonSchemaAttributeItemsNode;
