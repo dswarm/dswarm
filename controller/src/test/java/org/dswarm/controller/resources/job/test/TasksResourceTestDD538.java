@@ -37,14 +37,9 @@ import org.xmlunit.diff.Difference;
 
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 
-public abstract class TasksResourceTestDD538 extends AbstractXMLTasksResourceTest {
+public abstract class TasksResourceTestDD538 extends AbtractExportOnTheFlyTasksResourceTest {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TasksResourceTestDD538.class);
-
-
-	protected final String expectedResultXMLFileName;
-
-	private MediaType mediaType;
 
 	public TasksResourceTestDD538(final String taskJSONFileNameArg,
 	                              final String inputDataResourceFileNameArg,
@@ -55,39 +50,17 @@ public abstract class TasksResourceTestDD538 extends AbstractXMLTasksResourceTes
 	                              final boolean utiliseExistingInputSchema,
 	                              final MediaType mediaTypeArg) {
 
-		super(taskJSONFileNameArg, inputDataResourceFileNameArg, recordTagArg, storageTypeArg, testPostfixArg, true, utiliseExistingInputSchema);
-
-		expectedResultXMLFileName = expectedResultXMLFileNameArg;
-		mediaType = mediaTypeArg;
+		super(taskJSONFileNameArg, inputDataResourceFileNameArg, recordTagArg, storageTypeArg, expectedResultXMLFileNameArg, testPostfixArg, utiliseExistingInputSchema, mediaTypeArg);
 	}
 
-	/**
-	 * note: the result XML might not be what one would expect, because it contains for feld->nr multiple values, whereby each value is encapsulated in an own mabxml:nr element (i.e. this isn't conform to the MABXML schema)
-	 *
-	 * @throws Exception
-	 */
 	@Override
-	public void testTaskExecution() throws Exception {
-
-		TasksResourceTestDD538.LOG.debug("start DD-538 {} task execution test", testPostfix);
-
-		final ObjectNode requestJSON = prepareTask();
-
-		final Response response = target().request(mediaType).post(Entity.json(requestJSON));
-
-		Assert.assertEquals("200 Created was expected", 200, response.getStatus());
-
-		final InputStream actualXMLStream = response.readEntity(InputStream.class);
-		Assert.assertNotNull(actualXMLStream);
-
-		final BufferedInputStream bis = new BufferedInputStream(actualXMLStream, 1024);
-
-		final String expectedXML = DMPPersistenceUtil.getResourceAsString(expectedResultXMLFileName);
+	protected void doComparison(final String expectedResult,
+	                            final InputStream actualResult) {
 
 		// do comparison: check for XML similarity
 		final Diff xmlDiff = DiffBuilder
-				.compare(Input.fromString(expectedXML).build())
-				.withTest(Input.fromStream(bis).build())
+				.compare(Input.fromString(expectedResult).build())
+				.withTest(Input.fromStream(actualResult).build())
 				.ignoreWhitespace()
 				.checkForSimilar()
 				.build();
@@ -100,9 +73,5 @@ public abstract class TasksResourceTestDD538 extends AbstractXMLTasksResourceTes
 			Assert.fail(sb.toString());
 		}
 
-		actualXMLStream.close();
-		bis.close();
-
-		TasksResourceTestDD538.LOG.debug("end DD-538 {} task execution test", testPostfix);
 	}
 }

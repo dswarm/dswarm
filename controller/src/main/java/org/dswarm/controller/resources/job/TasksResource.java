@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,6 +15,41 @@
  */
 package org.dswarm.controller.resources.job;
 
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Provider;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.container.AsyncResponse;
+import javax.ws.rs.container.Suspended;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
+import javax.ws.rs.core.UriInfo;
+import javax.xml.stream.XMLStreamException;
+
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -23,8 +58,20 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Iterators;
 import com.google.inject.servlet.RequestScoped;
-import com.wordnik.swagger.annotations.*;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import rx.Observable;
+import rx.Observer;
+import rx.Scheduler;
+import rx.observables.ConnectableObservable;
+import rx.schedulers.Schedulers;
+
 import org.dswarm.common.MediaTypeUtil;
 import org.dswarm.common.types.Tuple;
 import org.dswarm.controller.DMPControllerException;
@@ -40,6 +87,10 @@ import org.dswarm.converter.export.XMLExporter;
 import org.dswarm.converter.flow.GDMModelTransformationFlow;
 import org.dswarm.converter.flow.GDMModelTransformationFlowFactory;
 import org.dswarm.converter.morph.MorphScriptBuilder;
+import org.dswarm.graph.json.Model;
+import org.dswarm.graph.json.stream.ModelBuilder;
+import org.dswarm.persistence.DMPPersistenceError;
+import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.job.Job;
 import org.dswarm.persistence.model.job.Task;
@@ -51,29 +102,6 @@ import org.dswarm.persistence.monitoring.MonitoringHelper;
 import org.dswarm.persistence.monitoring.MonitoringLogger;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.dswarm.persistence.util.GDMUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import rx.Observable;
-import rx.Observer;
-import rx.Scheduler;
-import rx.observables.ConnectableObservable;
-import rx.schedulers.Schedulers;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Provider;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.container.AsyncResponse;
-import javax.ws.rs.container.Suspended;
-import javax.ws.rs.core.*;
-import javax.xml.stream.XMLStreamException;
-import java.io.*;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A resource (controller service) for {@link Task}s.
@@ -117,9 +145,9 @@ public class TasksResource {
 			.newCachedThreadPool(
 					new BasicThreadFactory.Builder().daemon(false).namingPattern(DSWARM_EXPORT_THREAD_NAMING_PATTERN).build());
 	private static final Scheduler EXPORT_SCHEDULER = Schedulers.from(EXPORT_EXECUTOR_SERVICE);
-	public static final String ERROR_IDENTIFIER = "error";
-	public static final String MESSAGE_IDENTIFIER = "message";
-	public static final String STACKTRACE_IDENTIFIER = "stacktrace";
+	private static final String ERROR_IDENTIFIER = "error";
+	private static final String MESSAGE_IDENTIFIER = "message";
+	private static final String STACKTRACE_IDENTIFIER = "stacktrace";
 
 	/**
 	 * The base URI of this resource.
@@ -186,7 +214,7 @@ public class TasksResource {
 	 * - at_most: the number of result records that should be returned at most (optional)
 	 * - persist: flag that indicates whether the result should be persisted in the datahub or not (optional)
 	 * <p>
-	 * returns the result of the task execution in the requested format (media type, e.g., "application/json", "application/solr+update+xml", "application/xml", "application/n-triples", "application/n-quads", "application/trig")
+	 * returns the result of the task execution in the requested format (media type, e.g., "application/json", "application/solr+update+xml", "application/xml", "application/n-triples", "application/n-quads", "application/trig", "application/gdm+json")
 	 *
 	 * @param jsonObjectString a JSON representation of the request JSON (incl. task)
 	 * @throws IOException
@@ -207,7 +235,8 @@ public class TasksResource {
 			MediaTypeUtil.N_QUADS,
 			MediaTypeUtil.TRIG,
 			MediaTypeUtil.TRIX,
-			MediaTypeUtil.RDF_THRIFT})
+			MediaTypeUtil.RDF_THRIFT,
+			MediaTypeUtil.GDM_JSON})
 	public void executeTask(@ApiParam(value = "task execution request (as JSON)", required = true) final String jsonObjectString,
 	                        @Context final HttpHeaders requestHeaders,
 	                        @Suspended final AsyncResponse asyncResponse) throws IOException, DMPConverterException, DMPControllerException {
@@ -551,6 +580,11 @@ public class TasksResource {
 					resultObservable = doQuadRDFExport(connectableResult.observeOn(EXPORT_SCHEDULER), responseMediaType, bos, task);
 
 					break;
+				case MediaTypeUtil.GDM_JSON:
+
+					resultObservable = doGDMJSONExport(connectableResult.observeOn(EXPORT_SCHEDULER), responseMediaType, bos);
+
+					break;
 				default:
 
 					// media type is not supported
@@ -636,13 +670,72 @@ public class TasksResource {
 
 				Thread.currentThread().interrupt();
 			}
-		} catch (final XMLStreamException | DMPConverterException e) {
+		} catch (final XMLStreamException | DMPConverterException | DMPControllerException e) {
 
 			final String message = String.format("couldn't process task (maybe %s export) successfully", responseMediaType.toString());
 
 			TasksResource.LOG.error(message, e);
 
 			asyncResponse.resume(new DMPControllerException(message, e));
+		}
+	}
+
+	private Observable<Void> doGDMJSONExport(final Observable<GDMModel> gdmModelObservable,
+	                                         final MediaType responseMediaType,
+	                                         final BufferedOutputStream bos) throws DMPControllerException {
+
+		final AtomicInteger resultCounter = new AtomicInteger(0);
+
+		try {
+
+			final ModelBuilder modelBuilder = new ModelBuilder(bos);
+
+			return gdmModelObservable.onBackpressureBuffer(10000)
+					.doOnSubscribe(() -> TasksResource.LOG.debug("subscribed to {} export", responseMediaType))
+					.doOnNext(resultObj -> {
+
+						resultCounter.incrementAndGet();
+
+						if (resultCounter.get() == 1) {
+
+							TasksResource.LOG.debug("received first result for {} export in task resource", responseMediaType);
+						}
+					})
+					.map(GDMModel::getModel)
+					.map(Model::getResources)
+					.map(resources -> {
+
+						resources.forEach(resource -> {
+
+							try {
+
+								modelBuilder.addResource(resource);
+								bos.flush();
+							} catch (final IOException e) {
+
+								throw DMPPersistenceError.wrap(new DMPPersistenceException("something went wrong while serialising the GDM JSON", e));
+							}
+						});
+
+						return resources;
+					})
+					.onBackpressureBuffer(10000)
+					.doOnCompleted(() -> {
+
+						TasksResource.LOG.debug("received '{}' results for {} export in task resource overall", resultCounter.get(), responseMediaType);
+
+						try {
+
+							modelBuilder.build();
+						} catch (final IOException e) {
+
+							throw DMPPersistenceError.wrap(new DMPPersistenceException("something went wrong while building the GDM JSON", e));
+						}
+					})
+					.ignoreElements().cast(Void.class);
+		} catch (final IOException e) {
+
+			throw new DMPControllerException("something went wrong while serialising the GDM JSON", e);
 		}
 	}
 
@@ -691,7 +784,7 @@ public class TasksResource {
 		LOG.debug("create {} exporter with: record tag = '{}' :: record class URI = '{}' :: original data model type = '{}'",
 				responseMediaType.toString(), optionalRecordTag, recordClassUri, java8OptionalOriginalDataModelType);
 
-		final XMLExporter xmlExporter = new XMLExporter(java8OptionalRecordTag, recordClassUri, Optional.<String>empty(), java8OptionalOriginalDataModelType);
+		final XMLExporter xmlExporter = new XMLExporter(java8OptionalRecordTag, recordClassUri, Optional.empty(), java8OptionalOriginalDataModelType);
 
 		LOG.debug("trigger {} export", responseMediaType.toString());
 
@@ -705,8 +798,8 @@ public class TasksResource {
 	}
 
 	private Observable<Void> doTripleRDFExport(final Observable<GDMModel> result,
-	                                     final MediaType responseMediaType,
-	                                     final BufferedOutputStream bos) throws XMLStreamException {
+	                                           final MediaType responseMediaType,
+	                                           final BufferedOutputStream bos) throws XMLStreamException {
 
 		final RDFExporter rdfExporter = new TripleRDFExporter(responseMediaType);
 
@@ -782,9 +875,10 @@ public class TasksResource {
 						|| MediaTypeUtil.N_TRIPLES_TYPE.equals(mediaType)
 						|| MediaTypeUtil.TURTLE_TYPE.equals(mediaType)
 						|| MediaTypeUtil.N_QUADS_TYPE.equals(mediaType)
-				        || MediaTypeUtil.TRIG_TYPE.equals(mediaType)
+						|| MediaTypeUtil.TRIG_TYPE.equals(mediaType)
 						|| MediaTypeUtil.TRIX_TYPE.equals(mediaType)
-						|| MediaTypeUtil.RDF_THRIFT_TYPE.equals(mediaType))
+						|| MediaTypeUtil.RDF_THRIFT_TYPE.equals(mediaType)
+						|| MediaTypeUtil.GDM_JSON_TYPE.equals(mediaType))
 				.findFirst();
 
 		if (mediaTypeOptional.isPresent()) {
