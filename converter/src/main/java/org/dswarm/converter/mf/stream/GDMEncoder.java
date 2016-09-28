@@ -309,7 +309,7 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 						}
 				}
 
-				currentResource.addStatement(currentNode, attributeProperty, objectNode);
+				addStatement(currentNode, attributeProperty, objectNode);
 			} else {
 
 				if (LOG.isTraceEnabled()) {
