@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -51,6 +51,8 @@ import javax.ws.rs.core.UriInfo;
 import javax.xml.stream.XMLStreamException;
 
 import com.codahale.metrics.annotation.Timed;
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -236,7 +238,8 @@ public class TasksResource {
 			MediaTypeUtil.TRIG,
 			MediaTypeUtil.TRIX,
 			MediaTypeUtil.RDF_THRIFT,
-			MediaTypeUtil.GDM_JSON})
+			MediaTypeUtil.GDM_JSON,
+			MediaTypeUtil.GDM_COMPACT_JSON})
 	public void executeTask(@ApiParam(value = "task execution request (as JSON)", required = true) final String jsonObjectString,
 	                        @Context final HttpHeaders requestHeaders,
 	                        @Suspended final AsyncResponse asyncResponse) throws IOException, DMPConverterException, DMPControllerException {
@@ -585,6 +588,11 @@ public class TasksResource {
 					resultObservable = doGDMJSONExport(connectableResult.observeOn(EXPORT_SCHEDULER), responseMediaType, bos);
 
 					break;
+				case MediaTypeUtil.GDM_COMPACT_JSON:
+
+					resultObservable = doGDMCompactJSONExport(connectableResult.observeOn(EXPORT_SCHEDULER), responseMediaType, bos);
+
+					break;
 				default:
 
 					// media type is not supported
@@ -685,35 +693,71 @@ public class TasksResource {
 	                                                final BufferedOutputStream bos) throws DMPControllerException {
 
 		final AtomicInteger resultCounter = new AtomicInteger(0);
+		try {
+			final JsonGenerator jg = objectMapper.getFactory().createGenerator(bos, JsonEncoding.UTF8);
 
-		return gdmModelObservable.onBackpressureBuffer(10000)
-				.doOnSubscribe(() -> TasksResource.LOG.debug("subscribed to {} export", responseMediaType))
-				.doOnNext(resultObj -> {
+			return gdmModelObservable.onBackpressureBuffer(10000)
+					.doOnSubscribe(() -> TasksResource.LOG.debug("subscribed to {} export", responseMediaType))
+					.doOnNext(resultObj -> {
 
-					resultCounter.incrementAndGet();
+						resultCounter.incrementAndGet();
 
-					if (resultCounter.get() == 1) {
+						if (resultCounter.get() == 1) {
 
-						TasksResource.LOG.debug("received first result for {} export in task resource", responseMediaType);
-					}
-				})
-				.map(GDMModel::toJSON)
-				.map(model -> {
+							try {
 
-					try {
+								jg.writeStartArray();
+							} catch (final IOException e) {
 
-						objectMapper.writeValue(bos, model);
-						bos.flush();
-					} catch (final IOException e) {
+								throw DMPPersistenceError.wrap(new DMPPersistenceException("something went wrong while serialising the GDM compact JSON", e));
+							}
 
-						throw DMPPersistenceError.wrap(new DMPPersistenceException("something went wrong while serialising the GDM JSON", e));
-					}
+							TasksResource.LOG.debug("received first result for {} export in task resource", responseMediaType);
+						}
+					})
+					.map(GDMModel::toJSON)
+					.map(model -> {
 
-					return model;
-				})
-				.onBackpressureBuffer(10000)
-				.doOnCompleted(() -> TasksResource.LOG.debug("received '{}' results for {} export in task resource overall", resultCounter.get(), responseMediaType))
-				.ignoreElements().cast(Void.class);
+						try {
+
+							jg.writeTree(model.get(0));
+							bos.flush();
+						} catch (final IOException e) {
+
+							throw DMPPersistenceError.wrap(new DMPPersistenceException("something went wrong while serialising the GDM compact JSON", e));
+						}
+
+						return model;
+					})
+					.onBackpressureBuffer(10000)
+					.doOnCompleted(() -> {
+
+						if(resultCounter.get() > 0) {
+
+							try {
+
+								jg.writeEndArray();
+							} catch (final IOException e) {
+
+								throw DMPPersistenceError.wrap(new DMPPersistenceException("something went wrong while serialising the GDM compact JSON", e));
+							}
+						}
+
+						try {
+
+							jg.close();
+						} catch (final IOException e) {
+
+							throw DMPPersistenceError.wrap(new DMPPersistenceException("something went wrong while serialising the GDM compact JSON", e));
+						}
+
+						TasksResource.LOG.debug("received '{}' results for {} export in task resource overall", resultCounter.get(), responseMediaType);
+					})
+					.ignoreElements().cast(Void.class);
+		} catch (final IOException e) {
+
+			throw new DMPControllerException("something went wrong while serialising the GDM compact JSON", e);
+		}
 	}
 
 	private Observable<Void> doGDMJSONExport(final Observable<GDMModel> gdmModelObservable,
@@ -914,7 +958,8 @@ public class TasksResource {
 						|| MediaTypeUtil.TRIG_TYPE.equals(mediaType)
 						|| MediaTypeUtil.TRIX_TYPE.equals(mediaType)
 						|| MediaTypeUtil.RDF_THRIFT_TYPE.equals(mediaType)
-						|| MediaTypeUtil.GDM_JSON_TYPE.equals(mediaType))
+						|| MediaTypeUtil.GDM_JSON_TYPE.equals(mediaType)
+						|| MediaTypeUtil.GDM_COMPACT_JSON_TYPE.equals(mediaType))
 				.findFirst();
 
 		if (mediaTypeOptional.isPresent()) {
