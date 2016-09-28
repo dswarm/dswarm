@@ -680,6 +680,42 @@ public class TasksResource {
 		}
 	}
 
+	private Observable<Void> doGDMCompactJSONExport(final Observable<GDMModel> gdmModelObservable,
+	                                                final MediaType responseMediaType,
+	                                                final BufferedOutputStream bos) throws DMPControllerException {
+
+		final AtomicInteger resultCounter = new AtomicInteger(0);
+
+		return gdmModelObservable.onBackpressureBuffer(10000)
+				.doOnSubscribe(() -> TasksResource.LOG.debug("subscribed to {} export", responseMediaType))
+				.doOnNext(resultObj -> {
+
+					resultCounter.incrementAndGet();
+
+					if (resultCounter.get() == 1) {
+
+						TasksResource.LOG.debug("received first result for {} export in task resource", responseMediaType);
+					}
+				})
+				.map(GDMModel::toJSON)
+				.map(model -> {
+
+					try {
+
+						objectMapper.writeValue(bos, model);
+						bos.flush();
+					} catch (final IOException e) {
+
+						throw DMPPersistenceError.wrap(new DMPPersistenceException("something went wrong while serialising the GDM JSON", e));
+					}
+
+					return model;
+				})
+				.onBackpressureBuffer(10000)
+				.doOnCompleted(() -> TasksResource.LOG.debug("received '{}' results for {} export in task resource overall", resultCounter.get(), responseMediaType))
+				.ignoreElements().cast(Void.class);
+	}
+
 	private Observable<Void> doGDMJSONExport(final Observable<GDMModel> gdmModelObservable,
 	                                         final MediaType responseMediaType,
 	                                         final BufferedOutputStream bos) throws DMPControllerException {
