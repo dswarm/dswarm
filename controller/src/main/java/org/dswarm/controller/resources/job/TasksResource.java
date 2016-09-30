@@ -53,7 +53,6 @@ import javax.xml.stream.XMLStreamException;
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -239,7 +238,8 @@ public class TasksResource {
 			MediaTypeUtil.TRIX,
 			MediaTypeUtil.RDF_THRIFT,
 			MediaTypeUtil.GDM_JSON,
-			MediaTypeUtil.GDM_COMPACT_JSON})
+			MediaTypeUtil.GDM_COMPACT_JSON,
+			MediaTypeUtil.GDM_COMPACT_FE_JSON})
 	public void executeTask(@ApiParam(value = "task execution request (as JSON)", required = true) final String jsonObjectString,
 	                        @Context final HttpHeaders requestHeaders,
 	                        @Suspended final AsyncResponse asyncResponse) throws IOException, DMPConverterException, DMPControllerException {
@@ -433,11 +433,6 @@ public class TasksResource {
 
 			return;
 		}
-
-		transformHierarchicalGDMModelToFEFriendlyJSON(asyncResponse, connectableResult);
-
-		connectableResult.connect();
-		connectableInputData.connect();
 	}
 
 	/**
@@ -593,6 +588,11 @@ public class TasksResource {
 					resultObservable = doGDMCompactJSONExport(connectableResult.observeOn(EXPORT_SCHEDULER), responseMediaType, bos);
 
 					break;
+				case MediaTypeUtil.GDM_COMPACT_FE_JSON:
+
+					resultObservable = doGDMCompactFEJSONExport(connectableResult.observeOn(EXPORT_SCHEDULER), responseMediaType, bos);
+
+					break;
 				default:
 
 					// media type is not supported
@@ -732,7 +732,7 @@ public class TasksResource {
 					.onBackpressureBuffer(10000)
 					.doOnCompleted(() -> {
 
-						if(resultCounter.get() > 0) {
+						if (resultCounter.get() > 0) {
 
 							try {
 
@@ -959,7 +959,8 @@ public class TasksResource {
 						|| MediaTypeUtil.TRIX_TYPE.equals(mediaType)
 						|| MediaTypeUtil.RDF_THRIFT_TYPE.equals(mediaType)
 						|| MediaTypeUtil.GDM_JSON_TYPE.equals(mediaType)
-						|| MediaTypeUtil.GDM_COMPACT_JSON_TYPE.equals(mediaType))
+						|| MediaTypeUtil.GDM_COMPACT_JSON_TYPE.equals(mediaType)
+						|| MediaTypeUtil.GDM_COMPACT_FE_JSON_TYPE.equals(mediaType))
 				.findFirst();
 
 		if (mediaTypeOptional.isPresent()) {
@@ -1003,58 +1004,52 @@ public class TasksResource {
 		});
 	}
 
-	private void transformHierarchicalGDMModelToFEFriendlyJSON(final AsyncResponse asyncResponse,
-	                                                           final Observable<GDMModel> result) {
+	private Observable<Void> doGDMCompactFEJSONExport(final Observable<GDMModel> result,
+	                                                  final MediaType responseMediaType,
+	                                                  final BufferedOutputStream bos) throws DMPControllerException {
 
 		// transform model json to fe friendly json
 		final ArrayNode feFriendlyJSON = objectMapper.createArrayNode();
 		final AtomicInteger counter = new AtomicInteger(0);
 
+		// TODO rewrite this part up from here to properly utilise the reactive pattern
+
 		final ConnectableObservable<JsonNode> jsonResult = generateJSONResult(result);
 
-		jsonResult.doOnSubscribe(() -> TasksResource.LOG.debug("subscribed to JSON export on task resource")).subscribe(new Observer<JsonNode>() {
+		final Observable<Void> voidObservable = jsonResult.doOnSubscribe(() -> TasksResource.LOG.debug("subscribed to {} export on task resource", responseMediaType))
+				.doOnCompleted(() -> {
 
-			@Override
-			public void onCompleted() {
+					try {
 
-				final String resultString;
-				try {
-					resultString = objectMapper.writeValueAsString(feFriendlyJSON);
+						objectMapper.writeValue(bos, feFriendlyJSON);
 
-					TasksResource.LOG.debug("processed task successfully, return data to caller; received '{}' records overall", counter.get());
+						TasksResource.LOG.debug("processed task successfully, return data to caller; received '{}' records overall", counter.get());
+					} catch (final IOException e) {
 
-					asyncResponse.resume(buildResponse(resultString, MediaType.APPLICATION_JSON_TYPE));
-				} catch (JsonProcessingException e) {
+						final String message = String.format("something went wrong while serializing the %s data", responseMediaType);
 
-					asyncResponse.resume(e);
-				}
-			}
+						TasksResource.LOG.error(message, e);
 
-			@Override
-			public void onError(final Throwable e) {
+						throw new RuntimeException(message, e);
+					}
+				})
+				.doOnError(e -> TasksResource.LOG.error("couldn't deserialize result {} from string", responseMediaType, e))
+				.doOnNext(jsonNode -> {
 
-				final String message = "couldn't deserialize result JSON from string";
+					counter.incrementAndGet();
 
-				TasksResource.LOG.error(message, e);
+					if (counter.get() == 1) {
 
-				asyncResponse.resume(new DMPControllerException(message, e));
-			}
+						TasksResource.LOG.debug("recieved first record for JSON export in task resource");
+					}
 
-			@Override
-			public void onNext(final JsonNode jsonNode) {
-
-				counter.incrementAndGet();
-
-				if (counter.get() == 1) {
-
-					TasksResource.LOG.debug("recieved first record for JSON export in task resource");
-				}
-
-				feFriendlyJSON.add(transformModelJSONtoFEFriendlyJSON(jsonNode));
-			}
-		});
+					feFriendlyJSON.add(transformModelJSONtoFEFriendlyJSON(jsonNode));
+				})
+				.ignoreElements().cast(Void.class);
 
 		jsonResult.connect();
+
+		return voidObservable;
 	}
 
 	private ConnectableObservable<JsonNode> generateJSONResult(final Observable<GDMModel> model) {
