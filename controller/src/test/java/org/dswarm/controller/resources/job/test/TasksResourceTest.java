@@ -18,7 +18,10 @@ package org.dswarm.controller.resources.job.test;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.BooleanNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import org.dswarm.common.MediaTypeUtil;
 import org.dswarm.controller.resources.job.TasksResource;
 import org.dswarm.controller.resources.job.test.utils.TasksResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
@@ -85,8 +88,8 @@ public class TasksResourceTest extends ResourceTest {
 
 		final ObjectNode requestJSON = prepareTask(inputDataModel);
 
-		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE)
-				.accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(requestJSON));
+		final Response response = target().request(MediaTypeUtil.GDM_COMPACT_FE_JSON_TYPE)
+				.accept(MediaTypeUtil.GDM_COMPACT_FE_JSON_TYPE).post(Entity.json(requestJSON));
 
 		Assert.assertEquals("200 Created was expected", 200, response.getStatus());
 
@@ -166,9 +169,10 @@ public class TasksResourceTest extends ResourceTest {
 
 		final ObjectNode requestJSON = prepareTask(inputDataModel);
 		requestJSON.put(TasksResource.RETURN_IDENTIFIER, true);
+		requestJSON.put(TasksResource.DO_EXPORT_ON_THE_FLY_IDENTIFIER, Boolean.FALSE);
 
-		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE)
-				.accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(requestJSON));
+		final Response response = target().request(MediaTypeUtil.GDM_COMPACT_FE_JSON_TYPE)
+				.accept(MediaTypeUtil.GDM_COMPACT_FE_JSON_TYPE).post(Entity.json(requestJSON));
 
 		Assert.assertEquals("204 No Content was expected", 204, response.getStatus());
 
