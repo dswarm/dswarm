@@ -53,7 +53,6 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
 import com.google.common.io.CharSource;
 import com.google.common.io.Resources;
-import org.apache.commons.io.Charsets;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -101,7 +100,7 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 		AbstractMorphScriptBuilder.TRANSFORMER_FACTORY.setAttribute("indent-number", 4);
 
 		final URL resource = Resources.getResource(AbstractMorphScriptBuilder.SCHEMA_PATH);
-		final CharSource inputStreamInputSupplier = Resources.asCharSource(resource, Charsets.UTF_8);
+		final CharSource inputStreamInputSupplier = Resources.asCharSource(resource, StandardCharsets.UTF_8);
 
 		try (final Reader schemaStream = inputStreamInputSupplier.openStream()) {
 

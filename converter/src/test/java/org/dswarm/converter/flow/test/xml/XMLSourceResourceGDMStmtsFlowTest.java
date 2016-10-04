@@ -17,6 +17,7 @@ package org.dswarm.converter.flow.test.xml;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.List;
 
@@ -30,7 +31,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.io.Resources;
-import org.apache.commons.io.Charsets;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -87,7 +87,7 @@ public class XMLSourceResourceGDMStmtsFlowTest extends GuicedTest {
 
 				try {
 
-					expectedResult = Resources.toString(expectedResultFileURL, Charsets.UTF_8);
+					expectedResult = Resources.toString(expectedResultFileURL, StandardCharsets.UTF_8);
 				} catch (final IOException e) {
 
 					Assert.assertTrue("something went wrong while reading expected result from file", false);

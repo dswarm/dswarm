@@ -19,12 +19,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 import javax.xml.stream.XMLStreamException;
 
 import com.google.common.io.Files;
-import org.apache.commons.io.Charsets;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -82,7 +82,7 @@ public class SolrXMLDataSourceConfigGeneratorTest extends GuicedTest {
 
 		Assert.assertNotNull(expectedDataConfig);
 
-		final String actualDataConfig = Files.toString(file, Charsets.UTF_8);
+		final String actualDataConfig = Files.toString(file, StandardCharsets.UTF_8);
 
 		Assert.assertNotNull(actualDataConfig);
 
