@@ -45,6 +45,8 @@ public interface Model {
 
 	JsonNode toGDMSimpleJSON();
 
+	JsonNode toGDMSimpleShortJSON();
+
 	JsonNode toJSON();
 
 	JsonNode getSchema();

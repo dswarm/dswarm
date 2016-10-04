@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *         http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -222,7 +222,8 @@ public class TasksResource {
 			MediaTypeUtil.GDM_JSON,
 			MediaTypeUtil.GDM_COMPACT_JSON,
 			MediaTypeUtil.GDM_COMPACT_FE_JSON,
-			MediaTypeUtil.GDM_SIMPLE_JSON})
+			MediaTypeUtil.GDM_SIMPLE_JSON,
+			MediaTypeUtil.GDM_SIMPLE_SHORT_JSON})
 	public void executeTask(@ApiParam(value = "task execution request (as JSON)", required = true) final String jsonObjectString,
 	                        @Context final HttpHeaders requestHeaders,
 	                        @Suspended final AsyncResponse asyncResponse) throws IOException, DMPConverterException, DMPControllerException {
@@ -576,6 +577,11 @@ public class TasksResource {
 					resultObservable = doGDMSimpleJSONExport(connectableResult.observeOn(EXPORT_SCHEDULER), responseMediaType, bos);
 
 					break;
+				case MediaTypeUtil.GDM_SIMPLE_SHORT_JSON:
+
+					resultObservable = doGDMSimpleShortJSONExport(connectableResult.observeOn(EXPORT_SCHEDULER), responseMediaType, bos);
+
+					break;
 				default:
 
 					// media type is not supported
@@ -671,6 +677,13 @@ public class TasksResource {
 		}
 	}
 
+	private Observable<Void> doJSONExport(final Observable<GDMModel> gdmModelObservable,
+	                                      final MediaType responseMediaType,
+	                                      final BufferedOutputStream bos) throws DMPControllerException {
+
+		return doGDMJSONExport(gdmModelObservable, responseMediaType, bos, GDMModel::toJSON);
+	}
+
 	private Observable<Void> doGDMCompactJSONExport(final Observable<GDMModel> gdmModelObservable,
 	                                                final MediaType responseMediaType,
 	                                                final BufferedOutputStream bos) throws DMPControllerException {
@@ -685,11 +698,11 @@ public class TasksResource {
 		return doGDMJSONExport(gdmModelObservable, responseMediaType, bos, GDMModel::toGDMSimpleJSON);
 	}
 
-	private Observable<Void> doJSONExport(final Observable<GDMModel> gdmModelObservable,
-	                                      final MediaType responseMediaType,
-	                                      final BufferedOutputStream bos) throws DMPControllerException {
+	private Observable<Void> doGDMSimpleShortJSONExport(final Observable<GDMModel> gdmModelObservable,
+	                                                    final MediaType responseMediaType,
+	                                                    final BufferedOutputStream bos) throws DMPControllerException {
 
-		return doGDMJSONExport(gdmModelObservable, responseMediaType, bos, GDMModel::toJSON);
+		return doGDMJSONExport(gdmModelObservable, responseMediaType, bos, GDMModel::toGDMSimpleShortJSON);
 	}
 
 	private Observable<Void> doGDMJSONExport(final Observable<GDMModel> gdmModelObservable,
@@ -894,7 +907,8 @@ public class TasksResource {
 						|| MediaTypeUtil.GDM_JSON_TYPE.equals(mediaType)
 						|| MediaTypeUtil.GDM_COMPACT_JSON_TYPE.equals(mediaType)
 						|| MediaTypeUtil.GDM_COMPACT_FE_JSON_TYPE.equals(mediaType)
-						|| MediaTypeUtil.GDM_SIMPLE_JSON_TYPE.equals(mediaType))
+						|| MediaTypeUtil.GDM_SIMPLE_JSON_TYPE.equals(mediaType)
+						|| MediaTypeUtil.GDM_SIMPLE_SHORT_JSON_TYPE.equals(mediaType))
 				.findFirst();
 
 		if (mediaTypeOptional.isPresent()) {
@@ -1063,7 +1077,7 @@ public class TasksResource {
 								jg.writeStartArray();
 							} catch (final IOException e) {
 
-								throw DMPPersistenceError.wrap(new DMPPersistenceException(String.format("something went wrong while serialising the %", responseMediaType), e));
+								throw DMPPersistenceError.wrap(new DMPPersistenceException(String.format("something went wrong while serialising the %s", responseMediaType), e));
 							}
 
 							TasksResource.LOG.debug("received first result for {} export in task resource", responseMediaType);
@@ -1078,7 +1092,7 @@ public class TasksResource {
 							bos.flush();
 						} catch (final IOException e) {
 
-							throw DMPPersistenceError.wrap(new DMPPersistenceException(String.format("something went wrong while serialising the %", responseMediaType), e));
+							throw DMPPersistenceError.wrap(new DMPPersistenceException(String.format("something went wrong while serialising the %s", responseMediaType), e));
 						}
 
 						return model;
@@ -1093,7 +1107,7 @@ public class TasksResource {
 								jg.writeEndArray();
 							} catch (final IOException e) {
 
-								throw DMPPersistenceError.wrap(new DMPPersistenceException(String.format("something went wrong while serialising the %", responseMediaType), e));
+								throw DMPPersistenceError.wrap(new DMPPersistenceException(String.format("something went wrong while serialising the %s", responseMediaType), e));
 							}
 						}
 
@@ -1102,7 +1116,7 @@ public class TasksResource {
 							jg.close();
 						} catch (final IOException e) {
 
-							throw DMPPersistenceError.wrap(new DMPPersistenceException(String.format("something went wrong while serialising the %", responseMediaType), e));
+							throw DMPPersistenceError.wrap(new DMPPersistenceException(String.format("something went wrong while serialising the %s", responseMediaType), e));
 						}
 
 						TasksResource.LOG.debug("received '{}' results for {} export in task resource overall", resultCounter.get(), responseMediaType);
@@ -1110,7 +1124,7 @@ public class TasksResource {
 					.ignoreElements().cast(Void.class);
 		} catch (final IOException e) {
 
-			throw new DMPControllerException(String.format("something went wrong while serialising the %", responseMediaType), e);
+			throw new DMPControllerException(String.format("something went wrong while serialising the %s", responseMediaType), e);
 		}
 	}
 

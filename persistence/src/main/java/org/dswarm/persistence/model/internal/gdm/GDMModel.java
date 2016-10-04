@@ -310,6 +310,12 @@ public class GDMModel implements Model {
 	}
 
 	@Override
+	public JsonNode toGDMSimpleShortJSON() {
+
+		return Util.toGDMSimpleShortJSON(model, getRecordURIs());
+	}
+
+	@Override
 	public JsonNode toJSON() {
 
 		return Util.toJSON(model, getRecordURIs());
