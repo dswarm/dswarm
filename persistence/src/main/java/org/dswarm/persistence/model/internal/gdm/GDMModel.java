@@ -309,6 +309,12 @@ public class GDMModel implements Model {
 		return Util.toGDMSimpleJSON(model, getRecordURIs());
 	}
 
+	@Override
+	public JsonNode toJSON() {
+
+		return Util.toJSON(model, getRecordURIs());
+	}
+
 	private JsonNode determineUnnormalizedSchema(final Resource recordResource,
 	                                             final Node resourceNode,
 	                                             final ObjectNode rootJson,

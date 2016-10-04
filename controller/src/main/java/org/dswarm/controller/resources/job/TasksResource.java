@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -527,6 +527,11 @@ public class TasksResource {
 
 			switch (responseMediaType.toString()) {
 
+				case MediaType.APPLICATION_JSON:
+
+					resultObservable = doJSONExport(connectableResult.observeOn(EXPORT_SCHEDULER), responseMediaType, bos);
+
+					break;
 				case MediaTypeUtil.SOLR_UPDATE_XML:
 
 					resultObservable = doSolrUpdateXMLExport(connectableResult.observeOn(EXPORT_SCHEDULER), responseMediaType, bos);
@@ -678,6 +683,13 @@ public class TasksResource {
 	                                               final BufferedOutputStream bos) throws DMPControllerException {
 
 		return doGDMJSONExport(gdmModelObservable, responseMediaType, bos, GDMModel::toGDMSimpleJSON);
+	}
+
+	private Observable<Void> doJSONExport(final Observable<GDMModel> gdmModelObservable,
+	                                      final MediaType responseMediaType,
+	                                      final BufferedOutputStream bos) throws DMPControllerException {
+
+		return doGDMJSONExport(gdmModelObservable, responseMediaType, bos, GDMModel::toJSON);
 	}
 
 	private Observable<Void> doGDMJSONExport(final Observable<GDMModel> gdmModelObservable,
@@ -865,13 +877,14 @@ public class TasksResource {
 
 		if (acceptableMediaTypes == null || acceptableMediaTypes.isEmpty()) {
 
-			// default media type is application/xml
-			return Optional.of(MediaType.APPLICATION_XML_TYPE);
+			// default media type is application/json
+			return Optional.of(MediaType.APPLICATION_JSON_TYPE);
 		}
 
 		final Optional<MediaType> mediaTypeOptional = acceptableMediaTypes.stream()
-				.filter(mediaType -> MediaTypeUtil.SOLR_UPDATE_XML_TYPE.equals(mediaType)
+				.filter(mediaType -> MediaType.APPLICATION_JSON_TYPE.equals(mediaType)
 						|| MediaType.APPLICATION_XML_TYPE.equals(mediaType)
+						|| MediaTypeUtil.SOLR_UPDATE_XML_TYPE.equals(mediaType)
 						|| MediaTypeUtil.N_TRIPLES_TYPE.equals(mediaType)
 						|| MediaTypeUtil.TURTLE_TYPE.equals(mediaType)
 						|| MediaTypeUtil.N_QUADS_TYPE.equals(mediaType)

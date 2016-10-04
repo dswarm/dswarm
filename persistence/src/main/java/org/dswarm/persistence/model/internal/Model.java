@@ -45,6 +45,8 @@ public interface Model {
 
 	JsonNode toGDMSimpleJSON();
 
+	JsonNode toJSON();
+
 	JsonNode getSchema();
 
 	Set<AttributePathHelper> getAttributePaths();

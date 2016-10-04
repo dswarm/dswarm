@@ -302,6 +302,16 @@
 			<groupId>org.dswarm</groupId>
 			<artifactId>graph-json</artifactId>
 			<version>${version.dswarm.graph.json}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-lang3</artifactId>
+					<groupId>org.apache.commons</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>commons-csv</artifactId>
+					<groupId>org.apache.commons</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
