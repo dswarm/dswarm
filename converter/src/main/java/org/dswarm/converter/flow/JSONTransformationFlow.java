@@ -15,6 +15,14 @@
  */
 package org.dswarm.converter.flow;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.ws.rs.core.Response;
+
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -29,24 +37,18 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.stream.pipe.Filter;
-import org.dswarm.common.types.Tuple;
-import org.dswarm.converter.DMPConverterException;
-import org.dswarm.converter.pipe.timing.TimerBasedFactory;
-import org.dswarm.persistence.model.resource.DataModel;
-import org.dswarm.persistence.service.InternalModelServiceFactory;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
 import rx.observables.ConnectableObservable;
 import rx.schedulers.Schedulers;
 
-import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
+import org.dswarm.common.types.Tuple;
+import org.dswarm.converter.DMPConverterException;
+import org.dswarm.converter.pipe.timing.TimerBasedFactory;
+import org.dswarm.persistence.model.resource.DataModel;
+import org.dswarm.persistence.service.InternalModelServiceFactory;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * Flow that executes a given set of transformations on data of a given data model.
@@ -141,7 +143,7 @@ public class JSONTransformationFlow extends TransformationFlow<JsonNode> {
 					}
 				})
 				.doOnCompleted(() -> JSONTransformationFlow.LOG.debug("received '{}' results in transformation engine overall", resultCounter.get()))
-				.map(org.dswarm.persistence.model.internal.Model::toJSON)
+				.map(org.dswarm.persistence.model.internal.Model::toGDMCompactJSON)
 				.flatMapIterable(nodes -> {
 
 					final ArrayList<JsonNode> nodeList = new ArrayList<>();

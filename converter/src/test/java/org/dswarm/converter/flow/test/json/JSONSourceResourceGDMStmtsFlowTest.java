@@ -87,7 +87,7 @@ public class JSONSourceResourceGDMStmtsFlowTest extends GuicedTest {
 
 				final Model model = gdmModel.getModel();
 
-				final JsonNode jsonNode = gdmModel.toJSON();
+				final JsonNode jsonNode = gdmModel.toGDMCompactJSON();
 
 				Assert.assertNotNull("the GDM model shouldn't be null", model);
 

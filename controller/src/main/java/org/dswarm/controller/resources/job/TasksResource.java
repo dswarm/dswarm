@@ -70,6 +70,7 @@ import org.slf4j.LoggerFactory;
 import rx.Observable;
 import rx.Observer;
 import rx.Scheduler;
+import rx.functions.Func1;
 import rx.observables.ConnectableObservable;
 import rx.schedulers.Schedulers;
 
@@ -220,7 +221,8 @@ public class TasksResource {
 			MediaTypeUtil.RDF_THRIFT,
 			MediaTypeUtil.GDM_JSON,
 			MediaTypeUtil.GDM_COMPACT_JSON,
-			MediaTypeUtil.GDM_COMPACT_FE_JSON})
+			MediaTypeUtil.GDM_COMPACT_FE_JSON,
+			MediaTypeUtil.GDM_SIMPLE_JSON})
 	public void executeTask(@ApiParam(value = "task execution request (as JSON)", required = true) final String jsonObjectString,
 	                        @Context final HttpHeaders requestHeaders,
 	                        @Suspended final AsyncResponse asyncResponse) throws IOException, DMPConverterException, DMPControllerException {
@@ -564,6 +566,11 @@ public class TasksResource {
 					resultObservable = doGDMCompactFEJSONExport(connectableResult.observeOn(EXPORT_SCHEDULER), responseMediaType, bos);
 
 					break;
+				case MediaTypeUtil.GDM_SIMPLE_JSON:
+
+					resultObservable = doGDMSimpleJSONExport(connectableResult.observeOn(EXPORT_SCHEDULER), responseMediaType, bos);
+
+					break;
 				default:
 
 					// media type is not supported
@@ -663,72 +670,14 @@ public class TasksResource {
 	                                                final MediaType responseMediaType,
 	                                                final BufferedOutputStream bos) throws DMPControllerException {
 
-		final AtomicInteger resultCounter = new AtomicInteger(0);
-		try {
-			final JsonGenerator jg = objectMapper.getFactory().createGenerator(bos, JsonEncoding.UTF8);
+		return doGDMJSONExport(gdmModelObservable, responseMediaType, bos, GDMModel::toGDMCompactJSON);
+	}
 
-			return gdmModelObservable.onBackpressureBuffer(10000)
-					.doOnSubscribe(() -> TasksResource.LOG.debug("subscribed to {} export", responseMediaType))
-					.doOnNext(resultObj -> {
+	private Observable<Void> doGDMSimpleJSONExport(final Observable<GDMModel> gdmModelObservable,
+	                                               final MediaType responseMediaType,
+	                                               final BufferedOutputStream bos) throws DMPControllerException {
 
-						resultCounter.incrementAndGet();
-
-						if (resultCounter.get() == 1) {
-
-							try {
-
-								jg.writeStartArray();
-							} catch (final IOException e) {
-
-								throw DMPPersistenceError.wrap(new DMPPersistenceException("something went wrong while serialising the GDM compact JSON", e));
-							}
-
-							TasksResource.LOG.debug("received first result for {} export in task resource", responseMediaType);
-						}
-					})
-					.map(GDMModel::toJSON)
-					.map(model -> {
-
-						try {
-
-							jg.writeTree(model.get(0));
-							bos.flush();
-						} catch (final IOException e) {
-
-							throw DMPPersistenceError.wrap(new DMPPersistenceException("something went wrong while serialising the GDM compact JSON", e));
-						}
-
-						return model;
-					})
-					.onBackpressureBuffer(10000)
-					.doOnCompleted(() -> {
-
-						if (resultCounter.get() > 0) {
-
-							try {
-
-								jg.writeEndArray();
-							} catch (final IOException e) {
-
-								throw DMPPersistenceError.wrap(new DMPPersistenceException("something went wrong while serialising the GDM compact JSON", e));
-							}
-						}
-
-						try {
-
-							jg.close();
-						} catch (final IOException e) {
-
-							throw DMPPersistenceError.wrap(new DMPPersistenceException("something went wrong while serialising the GDM compact JSON", e));
-						}
-
-						TasksResource.LOG.debug("received '{}' results for {} export in task resource overall", resultCounter.get(), responseMediaType);
-					})
-					.ignoreElements().cast(Void.class);
-		} catch (final IOException e) {
-
-			throw new DMPControllerException("something went wrong while serialising the GDM compact JSON", e);
-		}
+		return doGDMJSONExport(gdmModelObservable, responseMediaType, bos, GDMModel::toGDMSimpleJSON);
 	}
 
 	private Observable<Void> doGDMJSONExport(final Observable<GDMModel> gdmModelObservable,
@@ -798,7 +747,7 @@ public class TasksResource {
 
 		LOG.debug("trigger {} export", responseMediaType.toString());
 
-		final ConnectableObservable<JsonNode> jsonResult = generateJSONResult(result);
+		final ConnectableObservable<JsonNode> jsonResult = generateGDMCompactJSONResult(result);
 
 		final Observable<Void> resultObservable = solrUpdateXMLExporter.generate(jsonResult, bos).ignoreElements().cast(Void.class);
 
@@ -839,7 +788,7 @@ public class TasksResource {
 
 		LOG.debug("trigger {} export", responseMediaType.toString());
 
-		final ConnectableObservable<JsonNode> jsonResult = generateJSONResult(result);
+		final ConnectableObservable<JsonNode> jsonResult = generateGDMCompactJSONResult(result);
 
 		final Observable<Void> resultObservable = xmlExporter.generate(jsonResult, bos).ignoreElements().cast(Void.class);
 
@@ -931,7 +880,8 @@ public class TasksResource {
 						|| MediaTypeUtil.RDF_THRIFT_TYPE.equals(mediaType)
 						|| MediaTypeUtil.GDM_JSON_TYPE.equals(mediaType)
 						|| MediaTypeUtil.GDM_COMPACT_JSON_TYPE.equals(mediaType)
-						|| MediaTypeUtil.GDM_COMPACT_FE_JSON_TYPE.equals(mediaType))
+						|| MediaTypeUtil.GDM_COMPACT_FE_JSON_TYPE.equals(mediaType)
+						|| MediaTypeUtil.GDM_SIMPLE_JSON_TYPE.equals(mediaType))
 				.findFirst();
 
 		if (mediaTypeOptional.isPresent()) {
@@ -985,7 +935,7 @@ public class TasksResource {
 
 		// TODO rewrite this part up from here to properly utilise the reactive pattern
 
-		final ConnectableObservable<JsonNode> jsonResult = generateJSONResult(result);
+		final ConnectableObservable<JsonNode> jsonResult = generateGDMCompactJSONResult(result);
 
 		final Observable<Void> voidObservable = jsonResult.doOnSubscribe(() -> TasksResource.LOG.debug("subscribed to {} export on task resource", responseMediaType))
 				.doOnCompleted(() -> {
@@ -1014,7 +964,7 @@ public class TasksResource {
 						TasksResource.LOG.debug("recieved first record for JSON export in task resource");
 					}
 
-					feFriendlyJSON.add(transformModelJSONtoFEFriendlyJSON(jsonNode));
+					feFriendlyJSON.add(transformGDMCompactJSONtoGDMCompactFEJSON(jsonNode));
 				})
 				.ignoreElements().cast(Void.class);
 
@@ -1023,7 +973,7 @@ public class TasksResource {
 		return voidObservable;
 	}
 
-	private ConnectableObservable<JsonNode> generateJSONResult(final Observable<GDMModel> model) {
+	private ConnectableObservable<JsonNode> generateGDMCompactJSONResult(final Observable<GDMModel> model) {
 
 		final AtomicInteger resultCounter = new AtomicInteger(0);
 
@@ -1041,7 +991,7 @@ public class TasksResource {
 					}
 				})
 				.doOnCompleted(() -> TasksResource.LOG.debug("received '{}' results in task resource overall", resultCounter.get()))
-				.map(org.dswarm.persistence.model.internal.Model::toJSON)
+				.map(org.dswarm.persistence.model.internal.Model::toGDMCompactJSON)
 				.flatMapIterable(nodes -> {
 
 					final ArrayList<JsonNode> nodeList = new ArrayList<>();
@@ -1054,7 +1004,7 @@ public class TasksResource {
 				.publish();
 	}
 
-	private JsonNode transformModelJSONtoFEFriendlyJSON(final JsonNode resultJSON) {
+	private JsonNode transformGDMCompactJSONtoGDMCompactFEJSON(final JsonNode resultJSON) {
 
 		final Iterator<String> fieldNamesIter = resultJSON.fieldNames();
 
@@ -1076,6 +1026,79 @@ public class TasksResource {
 		recordNode.set(DMPPersistenceUtil.RECORD_DATA, recordContentNode);
 
 		return recordNode;
+	}
+
+	private Observable<Void> doGDMJSONExport(final Observable<GDMModel> gdmModelObservable,
+	                                         final MediaType responseMediaType,
+	                                         final BufferedOutputStream bos,
+	                                         final Func1<GDMModel, JsonNode> transformationFunction) throws DMPControllerException {
+
+		final AtomicInteger resultCounter = new AtomicInteger(0);
+		try {
+			final JsonGenerator jg = objectMapper.getFactory().createGenerator(bos, JsonEncoding.UTF8);
+
+			return gdmModelObservable.onBackpressureBuffer(10000)
+					.doOnSubscribe(() -> TasksResource.LOG.debug("subscribed to {} export", responseMediaType))
+					.doOnNext(resultObj -> {
+
+						resultCounter.incrementAndGet();
+
+						if (resultCounter.get() == 1) {
+
+							try {
+
+								jg.writeStartArray();
+							} catch (final IOException e) {
+
+								throw DMPPersistenceError.wrap(new DMPPersistenceException(String.format("something went wrong while serialising the %", responseMediaType), e));
+							}
+
+							TasksResource.LOG.debug("received first result for {} export in task resource", responseMediaType);
+						}
+					})
+					.map(transformationFunction)
+					.map(model -> {
+
+						try {
+
+							jg.writeTree(model.get(0));
+							bos.flush();
+						} catch (final IOException e) {
+
+							throw DMPPersistenceError.wrap(new DMPPersistenceException(String.format("something went wrong while serialising the %", responseMediaType), e));
+						}
+
+						return model;
+					})
+					.onBackpressureBuffer(10000)
+					.doOnCompleted(() -> {
+
+						if (resultCounter.get() > 0) {
+
+							try {
+
+								jg.writeEndArray();
+							} catch (final IOException e) {
+
+								throw DMPPersistenceError.wrap(new DMPPersistenceException(String.format("something went wrong while serialising the %", responseMediaType), e));
+							}
+						}
+
+						try {
+
+							jg.close();
+						} catch (final IOException e) {
+
+							throw DMPPersistenceError.wrap(new DMPPersistenceException(String.format("something went wrong while serialising the %", responseMediaType), e));
+						}
+
+						TasksResource.LOG.debug("received '{}' results for {} export in task resource overall", resultCounter.get(), responseMediaType);
+					})
+					.ignoreElements().cast(Void.class);
+		} catch (final IOException e) {
+
+			throw new DMPControllerException(String.format("something went wrong while serialising the %", responseMediaType), e);
+		}
 	}
 
 	private java.util.Optional<String> guavaOptionalToJava8Optional(final Optional<String> optionalString) {

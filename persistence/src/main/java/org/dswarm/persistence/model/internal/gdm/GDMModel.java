@@ -298,13 +298,21 @@ public class GDMModel implements Model {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public JsonNode toJSON() {
+	public JsonNode toGDMCompactJSON() {
 
 		return Util.toGDMCompactJSON(model, getRecordURIs());
 	}
 
-	private JsonNode determineUnnormalizedSchema(final Resource recordResource, final Node resourceNode, final ObjectNode rootJson,
-			final JsonNode json) {
+	@Override
+	public JsonNode toGDMSimpleJSON() {
+
+		return Util.toGDMSimpleJSON(model, getRecordURIs());
+	}
+
+	private JsonNode determineUnnormalizedSchema(final Resource recordResource,
+	                                             final Node resourceNode,
+	                                             final ObjectNode rootJson,
+	                                             final JsonNode json) {
 
 		// filter record resource statements to statements for subject uri/id (resource node))
 		final Set<Statement> statements = Util.getResourceStatement(resourceNode, recordResource);
@@ -380,8 +388,9 @@ public class GDMModel implements Model {
 		return json;
 	}
 
-	private Set<AttributePathHelper> determineAttributePaths(final JsonNode unnormalizedSchema, final Set<AttributePathHelper> attributePaths,
-			final AttributePathHelper attributePath) {
+	private Set<AttributePathHelper> determineAttributePaths(final JsonNode unnormalizedSchema,
+	                                                         final Set<AttributePathHelper> attributePaths,
+	                                                         final AttributePathHelper attributePath) {
 
 		// note: simply copied from RDFModel
 		// TODO: create abstracted class for RDFModel + GDMModel to share methods
@@ -474,7 +483,8 @@ public class GDMModel implements Model {
 		}
 	}
 
-	private JsonNode generateSchema(final List<AttributePathHelper> attributePaths, final int level) {
+	private JsonNode generateSchema(final List<AttributePathHelper> attributePaths,
+	                                final int level) {
 
 		// note: simply copied from RDFModel
 		// TODO: create abstracted class for RDFModel + GDMModel to share methods
@@ -544,8 +554,10 @@ public class GDMModel implements Model {
 		}
 	}
 
-	private JsonNode generateNextLevelSchemaForRootAttributePath(final List<AttributePathHelper> attributePaths, final String levelRootAttributePath,
-			final AttributePathHelper sampleAttributePath, final int level) {
+	private JsonNode generateNextLevelSchemaForRootAttributePath(final List<AttributePathHelper> attributePaths,
+	                                                             final String levelRootAttributePath,
+	                                                             final AttributePathHelper sampleAttributePath,
+	                                                             final int level) {
 
 		// note: simply copied from RDFModel
 		// TODO: create abstracted class for RDFModel + GDMModel to share methods
