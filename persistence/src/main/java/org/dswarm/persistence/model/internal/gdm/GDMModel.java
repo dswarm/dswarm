@@ -39,15 +39,13 @@ import org.dswarm.graph.json.Node;
 import org.dswarm.graph.json.Resource;
 import org.dswarm.graph.json.ResourceNode;
 import org.dswarm.graph.json.Statement;
+import org.dswarm.graph.json.util.Util;
 import org.dswarm.persistence.model.internal.Model;
-import org.dswarm.persistence.model.internal.gdm.helper.ConverterHelperGDMHelper;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelperHelper;
-import org.dswarm.persistence.model.internal.helper.ConverterHelper;
 import org.dswarm.persistence.model.internal.helper.SchemaHelper;
 import org.dswarm.persistence.model.internal.helper.SchemaHelperHelper;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.dswarm.persistence.util.GDMUtil;
 
 /**
  * @author tgaengler
@@ -188,7 +186,7 @@ public class GDMModel implements Model {
 		final ArrayNode json = DMPPersistenceUtil.getJSONObjectMapper().createArrayNode();
 
 		// determine record resource node from statements of the record resource
-		final ResourceNode recordResourceNode = GDMUtil.getResourceNode(resourceURI, recordResource);
+		final ResourceNode recordResourceNode = Util.getResourceNode(resourceURI, recordResource);
 
 		if (recordResourceNode == null) {
 
@@ -197,7 +195,7 @@ public class GDMModel implements Model {
 			return null;
 		}
 
-		convertGDMToJSON(recordResource, recordResourceNode, json);
+		Util.convertToGDMCompactJSON(recordResource, recordResourceNode, json, model);
 
 		return json;
 	}
@@ -253,7 +251,7 @@ public class GDMModel implements Model {
 			final ObjectNode json = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
 
 			// determine record resource node from statements of the record resource
-			final ResourceNode recordResourceNode = GDMUtil.getResourceNode(resourceURI, recordResource);
+			final ResourceNode recordResourceNode = Util.getResourceNode(resourceURI, recordResource);
 
 			if (recordResourceNode == null) {
 
@@ -302,156 +300,14 @@ public class GDMModel implements Model {
 	@Override
 	public JsonNode toJSON() {
 
-		if (model == null) {
-
-			GDMModel.LOG.debug("model is null, can't convert model to JSON");
-
-			return null;
-		}
-
-		if (getRecordURIs() == null) {
-
-			GDMModel.LOG.debug("resource URI is null, can't convert model to JSON");
-
-			return null;
-		}
-
-		final Iterator<String> iter = getRecordURIs().iterator();
-
-		if (!iter.hasNext()) {
-
-			// no entries
-
-			return null;
-		}
-
-		final ArrayNode jsonArray = DMPPersistenceUtil.getJSONObjectMapper().createArrayNode();
-
-		while (iter.hasNext()) {
-
-			final String resourceURI = iter.next();
-			final Resource recordResource = model.getResource(resourceURI);
-
-			if (recordResource == null) {
-
-				GDMModel.LOG.debug("couldn't find record resource for record  uri '{}' in model", resourceURI);
-
-				return null;
-			}
-
-			final ArrayNode json = DMPPersistenceUtil.getJSONObjectMapper().createArrayNode();
-
-			// determine record resource node from statements of the record resource
-			final ResourceNode recordResourceNode = GDMUtil.getResourceNode(resourceURI, recordResource);
-
-			if (recordResourceNode == null) {
-
-				GDMModel.LOG.debug("couldn't find record resource node for record  uri '{}' in model", resourceURI);
-
-				return null;
-			}
-
-			convertGDMToJSON(recordResource, recordResourceNode, json);
-
-			if (json == null) {
-
-				// TODO: maybe log something here
-
-				continue;
-			}
-
-			final ObjectNode resourceJson = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
-
-			resourceJson.set(resourceURI, json);
-			jsonArray.add(resourceJson);
-		}
-
-		return jsonArray;
-	}
-
-	private JsonNode convertGDMToJSON(final Resource recordResource, final Node resourceNode, final ArrayNode json) {
-
-		final Map<String, ConverterHelper> converterHelpers = Maps.newLinkedHashMap();
-
-		// filter record resource statements to statements for subject uri/id (resource node))
-		final Set<Statement> statements = GDMUtil.getResourceStatement(resourceNode, recordResource);
-
-		for (final Statement statement : statements) {
-
-			final String propertyURI = statement.getPredicate().getUri();
-			final Node gdmNode = statement.getObject();
-
-			if (gdmNode instanceof LiteralNode) {
-
-				ConverterHelperGDMHelper.addLiteralToConverterHelper(converterHelpers, propertyURI, gdmNode);
-
-				continue;
-			}
-
-			if (gdmNode instanceof ResourceNode) {
-
-				final ResourceNode object = (ResourceNode) gdmNode;
-
-				final Resource objectResource;
-
-				if (model.getResource(object.getUri()) != null) {
-
-					objectResource = model.getResource(object.getUri());
-				} else {
-
-					objectResource = recordResource;
-				}
-
-				// TODO: define stop criteria to avoid running in endless loops
-
-				// filter record resource statements to statements for object uri (object node))
-				final Set<Statement> objectStatements = GDMUtil.getResourceStatement(object, objectResource);
-
-				if (objectStatements == null || objectStatements.isEmpty()) {
-
-					ConverterHelperGDMHelper.addURIResourceToConverterHelper(converterHelpers, propertyURI, gdmNode);
-
-					continue;
-				}
-
-				// resource has an uri, but is deeper in the hierarchy => record_id will be attached inline
-
-				final ArrayNode objectNode = DMPPersistenceUtil.getJSONObjectMapper().createArrayNode();
-
-				final JsonNode jsonNode = convertGDMToJSON(objectResource, object, objectNode);
-
-				final ObjectNode recordIdNode = DMPPersistenceUtil.getJSONObjectMapper().createObjectNode();
-				recordIdNode.put(DMPPersistenceUtil.RECORD_ID, object.getUri());
-
-				objectNode.add(recordIdNode);
-
-				ConverterHelperGDMHelper.addJSONNodeToConverterHelper(converterHelpers, propertyURI, jsonNode);
-
-				continue;
-			}
-
-			// node is (/must be) a blank node
-
-			final ArrayNode objectNode = DMPPersistenceUtil.getJSONObjectMapper().createArrayNode();
-
-			final JsonNode jsonNode = convertGDMToJSON(recordResource, gdmNode, objectNode);
-
-			ConverterHelperGDMHelper.addJSONNodeToConverterHelper(converterHelpers, propertyURI, jsonNode);
-		}
-
-		for (final Entry<String, ConverterHelper> converterHelperEntry : converterHelpers.entrySet()) {
-
-			converterHelperEntry.getValue().build(json);
-		}
-
-		return json;
+		return Util.toGDMCompactJSON(model, getRecordURIs());
 	}
 
 	private JsonNode determineUnnormalizedSchema(final Resource recordResource, final Node resourceNode, final ObjectNode rootJson,
 			final JsonNode json) {
 
 		// filter record resource statements to statements for subject uri/id (resource node))
-		final Set<Statement> statements = GDMUtil.getResourceStatement(resourceNode, recordResource);
+		final Set<Statement> statements = Util.getResourceStatement(resourceNode, recordResource);
 
 		final Map<String, SchemaHelper> schemaHelpers = Maps.newLinkedHashMap();
 
@@ -472,7 +328,7 @@ public class GDMModel implements Model {
 				final ResourceNode object = (ResourceNode) gdmNode;
 
 				// filter record resource statements to statements for object uri (object node))
-				final Set<Statement> objectStatements = GDMUtil.getResourceStatement(object, recordResource);
+				final Set<Statement> objectStatements = Util.getResourceStatement(object, recordResource);
 
 				if (objectStatements == null || objectStatements.isEmpty()) {
 
