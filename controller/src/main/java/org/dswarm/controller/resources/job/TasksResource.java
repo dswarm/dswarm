@@ -123,7 +123,6 @@ public class TasksResource {
 	public static final String SELECTED_RECORDS_IDENTIFIER = "selected_records";
 	public static final String DO_INGEST_ON_THE_FLY_IDENTIFIER = "do_ingest_on_the_fly";
 	public static final String UTILISE_EXISTING_INPUT_SCHEMA_IDENTIFIER = "utilise_existing_input_schema";
-	public static final String DO_EXPORT_ON_THE_FLY_IDENTIFIER = "do_export_on_the_fly";
 	public static final String DO_VERSIONING_ON_RESULT_IDENTIFIER = "do_versioning_on_result";
 
 	private static final String DSWARM_INGEST_THREAD_NAMING_PATTERN = "dswarm-ingest-%d";
@@ -189,24 +188,6 @@ public class TasksResource {
 		objectMapper = objectMapperArg;
 		transformationFlowFactory = transformationFlowFactoryArg;
 		this.monitoringLogger = monitoringLogger;
-	}
-
-	/**
-	 * Builds a positive response with the given content.
-	 *
-	 * @param responseContent a response message
-	 * @return the response
-	 */
-	private static Response buildResponse(final String responseContent, final MediaType mediaType) {
-
-		final Response.ResponseBuilder responseBuilder = Response.ok(responseContent);
-
-		if (mediaType != null) {
-
-			responseBuilder.type(mediaType);
-		}
-
-		return responseBuilder.build();
 	}
 
 	/**
@@ -395,10 +376,6 @@ public class TasksResource {
 
 		final boolean doVersioningOnResult = JsonUtils.getBooleanValue(TasksResource.DO_VERSIONING_ON_RESULT_IDENTIFIER, requestJSON, true);
 
-		final boolean doExportOnTheFly = JsonUtils.getBooleanValue(TasksResource.DO_EXPORT_ON_THE_FLY_IDENTIFIER, requestJSON, true);
-
-		final boolean doNotReturnJsonToCaller2 = !doExportOnTheFly && doNotReturnJsonToCaller;
-
 		if (!doVersioningOnResult) {
 
 			TasksResource.LOG.debug("skip result versioning");
@@ -409,19 +386,11 @@ public class TasksResource {
 		try (final MonitoringHelper ignore = monitoringLogger.get().startExecution(task)) {
 
 			final GDMModelTransformationFlow flow = transformationFlowFactory.fromTask(task);
-			final ConnectableObservable<GDMModel> apply = flow.apply(connectableInputData, writeResultToDatahub, doNotReturnJsonToCaller2, doVersioningOnResult, TRANSFORMATION_ENGINE_SCHEDULER);
+			final ConnectableObservable<GDMModel> apply = flow.apply(connectableInputData, writeResultToDatahub, doNotReturnJsonToCaller, doVersioningOnResult, TRANSFORMATION_ENGINE_SCHEDULER);
 			connectableResult = apply.observeOn(TRANSFORMATION_ENGINE_SCHEDULER)
 					.onBackpressureBuffer(10000)
 					.publish();
 			apply.connect();
-		}
-
-		// note: you can only do one of this, i.e., export result as (xml or a RDF serialization) or as json
-		if (doExportOnTheFly) {
-
-			doExportOnTheFly(requestHeaders, asyncResponse, task, connectableResult, connectableInputData);
-
-			return;
 		}
 
 		if (doNotReturnJsonToCaller) {
@@ -433,6 +402,8 @@ public class TasksResource {
 
 			return;
 		}
+
+		doExport(requestHeaders, asyncResponse, task, connectableResult, connectableInputData);
 	}
 
 	/**
@@ -483,13 +454,13 @@ public class TasksResource {
 		return new MorphScriptBuilder().apply(task).toString();
 	}
 
-	private void doExportOnTheFly(final HttpHeaders requestHeaders,
-	                              final AsyncResponse asyncResponse,
-	                              final Task task,
-	                              final ConnectableObservable<GDMModel> connectableResult,
-	                              final ConnectableObservable<Tuple<String, JsonNode>> connectableInputData) throws DMPControllerException {
+	private void doExport(final HttpHeaders requestHeaders,
+	                      final AsyncResponse asyncResponse,
+	                      final Task task,
+	                      final ConnectableObservable<GDMModel> connectableResult,
+	                      final ConnectableObservable<Tuple<String, JsonNode>> connectableInputData) throws DMPControllerException {
 
-		LOG.debug("do export on-the-fly for task execution of task '{}'", task.getUuid());
+		LOG.debug("do export for task execution of task '{}'", task.getUuid());
 
 		final Optional<MediaType> optionalResponseMediaType = determineResponseMediaType(requestHeaders);
 

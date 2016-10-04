@@ -15,11 +15,20 @@
  */
 package org.dswarm.controller.resources.job.test;
 
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.Response;
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.validation.SchemaFactory;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.BooleanNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.junit.Assert;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.dswarm.common.MediaTypeUtil;
 import org.dswarm.controller.resources.job.TasksResource;
@@ -32,17 +41,6 @@ import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.utils.DataModelUtils;
 import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.junit.Assert;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.validation.SchemaFactory;
 
 public class TasksResourceTest extends ResourceTest {
 
@@ -169,7 +167,6 @@ public class TasksResourceTest extends ResourceTest {
 
 		final ObjectNode requestJSON = prepareTask(inputDataModel);
 		requestJSON.put(TasksResource.RETURN_IDENTIFIER, true);
-		requestJSON.put(TasksResource.DO_EXPORT_ON_THE_FLY_IDENTIFIER, Boolean.FALSE);
 
 		final Response response = target().request(MediaTypeUtil.GDM_COMPACT_FE_JSON_TYPE)
 				.accept(MediaTypeUtil.GDM_COMPACT_FE_JSON_TYPE).post(Entity.json(requestJSON));
