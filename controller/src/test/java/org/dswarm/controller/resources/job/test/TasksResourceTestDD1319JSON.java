@@ -58,7 +58,7 @@ public class TasksResourceTestDD1319JSON extends AbtractExportOnTheFlyTasksResou
 			final ArrayNode actualResultJSONArray = indentObjectMapper.readValue(actualResult, ArrayNode.class);
 			final String actualResultJSON = indentObjectMapper.writeValueAsString(actualResultJSONArray);
 
-			Assert.assertEquals(expectedResult.length(), actualResultJSON.length());
+			Assert.assertEquals(expectedResult, actualResultJSON);
 		} catch (final IOException e) {
 
 			LOG.error("some thing went wrong", e);
