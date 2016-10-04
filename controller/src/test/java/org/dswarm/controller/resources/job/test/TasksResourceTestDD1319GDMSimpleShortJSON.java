@@ -18,8 +18,6 @@ package org.dswarm.controller.resources.job.test;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.ws.rs.core.MediaType;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;

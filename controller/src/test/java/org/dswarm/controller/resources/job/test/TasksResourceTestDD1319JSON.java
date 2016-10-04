@@ -27,7 +27,6 @@ import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.dswarm.common.MediaTypeUtil;
 import org.dswarm.graph.json.util.Util;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 
