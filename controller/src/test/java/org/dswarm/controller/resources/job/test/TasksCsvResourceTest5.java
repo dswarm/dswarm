@@ -26,7 +26,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -37,7 +36,6 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.io.Resources;
 import com.google.inject.Key;
 import org.apache.commons.io.FileUtils;
-import org.dswarm.controller.resources.job.test.utils.TasksResourceTestUtils;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
@@ -46,8 +44,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
 
+import org.dswarm.common.MediaTypeUtil;
 import org.dswarm.common.types.Tuple;
 import org.dswarm.controller.resources.job.TasksResource;
+import org.dswarm.controller.resources.job.test.utils.TasksResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
 import org.dswarm.controller.resources.test.ResourceTest;
@@ -251,8 +251,8 @@ public class TasksCsvResourceTest5 extends ResourceTest {
 
 		requestJSON.set(TasksResource.SELECTED_RECORDS_IDENTIFIER, selectedRecordsNode);
 
-		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE)
-				.accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(requestJSON));
+		final Response response = target().request(MediaTypeUtil.GDM_COMPACT_FE_JSON_TYPE)
+				.accept(MediaTypeUtil.GDM_COMPACT_FE_JSON_TYPE).post(Entity.json(requestJSON));
 
 		// SR Start checking response
 
