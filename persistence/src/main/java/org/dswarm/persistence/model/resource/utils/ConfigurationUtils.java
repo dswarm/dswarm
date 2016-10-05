@@ -15,6 +15,9 @@
  */
 package org.dswarm.persistence.model.resource.utils;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.utils.ExtendedBasicDMPJPAObjectUtils;
 
@@ -23,4 +26,25 @@ import org.dswarm.persistence.model.utils.ExtendedBasicDMPJPAObjectUtils;
  */
 public final class ConfigurationUtils extends ExtendedBasicDMPJPAObjectUtils<Configuration> {
 
+	private static final Collection<String> xmlStorageTypes = new ArrayList<>();
+
+	static {
+
+		xmlStorageTypes.add(ConfigurationStatics.XML_STORAGE_TYPE);
+		xmlStorageTypes.add(ConfigurationStatics.MABXML_STORAGE_TYPE);
+		xmlStorageTypes.add(ConfigurationStatics.MARCXML_STORAGE_TYPE);
+		xmlStorageTypes.add(ConfigurationStatics.OAI_PMH_DC_ELEMENTS_STORAGE_TYPE);
+		xmlStorageTypes.add(ConfigurationStatics.OAI_PMH_DCE_AND_EDM_ELEMENTS_STORAGE_TYPE);
+		xmlStorageTypes.add(ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE);
+		xmlStorageTypes.add(ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE);
+		xmlStorageTypes.add(ConfigurationStatics.PICAPLUSXML_GLOBAL_STORAGE_TYPE);
+		xmlStorageTypes.add(ConfigurationStatics.PICAPLUSXML_STORAGE_TYPE);
+		xmlStorageTypes.add(ConfigurationStatics.PNX_STORAGE_TYPE);
+		xmlStorageTypes.add(ConfigurationStatics.SRU_11_PICAPLUSXML_GLOBAL_STORAGE_TYPE);
+	}
+
+	public static Collection<String> getXMLStorageTypes() {
+
+		return xmlStorageTypes;
+	}
 }
