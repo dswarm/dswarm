@@ -195,6 +195,8 @@ public class SchemaAttributePathInstanceServiceTestUtils extends
 	                                                             final SchemaAttributePathInstance object) {
 		super.prepareObjectForUpdate(objectWithUpdates, object);
 		object.setSubSchema(objectWithUpdates.getSubSchema());
+		object.setRequired(objectWithUpdates.isRequired());
+		object.setMultivalue(objectWithUpdates.isMultivalue());
 		return object;
 	}
 

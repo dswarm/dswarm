@@ -69,8 +69,12 @@ public class SchemaAttributePathInstanceService extends
 		super.updateObjectInternal(object, updateObject);
 
 		final Schema subSchema = object.getSubSchema();
+		final Boolean required = object.isRequired();
+		final Boolean multivalue = object.isMultivalue();
 
 		updateObject.setSubSchema(subSchema);
+		updateObject.setRequired(required);
+		updateObject.setMultivalue(multivalue);
 	}
 
 	public ProxySchemaAttributePathInstance createObjectTransactional(final AttributePath attributePath) throws DMPPersistenceException {

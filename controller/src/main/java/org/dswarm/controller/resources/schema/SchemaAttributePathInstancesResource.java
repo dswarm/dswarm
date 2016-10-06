@@ -185,11 +185,13 @@ public class SchemaAttributePathInstancesResource
 	 */
 	@Override
 	protected SchemaAttributePathInstance prepareObjectForUpdate(final SchemaAttributePathInstance objectFromJSON,
-			final SchemaAttributePathInstance object) {
+	                                                             final SchemaAttributePathInstance object) {
 
 		super.prepareObjectForUpdate(objectFromJSON, object);
 
 		object.setSubSchema(objectFromJSON.getSubSchema());
+		object.setRequired(objectFromJSON.isRequired());
+		object.setMultivalue(objectFromJSON.isMultivalue());
 
 		return object;
 	}

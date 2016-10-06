@@ -83,6 +83,8 @@ public class SchemaAttributePathInstancesResourceTest
 	protected SchemaAttributePathInstance updateObject(final SchemaAttributePathInstance persistedMappingAttributePathInstance) throws Exception {
 
 		final String updateSchemaAttributePathInstanceNameString = "new name";
+		final Boolean updatedRequiredState = Boolean.TRUE;
+		final Boolean updatedMultivalueState = Boolean.TRUE;
 		final AttributePathServiceTestUtils attributePathServiceTestUtils = attributePathResourceTestUtils.getPersistenceServiceTestUtils();
 		final AttributePath newAttributePath = attributePathServiceTestUtils.getDctermsCreatedAP();
 
@@ -92,6 +94,8 @@ public class SchemaAttributePathInstancesResourceTest
 		persistedMappingAttributePathInstance.setName(updateSchemaAttributePathInstanceNameString);
 		persistedMappingAttributePathInstance.setAttributePath(newAttributePath);
 		persistedMappingAttributePathInstance.setSubSchema(subSchema);
+		persistedMappingAttributePathInstance.setRequired(updatedRequiredState);
+		persistedMappingAttributePathInstance.setMultivalue(updatedMultivalueState);
 
 		final String updatedSchemaAttributePathInstanceJSONString = objectMapper.writeValueAsString(persistedMappingAttributePathInstance);
 

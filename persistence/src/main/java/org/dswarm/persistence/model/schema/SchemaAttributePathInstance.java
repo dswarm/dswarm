@@ -16,6 +16,7 @@
 package org.dswarm.persistence.model.schema;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -25,6 +26,7 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.base.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,6 +60,22 @@ public class SchemaAttributePathInstance extends AttributePathInstance {
 	private Schema subSchema;
 
 	/**
+	 * Indicates whether the attribute path should always have a value/values (or not)
+	 */
+	@XmlElement(name = "required")
+	@Column(name = "REQUIRED")
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private Boolean required;
+
+	/**
+	 * Indicates whether multiple values for the attribute path of this SAPI can occur (or not)
+	 */
+	@XmlElement(name = "multivalue")
+	@Column(name = "MULTIVALUE")
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private Boolean multivalue;
+
+	/**
 	 * Creates a new mapping attribute path instance.
 	 */
 	protected SchemaAttributePathInstance() {
@@ -75,6 +93,7 @@ public class SchemaAttributePathInstance extends AttributePathInstance {
 	 * or null if no sub-schema was defined
 	 */
 	public Schema getSubSchema() {
+
 		return subSchema;
 	}
 
@@ -85,14 +104,36 @@ public class SchemaAttributePathInstance extends AttributePathInstance {
 	 * @param subSchema - the Schema to be used as as sub-schema.
 	 */
 	public void setSubSchema(final Schema subSchema) {
+
 		this.subSchema = subSchema;
+	}
+
+	public Boolean isRequired() {
+
+		return required;
+	}
+
+	public void setRequired(final Boolean required) {
+
+		this.required = required;
+	}
+
+	public Boolean isMultivalue() {
+
+		return multivalue;
+	}
+
+	public void setMultivalue(final Boolean multivalue) {
+
+		this.multivalue = multivalue;
 	}
 
 	@Override
 	public boolean completeEquals(final Object obj) {
 
 		return SchemaAttributePathInstance.class.isInstance(obj) && super.completeEquals(obj)
-				//&& Objects.equal(((SchemaAttributePathInstance) obj).getOrdinal(), getOrdinal())
-				&& Objects.equal(((SchemaAttributePathInstance) obj).getSubSchema(), getSubSchema());
+				&& Objects.equal(((SchemaAttributePathInstance) obj).getSubSchema(), getSubSchema())
+				&& Objects.equal(((SchemaAttributePathInstance) obj).isRequired(), isRequired())
+				&& Objects.equal(((SchemaAttributePathInstance) obj).isMultivalue(), isMultivalue());
 	}
 }
