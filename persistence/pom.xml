@@ -38,7 +38,7 @@
 		<version.lambdaj>2.4</version.lambdaj>
 		<version.mysql-connector-java>6.0.4</version.mysql-connector-java>
 		<version.eclipselink>2.6.4</version.eclipselink>
-		<version.jpa-schema-maven-plugin>0.2.2-SNAPSHOT</version.jpa-schema-maven-plugin>
+		<version.jpa-schema-maven-plugin>0.2.3-SNAPSHOT</version.jpa-schema-maven-plugin>
 	</properties>
 
 	<repositories>
@@ -60,9 +60,16 @@
 				<artifactId>jpa-schema-maven-plugin</artifactId>
 				<version>${version.jpa-schema-maven-plugin}</version>
 				<configuration>
+					<vendor>eclipselink</vendor>
 					<persistenceUnitName>DMPApp</persistenceUnitName>
-					<dialect>org.hibernate.dialect.MySQL5InnoDBDialect</dialect>
+					<databaseProductName>MySQL</databaseProductName>
+					<packageToScan>
+						<string>org.dswarm.persistence.model</string>
+					</packageToScan>
 					<scriptAction>drop-and-create</scriptAction>
+					<format>true</format>
+					<databaseMajorVersion>5</databaseMajorVersion>
+					<databaseMinorVersion>7</databaseMinorVersion>
 				</configuration>
 			</plugin>
 			<plugin>
