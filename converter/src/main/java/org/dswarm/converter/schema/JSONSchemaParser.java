@@ -90,7 +90,8 @@ public class JSONSchemaParser extends AbstractJSONSchemaParser {
 		if(type.equals(OBJECT_JSON_SCHEMA_ATTRIBUTE_TYPE)) {
 
 			// add rdf:type attribute
-			AttributePathHelperHelper.addAttributePath(GDMUtil.RDF_type, attributePaths, finalAttributePathHelper);
+			final Boolean multivalue = null;
+			AttributePathHelperHelper.addAttributePath(GDMUtil.RDF_type, multivalue, attributePaths, finalAttributePathHelper);
 		}
 	}
 

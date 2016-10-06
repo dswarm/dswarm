@@ -85,8 +85,21 @@ public class SchemaAttributePathInstanceService extends
 
 		sapi.setAttributePath(attributePath);
 
-		final ProxySchemaAttributePathInstance psapi = createObjectTransactional(sapi);
+		return createObjectTransactional(sapi);
+	}
 
-		return psapi;
+	public ProxySchemaAttributePathInstance createObjectTransactional(final AttributePath attributePath,
+	                                                                  final Boolean required,
+	                                                                  final Boolean multivalue) throws DMPPersistenceException {
+
+		final String uuid = UUIDService.getUUID(SchemaAttributePathInstance.class.getSimpleName());
+
+		final SchemaAttributePathInstance sapi = new SchemaAttributePathInstance(uuid);
+
+		sapi.setAttributePath(attributePath);
+		sapi.setRequired(required);
+		sapi.setMultivalue(multivalue);
+
+		return createObjectTransactional(sapi);
 	}
 }

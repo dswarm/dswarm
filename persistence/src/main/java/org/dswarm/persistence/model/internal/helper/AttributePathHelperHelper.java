@@ -28,27 +28,33 @@ import org.dswarm.init.util.DMPStatics;
 
 public class AttributePathHelperHelper {
 
-	public static AttributePathHelper addAttributePath(final JsonNode unnormalizedSchema, final Set<AttributePathHelper> attributePaths,
-			final AttributePathHelper attributePath) {
+	public static AttributePathHelper addAttributePath(final JsonNode unnormalizedSchema,
+	                                                   final Set<AttributePathHelper> attributePaths,
+	                                                   final AttributePathHelper attributePath) {
 
 		final String attribute = unnormalizedSchema.asText();
+		final boolean multivalue = false;
 
-		return AttributePathHelperHelper.addAttributePath(attribute, attributePaths, attributePath);
+		return AttributePathHelperHelper.addAttributePath(attribute, multivalue, attributePaths, attributePath);
 	}
 
-	public static AttributePathHelper addAttributePath(final String attribute, final Set<AttributePathHelper> attributePaths,
-			final AttributePathHelper attributePath) {
+	public static AttributePathHelper addAttributePath(final String attribute,
+	                                                   final Boolean multivalue,
+	                                                   final Set<AttributePathHelper> attributePaths,
+	                                                   final AttributePathHelper attributePath) {
 
 		final List<String> currentAttributePath = Lists.newArrayList(attributePath.getAttributePath());
 		currentAttributePath.add(attribute);
-		final AttributePathHelper schemaNormalizerHelper = new AttributePathHelper(currentAttributePath);
+		final Boolean required = null;
+		final AttributePathHelper schemaNormalizerHelper = new AttributePathHelper(currentAttributePath, required, multivalue);
 		attributePaths.add(schemaNormalizerHelper);
 
 		return schemaNormalizerHelper;
 	}
 
-	public static AttributePathHelper addAttributePath(final AttributePathHelper childAttributePath, final Set<AttributePathHelper> attributePaths,
-			final AttributePathHelper rootAttributePath) {
+	public static AttributePathHelper addAttributePath(final AttributePathHelper childAttributePath,
+	                                                   final Set<AttributePathHelper> attributePaths,
+	                                                   final AttributePathHelper rootAttributePath) {
 
 		final List<String> currentAttributePath = Lists.newArrayList(rootAttributePath.getAttributePath());
 		currentAttributePath.addAll(childAttributePath.getAttributePath());
@@ -58,7 +64,8 @@ public class AttributePathHelperHelper {
 		return schemaNormalizerHelper;
 	}
 
-	public static boolean levelAsArray(final List<AttributePathHelper> attributePaths, final String levelCurrentRootAttributePath) {
+	public static boolean levelAsArray(final List<AttributePathHelper> attributePaths,
+	                                   final String levelCurrentRootAttributePath) {
 
 		boolean levelAsArray = false;
 
@@ -75,7 +82,8 @@ public class AttributePathHelperHelper {
 		return levelAsArray;
 	}
 
-	public static String determineLevelRootAttributePath(final AttributePathHelper attributePathHelper, final int level) {
+	public static String determineLevelRootAttributePath(final AttributePathHelper attributePathHelper,
+	                                                     final int level) {
 
 		String levelCurrentRootAttributePath = "";
 
@@ -107,7 +115,8 @@ public class AttributePathHelperHelper {
 		return levelCurrentRootAttributePath;
 	}
 
-	public static List<AttributePathHelper> prepareAttributePathHelpers(final List<AttributePathHelper> attributePaths, final int level) {
+	public static List<AttributePathHelper> prepareAttributePathHelpers(final List<AttributePathHelper> attributePaths,
+	                                                                    final int level) {
 
 		// only relevant attribute paths
 		final List<AttributePathHelper> filteredAttributePaths = Lambda.filter(
@@ -123,7 +132,8 @@ public class AttributePathHelperHelper {
 	}
 
 	public static List<AttributePathHelper> getNextAttributePathHelpersForLevelRootAttributePath(final List<AttributePathHelper> attributePaths,
-			final String levelRootAttributePath, final int level) {
+	                                                                                             final String levelRootAttributePath,
+	                                                                                             final int level) {
 
 		// only attribute paths for level root attribute path
 		final List<AttributePathHelper> levelRootAttributePaths = Lambda.filter(
@@ -138,7 +148,8 @@ public class AttributePathHelperHelper {
 		return AttributePathHelperHelper.prepareAttributePathHelpers(levelRootAttributePaths, level + 1);
 	}
 
-	public static boolean hasNextLevel(final List<AttributePathHelper> attributePaths, final int level) {
+	public static boolean hasNextLevel(final List<AttributePathHelper> attributePaths,
+	                                   final int level) {
 
 		final List<AttributePathHelper> nextLevelAttributePaths = AttributePathHelperHelper.prepareAttributePathHelpers(attributePaths, level + 1);
 

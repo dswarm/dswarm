@@ -429,7 +429,9 @@ public class GDMModel implements Model {
 
 				fieldNames.forEachRemaining(fieldName -> {
 
-					final AttributePathHelper newAttributePath = AttributePathHelperHelper.addAttributePath(fieldName, attributePaths, attributePath);
+					final Boolean multivalue = null;
+
+					final AttributePathHelper newAttributePath = AttributePathHelperHelper.addAttributePath(fieldName, multivalue, attributePaths, attributePath);
 
 					final JsonNode valueNode = jsonObject.get(fieldName);
 
