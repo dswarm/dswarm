@@ -1208,15 +1208,6 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 			final Set<String> uniqueInputAttributePaths = mappingInputAttributePathInstances.stream()
 					.map(mappingInputAttributePathInstance -> StringEscapeUtils.escapeXml(mappingInputAttributePathInstance.getAttributePath().toAttributePath()))
-					.map(attributePath -> {
-
-						if(isXmlSchema && attributePath.endsWith(GDMUtil.RDF_value)) {
-
-							return attributePath.substring(0, attributePath.length() - GDMUtil.RDF_value.length() - 1);
-						}
-
-						return attributePath;
-					})
 					.collect(Collectors.toSet());
 
 			if (optionalInputSchema.isPresent()
@@ -1230,9 +1221,19 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 				return Optional.empty();
 			}
 
-			final String[] attributePaths = new String[uniqueInputAttributePaths.size()];
+			final Set<String> finalUniqueInputAttributePaths = uniqueInputAttributePaths.stream().map(attributePath -> {
 
-			return Optional.of(determineCommonAttributePath(uniqueInputAttributePaths, attributePaths, 0));
+				if(isXmlSchema && attributePath.endsWith(GDMUtil.RDF_value)) {
+
+					return attributePath.substring(0, attributePath.length() - GDMUtil.RDF_value.length() - 1);
+				}
+
+				return attributePath;
+			}).collect(Collectors.toSet());
+
+			final String[] attributePaths = new String[finalUniqueInputAttributePaths.size()];
+
+			return Optional.of(determineCommonAttributePath(finalUniqueInputAttributePaths, attributePaths, 0));
 		});
 	}
 

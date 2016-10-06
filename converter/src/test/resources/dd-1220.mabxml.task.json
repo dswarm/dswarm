@@ -116,306 +116,834 @@
         }
       ],
       "parameters": {
-        "storage_type": "xml",
+        "storage_type": "mabxml",
         "record_tag": "datensatz"
       },
       "uuid": "64"
     },
     "schema": {
-      "name": null,
+      "uuid": "Schema-d87ba5c2-b02b-481d-a62d-2b46dd66d347",
+      "name": "mabxml schema",
       "attribute_paths": [
         {
           "type": "SchemaAttributePathInstance",
-          "name": "sapi_0",
+          "uuid": "SchemaAttributePathInstance-398bac61-b389-4105-9031-87d053186fd2",
+          "name": null,
           "attribute_path": {
+            "uuid": "AttributePath-0f13ed14-7920-4832-ac67-5ceca147bd87",
             "attributes": [
               {
+                "uuid": "Attribute-940425c7-cf49-4c52-a8e4-7b22506b475f",
                 "name": "type",
-                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                "uuid": "20"
+                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
               }
-            ],
-            "uuid": "20"
+            ]
           },
-          "uuid": "0"
+          "sub_schema": null
         },
         {
           "type": "SchemaAttributePathInstance",
-          "name": "sapi_1",
+          "uuid": "SchemaAttributePathInstance-942bde98-f684-4799-b6e8-8711344492a3",
+          "name": null,
           "attribute_path": {
+            "uuid": "AttributePath-470e4888-b3c9-4dcc-a0bd-c04a56f135fd",
             "attributes": [
               {
+                "uuid": "Attribute-e56c6ed0-2e1e-4cb4-a1d7-decd5b08eaf9",
                 "name": "id",
-                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id",
-                "uuid": "34"
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id"
               }
-            ],
-            "uuid": "38"
+            ]
           },
-          "uuid": "1"
+          "sub_schema": null
         },
         {
           "type": "SchemaAttributePathInstance",
-          "name": "sapi_2",
+          "uuid": "SchemaAttributePathInstance-6fdb2617-7c6a-4b92-9539-3b24a40a4a58",
+          "name": null,
           "attribute_path": {
+            "uuid": "AttributePath-fe40ee01-248e-4fac-bc69-b87743ea214c",
             "attributes": [
               {
+                "uuid": "Attribute-e639ab31-a2de-4c10-867a-9074e12092ac",
                 "name": "typ",
-                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ",
-                "uuid": "35"
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#typ"
               }
-            ],
-            "uuid": "39"
+            ]
           },
-          "uuid": "2"
+          "sub_schema": null
         },
         {
           "type": "SchemaAttributePathInstance",
-          "name": "sapi_3",
+          "uuid": "SchemaAttributePathInstance-4cfb205b-00b0-4e3b-94cd-f9602e43bea3",
+          "name": null,
           "attribute_path": {
+            "uuid": "AttributePath-c527b0c2-9c8e-47a1-99d1-d578e8c28715",
             "attributes": [
               {
+                "uuid": "Attribute-3ab6d931-64d0-49fd-85c0-f7efe06d8f8d",
                 "name": "status",
-                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status",
-                "uuid": "36"
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status"
               }
-            ],
-            "uuid": "40"
+            ]
           },
-          "uuid": "3"
+          "sub_schema": null
         },
         {
           "type": "SchemaAttributePathInstance",
-          "name": "sapi_4",
+          "uuid": "SchemaAttributePathInstance-e4795206-414e-477f-b74b-8696cdc90a77",
+          "name": null,
           "attribute_path": {
+            "uuid": "AttributePath-72795ca5-1d1c-4b34-a3bf-73e03d112f7e",
             "attributes": [
               {
-                "name": "feld",
-                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                "uuid": "38"
-              },
-              {
-                "name": "tf",
-                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
-                "uuid": "43"
-              }
-            ],
-            "uuid": "50"
-          },
-          "uuid": "4"
-        },
-        {
-          "type": "SchemaAttributePathInstance",
-          "name": "sapi_5",
-          "attribute_path": {
-            "attributes": [
-              {
-                "name": "feld",
-                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                "uuid": "38"
-              },
-              {
-                "name": "ns",
-                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns",
-                "uuid": "42"
-              },
-              {
-                "name": "value",
-                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-                "uuid": "41"
-              }
-            ],
-            "uuid": "49"
-          },
-          "uuid": "5"
-        },
-        {
-          "type": "SchemaAttributePathInstance",
-          "name": "sapi_6",
-          "attribute_path": {
-            "attributes": [
-              {
-                "name": "feld",
-                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                "uuid": "38"
-              },
-              {
-                "name": "tf",
-                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf",
-                "uuid": "43"
-              },
-              {
-                "name": "type",
-                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                "uuid": "20"
-              }
-            ],
-            "uuid": "51"
-          },
-          "uuid": "6"
-        },
-        {
-          "type": "SchemaAttributePathInstance",
-          "name": "sapi_7",
-          "attribute_path": {
-            "attributes": [
-              {
-                "name": "feld",
-                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                "uuid": "38"
-              },
-              {
-                "name": "ind",
-                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind",
-                "uuid": "40"
-              }
-            ],
-            "uuid": "45"
-          },
-          "uuid": "7"
-        },
-        {
-          "type": "SchemaAttributePathInstance",
-          "name": "sapi_8",
-          "attribute_path": {
-            "attributes": [
-              {
-                "name": "feld",
-                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                "uuid": "38"
-              },
-              {
-                "name": "value",
-                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
-                "uuid": "41"
-              }
-            ],
-            "uuid": "46"
-          },
-          "uuid": "8"
-        },
-        {
-          "type": "SchemaAttributePathInstance",
-          "name": "sapi_9",
-          "attribute_path": {
-            "attributes": [
-              {
-                "name": "feld",
-                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                "uuid": "38"
-              },
-              {
-                "name": "ns",
-                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns",
-                "uuid": "42"
-              }
-            ],
-            "uuid": "47"
-          },
-          "uuid": "9"
-        },
-        {
-          "type": "SchemaAttributePathInstance",
-          "name": "sapi_10",
-          "attribute_path": {
-            "attributes": [
-              {
-                "name": "feld",
-                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                "uuid": "38"
-              },
-              {
-                "name": "ns",
-                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns",
-                "uuid": "42"
-              },
-              {
-                "name": "type",
-                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                "uuid": "20"
-              }
-            ],
-            "uuid": "48"
-          },
-          "uuid": "10"
-        },
-        {
-          "type": "SchemaAttributePathInstance",
-          "name": "sapi_11",
-          "attribute_path": {
-            "attributes": [
-              {
+                "uuid": "Attribute-44eb6280-c334-4a82-9d63-58ed2c025252",
                 "name": "mabVersion",
-                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion",
-                "uuid": "37"
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#mabVersion"
               }
-            ],
-            "uuid": "41"
+            ]
           },
-          "uuid": "11"
+          "sub_schema": null
         },
         {
           "type": "SchemaAttributePathInstance",
-          "name": "sapi_12",
+          "uuid": "SchemaAttributePathInstance-b2201b68-a107-4995-ad2f-d88bf1e0c004",
+          "name": null,
           "attribute_path": {
+            "uuid": "AttributePath-820d4a5d-2c14-4d93-a716-fa30c44ea71d",
             "attributes": [
               {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
                 "name": "feld",
-                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                "uuid": "38"
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
               }
-            ],
-            "uuid": "42"
+            ]
           },
-          "uuid": "12"
+          "sub_schema": null
         },
         {
           "type": "SchemaAttributePathInstance",
-          "name": "sapi_13",
+          "uuid": "SchemaAttributePathInstance-c8b9de63-d36f-482f-a005-bdea9bbdf170",
+          "name": null,
           "attribute_path": {
+            "uuid": "AttributePath-03760807-26cf-452d-9901-8ae95c31a823",
             "attributes": [
               {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
                 "name": "feld",
-                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                "uuid": "38"
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
               },
               {
+                "uuid": "Attribute-940425c7-cf49-4c52-a8e4-7b22506b475f",
                 "name": "type",
-                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                "uuid": "20"
+                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
               }
-            ],
-            "uuid": "43"
+            ]
           },
-          "uuid": "13"
+          "sub_schema": null
         },
         {
           "type": "SchemaAttributePathInstance",
-          "name": "sapi_14",
+          "uuid": "SchemaAttributePathInstance-ba198fd3-bd29-4141-a5df-1bc2a8940e33",
+          "name": null,
           "attribute_path": {
+            "uuid": "AttributePath-98183da0-a1af-49a0-9833-eb8017b9ffa4",
             "attributes": [
               {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
                 "name": "feld",
-                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld",
-                "uuid": "38"
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
               },
               {
-                "name": "nr",
-                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr",
-                "uuid": "39"
+                "uuid": "Attribute-e56c6ed0-2e1e-4cb4-a1d7-decd5b08eaf9",
+                "name": "id",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id"
               }
-            ],
-            "uuid": "44"
+            ]
           },
-          "uuid": "14"
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-704f0023-ef95-4945-b82c-714fe132deb9",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-711a9434-bd6e-4db1-beef-329066005eb4",
+            "attributes": [
+              {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
+                "name": "feld",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+              },
+              {
+                "uuid": "Attribute-ad260ba4-3499-4228-b778-f4dc0772efc6",
+                "name": "nr",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-67429415-d7de-46e9-b193-16ad486ff048",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-761bd16b-58d9-4f9d-a798-3b3a8c801e8f",
+            "attributes": [
+              {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
+                "name": "feld",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+              },
+              {
+                "uuid": "Attribute-d5d98979-a3a1-4747-b1df-ba21a95d325f",
+                "name": "ind",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-9944f8b8-e9e2-4038-adc3-55705f752db0",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-6a2341b7-4eb0-44a5-a637-4b15f781c97f",
+            "attributes": [
+              {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
+                "name": "feld",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+              },
+              {
+                "uuid": "Attribute-06d09c8d-465d-417c-9b7f-0a3a2ca78b2d",
+                "name": "value",
+                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-43f5e725-8d52-45ca-aecd-11b03f29d17a",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-3655de9f-a729-45dd-a715-fa4e4f7ce734",
+            "attributes": [
+              {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
+                "name": "feld",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+              },
+              {
+                "uuid": "Attribute-e3a3fed2-bf44-4758-81e8-3b235c41437f",
+                "name": "tf",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-35fec78d-ee4c-4c9e-9639-3cab2ecdecd0",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-b6ec00bd-0463-44c0-8a3a-3b62ae127846",
+            "attributes": [
+              {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
+                "name": "feld",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+              },
+              {
+                "uuid": "Attribute-e3a3fed2-bf44-4758-81e8-3b235c41437f",
+                "name": "tf",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf"
+              },
+              {
+                "uuid": "Attribute-940425c7-cf49-4c52-a8e4-7b22506b475f",
+                "name": "type",
+                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-57fe68cb-701c-460c-b53f-77dcf55a60ef",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-d70da995-2543-49f4-8cfa-dcbb45f743b4",
+            "attributes": [
+              {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
+                "name": "feld",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+              },
+              {
+                "uuid": "Attribute-4ef6c5e3-7093-4b0b-bc96-ed888ffdd040",
+                "name": "stw",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#stw"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-319e6e6e-eaca-495b-85ed-70e9ae710c6a",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-bc60c7f7-8e44-4d65-b706-b7476434ab59",
+            "attributes": [
+              {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
+                "name": "feld",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+              },
+              {
+                "uuid": "Attribute-4ef6c5e3-7093-4b0b-bc96-ed888ffdd040",
+                "name": "stw",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#stw"
+              },
+              {
+                "uuid": "Attribute-940425c7-cf49-4c52-a8e4-7b22506b475f",
+                "name": "type",
+                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-538e230a-38fa-418e-a1e5-582a151b0044",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-ee140ca0-90a8-47c0-a97a-7415429f0eaa",
+            "attributes": [
+              {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
+                "name": "feld",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+              },
+              {
+                "uuid": "Attribute-4ef6c5e3-7093-4b0b-bc96-ed888ffdd040",
+                "name": "stw",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#stw"
+              },
+              {
+                "uuid": "Attribute-06d09c8d-465d-417c-9b7f-0a3a2ca78b2d",
+                "name": "value",
+                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-779bb6c8-47b3-4fc2-8543-c492297fec87",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-a6c5c96b-5732-4d03-9db6-5ec23c4e9a77",
+            "attributes": [
+              {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
+                "name": "feld",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+              },
+              {
+                "uuid": "Attribute-560cab81-6aef-4b09-afec-084c494f2a9d",
+                "name": "ns",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-d694b060-611e-47be-9882-d8592611d125",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-93708279-cfa9-4587-b833-89fecf48ac28",
+            "attributes": [
+              {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
+                "name": "feld",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+              },
+              {
+                "uuid": "Attribute-560cab81-6aef-4b09-afec-084c494f2a9d",
+                "name": "ns",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns"
+              },
+              {
+                "uuid": "Attribute-940425c7-cf49-4c52-a8e4-7b22506b475f",
+                "name": "type",
+                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-16314ce4-6395-4380-af92-c30c0ac1acf9",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-f5f64378-85b1-43c0-9e65-ec6cb4404973",
+            "attributes": [
+              {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
+                "name": "feld",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+              },
+              {
+                "uuid": "Attribute-560cab81-6aef-4b09-afec-084c494f2a9d",
+                "name": "ns",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns"
+              },
+              {
+                "uuid": "Attribute-06d09c8d-465d-417c-9b7f-0a3a2ca78b2d",
+                "name": "value",
+                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-4b506f18-c667-423b-bb68-2c04ed25c086",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-d52b4d73-ff19-4155-bdbb-fe98ef64bfa4",
+            "attributes": [
+              {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
+                "name": "feld",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+              },
+              {
+                "uuid": "Attribute-43c2aaa3-1fe8-41b5-9418-3decfc28e149",
+                "name": "uf",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-c8515d56-75c9-46f7-aee9-8d09914bb170",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-32638aa3-1fe9-45b5-b6b3-29bbb645743b",
+            "attributes": [
+              {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
+                "name": "feld",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+              },
+              {
+                "uuid": "Attribute-43c2aaa3-1fe8-41b5-9418-3decfc28e149",
+                "name": "uf",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf"
+              },
+              {
+                "uuid": "Attribute-940425c7-cf49-4c52-a8e4-7b22506b475f",
+                "name": "type",
+                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-6a0a4aec-be20-4465-bf2b-651baa4f4528",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-a50db076-7b67-44b2-9152-c6b8751f75ee",
+            "attributes": [
+              {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
+                "name": "feld",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+              },
+              {
+                "uuid": "Attribute-43c2aaa3-1fe8-41b5-9418-3decfc28e149",
+                "name": "uf",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf"
+              },
+              {
+                "uuid": "Attribute-e56c6ed0-2e1e-4cb4-a1d7-decd5b08eaf9",
+                "name": "id",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-095da8ca-4598-4ba2-b12a-174089878e49",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-1091536e-3652-4761-ba57-2ee36a98a97e",
+            "attributes": [
+              {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
+                "name": "feld",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+              },
+              {
+                "uuid": "Attribute-43c2aaa3-1fe8-41b5-9418-3decfc28e149",
+                "name": "uf",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf"
+              },
+              {
+                "uuid": "Attribute-87f8b7e1-1426-41f1-a950-33faa79f7a2b",
+                "name": "code",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#code"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-efcf229c-ea34-4667-857f-4a6cc361dfe4",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-5fcb750f-3a2b-4e89-b76b-f80db8a8891c",
+            "attributes": [
+              {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
+                "name": "feld",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+              },
+              {
+                "uuid": "Attribute-43c2aaa3-1fe8-41b5-9418-3decfc28e149",
+                "name": "uf",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf"
+              },
+              {
+                "uuid": "Attribute-06d09c8d-465d-417c-9b7f-0a3a2ca78b2d",
+                "name": "value",
+                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-5ed6f713-4603-418f-ae82-686b29dc3a52",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-93c41b1d-d8aa-44a6-9c0a-024238e0b246",
+            "attributes": [
+              {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
+                "name": "feld",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+              },
+              {
+                "uuid": "Attribute-43c2aaa3-1fe8-41b5-9418-3decfc28e149",
+                "name": "uf",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf"
+              },
+              {
+                "uuid": "Attribute-e3a3fed2-bf44-4758-81e8-3b235c41437f",
+                "name": "tf",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-8ba3ab67-f268-4a2c-8b1c-bdfa92f610c8",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-e7a5ae52-5bcf-4483-ac5d-d98fe9ac45d1",
+            "attributes": [
+              {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
+                "name": "feld",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+              },
+              {
+                "uuid": "Attribute-43c2aaa3-1fe8-41b5-9418-3decfc28e149",
+                "name": "uf",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf"
+              },
+              {
+                "uuid": "Attribute-e3a3fed2-bf44-4758-81e8-3b235c41437f",
+                "name": "tf",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tf"
+              },
+              {
+                "uuid": "Attribute-940425c7-cf49-4c52-a8e4-7b22506b475f",
+                "name": "type",
+                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-3a5bd278-62c6-4594-883e-fca3a7acc0af",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-2803ded8-91c7-4ae1-bae3-efb2aa7601b8",
+            "attributes": [
+              {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
+                "name": "feld",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+              },
+              {
+                "uuid": "Attribute-43c2aaa3-1fe8-41b5-9418-3decfc28e149",
+                "name": "uf",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf"
+              },
+              {
+                "uuid": "Attribute-4ef6c5e3-7093-4b0b-bc96-ed888ffdd040",
+                "name": "stw",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#stw"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-626df886-fbe8-4738-ad7c-666951082ad1",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-98db9e2f-6b63-4366-952e-f6b4c1c934d1",
+            "attributes": [
+              {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
+                "name": "feld",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+              },
+              {
+                "uuid": "Attribute-43c2aaa3-1fe8-41b5-9418-3decfc28e149",
+                "name": "uf",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf"
+              },
+              {
+                "uuid": "Attribute-4ef6c5e3-7093-4b0b-bc96-ed888ffdd040",
+                "name": "stw",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#stw"
+              },
+              {
+                "uuid": "Attribute-940425c7-cf49-4c52-a8e4-7b22506b475f",
+                "name": "type",
+                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-0b6c434d-333e-4d4c-82c8-ebfe49d1168f",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-ed8d8727-d2b9-4e1e-835a-4d982627c2f9",
+            "attributes": [
+              {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
+                "name": "feld",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+              },
+              {
+                "uuid": "Attribute-43c2aaa3-1fe8-41b5-9418-3decfc28e149",
+                "name": "uf",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf"
+              },
+              {
+                "uuid": "Attribute-4ef6c5e3-7093-4b0b-bc96-ed888ffdd040",
+                "name": "stw",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#stw"
+              },
+              {
+                "uuid": "Attribute-06d09c8d-465d-417c-9b7f-0a3a2ca78b2d",
+                "name": "value",
+                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-7234d930-70c4-49b7-b019-68a428b354c5",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-91bb079b-f774-4c34-adf0-2ae3df676022",
+            "attributes": [
+              {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
+                "name": "feld",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+              },
+              {
+                "uuid": "Attribute-43c2aaa3-1fe8-41b5-9418-3decfc28e149",
+                "name": "uf",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf"
+              },
+              {
+                "uuid": "Attribute-560cab81-6aef-4b09-afec-084c494f2a9d",
+                "name": "ns",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-dd8e1942-3a2d-47dc-84c2-6e987eb77cb9",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-e0524024-5fa4-4147-8569-6dae61f29047",
+            "attributes": [
+              {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
+                "name": "feld",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+              },
+              {
+                "uuid": "Attribute-43c2aaa3-1fe8-41b5-9418-3decfc28e149",
+                "name": "uf",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf"
+              },
+              {
+                "uuid": "Attribute-560cab81-6aef-4b09-afec-084c494f2a9d",
+                "name": "ns",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns"
+              },
+              {
+                "uuid": "Attribute-940425c7-cf49-4c52-a8e4-7b22506b475f",
+                "name": "type",
+                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+              }
+            ]
+          },
+          "sub_schema": null
+        },
+        {
+          "type": "SchemaAttributePathInstance",
+          "uuid": "SchemaAttributePathInstance-e8481f3a-aa18-40ad-9da4-222cf1fe44d2",
+          "name": null,
+          "attribute_path": {
+            "uuid": "AttributePath-c1ad2676-5e30-4130-b117-30733eec2f0b",
+            "attributes": [
+              {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
+                "name": "feld",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+              },
+              {
+                "uuid": "Attribute-43c2aaa3-1fe8-41b5-9418-3decfc28e149",
+                "name": "uf",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#uf"
+              },
+              {
+                "uuid": "Attribute-560cab81-6aef-4b09-afec-084c494f2a9d",
+                "name": "ns",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ns"
+              },
+              {
+                "uuid": "Attribute-06d09c8d-465d-417c-9b7f-0a3a2ca78b2d",
+                "name": "value",
+                "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+              }
+            ]
+          },
+          "sub_schema": null
         }
       ],
       "record_class": {
+        "uuid": "Clasz-bf76b001-5693-4bb3-a144-59c509f19ffa",
         "name": "datensatzType",
-        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datensatzType",
-        "uuid": "2"
+        "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datensatzType"
       },
-      "uuid": "63"
+      "content_schema": {
+        "uuid": "ContentSchema-26ea9fb6-d62c-4fed-a9f4-5dd0e8c39849",
+        "name": "mab content schema",
+        "record_identifier_attribute_path": {
+          "uuid": "AttributePath-470e4888-b3c9-4dcc-a0bd-c04a56f135fd",
+          "attributes": [
+            {
+              "uuid": "Attribute-e56c6ed0-2e1e-4cb4-a1d7-decd5b08eaf9",
+              "name": "id",
+              "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#id"
+            }
+          ]
+        },
+        "key_attribute_paths": [
+          {
+            "uuid": "AttributePath-711a9434-bd6e-4db1-beef-329066005eb4",
+            "attributes": [
+              {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
+                "name": "feld",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+              },
+              {
+                "uuid": "Attribute-ad260ba4-3499-4228-b778-f4dc0772efc6",
+                "name": "nr",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr"
+              }
+            ]
+          },
+          {
+            "uuid": "AttributePath-761bd16b-58d9-4f9d-a798-3b3a8c801e8f",
+            "attributes": [
+              {
+                "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
+                "name": "feld",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+              },
+              {
+                "uuid": "Attribute-d5d98979-a3a1-4747-b1df-ba21a95d325f",
+                "name": "ind",
+                "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#ind"
+              }
+            ]
+          }
+        ],
+        "value_attribute_path": {
+          "uuid": "AttributePath-6a2341b7-4eb0-44a5-a637-4b15f781c97f",
+          "attributes": [
+            {
+              "uuid": "Attribute-37ee501f-8de7-49a3-b2ef-61ac83e6ec75",
+              "name": "feld",
+              "uri": "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld"
+            },
+            {
+              "uuid": "Attribute-06d09c8d-465d-417c-9b7f-0a3a2ca78b2d",
+              "name": "value",
+              "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+            }
+          ]
+        }
+      }
     },
     "data_resource": {
       "name": "mabxml_dmp.xml",
@@ -436,7 +964,7 @@
             }
           ],
           "parameters": {
-            "storage_type": "xml",
+            "storage_type": "mabxml",
             "record_tag": "datensatz"
           },
           "uuid": "64"
