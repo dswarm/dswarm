@@ -423,7 +423,7 @@ public class XMLTransformationFlowTest extends GuicedTest {
 	@Test
 	public void testDD1399Morph() throws Exception {
 
-		testXMLMorphWithTuples("dd-1399/dd-1399.result.json", "dd-1399/dd-1399.task.morph.xml", "dd-1399/dd-1399.input.tuples.json");
+		testXMLMorphWithTuples("dd-1399/dd-1399.morph.result.json", "dd-1399/dd-1399.task.morph.xml", "dd-1399/dd-1399.input.tuples.json");
 	}
 
 	/**
