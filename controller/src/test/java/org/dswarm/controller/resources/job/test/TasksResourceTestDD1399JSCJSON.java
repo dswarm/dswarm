@@ -29,22 +29,22 @@ import org.dswarm.common.MediaTypeUtil;
 import org.dswarm.graph.json.util.Util;
 import org.dswarm.persistence.model.resource.utils.ConfigurationStatics;
 
-public class TasksResourceTestDD1399GDMCompactJSON extends AbtractExportOnTheFlyTasksResourceTest {
+public class TasksResourceTestDD1399JSCJSON extends AbtractExportOnTheFlyTasksResourceTest {
 
-	private static final Logger LOG = LoggerFactory.getLogger(TasksResourceTestDD1399GDMCompactJSON.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TasksResourceTestDD1399JSCJSON.class);
 
 	private static final ObjectMapper indentObjectMapper = Util.getJSONObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, true);
 
-	public TasksResourceTestDD1399GDMCompactJSON() {
+	public TasksResourceTestDD1399JSCJSON() {
 
 		super("dd-1399/task.of.project.eb549c14-3a39-bf92-ec41-ef4e63980766.json",
 				"dd-1387/input.xml",
 				"Publisher",
 				ConfigurationStatics.XML_STORAGE_TYPE,
-				"dd-1399/gdm.compact.json.result.json",
+				"dd-1399/jsc.json.result.json",
 				"01",
 				true,
-				MediaTypeUtil.GDM_COMPACT_JSON_TYPE);
+				MediaTypeUtil.JSC_JSON_TYPE);
 	}
 
 	@Override
