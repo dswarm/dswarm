@@ -17,7 +17,6 @@
             </if>
             <data name="feld_value__1__.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
         </combine>
-        <data name="http://purl.org/dc/elements/1.1/whitelist" source="@__TRANSFORMATION_OUTPUT_VARIABLE__2"/>
         <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__2" source="@feld_value__1__">
             <whitelist map="component4402409200787"/>
         </data>
@@ -34,10 +33,11 @@
             </if>
             <data name="feld_value__0__.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
         </combine>
-        <data name="http://purl.org/dc/elements/1.1/medium" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
         <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__1" source="@feld_value__0__">
             <lookup default="n/a" in="component1402409200787"/>
         </data>
+        <data name="http://purl.org/dc/elements/1.1/whitelist" source="@__TRANSFORMATION_OUTPUT_VARIABLE__2"/>
+        <data name="http://purl.org/dc/elements/1.1/medium" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
     </rules>
     <maps>
         <map name="component4402409200787">

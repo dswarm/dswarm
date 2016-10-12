@@ -24,6 +24,6 @@ public abstract class AbstractMABXMLTransformationFlowTest extends AbstractXMLTr
 
 	public AbstractMABXMLTransformationFlowTest(final String taskJSONFileName, final String taskResultJSONFileName) {
 
-		super(taskJSONFileName, taskResultJSONFileName, "datensatz", "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd", "test-mabxml.xml");
+		super(taskJSONFileName, taskResultJSONFileName, "datensatz", "mabxml", "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd", "test-mabxml.xml");
 	}
 }

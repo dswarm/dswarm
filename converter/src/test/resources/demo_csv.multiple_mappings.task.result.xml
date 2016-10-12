@@ -5,18 +5,18 @@
     </meta>
     <rules>
         <data name="@jahr__1__" source="http://data.slub-dresden.de/resources/1/schema#jahr"/>
-        <data name="http://purl.org/dc/elements/1.1/title" source="@__TRANSFORMATION_OUTPUT_VARIABLE__2"/>
         <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__2" source="@jahr__1__">
             <replace pattern="19" with="17"/>
         </data>
         <data name="@nummer" source="http://data.slub-dresden.de/resources/1/schema#nummer"/>
-        <data name="http://rdvocab.info/Elements/otherTitleInformation" source="@__TRANSFORMATION_OUTPUT_VARIABLE__3"/>
         <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__3" source="@nummer"/>
         <data name="@jahr__0__" source="http://data.slub-dresden.de/resources/1/schema#jahr"/>
-        <data name="http://purl.org/dc/terms/issued" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
         <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__1" source="@jahr__0__">
             <replace pattern="19" with="16"/>
         </data>
+        <data name="http://purl.org/dc/elements/1.1/title" source="@__TRANSFORMATION_OUTPUT_VARIABLE__2"/>
+        <data name="http://rdvocab.info/Elements/otherTitleInformation" source="@__TRANSFORMATION_OUTPUT_VARIABLE__3"/>
+        <data name="http://purl.org/dc/terms/issued" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
     </rules>
     <maps/>
 </metamorph>

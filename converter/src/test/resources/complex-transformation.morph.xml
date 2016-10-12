@@ -8,7 +8,6 @@
         <data name="@familyName" source="http://purl.org/dc/terms/creator&#30;http://xmlns.com/foaf/0.1/familyName"/>
         <data name="@title" source="http://purl.org/dc/terms/creator&#30;http://xmlns.com/foaf/0.1/title"/>
         <data name="@givenName" source="http://purl.org/dc/terms/creator&#30;http://xmlns.com/foaf/0.1/givenName"/>
-        <data name="http://purl.org/dc/terms/creator&#30;http://xmlns.com/foaf/0.1/name" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
         <data name="@component_id_12" source="@familyName">
             <replace pattern="=" with=""/>
         </data>
@@ -30,6 +29,9 @@
             <data name="title" source="@title"/>
             <data name="givenName" source="@givenName"/>
         </combine>
+        <entity flushWith="http://purl.org/dc/terms/creator" name="http://purl.org/dc/terms/creator" reset="true">
+            <data name="http://xmlns.com/foaf/0.1/name" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
+        </entity>
     </rules>
     <maps/>
 </metamorph>

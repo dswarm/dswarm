@@ -24,6 +24,6 @@ public abstract class AbstractRalfsMABXMLTransformationFlowTest extends Abstract
 
 	public AbstractRalfsMABXMLTransformationFlowTest(final String taskJSONFileName, final String taskResultJSONFileName) {
 
-		super(taskJSONFileName, taskResultJSONFileName, "record", null, "dmpf_bsp1.xml");
+		super(taskJSONFileName, taskResultJSONFileName, "record", "xml", null, "dmpf_bsp1.xml");
 	}
 }
