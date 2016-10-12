@@ -58,7 +58,7 @@ public class PrepareConfiguration {
 		conf1.setName("configuration 1");
 		conf1.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("datensatz"));
 		conf1.addParameter(ConfigurationStatics.XML_NAMESPACE, new TextNode("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd"));
-		conf1.addParameter(ConfigurationStatics.STORAGE_TYPE, new TextNode("xml"));
+		conf1.addParameter(ConfigurationStatics.STORAGE_TYPE, new TextNode("mabxml"));
 
 		final String configurationJSONString = objectMapper.writeValueAsString(conf1);
 
