@@ -8,59 +8,59 @@
 	</meta>
 	<rules>
 		<combine
-				flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield"
+				flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield"
 				includeSubEntities="true"
 				name="@metadata_record_datafield_subfield_value__3c629327-6bb6-dda8-b5ff-c979affc735b__0__" reset="true"
 				sameEntity="true"
 				value="${metadata_record_datafield_subfield_value__3c629327-6bb6-dda8-b5ff-c979affc735b__0__.filtered}">
 			<if>
-				<all flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag"
+				<all flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#tag"
 				     includeSubEntities="true" name="CONDITION_ALL" reset="true">
-					<data source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag">
+					<data source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#tag">
 						<regexp match="331"/>
 					</data>
 				</all>
 			</if>
 			<data name="metadata_record_datafield_subfield_value__3c629327-6bb6-dda8-b5ff-c979affc735b__0__.filtered"
-			      source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+			      source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#subfield&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
 		</combine>
 		<data name="@__TRANSFORMATION_OUTPUT_VARIABLE__2"
 		      source="@metadata_record_datafield_subfield_value__3c629327-6bb6-dda8-b5ff-c979affc735b__0__"/>
 		<combine
-				flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield"
+				flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield"
 				includeSubEntities="true"
 				name="@metadata_record_datafield_subfield_value__2bba13eb-1c30-9d6b-c3c7-8f7ca4fd03d6__1__" reset="true"
 				sameEntity="true"
 				value="${metadata_record_datafield_subfield_value__2bba13eb-1c30-9d6b-c3c7-8f7ca4fd03d6__1__.filtered}">
 			<if>
-				<all flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag"
+				<all flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#tag"
 				     includeSubEntities="true" name="CONDITION_ALL" reset="true">
-					<data source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag">
+					<data source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#tag">
 						<regexp match="331"/>
 					</data>
 				</all>
 			</if>
 			<data name="metadata_record_datafield_subfield_value__2bba13eb-1c30-9d6b-c3c7-8f7ca4fd03d6__1__.filtered"
-			      source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+			      source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#subfield&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
 		</combine>
 		<data name="@__TRANSFORMATION_OUTPUT_VARIABLE__4"
 		      source="@metadata_record_datafield_subfield_value__2bba13eb-1c30-9d6b-c3c7-8f7ca4fd03d6__1__"/>
 		<combine
-				flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield"
+				flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield"
 				includeSubEntities="true"
 				name="@metadata_record_datafield_subfield_value__b99ab5ec-7e37-bbeb-649b-c31811a73931__2__" reset="true"
 				sameEntity="true"
 				value="${metadata_record_datafield_subfield_value__b99ab5ec-7e37-bbeb-649b-c31811a73931__2__.filtered}">
 			<if>
-				<all flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag"
+				<all flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#tag"
 				     includeSubEntities="true" name="CONDITION_ALL" reset="true">
-					<data source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag">
+					<data source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#tag">
 						<regexp match="331"/>
 					</data>
 				</all>
 			</if>
 			<data name="metadata_record_datafield_subfield_value__b99ab5ec-7e37-bbeb-649b-c31811a73931__2__.filtered"
-			      source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+			      source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#subfield&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
 		</combine>
 		<data name="@__TRANSFORMATION_OUTPUT_VARIABLE__6"
 		      source="@metadata_record_datafield_subfield_value__b99ab5ec-7e37-bbeb-649b-c31811a73931__2__"/>
