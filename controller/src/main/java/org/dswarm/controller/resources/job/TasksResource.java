@@ -1217,7 +1217,7 @@ public class TasksResource {
 
 					try {
 
-						bw.write(objectMapper.writeValueAsString(model));
+						bw.write(objectMapper.writeValueAsString(model.get(0)));
 						bw.newLine();
 						bw.flush();
 						bos.flush();
