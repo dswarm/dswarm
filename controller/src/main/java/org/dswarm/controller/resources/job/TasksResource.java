@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,8 +16,10 @@
 package org.dswarm.controller.resources.job;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -226,7 +228,8 @@ public class TasksResource {
 			MediaTypeUtil.GDM_COMPACT_FE_JSON,
 			MediaTypeUtil.GDM_SIMPLE_JSON,
 			MediaTypeUtil.GDM_SIMPLE_SHORT_JSON,
-			MediaTypeUtil.JSC_JSON})
+			MediaTypeUtil.JSC_JSON,
+			MediaTypeUtil.JSC_LDJ})
 	public void executeTask(@ApiParam(value = "task execution request (as JSON)", required = true) final String jsonObjectString,
 	                        @Context final HttpHeaders requestHeaders,
 	                        @Suspended final AsyncResponse asyncResponse) throws IOException, DMPConverterException, DMPControllerException {
@@ -616,6 +619,11 @@ public class TasksResource {
 					resultObservable = doJSCJSONExport(connectableResult.observeOn(EXPORT_SCHEDULER), responseMediaType, bos, task);
 
 					break;
+				case MediaTypeUtil.JSC_LDJ:
+
+					resultObservable = doJSCLDJExport(connectableResult.observeOn(EXPORT_SCHEDULER), responseMediaType, bos, task);
+
+					break;
 				default:
 
 					// media type is not supported
@@ -744,19 +752,19 @@ public class TasksResource {
 	                                         final BufferedOutputStream bos,
 	                                         final Task task) throws DMPControllerException {
 
-		final Func1<GDMModel, JsonNode> transformationFunction = gdmModel -> {
-
-			final Optional<JsonNode> optionalResult = GDMModelUtil.toJSCJSON(gdmModel.getModel(), gdmModel.getRecordURIs(), task.getOutputDataModel().getSchema());
-
-			if (!optionalResult.isPresent()) {
-
-				return null;
-			}
-
-			return optionalResult.get();
-		};
+		final Func1<GDMModel, JsonNode> transformationFunction = toJSCJSONRecord(task);
 
 		return doGDMJSONExport(gdmModelObservable, responseMediaType, bos, transformationFunction);
+	}
+
+	private Observable<Void> doJSCLDJExport(final Observable<GDMModel> gdmModelObservable,
+	                                        final MediaType responseMediaType,
+	                                        final BufferedOutputStream bos,
+	                                        final Task task) throws DMPControllerException {
+
+		final Func1<GDMModel, JsonNode> transformationFunction = toJSCJSONRecord(task);
+
+		return doGDMLDJExport(gdmModelObservable, responseMediaType, bos, transformationFunction);
 	}
 
 	private Observable<Void> doGDMJSONExport(final Observable<GDMModel> gdmModelObservable,
@@ -964,7 +972,8 @@ public class TasksResource {
 						|| MediaTypeUtil.GDM_COMPACT_FE_JSON_TYPE.equals(mediaType)
 						|| MediaTypeUtil.GDM_SIMPLE_JSON_TYPE.equals(mediaType)
 						|| MediaTypeUtil.GDM_SIMPLE_SHORT_JSON_TYPE.equals(mediaType)
-						|| MediaTypeUtil.JSC_JSON_TYPE.equals(mediaType))
+						|| MediaTypeUtil.JSC_JSON_TYPE.equals(mediaType)
+						|| MediaTypeUtil.JSC_LDJ_TYPE.equals(mediaType))
 				.findFirst();
 
 		if (mediaTypeOptional.isPresent()) {
@@ -1184,6 +1193,57 @@ public class TasksResource {
 		}
 	}
 
+	private Observable<Void> doGDMLDJExport(final Observable<GDMModel> gdmModelObservable,
+	                                        final MediaType responseMediaType,
+	                                        final BufferedOutputStream bos,
+	                                        final Func1<GDMModel, JsonNode> transformationFunction) throws DMPControllerException {
+
+		final AtomicInteger resultCounter = new AtomicInteger(0);
+		final BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(bos));
+
+		return gdmModelObservable.onBackpressureBuffer(10000)
+				.doOnSubscribe(() -> TasksResource.LOG.debug("subscribed to {} export", responseMediaType))
+				.doOnNext(resultObj -> {
+
+					resultCounter.incrementAndGet();
+
+					if (resultCounter.get() == 1) {
+
+						TasksResource.LOG.debug("received first result for {} export in task resource", responseMediaType);
+					}
+				})
+				.map(transformationFunction)
+				.map(model -> {
+
+					try {
+
+						bw.write(objectMapper.writeValueAsString(model));
+						bw.newLine();
+						bw.flush();
+						bos.flush();
+					} catch (final IOException e) {
+
+						throw DMPPersistenceError.wrap(new DMPPersistenceException(String.format("something went wrong while serialising the %s", responseMediaType), e));
+					}
+
+					return model;
+				})
+				.onBackpressureBuffer(10000)
+				.doOnCompleted(() -> {
+
+					try {
+
+						bw.close();
+					} catch (final IOException e) {
+
+						throw DMPPersistenceError.wrap(new DMPPersistenceException(String.format("something went wrong while serialising the %s", responseMediaType), e));
+					}
+
+					TasksResource.LOG.debug("received '{}' results for {} export in task resource overall", resultCounter.get(), responseMediaType);
+				})
+				.ignoreElements().cast(Void.class);
+	}
+
 	private java.util.Optional<String> guavaOptionalToJava8Optional(final Optional<String> optionalString) {
 
 		if (optionalString.isPresent()) {
@@ -1192,6 +1252,21 @@ public class TasksResource {
 		}
 
 		return java.util.Optional.empty();
+	}
+
+	private static Func1<GDMModel, JsonNode> toJSCJSONRecord(final Task task) {
+
+		return gdmModel -> {
+
+			final Optional<JsonNode> optionalResult = GDMModelUtil.toJSCJSON(gdmModel.getModel(), gdmModel.getRecordURIs(), task.getOutputDataModel().getSchema());
+
+			if (!optionalResult.isPresent()) {
+
+				return null;
+			}
+
+			return optionalResult.get();
+		};
 	}
 
 }
