@@ -56,6 +56,7 @@ import javax.xml.stream.XMLStreamException;
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -94,6 +95,7 @@ import org.dswarm.converter.flow.GDMModelTransformationFlowFactory;
 import org.dswarm.converter.morph.MorphScriptBuilder;
 import org.dswarm.graph.json.Model;
 import org.dswarm.graph.json.stream.ModelBuilder;
+import org.dswarm.graph.json.util.Util;
 import org.dswarm.persistence.DMPPersistenceError;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
@@ -1212,6 +1214,14 @@ public class TasksResource {
 					if (resultCounter.get() == 1) {
 
 						TasksResource.LOG.debug("received first result (with '{}' statements) for {} export in task resource", resultObj.getModel().size(), responseMediaType);
+
+						try {
+
+							TasksResource.LOG.trace("first result = '{}'", Util.getJSONObjectMapper().writeValueAsString(resultObj.getModel()));
+						} catch (JsonProcessingException e) {
+
+							TasksResource.LOG.trace("something went wrong with serializing first result");
+						}
 					}
 				})
 				.map(gdmModel -> {
