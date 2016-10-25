@@ -87,6 +87,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 		inbuiltSchemaUuids.add(OAI_PMH_MARCXML_SCHEMA_UUID);
 		inbuiltSchemaUuids.add(SRU_11_PICAPLUSXML_GLOBAL_SCHEMA_UUID);
 		inbuiltSchemaUuids.add(OAI_PMH_DC_ELEMENTS_AND_EDM_SCHEMA_UUID);
+		inbuiltSchemaUuids.add(UBL_INTERMEDIATE_FORMAT_SCHEMA_UUID);
 	}
 
 	public static Collection<String> getInbuiltSchemaUuids() {

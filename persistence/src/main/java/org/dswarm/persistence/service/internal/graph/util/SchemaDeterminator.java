@@ -135,6 +135,7 @@ public class SchemaDeterminator {
 					case SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID:
 					case SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID:
 					case SchemaUtils.SRU_11_PICAPLUSXML_GLOBAL_SCHEMA_UUID:
+					case SchemaUtils.UBL_INTERMEDIATE_FORMAT_SCHEMA_UUID:
 
 						// those schemas are already there and shouldn't be manipulated by data that differs from those schemas
 						LOG.debug("schema for data model '{}' is a preset schema, so everything is already set", dataModel.getUuid());

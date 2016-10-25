@@ -1360,6 +1360,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 			case SchemaUtils.OAI_PMH_DC_TERMS_SCHEMA_UUID:
 			case SchemaUtils.OAI_PMH_MARCXML_SCHEMA_UUID:
 			case SchemaUtils.SRU_11_PICAPLUSXML_GLOBAL_SCHEMA_UUID:
+			case SchemaUtils.UBL_INTERMEDIATE_FORMAT_SCHEMA_UUID:
 
 				optionalPersistentInbuiltSchema = fetchInbuiltSchema(schemaUuid);
 
