@@ -395,7 +395,7 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 		final Optional<Map<String, FilterExpression>> optionalNewFilterExpressionMap = result.v1();
 		final Optional<FilterExpression> optionalCombineAsFilterDataOutFilter = result.v2();
 
-		if(optionalNewFilterExpressionMap.isPresent()) {
+		if (optionalNewFilterExpressionMap.isPresent()) {
 
 			final Map<String, FilterExpression> newFilterExpressionMap = optionalNewFilterExpressionMap.get();
 
@@ -416,7 +416,7 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 	                                   final Element combineAsFilter,
 	                                   final Map<String, FilterExpression> newFilterExpressionMap) throws DMPConverterException {
 
-		if(newFilterExpressionMap == null || newFilterExpressionMap.isEmpty()) {
+		if (newFilterExpressionMap == null || newFilterExpressionMap.isEmpty()) {
 
 			// nothing to do here, because no filters are left to create the filter if element
 
@@ -593,7 +593,14 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 
 		int i = 1;
 
-		for (final String filterAttributePath : filterAttributePaths) {
+		return determineCommonAttributePath(filterAttributePaths, attributePaths, i);
+	}
+
+	protected String determineCommonAttributePath(final Set<String> attributePathsSet,
+	                                              final String[] attributePaths,
+	                                              int i) {
+
+		for (final String filterAttributePath : attributePathsSet) {
 
 			attributePaths[i] = StringEscapeUtils.unescapeXml(filterAttributePath);
 

@@ -169,6 +169,12 @@ public class MorphScriptBuilderTest extends GuicedTest {
 		compareTaskGeneratedMorphscript("dd-962.task.json", "dd-962.regexlookup.morph.result.xml");
 	}
 
+	@Test
+	public void testCollectTask() throws Exception {
+
+		compareTaskGeneratedMorphscript("collect.task.json", "collect.task.morph.xml");
+	}
+
 	private void compareTaskGeneratedMorphscript(final String taskJSONFileName, final String morphFileName) throws Exception {
 
 		final ObjectMapper objectMapper = injector.getInstance(ObjectMapper.class);
