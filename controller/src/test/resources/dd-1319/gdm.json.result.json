@@ -1,0 +1,868 @@
+[ {
+  "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e" : [ {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "Physics"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "Physics"
+    }
+  }, {
+    "order" : 2,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "Astrophysics and Astroparticles"
+    }
+  }, {
+    "order" : 2,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "Astrophysics and Astroparticles"
+    }
+  }, {
+    "order" : 3,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "Astronomy, Observations and Techniques"
+    }
+  }, {
+    "order" : 3,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "Astronomy, Observations and Techniques"
+    }
+  }, {
+    "order" : 4,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "Cosmology"
+    }
+  }, {
+    "order" : 4,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "Cosmology"
+    }
+  }, {
+    "order" : 5,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "Extraterrestrial Physics, Space Sciences"
+    }
+  }, {
+    "order" : 5,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "Extraterrestrial Physics, Space Sciences"
+    }
+  }, {
+    "order" : 6,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "Astrobiology"
+    }
+  }, {
+    "order" : 6,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "Astrobiology"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/recordtype",
+    "o" : {
+      "v" : "propPubXml"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/format_de14",
+    "o" : {
+      "v" : "Article, E-Article"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/mega_collection",
+    "o" : {
+      "v" : "Springer Journals"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/format_de15",
+    "o" : {
+      "v" : "Article, E-Article"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/format",
+    "o" : {
+      "v" : "ElectronicArticle"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/institution",
+    "o" : {
+      "v" : " "
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/source_id",
+    "o" : {
+      "v" : "105"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/access_facet",
+    "o" : {
+      "v" : "Electronic Resources"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/language",
+    "o" : {
+      "v" : "English"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/publishDate",
+    "o" : {
+      "v" : "2016"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/publishDateSort",
+    "o" : {
+      "v" : "2016"
+    }
+  }, {
+    "order" : 7,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "Spatial frequencies in polar LEO satellite"
+    }
+  }, {
+    "order" : 7,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "Spatial frequencies in polar LEO satellite"
+    }
+  }, {
+    "order" : 8,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "Ionospheric currents"
+    }
+  }, {
+    "order" : 8,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "Ionospheric currents"
+    }
+  }, {
+    "order" : 9,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "LEO satellites"
+    }
+  }, {
+    "order" : 9,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "LEO satellites"
+    }
+  }, {
+    "order" : 10,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "Pulsations at LEO"
+    }
+  }, {
+    "order" : 10,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "Pulsations at LEO"
+    }
+  }, {
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/a6c19ddf-a089-418f-8d4c-8a7a289bf93e"
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/RecordType"
+    }
+  } ]
+}, {
+  "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03" : [ {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "Physics"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "Physics"
+    }
+  }, {
+    "order" : 2,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "Astrophysics and Astroparticles"
+    }
+  }, {
+    "order" : 2,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "Astrophysics and Astroparticles"
+    }
+  }, {
+    "order" : 3,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "Astronomy, Observations and Techniques"
+    }
+  }, {
+    "order" : 3,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "Astronomy, Observations and Techniques"
+    }
+  }, {
+    "order" : 4,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "Cosmology"
+    }
+  }, {
+    "order" : 4,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "Cosmology"
+    }
+  }, {
+    "order" : 5,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "Extraterrestrial Physics, Space Sciences"
+    }
+  }, {
+    "order" : 5,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "Extraterrestrial Physics, Space Sciences"
+    }
+  }, {
+    "order" : 6,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "Astrobiology"
+    }
+  }, {
+    "order" : 6,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "Astrobiology"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/recordtype",
+    "o" : {
+      "v" : "propPubXml"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/format_de14",
+    "o" : {
+      "v" : "Article, E-Article"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/mega_collection",
+    "o" : {
+      "v" : "Springer Journals"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/format_de15",
+    "o" : {
+      "v" : "Article, E-Article"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/format",
+    "o" : {
+      "v" : "ElectronicArticle"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/institution",
+    "o" : {
+      "v" : " "
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/source_id",
+    "o" : {
+      "v" : "105"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/access_facet",
+    "o" : {
+      "v" : "Electronic Resources"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/language",
+    "o" : {
+      "v" : "English"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/publishDate",
+    "o" : {
+      "v" : "2016"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/publishDateSort",
+    "o" : {
+      "v" : "2016"
+    }
+  }, {
+    "order" : 7,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "Spatial frequencies in polar LEO satellite"
+    }
+  }, {
+    "order" : 7,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "Spatial frequencies in polar LEO satellite"
+    }
+  }, {
+    "order" : 8,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "Ionospheric currents"
+    }
+  }, {
+    "order" : 8,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "Ionospheric currents"
+    }
+  }, {
+    "order" : 9,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "LEO satellites"
+    }
+  }, {
+    "order" : 9,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "LEO satellites"
+    }
+  }, {
+    "order" : 10,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "Pulsations at LEO"
+    }
+  }, {
+    "order" : 10,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "Pulsations at LEO"
+    }
+  }, {
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/9079aa8b-d79b-48d6-b896-9f8b395d7a03"
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/RecordType"
+    }
+  } ]
+}, {
+  "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef" : [ {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "Physics"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "Physics"
+    }
+  }, {
+    "order" : 2,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "Condensed Matter Physics"
+    }
+  }, {
+    "order" : 2,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "Condensed Matter Physics"
+    }
+  }, {
+    "order" : 3,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "Mechanics"
+    }
+  }, {
+    "order" : 3,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "Mechanics"
+    }
+  }, {
+    "order" : 4,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "Industrial Chemistry/Chemical Engineering"
+    }
+  }, {
+    "order" : 4,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "Industrial Chemistry/Chemical Engineering"
+    }
+  }, {
+    "order" : 5,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "Physical Chemistry"
+    }
+  }, {
+    "order" : 5,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "Physical Chemistry"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/recordtype",
+    "o" : {
+      "v" : "propPubXml"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/format_de14",
+    "o" : {
+      "v" : "Article, E-Article"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/mega_collection",
+    "o" : {
+      "v" : "Springer Journals"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/format_de15",
+    "o" : {
+      "v" : "Article, E-Article"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/format",
+    "o" : {
+      "v" : "ElectronicArticle"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/institution",
+    "o" : {
+      "v" : " "
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/source_id",
+    "o" : {
+      "v" : "105"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/access_facet",
+    "o" : {
+      "v" : "Electronic Resources"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/language",
+    "o" : {
+      "v" : "English"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/publishDate",
+    "o" : {
+      "v" : "2016"
+    }
+  }, {
+    "order" : 1,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/publishDateSort",
+    "o" : {
+      "v" : "2016"
+    }
+  }, {
+    "order" : 6,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "Equation of state"
+    }
+  }, {
+    "order" : 6,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "Equation of state"
+    }
+  }, {
+    "order" : 7,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "Helmholtz energy"
+    }
+  }, {
+    "order" : 7,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "Helmholtz energy"
+    }
+  }, {
+    "order" : 8,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "R-1234ze(E)"
+    }
+  }, {
+    "order" : 8,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "R-1234ze(E)"
+    }
+  }, {
+    "order" : 9,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "Thermodynamic properties"
+    }
+  }, {
+    "order" : 9,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "Thermodynamic properties"
+    }
+  }, {
+    "order" : 10,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet",
+    "o" : {
+      "v" : "&lt;![CDATA[                         &lt;Emphasis Type=&quot;Italic&quot;&gt;trans&lt;/Emphasis&gt;-1&lt;InlineEquation ID=&quot;IEq1&quot;&gt;                            &lt;InlineMediaObject&gt;                               &lt;ImageObject Color=&quot;BlackWhite&quot; FileRef=&quot;10765_2016_2040_Article_IEq1.gif&quot; Format=&quot;GIF&quot; Rendition=&quot;HTML&quot; Type=&quot;Linedraw&quot;/&gt;                            &lt;/InlineMediaObject&gt;                            &lt;EquationSource Format=&quot;TEX&quot;&gt;&lt;![CDATA[$$, $$]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                            &lt;EquationSource Format=&quot;MATHML&quot;&gt;&lt;![CDATA[                     ]]]]&gt;&lt;![CDATA[&gt;&lt;math xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;&gt;                                  &lt;mo&gt;,&lt;/mo&gt;                               &lt;/math&gt;&lt;![CDATA[                   ]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                         &lt;/InlineEquation&gt;3&lt;InlineEquation ID=&quot;IEq2&quot;&gt;                            &lt;InlineMediaObject&gt;                               &lt;ImageObject Color=&quot;BlackWhite&quot; FileRef=&quot;10765_2016_2040_Article_IEq2.gif&quot; Format=&quot;GIF&quot; Rendition=&quot;HTML&quot; Type=&quot;Linedraw&quot;/&gt;                            &lt;/InlineMediaObject&gt;                            &lt;EquationSource Format=&quot;TEX&quot;&gt;&lt;![CDATA[$$, $$]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                            &lt;EquationSource Format=&quot;MATHML&quot;&gt;&lt;![CDATA[                     ]]]]&gt;&lt;![CDATA[&gt;&lt;math xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;&gt;                                  &lt;mo&gt;,&lt;/mo&gt;                               &lt;/math&gt;&lt;![CDATA[                   ]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                         &lt;/InlineEquation&gt;3&lt;InlineEquation ID=&quot;IEq3&quot;&gt;                            &lt;InlineMediaObject&gt;                               &lt;ImageObject Color=&quot;BlackWhite&quot; FileRef=&quot;10765_2016_2040_Article_IEq3.gif&quot; Format=&quot;GIF&quot; Rendition=&quot;HTML&quot; Type=&quot;Linedraw&quot;/&gt;                            &lt;/InlineMediaObject&gt;                            &lt;EquationSource Format=&quot;TEX&quot;&gt;&lt;![CDATA[$$, $$]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                            &lt;EquationSource Format=&quot;MATHML&quot;&gt;&lt;![CDATA[                     ]]]]&gt;&lt;![CDATA[&gt;&lt;math xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;&gt;                                  &lt;mo&gt;,&lt;/mo&gt;                               &lt;/math&gt;&lt;![CDATA[                   ]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                         &lt;/InlineEquation&gt;3-Tetrafluoroprop-1-ene]]&gt;"
+    }
+  }, {
+    "order" : 10,
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic",
+    "o" : {
+      "v" : "&lt;![CDATA[                         &lt;Emphasis Type=&quot;Italic&quot;&gt;trans&lt;/Emphasis&gt;-1&lt;InlineEquation ID=&quot;IEq1&quot;&gt;                            &lt;InlineMediaObject&gt;                               &lt;ImageObject Color=&quot;BlackWhite&quot; FileRef=&quot;10765_2016_2040_Article_IEq1.gif&quot; Format=&quot;GIF&quot; Rendition=&quot;HTML&quot; Type=&quot;Linedraw&quot;/&gt;                            &lt;/InlineMediaObject&gt;                            &lt;EquationSource Format=&quot;TEX&quot;&gt;&lt;![CDATA[$$, $$]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                            &lt;EquationSource Format=&quot;MATHML&quot;&gt;&lt;![CDATA[                     ]]]]&gt;&lt;![CDATA[&gt;&lt;math xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;&gt;                                  &lt;mo&gt;,&lt;/mo&gt;                               &lt;/math&gt;&lt;![CDATA[                   ]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                         &lt;/InlineEquation&gt;3&lt;InlineEquation ID=&quot;IEq2&quot;&gt;                            &lt;InlineMediaObject&gt;                               &lt;ImageObject Color=&quot;BlackWhite&quot; FileRef=&quot;10765_2016_2040_Article_IEq2.gif&quot; Format=&quot;GIF&quot; Rendition=&quot;HTML&quot; Type=&quot;Linedraw&quot;/&gt;                            &lt;/InlineMediaObject&gt;                            &lt;EquationSource Format=&quot;TEX&quot;&gt;&lt;![CDATA[$$, $$]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                            &lt;EquationSource Format=&quot;MATHML&quot;&gt;&lt;![CDATA[                     ]]]]&gt;&lt;![CDATA[&gt;&lt;math xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;&gt;                                  &lt;mo&gt;,&lt;/mo&gt;                               &lt;/math&gt;&lt;![CDATA[                   ]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                         &lt;/InlineEquation&gt;3&lt;InlineEquation ID=&quot;IEq3&quot;&gt;                            &lt;InlineMediaObject&gt;                               &lt;ImageObject Color=&quot;BlackWhite&quot; FileRef=&quot;10765_2016_2040_Article_IEq3.gif&quot; Format=&quot;GIF&quot; Rendition=&quot;HTML&quot; Type=&quot;Linedraw&quot;/&gt;                            &lt;/InlineMediaObject&gt;                            &lt;EquationSource Format=&quot;TEX&quot;&gt;&lt;![CDATA[$$, $$]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                            &lt;EquationSource Format=&quot;MATHML&quot;&gt;&lt;![CDATA[                     ]]]]&gt;&lt;![CDATA[&gt;&lt;math xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;&gt;                                  &lt;mo&gt;,&lt;/mo&gt;                               &lt;/math&gt;&lt;![CDATA[                   ]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                         &lt;/InlineEquation&gt;3-Tetrafluoroprop-1-ene]]&gt;"
+    }
+  }, {
+    "s" : {
+      "uri" : "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/497c0694-0434-4c27-b9db-49f6346983ef"
+    },
+    "p" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    "o" : {
+      "uri" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/RecordType"
+    }
+  } ]
+} ]

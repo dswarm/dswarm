@@ -17,6 +17,7 @@ package org.dswarm.converter.flow.test.json;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.List;
 
@@ -27,7 +28,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.io.Resources;
-import org.apache.commons.io.Charsets;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -87,7 +87,7 @@ public class JSONSourceResourceGDMStmtsFlowTest extends GuicedTest {
 
 				final Model model = gdmModel.getModel();
 
-				final JsonNode jsonNode = gdmModel.toJSON();
+				final JsonNode jsonNode = gdmModel.toGDMCompactJSON();
 
 				Assert.assertNotNull("the GDM model shouldn't be null", model);
 
@@ -102,7 +102,7 @@ public class JSONSourceResourceGDMStmtsFlowTest extends GuicedTest {
 
 				Assert.assertNotNull("the expected result file URL shouldn't be null", expectedResultFileURL);
 
-				final String expectedResult = Resources.toString(expectedResultFileURL, Charsets.UTF_8);
+				final String expectedResult = Resources.toString(expectedResultFileURL, StandardCharsets.UTF_8);
 
 				Assert.assertNotNull("the expected result shouldn't be null", expectedResult);
 

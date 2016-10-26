@@ -127,7 +127,6 @@ public abstract class AbstractResponseMediaTypeTasksResourceTest extends Resourc
 		requestJSON.set(TasksResource.TASK_IDENTIFIER, taskJSON);
 		requestJSON.put(TasksResource.PERSIST_IDENTIFIER, Boolean.FALSE);
 		requestJSON.put(TasksResource.DO_INGEST_ON_THE_FLY_IDENTIFIER, Boolean.TRUE);
-		requestJSON.put(TasksResource.DO_EXPORT_ON_THE_FLY_IDENTIFIER, Boolean.TRUE);
 		requestJSON.put(TasksResource.DO_VERSIONING_ON_RESULT_IDENTIFIER, Boolean.FALSE);
 
 		return requestJSON;

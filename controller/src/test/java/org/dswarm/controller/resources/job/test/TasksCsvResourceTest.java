@@ -22,6 +22,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.io.Resources;
 import org.apache.commons.io.FileUtils;
+
+import org.dswarm.common.MediaTypeUtil;
 import org.dswarm.controller.resources.job.TasksResource;
 import org.dswarm.controller.resources.job.test.utils.TasksResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
@@ -211,8 +213,8 @@ public class TasksCsvResourceTest extends ResourceTest {
 		requestJSON.set(TasksResource.TASK_IDENTIFIER, taskJSON);
 		requestJSON.put(TasksResource.PERSIST_IDENTIFIER, Boolean.TRUE);
 
-		final Response response = target().request(MediaType.APPLICATION_JSON_TYPE)
-				.accept(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(requestJSON));
+		final Response response = target().request(MediaTypeUtil.GDM_COMPACT_FE_JSON_TYPE)
+				.accept(MediaTypeUtil.GDM_COMPACT_FE_JSON_TYPE).post(Entity.json(requestJSON));
 
 		// SR Start checking response
 

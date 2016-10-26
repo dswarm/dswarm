@@ -1,0 +1,91 @@
+[ {
+  "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/b7713339-a343-49fd-b2c0-4f3038c53f84" : [ {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic" : [ "Physics", "Astrophysics and Astroparticles", "Astronomy, Observations and Techniques", "Cosmology", "Extraterrestrial Physics, Space Sciences", "Astrobiology", "Spatial frequencies in polar LEO satellite", "Ionospheric currents", "LEO satellites", "Pulsations at LEO" ]
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet" : [ "Physics", "Astrophysics and Astroparticles", "Astronomy, Observations and Techniques", "Cosmology", "Extraterrestrial Physics, Space Sciences", "Astrobiology", "Spatial frequencies in polar LEO satellite", "Ionospheric currents", "LEO satellites", "Pulsations at LEO" ]
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/recordtype" : "propPubXml"
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/format_de14" : "Article, E-Article"
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/mega_collection" : "Springer Journals"
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/format_de15" : "Article, E-Article"
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/format" : "ElectronicArticle"
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/institution" : " "
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/source_id" : "105"
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/access_facet" : "Electronic Resources"
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/language" : "English"
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/publishDate" : "2016"
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/publishDateSort" : "2016"
+  }, {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/RecordType"
+  } ]
+}, {
+  "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/d553924d-4428-4275-8b1f-3f10d6783b2a" : [ {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic" : [ "Physics", "Astrophysics and Astroparticles", "Astronomy, Observations and Techniques", "Cosmology", "Extraterrestrial Physics, Space Sciences", "Astrobiology", "Spatial frequencies in polar LEO satellite", "Ionospheric currents", "LEO satellites", "Pulsations at LEO" ]
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet" : [ "Physics", "Astrophysics and Astroparticles", "Astronomy, Observations and Techniques", "Cosmology", "Extraterrestrial Physics, Space Sciences", "Astrobiology", "Spatial frequencies in polar LEO satellite", "Ionospheric currents", "LEO satellites", "Pulsations at LEO" ]
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/recordtype" : "propPubXml"
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/format_de14" : "Article, E-Article"
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/mega_collection" : "Springer Journals"
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/format_de15" : "Article, E-Article"
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/format" : "ElectronicArticle"
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/institution" : " "
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/source_id" : "105"
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/access_facet" : "Electronic Resources"
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/language" : "English"
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/publishDate" : "2016"
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/publishDateSort" : "2016"
+  }, {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/RecordType"
+  } ]
+}, {
+  "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/fc395cda-84c3-47f1-a204-c421fa53244a" : [ {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic" : [ "Physics", "Condensed Matter Physics", "Mechanics", "Industrial Chemistry/Chemical Engineering", "Physical Chemistry", "Equation of state", "Helmholtz energy", "R-1234ze(E)", "Thermodynamic properties", "&lt;![CDATA[                         &lt;Emphasis Type=&quot;Italic&quot;&gt;trans&lt;/Emphasis&gt;-1&lt;InlineEquation ID=&quot;IEq1&quot;&gt;                            &lt;InlineMediaObject&gt;                               &lt;ImageObject Color=&quot;BlackWhite&quot; FileRef=&quot;10765_2016_2040_Article_IEq1.gif&quot; Format=&quot;GIF&quot; Rendition=&quot;HTML&quot; Type=&quot;Linedraw&quot;/&gt;                            &lt;/InlineMediaObject&gt;                            &lt;EquationSource Format=&quot;TEX&quot;&gt;&lt;![CDATA[$$, $$]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                            &lt;EquationSource Format=&quot;MATHML&quot;&gt;&lt;![CDATA[                     ]]]]&gt;&lt;![CDATA[&gt;&lt;math xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;&gt;                                  &lt;mo&gt;,&lt;/mo&gt;                               &lt;/math&gt;&lt;![CDATA[                   ]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                         &lt;/InlineEquation&gt;3&lt;InlineEquation ID=&quot;IEq2&quot;&gt;                            &lt;InlineMediaObject&gt;                               &lt;ImageObject Color=&quot;BlackWhite&quot; FileRef=&quot;10765_2016_2040_Article_IEq2.gif&quot; Format=&quot;GIF&quot; Rendition=&quot;HTML&quot; Type=&quot;Linedraw&quot;/&gt;                            &lt;/InlineMediaObject&gt;                            &lt;EquationSource Format=&quot;TEX&quot;&gt;&lt;![CDATA[$$, $$]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                            &lt;EquationSource Format=&quot;MATHML&quot;&gt;&lt;![CDATA[                     ]]]]&gt;&lt;![CDATA[&gt;&lt;math xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;&gt;                                  &lt;mo&gt;,&lt;/mo&gt;                               &lt;/math&gt;&lt;![CDATA[                   ]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                         &lt;/InlineEquation&gt;3&lt;InlineEquation ID=&quot;IEq3&quot;&gt;                            &lt;InlineMediaObject&gt;                               &lt;ImageObject Color=&quot;BlackWhite&quot; FileRef=&quot;10765_2016_2040_Article_IEq3.gif&quot; Format=&quot;GIF&quot; Rendition=&quot;HTML&quot; Type=&quot;Linedraw&quot;/&gt;                            &lt;/InlineMediaObject&gt;                            &lt;EquationSource Format=&quot;TEX&quot;&gt;&lt;![CDATA[$$, $$]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                            &lt;EquationSource Format=&quot;MATHML&quot;&gt;&lt;![CDATA[                     ]]]]&gt;&lt;![CDATA[&gt;&lt;math xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;&gt;                                  &lt;mo&gt;,&lt;/mo&gt;                               &lt;/math&gt;&lt;![CDATA[                   ]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                         &lt;/InlineEquation&gt;3-Tetrafluoroprop-1-ene]]&gt;" ]
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/topic_facet" : [ "Physics", "Condensed Matter Physics", "Mechanics", "Industrial Chemistry/Chemical Engineering", "Physical Chemistry", "Equation of state", "Helmholtz energy", "R-1234ze(E)", "Thermodynamic properties", "&lt;![CDATA[                         &lt;Emphasis Type=&quot;Italic&quot;&gt;trans&lt;/Emphasis&gt;-1&lt;InlineEquation ID=&quot;IEq1&quot;&gt;                            &lt;InlineMediaObject&gt;                               &lt;ImageObject Color=&quot;BlackWhite&quot; FileRef=&quot;10765_2016_2040_Article_IEq1.gif&quot; Format=&quot;GIF&quot; Rendition=&quot;HTML&quot; Type=&quot;Linedraw&quot;/&gt;                            &lt;/InlineMediaObject&gt;                            &lt;EquationSource Format=&quot;TEX&quot;&gt;&lt;![CDATA[$$, $$]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                            &lt;EquationSource Format=&quot;MATHML&quot;&gt;&lt;![CDATA[                     ]]]]&gt;&lt;![CDATA[&gt;&lt;math xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;&gt;                                  &lt;mo&gt;,&lt;/mo&gt;                               &lt;/math&gt;&lt;![CDATA[                   ]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                         &lt;/InlineEquation&gt;3&lt;InlineEquation ID=&quot;IEq2&quot;&gt;                            &lt;InlineMediaObject&gt;                               &lt;ImageObject Color=&quot;BlackWhite&quot; FileRef=&quot;10765_2016_2040_Article_IEq2.gif&quot; Format=&quot;GIF&quot; Rendition=&quot;HTML&quot; Type=&quot;Linedraw&quot;/&gt;                            &lt;/InlineMediaObject&gt;                            &lt;EquationSource Format=&quot;TEX&quot;&gt;&lt;![CDATA[$$, $$]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                            &lt;EquationSource Format=&quot;MATHML&quot;&gt;&lt;![CDATA[                     ]]]]&gt;&lt;![CDATA[&gt;&lt;math xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;&gt;                                  &lt;mo&gt;,&lt;/mo&gt;                               &lt;/math&gt;&lt;![CDATA[                   ]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                         &lt;/InlineEquation&gt;3&lt;InlineEquation ID=&quot;IEq3&quot;&gt;                            &lt;InlineMediaObject&gt;                               &lt;ImageObject Color=&quot;BlackWhite&quot; FileRef=&quot;10765_2016_2040_Article_IEq3.gif&quot; Format=&quot;GIF&quot; Rendition=&quot;HTML&quot; Type=&quot;Linedraw&quot;/&gt;                            &lt;/InlineMediaObject&gt;                            &lt;EquationSource Format=&quot;TEX&quot;&gt;&lt;![CDATA[$$, $$]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                            &lt;EquationSource Format=&quot;MATHML&quot;&gt;&lt;![CDATA[                     ]]]]&gt;&lt;![CDATA[&gt;&lt;math xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;&gt;                                  &lt;mo&gt;,&lt;/mo&gt;                               &lt;/math&gt;&lt;![CDATA[                   ]]]]&gt;&lt;![CDATA[&gt;&lt;/EquationSource&gt;                         &lt;/InlineEquation&gt;3-Tetrafluoroprop-1-ene]]&gt;" ]
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/recordtype" : "propPubXml"
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/format_de14" : "Article, E-Article"
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/mega_collection" : "Springer Journals"
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/format_de15" : "Article, E-Article"
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/format" : "ElectronicArticle"
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/institution" : " "
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/source_id" : "105"
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/access_facet" : "Electronic Resources"
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/language" : "English"
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/publishDate" : "2016"
+  }, {
+    "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/publishDateSort" : "2016"
+  }, {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/RecordType"
+  } ]
+} ]

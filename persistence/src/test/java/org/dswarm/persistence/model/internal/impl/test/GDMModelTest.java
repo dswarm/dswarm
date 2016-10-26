@@ -17,11 +17,11 @@ package org.dswarm.persistence.model.internal.impl.test;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
-import org.apache.commons.io.Charsets;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -69,7 +69,7 @@ public class GDMModelTest {
 
 		Assert.assertNotNull(fileURL);
 
-		final String fileContent = Resources.toString(fileURL, Charsets.UTF_8);
+		final String fileContent = Resources.toString(fileURL, StandardCharsets.UTF_8);
 
 		Assert.assertNotNull(fileContent);
 
@@ -78,7 +78,7 @@ public class GDMModelTest {
 		Assert.assertNotNull(model);
 
 		final GDMModel gdmModel = new GDMModel(model, resourceURI);
-		final JsonNode jsonNode = gdmModel.toJSON();
+		final JsonNode jsonNode = gdmModel.toGDMCompactJSON();
 
 		final String jsonString = DMPPersistenceUtil.getJSONObjectMapper().writeValueAsString(jsonNode);
 
@@ -102,7 +102,7 @@ public class GDMModelTest {
 
 		Assert.assertNotNull(fileURL);
 
-		final String fileContent = Resources.toString(fileURL, Charsets.UTF_8);
+		final String fileContent = Resources.toString(fileURL, StandardCharsets.UTF_8);
 
 		Assert.assertNotNull(fileContent);
 

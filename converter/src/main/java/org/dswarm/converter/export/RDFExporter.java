@@ -22,17 +22,20 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.riot.system.StreamRDF;
 import org.apache.jena.riot.system.StreamRDFWriter;
+
 import org.dswarm.converter.DMPConverterError;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.graph.json.*;
 import org.dswarm.graph.json.Node;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
 
 import javax.ws.rs.core.MediaType;
 import javax.xml.stream.XMLStreamException;
+
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -77,7 +80,7 @@ public abstract class RDFExporter<TUPLE_FORMAT> implements Exporter<GDMModel> {
 				.doOnSubscribe(() -> LOG.debug("subscribed to RDF export; will return data as '{}'", mediaType.toString()))
 				.onBackpressureBuffer(10000)
 				.map(recordGDMModel -> processRecordGDMModel(writer, resourceNodeCache, predicateCache, recordGDMModel))
-				.map(org.dswarm.persistence.model.internal.Model::toJSON)
+				.map(org.dswarm.persistence.model.internal.Model::toGDMCompactJSON)
 				.flatMapIterable(nodes -> {
 
 					final ArrayList<JsonNode> nodeList = new ArrayList<>();
@@ -91,8 +94,8 @@ public abstract class RDFExporter<TUPLE_FORMAT> implements Exporter<GDMModel> {
 	}
 
 	private GDMModel processRecordGDMModel(final StreamRDF writer,
-	                                              final ConcurrentHashMap<String, org.apache.jena.graph.Node> resourceNodeCache,
-	                                              final ConcurrentHashMap<String, org.apache.jena.graph.Node> predicateCache, GDMModel recordGDMModel) {
+	                                       final ConcurrentHashMap<String, org.apache.jena.graph.Node> resourceNodeCache,
+	                                       final ConcurrentHashMap<String, org.apache.jena.graph.Node> predicateCache, GDMModel recordGDMModel) {
 
 		final Optional<Model> optionalRecordModel = Optional.ofNullable(recordGDMModel.getModel());
 
@@ -106,8 +109,8 @@ public abstract class RDFExporter<TUPLE_FORMAT> implements Exporter<GDMModel> {
 	}
 
 	private void processResource(final StreamRDF writer,
-	                                    final ConcurrentHashMap<String, org.apache.jena.graph.Node> resourceNodeCache,
-	                                    final ConcurrentHashMap<String, org.apache.jena.graph.Node> predicateCache, Resource resource) {
+	                             final ConcurrentHashMap<String, org.apache.jena.graph.Node> resourceNodeCache,
+	                             final ConcurrentHashMap<String, org.apache.jena.graph.Node> predicateCache, Resource resource) {
 
 		final ConcurrentHashMap<Long, org.apache.jena.graph.Node> bnodeCache = new ConcurrentHashMap<>();
 
@@ -129,23 +132,23 @@ public abstract class RDFExporter<TUPLE_FORMAT> implements Exporter<GDMModel> {
 	}
 
 	protected abstract TUPLE_FORMAT generateTuple(final Statement statement,
-	                                     final ConcurrentHashMap<String, org.apache.jena.graph.Node> resourceNodeCache,
-	                                     final ConcurrentHashMap<Long, org.apache.jena.graph.Node> bnodeCache,
-	                                     final ConcurrentHashMap<String, org.apache.jena.graph.Node> predicateCache) throws DMPConverterException;
+	                                              final ConcurrentHashMap<String, org.apache.jena.graph.Node> resourceNodeCache,
+	                                              final ConcurrentHashMap<Long, org.apache.jena.graph.Node> bnodeCache,
+	                                              final ConcurrentHashMap<String, org.apache.jena.graph.Node> predicateCache) throws DMPConverterException;
 
 	protected abstract void writeTuple(final TUPLE_FORMAT tuple,
 	                                   final StreamRDF writer);
 
 	protected static org.apache.jena.graph.Node generateSubjectNode(final Node gdmNode,
-	                                                              final ConcurrentHashMap<String, org.apache.jena.graph.Node> resourceNodeCache,
-	                                                              final ConcurrentHashMap<Long, org.apache.jena.graph.Node> bnodeCache) throws DMPConverterException {
+	                                                                final ConcurrentHashMap<String, org.apache.jena.graph.Node> resourceNodeCache,
+	                                                                final ConcurrentHashMap<Long, org.apache.jena.graph.Node> bnodeCache) throws DMPConverterException {
 
 		return generateNode(gdmNode, TriplePosition.SUBJECT, resourceNodeCache, bnodeCache);
 	}
 
 	protected static org.apache.jena.graph.Node generateObjectNode(final Node gdmNode,
-	                                                             final ConcurrentHashMap<String, org.apache.jena.graph.Node> resourceNodeCache,
-	                                                             final ConcurrentHashMap<Long, org.apache.jena.graph.Node> bnodeCache) throws DMPConverterException {
+	                                                               final ConcurrentHashMap<String, org.apache.jena.graph.Node> resourceNodeCache,
+	                                                               final ConcurrentHashMap<Long, org.apache.jena.graph.Node> bnodeCache) throws DMPConverterException {
 
 		return generateNode(gdmNode, TriplePosition.OBJECT, resourceNodeCache, bnodeCache);
 	}
@@ -197,7 +200,7 @@ public abstract class RDFExporter<TUPLE_FORMAT> implements Exporter<GDMModel> {
 	}
 
 	protected static org.apache.jena.graph.Node generatePredicate(final Predicate gdmPredicate,
-	                                                            final ConcurrentHashMap<String, org.apache.jena.graph.Node> predicateCache) {
+	                                                              final ConcurrentHashMap<String, org.apache.jena.graph.Node> predicateCache) {
 
 		final String predicateURI = gdmPredicate.getUri();
 

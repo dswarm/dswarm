@@ -41,6 +41,12 @@ public interface Model {
 	 * 
 	 * @return a JSON serialisation of the data of the model
 	 */
+	JsonNode toGDMCompactJSON();
+
+	JsonNode toGDMSimpleJSON();
+
+	JsonNode toGDMSimpleShortJSON();
+
 	JsonNode toJSON();
 
 	JsonNode getSchema();
