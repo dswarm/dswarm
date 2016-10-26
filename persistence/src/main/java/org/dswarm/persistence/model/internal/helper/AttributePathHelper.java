@@ -25,20 +25,45 @@ import org.dswarm.init.util.DMPStatics;
 public class AttributePathHelper {
 
 	private final List<String> attributePath;
+	private final Boolean required;
+	private final Boolean multivalue;
 
 	public AttributePathHelper() {
 
 		this.attributePath = Collections.emptyList();
+		this.required = null;
+		this.multivalue = null;
 	}
 
 	public AttributePathHelper(final List<String> attributePath) {
 
 		this.attributePath = attributePath;
+		this.required = null;
+		this.multivalue = null;
+	}
+
+	public AttributePathHelper(final List<String> attributePath,
+	                           final Boolean required,
+	                           final Boolean multivalue) {
+
+		this.attributePath = attributePath;
+		this.required = required;
+		this.multivalue = multivalue;
 	}
 
 	public List<String> getAttributePath() {
 
 		return attributePath;
+	}
+
+	public Boolean isRequired() {
+
+		return required;
+	}
+
+	public Boolean isMultivalue() {
+
+		return multivalue;
 	}
 
 	public int length() {

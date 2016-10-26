@@ -220,7 +220,10 @@ public class SchemaEventRecorder {
 			final LinkedList<Attribute> attributes = Lists.newLinkedList();
 			attributes.add(attribute);
 
-			SchemaUtils.addAttributePaths(schema, attributes, attributePathService, schemaAttributePathInstanceService);
+			final Boolean required = null;
+			final Boolean multivalue = null;
+
+			SchemaUtils.addAttributePaths(schema, attributes, required, multivalue, attributePathService, schemaAttributePathInstanceService);
 		}
 
 		schema.setRecordClass(clasz);

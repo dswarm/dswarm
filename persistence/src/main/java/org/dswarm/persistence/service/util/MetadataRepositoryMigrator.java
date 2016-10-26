@@ -444,8 +444,11 @@ public class MetadataRepositoryMigrator {
 
 					if (!persistentAttributePaths.containsKey(newAttributePathString)) {
 
+						final Boolean required = null;
+						final Boolean multivalue = null;
+
 						final AttributePath recreatedAttributePath = SchemaUtils
-								.addAttributePaths(newSchema, newAttributePath, attributePathService, schemaAttributePathInstanceService);
+								.addAttributePaths(newSchema, newAttributePath, required, multivalue, attributePathService, schemaAttributePathInstanceService);
 
 						final String recreatedAttributePathString = recreatedAttributePath.toAttributePath();
 

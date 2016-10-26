@@ -15,26 +15,46 @@
  */
 package org.dswarm.persistence.model.schema.utils;
 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+
+import javax.annotation.Nullable;
+
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import com.google.common.net.UrlEscapers;
 import com.google.inject.Provider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.AdvancedDMPJPAObject;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
 import org.dswarm.persistence.model.proxy.RetrievalType;
 import org.dswarm.persistence.model.resource.DataModel;
-import org.dswarm.persistence.model.schema.*;
-import org.dswarm.persistence.model.schema.proxy.*;
+import org.dswarm.persistence.model.schema.Attribute;
+import org.dswarm.persistence.model.schema.AttributePath;
+import org.dswarm.persistence.model.schema.Clasz;
+import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
+import org.dswarm.persistence.model.schema.proxy.ProxyAttribute;
+import org.dswarm.persistence.model.schema.proxy.ProxyAttributePath;
+import org.dswarm.persistence.model.schema.proxy.ProxyClasz;
+import org.dswarm.persistence.model.schema.proxy.ProxySchema;
+import org.dswarm.persistence.model.schema.proxy.ProxySchemaAttributePathInstance;
 import org.dswarm.persistence.model.utils.BasicDMPJPAObjectUtils;
-import org.dswarm.persistence.service.schema.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.annotation.Nullable;
-import java.net.URI;
-import java.util.*;
+import org.dswarm.persistence.service.schema.AttributePathService;
+import org.dswarm.persistence.service.schema.AttributeService;
+import org.dswarm.persistence.service.schema.ClaszService;
+import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
+import org.dswarm.persistence.service.schema.SchemaService;
 
 /**
  * @author tgaengler
@@ -249,15 +269,15 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 				continue;
 			}
 
-			if(optionalExcludeAttributePathStubs.isPresent()) {
+			if (optionalExcludeAttributePathStubs.isPresent()) {
 
 				boolean excludeAttributePath = false;
 
 				final Set<String> excludeAttributePathStubs = optionalExcludeAttributePathStubs.get();
 
-				for(final String excludeAttributePathStub : excludeAttributePathStubs) {
+				for (final String excludeAttributePathStub : excludeAttributePathStubs) {
 
-					if(attributePathString.startsWith(excludeAttributePathStub)) {
+					if (attributePathString.startsWith(excludeAttributePathStub)) {
 
 						excludeAttributePath = true;
 
@@ -265,7 +285,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 					}
 				}
 
-				if(excludeAttributePath) {
+				if (excludeAttributePath) {
 
 					// don't add and persist this attribute path to the schema, i.e., exclude it
 
@@ -282,7 +302,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 				continue;
 			}
 
-			if(optionalAttributePathsSAPIUUIDs.isPresent()) {
+			if (optionalAttributePathsSAPIUUIDs.isPresent()) {
 
 				final Map<String, String> attributePathsSAPIUUIDs = optionalAttributePathsSAPIUUIDs.get();
 
@@ -339,7 +359,10 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 				attribute.setName(attributeName);
 			}
 
-			addAttributePaths(schema, attributes, attributePathService, schemaAttributePathInstanceService);
+			final Boolean required = attributePathHelper.isRequired();
+			final Boolean multivalue = attributePathHelper.isMultivalue();
+
+			addAttributePaths(schema, attributes, required, multivalue, attributePathService, schemaAttributePathInstanceService);
 		}
 
 		return true;
@@ -347,11 +370,13 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 	public static AttributePath addAttributePaths(final Schema schema,
 	                                              final List<Attribute> attributes,
+	                                              final Boolean required,
+	                                              final Boolean multivalue,
 	                                              final AttributePathService attributePathService,
 	                                              final SchemaAttributePathInstanceService schemaAttributePathInstanceService,
 	                                              final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs) throws DMPPersistenceException {
 
-		final SchemaAttributePathInstance schemaAttributePathInstance = createOrGetSchemaAttributePathInstance(attributes, attributePathService, schemaAttributePathInstanceService, optionalAttributePathsSAPIUUIDs);
+		final SchemaAttributePathInstance schemaAttributePathInstance = createOrGetSchemaAttributePathInstance(attributes, required, multivalue, attributePathService, schemaAttributePathInstanceService, optionalAttributePathsSAPIUUIDs);
 
 		schema.addAttributePath(schemaAttributePathInstance);
 
@@ -360,13 +385,17 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 	public static AttributePath addAttributePaths(final Schema schema,
 	                                              final List<Attribute> attributes,
+	                                              final Boolean required,
+	                                              final Boolean multivalue,
 	                                              final AttributePathService attributePathService,
 	                                              final SchemaAttributePathInstanceService schemaAttributePathInstanceService) throws DMPPersistenceException {
 
-		return addAttributePaths(schema, attributes, attributePathService, schemaAttributePathInstanceService, Optional.empty());
+		return addAttributePaths(schema, attributes, required, multivalue, attributePathService, schemaAttributePathInstanceService, Optional.empty());
 	}
 
 	public static SchemaAttributePathInstance createOrGetSchemaAttributePathInstance(final List<Attribute> attributes,
+	                                                                                 final Boolean required,
+	                                                                                 final Boolean multivalue,
 	                                                                                 final AttributePathService attributePathService,
 	                                                                                 final SchemaAttributePathInstanceService schemaAttributePathInstanceService,
 	                                                                                 final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs) throws DMPPersistenceException {
@@ -406,7 +435,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 		}
 
 		final ProxySchemaAttributePathInstance proxySchemaAttributePathInstance =
-				schemaAttributePathInstanceService.createObjectTransactional(attributePath);
+				schemaAttributePathInstanceService.createObjectTransactional(attributePath, required, multivalue);
 
 		if (proxySchemaAttributePathInstance == null) {
 
@@ -429,7 +458,10 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 	                                                                            final AttributePathService attributePathService,
 	                                                                            final SchemaAttributePathInstanceService schemaAttributePathInstanceService) throws DMPPersistenceException {
 
-		return createOrGetSchemaAttributePathInstance(attributes, attributePathService, schemaAttributePathInstanceService, Optional.empty());
+		final Boolean required = null;
+		final Boolean multivalue = null;
+
+		return createOrGetSchemaAttributePathInstance(attributes, required, multivalue, attributePathService, schemaAttributePathInstanceService, Optional.empty());
 	}
 
 	public static boolean isValidUri(@Nullable final String identifier) {

@@ -94,6 +94,7 @@ import org.dswarm.graph.json.stream.ModelBuilder;
 import org.dswarm.persistence.DMPPersistenceError;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
+import org.dswarm.persistence.model.internal.gdm.GDMModelUtil;
 import org.dswarm.persistence.model.job.Job;
 import org.dswarm.persistence.model.job.Task;
 import org.dswarm.persistence.model.job.Transformation;
@@ -224,7 +225,8 @@ public class TasksResource {
 			MediaTypeUtil.GDM_COMPACT_JSON,
 			MediaTypeUtil.GDM_COMPACT_FE_JSON,
 			MediaTypeUtil.GDM_SIMPLE_JSON,
-			MediaTypeUtil.GDM_SIMPLE_SHORT_JSON})
+			MediaTypeUtil.GDM_SIMPLE_SHORT_JSON,
+			MediaTypeUtil.JSC_JSON})
 	public void executeTask(@ApiParam(value = "task execution request (as JSON)", required = true) final String jsonObjectString,
 	                        @Context final HttpHeaders requestHeaders,
 	                        @Suspended final AsyncResponse asyncResponse) throws IOException, DMPConverterException, DMPControllerException {
@@ -368,7 +370,7 @@ public class TasksResource {
 			final Optional<Integer> optionalReturnAtMost = JsonUtils.getIntValue(TasksResource.RETURN_AT_MOST_IDENTIFIER, requestJSON);
 			final Observable<GDMModel> returnAtMost;
 
-			if(optionalReturnAtMost.isPresent()) {
+			if (optionalReturnAtMost.isPresent()) {
 
 				final Integer count = optionalReturnAtMost.get();
 
@@ -474,7 +476,7 @@ public class TasksResource {
 
 		final Optional<Integer> optionalAtMost = JsonUtils.getIntValue(TasksResource.AT_MOST_IDENTIFIER, requestJSON);
 
-		if(optionalAtMost.isPresent()) {
+		if (optionalAtMost.isPresent()) {
 
 			final Integer count = optionalAtMost.get();
 
@@ -609,6 +611,11 @@ public class TasksResource {
 					resultObservable = doGDMSimpleShortJSONExport(connectableResult.observeOn(EXPORT_SCHEDULER), responseMediaType, bos);
 
 					break;
+				case MediaTypeUtil.JSC_JSON:
+
+					resultObservable = doJSCJSONExport(connectableResult.observeOn(EXPORT_SCHEDULER), responseMediaType, bos, task);
+
+					break;
 				default:
 
 					// media type is not supported
@@ -730,6 +737,26 @@ public class TasksResource {
 	                                                    final BufferedOutputStream bos) throws DMPControllerException {
 
 		return doGDMJSONExport(gdmModelObservable, responseMediaType, bos, GDMModel::toGDMSimpleShortJSON);
+	}
+
+	private Observable<Void> doJSCJSONExport(final Observable<GDMModel> gdmModelObservable,
+	                                         final MediaType responseMediaType,
+	                                         final BufferedOutputStream bos,
+	                                         final Task task) throws DMPControllerException {
+
+		final Func1<GDMModel, JsonNode> transformationFunction = gdmModel -> {
+
+			final Optional<JsonNode> optionalResult = GDMModelUtil.toJSCJSON(gdmModel.getModel(), gdmModel.getRecordURIs(), task.getOutputDataModel().getSchema());
+
+			if (!optionalResult.isPresent()) {
+
+				return null;
+			}
+
+			return optionalResult.get();
+		};
+
+		return doGDMJSONExport(gdmModelObservable, responseMediaType, bos, transformationFunction);
 	}
 
 	private Observable<Void> doGDMJSONExport(final Observable<GDMModel> gdmModelObservable,
@@ -921,6 +948,7 @@ public class TasksResource {
 			return Optional.of(MediaType.APPLICATION_JSON_TYPE);
 		}
 
+		// TODO: this might be improved
 		final Optional<MediaType> mediaTypeOptional = acceptableMediaTypes.stream()
 				.filter(mediaType -> MediaType.APPLICATION_JSON_TYPE.equals(mediaType)
 						|| MediaType.APPLICATION_XML_TYPE.equals(mediaType)
@@ -935,7 +963,8 @@ public class TasksResource {
 						|| MediaTypeUtil.GDM_COMPACT_JSON_TYPE.equals(mediaType)
 						|| MediaTypeUtil.GDM_COMPACT_FE_JSON_TYPE.equals(mediaType)
 						|| MediaTypeUtil.GDM_SIMPLE_JSON_TYPE.equals(mediaType)
-						|| MediaTypeUtil.GDM_SIMPLE_SHORT_JSON_TYPE.equals(mediaType))
+						|| MediaTypeUtil.GDM_SIMPLE_SHORT_JSON_TYPE.equals(mediaType)
+						|| MediaTypeUtil.JSC_JSON_TYPE.equals(mediaType))
 				.findFirst();
 
 		if (mediaTypeOptional.isPresent()) {

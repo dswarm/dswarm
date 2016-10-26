@@ -493,7 +493,8 @@ public abstract class AbstractJSONSchemaParser {
 				// attribute has enum values, or a pattern, or is simply an array, i.e., simply add the attribute path
 
 				final String finalAttribute = determineAttributeName(attribute);
-				AttributePathHelperHelper.addAttributePath(finalAttribute, attributePaths, attributePath);
+				final boolean multivalue = true;
+				AttributePathHelperHelper.addAttributePath(finalAttribute, multivalue, attributePaths, attributePath);
 
 				return attributePaths;
 			}
@@ -506,7 +507,8 @@ public abstract class AbstractJSONSchemaParser {
 				finalJsonSchemaAttributeItemsNode = jsonSchemaAttributeItemsNode.get(AbstractJSONSchemaParser.JSON_SCHEMA_PROPERTIES_IDENTIFIER);
 
 				final String finalAttribute = determineAttributeName(attribute);
-				finalAttributePath = AttributePathHelperHelper.addAttributePath(finalAttribute, attributePaths, attributePath);
+				final boolean multivalue = true;
+				finalAttributePath = AttributePathHelperHelper.addAttributePath(finalAttribute, multivalue, attributePaths, attributePath);
 
 				optionalAddRDFTypeAttributePath(attributePaths, arrayType, attribute, finalAttributePath);
 			} else {
@@ -530,7 +532,8 @@ public abstract class AbstractJSONSchemaParser {
 
 			if (addRootAttribute) {
 
-				finalAttributePathHelper = AttributePathHelperHelper.addAttributePath(finalAttribute, attributePaths, attributePath);
+				final Boolean multivalue = null;
+				finalAttributePathHelper = AttributePathHelperHelper.addAttributePath(finalAttribute, multivalue, attributePaths, attributePath);
 			} else {
 
 				finalAttributePathHelper = attributePath;

@@ -124,7 +124,8 @@ public class XMLSchemaParser extends AbstractJSONSchemaParser {
 				&& !isXMLAttribute(attribute)) {
 
 			// add rdf:type attribute
-			AttributePathHelperHelper.addAttributePath(GDMUtil.RDF_type, attributePaths, finalAttributePathHelper);
+			final Boolean multivalue = null;
+			AttributePathHelperHelper.addAttributePath(GDMUtil.RDF_type, multivalue, attributePaths, finalAttributePathHelper);
 		}
 	}
 
@@ -135,7 +136,8 @@ public class XMLSchemaParser extends AbstractJSONSchemaParser {
 		if (addRDFValueAttributePath) {
 
 			// add rdf:value attribute
-			AttributePathHelperHelper.addAttributePath(GDMUtil.RDF_value, attributePaths, attributePath);
+			final Boolean multivalue = null;
+			AttributePathHelperHelper.addAttributePath(GDMUtil.RDF_value, multivalue, attributePaths, attributePath);
 		}
 	}
 
