@@ -53,7 +53,7 @@
                   "login": "dmp",
                   "password": "dmp",
                   "query": "select ATTRIBUTE_PATH_UUID from ATTRIBUTE_PATHS_ATTRIBUTES where ATTRIBUTE_UUID = ?",
-                  "driver": "com.mysql.jdbc.Driver",
+                  "driver": "com.mysql.cj.jdbc.Driver",
                   "inputString": "feld_value__0__"
                 },
                 "uuid": "-1402409200649"

@@ -23,6 +23,6 @@
         </data>
     </rules>
     <maps>
-        <sqlmap database="dmp" databaseType="mysql" driver="com.mysql.jdbc.Driver" host="localhost" login="dmp" name="component1402409200787" password="dmp" port="3306" query="SELECT name FROM DATA_SCHEMA WHERE uuid = ?"/>
+        <sqlmap database="dmp" databaseType="mysql" driver="com.mysql.cj.jdbc.Driver" host="localhost" login="dmp" name="component1402409200787" password="dmp" port="3306" query="SELECT name FROM DATA_SCHEMA WHERE uuid = ?"/>
     </maps>
 </metamorph>

@@ -83,7 +83,7 @@ public class JpaHibernateModule extends AbstractModule {
 		properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5InnoDBDialect");
 		properties.setProperty("hibernate.discriminator.ignore_explicit_for_joined", "true");
 		properties.setProperty("hibernate.show_sql", String.valueOf(isLogSql)); */
-		properties.setProperty("javax.persistence.jdbc.driver", "com.mysql.jdbc.Driver");
+		properties.setProperty("javax.persistence.jdbc.driver", "com.mysql.cj.jdbc.Driver");
 		/*properties.setProperty("hibernate.jdbc.lob.non_contextual_creation", "true");
 		properties.setProperty("hibernate.ejb.entitymanager_factory_name", "DMPAppFactory");
 		properties.setProperty("hibernate.hbm2ddl.auto", "");*/

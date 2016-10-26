@@ -55,7 +55,7 @@
                     "name": "sqlmap",
                     "dsl": "metafacture",
                     "reference": "sqlmap",
-                    "description": "Does a lookup in a SQL table via a prepared SQL statement, i.e., the statement needs to include some variable parts. Furthermore, the connection string to the SQL database can be defined via the following attributes: 'databaseType' = the type of the database, e.g., 'mysql'; 'host' = the host of the database, e.g., 'localhost' (default = 'localhost'); 'port' = the port of the database, e.g., '3306' (default = '3306'); 'database' = the name of the database. The credentials for the connection can be defined with the following attributes: 'login' = the username that should be utilised to connect to the database; 'password' = the password that should be utilised to connect to the database. The SQL query statement that should be utilised to retrieve the value for a given key can be defined via 'query', e.g. 'SELECT value FROM mytable WHERE key = ?'. The driver that should be utilised to establish the connection to the database can be defined via 'driver' (default = 'com.mysql.jdbc.Driver'; note: the database driver needs to be part of the classpath of the execution environment).",
+                    "description": "Does a lookup in a SQL table via a prepared SQL statement, i.e., the statement needs to include some variable parts. Furthermore, the connection string to the SQL database can be defined via the following attributes: 'databaseType' = the type of the database, e.g., 'mysql'; 'host' = the host of the database, e.g., 'localhost' (default = 'localhost'); 'port' = the port of the database, e.g., '3306' (default = '3306'); 'database' = the name of the database. The credentials for the connection can be defined with the following attributes: 'login' = the username that should be utilised to connect to the database; 'password' = the password that should be utilised to connect to the database. The SQL query statement that should be utilised to retrieve the value for a given key can be defined via 'query', e.g. 'SELECT value FROM mytable WHERE key = ?'. The driver that should be utilised to establish the connection to the database can be defined via 'driver' (default = 'com.mysql.cj.jdbc.Driver'; note: the database driver needs to be part of the classpath of the execution environment).",
                     "parameters": {
                       "databaseType": {
                         "type": "text",
@@ -90,7 +90,7 @@
                       "driver": {
                         "type": "text",
                         "optional": true,
-                        "description": "the JDBC driver that should be utilised to connect to the database (default = com.mysql.jdbc.Driver; note: the database driver needs to be part of the classpath of the execution environment)"
+                        "description": "the JDBC driver that should be utilised to connect to the database (default = com.mysql.cj.jdbc.Driver; note: the database driver needs to be part of the classpath of the execution environment)"
                       }
                     }
                   },
@@ -201,7 +201,7 @@
                     "name": "sqlmap",
                     "dsl": "metafacture",
                     "reference": "sqlmap",
-                    "description": "Does a lookup in a SQL table via a prepared SQL statement, i.e., the statement needs to include some variable parts. Furthermore, the connection string to the SQL database can be defined via the following attributes: 'databaseType' = the type of the database, e.g., 'mysql'; 'host' = the host of the database, e.g., 'localhost' (default = 'localhost'); 'port' = the port of the database, e.g., '3306' (default = '3306'); 'database' = the name of the database. The credentials for the connection can be defined with the following attributes: 'login' = the username that should be utilised to connect to the database; 'password' = the password that should be utilised to connect to the database. The SQL query statement that should be utilised to retrieve the value for a given key can be defined via 'query', e.g. 'SELECT value FROM mytable WHERE key = ?'. The driver that should be utilised to establish the connection to the database can be defined via 'driver' (default = 'com.mysql.jdbc.Driver'; note: the database driver needs to be part of the classpath of the execution environment).",
+                    "description": "Does a lookup in a SQL table via a prepared SQL statement, i.e., the statement needs to include some variable parts. Furthermore, the connection string to the SQL database can be defined via the following attributes: 'databaseType' = the type of the database, e.g., 'mysql'; 'host' = the host of the database, e.g., 'localhost' (default = 'localhost'); 'port' = the port of the database, e.g., '3306' (default = '3306'); 'database' = the name of the database. The credentials for the connection can be defined with the following attributes: 'login' = the username that should be utilised to connect to the database; 'password' = the password that should be utilised to connect to the database. The SQL query statement that should be utilised to retrieve the value for a given key can be defined via 'query', e.g. 'SELECT value FROM mytable WHERE key = ?'. The driver that should be utilised to establish the connection to the database can be defined via 'driver' (default = 'com.mysql.cj.jdbc.Driver'; note: the database driver needs to be part of the classpath of the execution environment).",
                     "parameters": {
                       "databaseType": {
                         "type": "text",
@@ -236,7 +236,7 @@
                       "driver": {
                         "type": "text",
                         "optional": true,
-                        "description": "the JDBC driver that should be utilised to connect to the database (default = com.mysql.jdbc.Driver; note: the database driver needs to be part of the classpath of the execution environment)"
+                        "description": "the JDBC driver that should be utilised to connect to the database (default = com.mysql.cj.jdbc.Driver; note: the database driver needs to be part of the classpath of the execution environment)"
                       }
                     }
                   },

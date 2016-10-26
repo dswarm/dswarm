@@ -19,7 +19,7 @@
         </combine>
         <data name="http://purl.org/dc/elements/1.1/medium" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
         <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__1" source="@feld_value__0__">
-            <sql-db-request database="dmp" databaseType="mysql" driver="com.mysql.jdbc.Driver" host="localhost" login="dmp" password="dmp" port="3306" query="select ATTRIBUTE_PATH_UUID from ATTRIBUTE_PATHS_ATTRIBUTES where ATTRIBUTE_UUID = ?"/>
+            <sql-db-request database="dmp" databaseType="mysql" driver="com.mysql.cj.jdbc.Driver" host="localhost" login="dmp" password="dmp" port="3306" query="select ATTRIBUTE_PATH_UUID from ATTRIBUTE_PATHS_ATTRIBUTES where ATTRIBUTE_UUID = ?"/>
         </data>
     </rules>
     <maps/>
