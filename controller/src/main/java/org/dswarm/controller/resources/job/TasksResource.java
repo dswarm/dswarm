@@ -119,6 +119,7 @@ public class TasksResource {
 
 	public static final String TASK_IDENTIFIER = "task";
 	public static final String AT_MOST_IDENTIFIER = "at_most";
+	public static final String RETURN_AT_MOST_IDENTIFIER = "return_at_most";
 	public static final String PERSIST_IDENTIFIER = "persist";
 	public static final String RETURN_IDENTIFIER = "do_not_return_data";
 	public static final String SELECTED_RECORDS_IDENTIFIER = "selected_records";
@@ -340,36 +341,7 @@ public class TasksResource {
 			throw new DMPConverterException(message);
 		}
 
-		final Observable<Tuple<String, JsonNode>> inputData;
-
-		final boolean doIngestOnTheFly = JsonUtils.getBooleanValue(TasksResource.DO_INGEST_ON_THE_FLY_IDENTIFIER, requestJSON, false);
-
-		if (doIngestOnTheFly) {
-
-			LOG.debug("do ingest on-the-fly for task execution of task '{}'", task.getUuid());
-
-			DataModelUtil.checkDataResource(inputDataModel);
-
-			final boolean utiliseExistingInputSchema = JsonUtils.getBooleanValue(TasksResource.UTILISE_EXISTING_INPUT_SCHEMA_IDENTIFIER, requestJSON,
-					false);
-
-			inputData = dataModelUtil.doIngest(inputDataModel, utiliseExistingInputSchema, INGEST_SCHEDULER);
-		} else {
-
-			final Optional<Set<String>> optionalSelectedRecords = JsonUtils.getStringSetValue(TasksResource.SELECTED_RECORDS_IDENTIFIER, requestJSON);
-
-			if (optionalSelectedRecords.isPresent()) {
-
-				// retrieve data only for selected records
-
-				inputData = dataModelUtil.getRecordsData(optionalSelectedRecords.get(), inputDataModel.getUuid());
-			} else {
-
-				final Optional<Integer> optionalAtMost = JsonUtils.getIntValue(TasksResource.AT_MOST_IDENTIFIER, requestJSON);
-
-				inputData = dataModelUtil.getData(inputDataModel.getUuid(), optionalAtMost);
-			}
-		}
+		final Observable<Tuple<String, JsonNode>> inputData = getInputData(requestJSON, task, inputDataModel);
 
 		final ConnectableObservable<Tuple<String, JsonNode>> connectableInputData = inputData.publish();
 
@@ -390,9 +362,25 @@ public class TasksResource {
 
 			final GDMModelTransformationFlow flow = transformationFlowFactory.fromTask(task);
 			final ConnectableObservable<GDMModel> apply = flow.apply(connectableInputData, writeResultToDatahub, doNotReturnJsonToCaller, doVersioningOnResult, TRANSFORMATION_ENGINE_SCHEDULER);
-			connectableResult = apply.observeOn(TRANSFORMATION_ENGINE_SCHEDULER)
-					.onBackpressureBuffer(10000)
-					.publish();
+			final Observable<GDMModel> buffer = apply.observeOn(TRANSFORMATION_ENGINE_SCHEDULER)
+					.onBackpressureBuffer(10000);
+
+			final Optional<Integer> optionalReturnAtMost = JsonUtils.getIntValue(TasksResource.RETURN_AT_MOST_IDENTIFIER, requestJSON);
+			final Observable<GDMModel> returnAtMost;
+
+			if(optionalReturnAtMost.isPresent()) {
+
+				final Integer count = optionalReturnAtMost.get();
+
+				TasksResource.LOG.debug("return at most '{}' records for task execution on task '{}' with input data model '{}'", count, task.getUuid(), inputDataModel.getUuid());
+
+				returnAtMost = buffer.take(count);
+			} else {
+
+				returnAtMost = buffer;
+			}
+
+			connectableResult = returnAtMost.publish();
 			apply.connect();
 		}
 
@@ -455,6 +443,45 @@ public class TasksResource {
 		}
 
 		return new MorphScriptBuilder().apply(task).toString();
+	}
+
+	private Observable<Tuple<String, JsonNode>> getInputData(final ObjectNode requestJSON,
+	                                                         final Task task,
+	                                                         final DataModel inputDataModel) throws DMPControllerException {
+
+		final boolean doIngestOnTheFly = JsonUtils.getBooleanValue(TasksResource.DO_INGEST_ON_THE_FLY_IDENTIFIER, requestJSON, false);
+
+		if (doIngestOnTheFly) {
+
+			LOG.debug("do ingest on-the-fly for task execution of task '{}'", task.getUuid());
+
+			DataModelUtil.checkDataResource(inputDataModel);
+
+			final boolean utiliseExistingInputSchema = JsonUtils.getBooleanValue(TasksResource.UTILISE_EXISTING_INPUT_SCHEMA_IDENTIFIER, requestJSON,
+					false);
+
+			return dataModelUtil.doIngest(inputDataModel, utiliseExistingInputSchema, INGEST_SCHEDULER);
+		}
+
+		final Optional<Set<String>> optionalSelectedRecords = JsonUtils.getStringSetValue(TasksResource.SELECTED_RECORDS_IDENTIFIER, requestJSON);
+
+		if (optionalSelectedRecords.isPresent()) {
+
+			// retrieve data only for selected records
+
+			return dataModelUtil.getRecordsData(optionalSelectedRecords.get(), inputDataModel.getUuid());
+		}
+
+		final Optional<Integer> optionalAtMost = JsonUtils.getIntValue(TasksResource.AT_MOST_IDENTIFIER, requestJSON);
+
+		if(optionalAtMost.isPresent()) {
+
+			final Integer count = optionalAtMost.get();
+
+			TasksResource.LOG.debug("do task execution on task '{}' with input data model '{}' for '{}' records", task.getUuid(), inputDataModel.getUuid(), count);
+		}
+
+		return dataModelUtil.getData(inputDataModel.getUuid(), optionalAtMost);
 	}
 
 	private void doExport(final HttpHeaders requestHeaders,
