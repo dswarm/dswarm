@@ -17,10 +17,8 @@ package org.dswarm.converter.morph;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -30,22 +28,27 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import javaslang.Tuple;
+import javaslang.Tuple2;
+import javaslang.Tuple3;
+import javaslang.Tuple4;
+import javaslang.Tuple5;
+import javaslang.collection.HashSet;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import org.dswarm.common.DMPStatics;
-import org.dswarm.common.types.Tuple;
 import org.dswarm.common.xml.utils.XMLUtils;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.morph.model.FilterExpression;
@@ -75,6 +78,8 @@ import org.dswarm.persistence.util.GDMUtil;
 public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBuilder> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(MorphScriptBuilder.class);
+
+	private static final String ATTRIBUTE_DELIMITER = String.valueOf(DMPStatics.ATTRIBUTE_DELIMITER);
 
 	private static final String UNDERSCORE = "_";
 
@@ -132,13 +137,12 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 	private static final String OCCURRENCE_VARIABLE_POSTFIX = ".occurrence";
 
-	private static final Set<String> LOOKUP_FUNCTIONS = new HashSet<>(Arrays.asList(
-			new String[]{METAMORPH_FUNCTION_LOOKUP,
-					METAMORPH_FUNCTION_SETREPLACE,
-					METAMORPH_FUNCTION_BLACKLIST,
-					METAMORPH_FUNCTION_WHITELIST,
-					METAMORPH_FUNCTION_REGEXLOOKUP,
-					METAMORPH_FUNCTION_SQLMAP}));
+	private static final javaslang.collection.Set<String> LOOKUP_FUNCTIONS = HashSet.of(METAMORPH_FUNCTION_LOOKUP,
+			METAMORPH_FUNCTION_SETREPLACE,
+			METAMORPH_FUNCTION_BLACKLIST,
+			METAMORPH_FUNCTION_WHITELIST,
+			METAMORPH_FUNCTION_REGEXLOOKUP,
+			METAMORPH_FUNCTION_SQLMAP);
 
 	private static final String LOOKUP_MAP_DEFINITION = "lookupString";
 
@@ -154,39 +158,12 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 	private static final Map<String, AtomicInteger> mapiVarCounters = new HashMap<>();
 
-	private static Optional<Map<String, Integer>> generateSchemaMap(final Schema schema) {
-
-		final AtomicInteger counter = new AtomicInteger(0);
-
-		return Optional.ofNullable(schema.getAttributePaths())
-				.filter(attributePaths -> !attributePaths.isEmpty())
-				.map(attributePaths -> attributePaths.stream()
-						.filter(schemaAttributePathInstance -> Optional.ofNullable(schemaAttributePathInstance.getAttributePath()).isPresent())
-						.filter(schemaAttributePathInstance1 -> Optional.ofNullable(schemaAttributePathInstance1.getAttributePath().toAttributePath()).isPresent())
-						.map(schemaAttributePathInstance2 -> Tuple.tuple(StringEscapeUtils.escapeXml(schemaAttributePathInstance2.getAttributePath().toAttributePath()), counter.getAndIncrement()))
-						.collect(Collectors.toMap(Tuple::v1, Tuple::v2))
-				);
-	}
-
-	private static Optional<Map<String, Integer>> generateInputSchemaMap(final Task task) {
-
-		if (task == null) {
-
-			return Optional.empty();
-		}
-
-		final Optional<Schema> optionalInputSchema = Optional.ofNullable(task.getInputDataModel())
-				.flatMap(inputDataModel -> Optional.ofNullable(inputDataModel.getSchema()));
-
-		return optionalInputSchema.flatMap(MorphScriptBuilder::generateSchemaMap);
-	}
-
 	@Override
 	public MorphScriptBuilder apply(final Task task) throws DMPConverterException {
 
 		super.apply(task);
 
-		final List<String> metas = Lists.newArrayList();
+		final List<String> metas = new ArrayList<>();
 
 		final Optional<Map<String, Integer>> optionalInputSchemaMap = generateInputSchemaMap(task);
 		final Optional<DataModel> optionalInputDataModel = Optional.ofNullable(task)
@@ -194,6 +171,8 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 		final Optional<Schema> optionalInputSchema = optionalInputDataModel
 				.flatMap(inputDataModel -> Optional.ofNullable(inputDataModel.getSchema()));
 		final boolean isXmlSchema = isXmlSchema(optionalInputDataModel);
+
+		final List<Tuple5<Optional<String>, javaslang.collection.List<String>, String, Element, Optional<String>>> mappingOutputs = new ArrayList<>();
 
 		for (final Mapping mapping : task.getJob().getMappings()) {
 
@@ -203,10 +182,18 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 			final Optional<Boolean> optionalSelectValueFromSameSubEntity = determineFilterUseCase(mapping, optionalInputSchema);
 			final Optional<String> optionalCommonAttributePathOfMappingInputs = determineCommonAttributePathOfMappingInputs(mapping, optionalInputSchema, isXmlSchema);
 
-			createTransformation(rules, mapping, optionalDeepestMappingInput, optionalSelectValueFromSameSubEntity, optionalCommonAttributePathOfMappingInputs);
+			createTransformation(rules, mapping, optionalDeepestMappingInput, optionalSelectValueFromSameSubEntity, optionalCommonAttributePathOfMappingInputs)
+					.ifPresent(currentMappingOutputs -> currentMappingOutputs
+							.forEach(currentMappingOutput -> mappingOutputs.add(Tuple.of(currentMappingOutput._1,
+									currentMappingOutput._2,
+									currentMappingOutput._3,
+									currentMappingOutput._4,
+									optionalCommonAttributePathOfMappingInputs))));
 
 			createLookupTable(maps, mapping.getTransformation());
 		}
+
+		createMappingOutputs(mappingOutputs, rules, doc);
 
 		metaName.setTextContent(Joiner.on(", ").join(metas));
 
@@ -372,8 +359,8 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 	}
 
 	@Override
-	protected Tuple<Optional<Map<String, FilterExpression>>, Optional<FilterExpression>> determineCombineAsFilterDataOutFilter(final Map<String, FilterExpression> filterExpressionMap,
-	                                                                                                                           final String inputAttributePathStringXMLEscaped) {
+	protected Tuple2<Optional<Map<String, FilterExpression>>, Optional<FilterExpression>> determineCombineAsFilterDataOutFilter(final Map<String, FilterExpression> filterExpressionMap,
+	                                                                                                                            final String inputAttributePathStringXMLEscaped) {
 
 		final Optional<Map<String, FilterExpression>> mappingInputIsUtilisedInFilterExpression = Optional.ofNullable(filterExpressionMap)
 				.filter(filterExpressionMap1 -> !filterExpressionMap1.isEmpty())
@@ -383,7 +370,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 			final FilterExpression mappingInputFilter = filterExpressionMap.remove(inputAttributePathStringXMLEscaped);
 
-			return Tuple.tuple(Optional.ofNullable(filterExpressionMap).filter(filterExpressionMap2 -> !filterExpressionMap2.isEmpty()), Optional.of(mappingInputFilter));
+			return Tuple.of(Optional.ofNullable(filterExpressionMap).filter(filterExpressionMap2 -> !filterExpressionMap2.isEmpty()), Optional.of(mappingInputFilter));
 		}
 
 		return super.determineCombineAsFilterDataOutFilter(filterExpressionMap, inputAttributePathStringXMLEscaped);
@@ -410,11 +397,25 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 		return combineAsFilterDataOut;
 	}
 
-	private void createTransformation(final Element rules,
-	                                  final Mapping mapping,
-	                                  final Optional<String> optionalDeepestMappingInput,
-	                                  final Optional<Boolean> optionalSelectValueFromSameSubEntity,
-	                                  final Optional<String> optionalCommonAttributePathOfMappingInputs) throws DMPConverterException {
+	/**
+	 * _1 = mapping output
+	 * _2 = mapping output attributes - last attribute
+	 * _3 = last attribute of mapping output
+	 * _4 = mapping output 'data' element
+	 *
+	 * @param rules
+	 * @param mapping
+	 * @param optionalDeepestMappingInput
+	 * @param optionalSelectValueFromSameSubEntity
+	 * @param optionalCommonAttributePathOfMappingInputs
+	 * @return
+	 * @throws DMPConverterException
+	 */
+	private Optional<List<Tuple4<Optional<String>, javaslang.collection.List<String>, String, Element>>> createTransformation(final Element rules,
+	                                                                                                                          final Mapping mapping,
+	                                                                                                                          final Optional<String> optionalDeepestMappingInput,
+	                                                                                                                          final Optional<Boolean> optionalSelectValueFromSameSubEntity,
+	                                                                                                                          final Optional<String> optionalCommonAttributePathOfMappingInputs) throws DMPConverterException {
 
 		// first handle the parameter mapping from the attribute paths of the mapping to the transformation component
 
@@ -427,9 +428,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 			// just delegate input attribute path to output attribute path
 
-			mapMappingInputToMappingOutput(mapping, rules);
-
-			return;
+			return mapMappingInputToMappingOutput(mapping, rules).map(mappingOutput -> javaslang.collection.List.of(mappingOutput).toJavaList());
 		}
 
 		if (transformationComponent.getParameterMappings() == null || transformationComponent.getParameterMappings().isEmpty()) {
@@ -440,17 +439,17 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 			// delegate input attribute path to output attribute path + add possible transformations (components)
 
-			mapMappingInputToMappingOutput(mapping, rules);
+			final Optional<Tuple4<Optional<String>, javaslang.collection.List<String>, String, Element>> optionalMappingOutputTuple = mapMappingInputToMappingOutput(mapping, rules);
 			processTransformationComponentFunction(transformationComponent, mapping, null, optionalDeepestMappingInput, optionalSelectValueFromSameSubEntity, optionalCommonAttributePathOfMappingInputs, rules);
 
-			return;
+			return optionalMappingOutputTuple.map(mappingOutput -> javaslang.collection.List.of(mappingOutput).toJavaList());
 		}
 
 		// get all input attribute paths and create datas for them
 
 		final Set<MappingAttributePathInstance> mappingInputs = mapping.getInputAttributePaths();
 
-		final Map<String, List<String>> mappingInputsVariablesMap = Maps.newLinkedHashMap();
+		final Map<String, List<String>> mappingInputsVariablesMap = new LinkedHashMap<>();
 
 		for (final MappingAttributePathInstance mappingInput : mappingInputs) {
 
@@ -469,9 +468,11 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 		final List<String> variablesFromMappingOutput = getParameterMappingKeys(mappingOutputName, transformationComponent);
 
-		addMappingOutputMapping(variablesFromMappingOutput, mapping.getOutputAttributePath(), rules);
+		final Optional<List<Tuple4<Optional<String>, javaslang.collection.List<String>, String, Element>>> mappingOutputs = addMappingOutputMapping(variablesFromMappingOutput, mapping.getOutputAttributePath());
 
 		processTransformationComponentFunction(transformationComponent, mapping, mappingInputsVariablesMap, optionalDeepestMappingInput, optionalSelectValueFromSameSubEntity, optionalCommonAttributePathOfMappingInputs, rules);
+
+		return mappingOutputs;
 	}
 
 	private void createLookupTable(final Element maps,
@@ -714,8 +715,8 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 		return data;
 	}
 
-	private List<String> getParameterMappingKeys(final String variableName,
-	                                             final Component transformationComponent) {
+	private static List<String> getParameterMappingKeys(final String variableName,
+	                                                    final Component transformationComponent) {
 
 		List<String> parameterMappingKeys = null;
 
@@ -727,7 +728,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 				if (parameterMappingKeys == null) {
 
-					parameterMappingKeys = Lists.newArrayList();
+					parameterMappingKeys = new ArrayList<>();
 				}
 
 				parameterMappingKeys.add(parameterMapping.getKey());
@@ -784,23 +785,33 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 		mappingInputsVariablesMap.get(inputAttributePathStringXMLEscaped).addAll(variables);
 	}
 
-	private void addMappingOutputMapping(final List<String> variables,
-	                                     final MappingAttributePathInstance mappingOutput,
-	                                     final Element rules) {
+	/**
+	 * _1 = mapping output
+	 * _2 = mapping output attributes - last attribute
+	 * _3 = last attribute of mapping output
+	 * _4 = mapping output 'data' element
+	 *
+	 * @param variables
+	 * @param mappingOutput
+	 * @return
+	 */
+	private Optional<List<Tuple4<Optional<String>, javaslang.collection.List<String>, String, Element>>> addMappingOutputMapping(final List<String> variables,
+	                                                                                                                             final MappingAttributePathInstance mappingOutput) {
 
 		if (variables == null || variables.isEmpty()) {
 
 			LOG.debug("there are no variables to map the mapping output");
 
-			return;
+			return Optional.empty();
 		}
 
-		// .ESCAPE_XML11.with(NumericEntityEscaper.between(0x7f, Integer.MAX_VALUE)).translate( <- also doesn't work
-		final String outputAttributePathStringXMLEscaped = StringEscapeUtils.escapeXml(mappingOutput.getAttributePath().toAttributePath());
+		final Tuple3<Optional<String>, javaslang.collection.List<String>, String> mappingOutputTuple = determineMappingOutputAttribute(mappingOutput).get();
 
 		// TODO: maybe add mapping to default output variable identifier, if output attribute path is not part of the parameter
 		// mappings of the transformation component
 		// maybe for later: separate parameter mapppings into input parameter mappings and output parameter mappings
+
+		final List<Tuple4<Optional<String>, javaslang.collection.List<String>, String, Element>> mappingOutputTuples = new ArrayList<>();
 
 		for (final String variable : variables) {
 
@@ -809,15 +820,33 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 				continue;
 			}
 
-			final Element dataOutput = doc.createElement(METAMORPH_ELEMENT_DATA);
-			dataOutput.setAttribute(METAMORPH_DATA_SOURCE, MF_VARIABLE_PREFIX + variable);
-			dataOutput.setAttribute(METAMORPH_DATA_TARGET, outputAttributePathStringXMLEscaped);
-			rules.appendChild(dataOutput);
+			final Element mappingOutputElement = doc.createElement(METAMORPH_ELEMENT_DATA);
+			mappingOutputElement.setAttribute(METAMORPH_DATA_SOURCE, MF_VARIABLE_PREFIX + variable);
+
+			mappingOutputTuples.add(Tuple.of(mappingOutputTuple._1, mappingOutputTuple._2, mappingOutputTuple._3, mappingOutputElement));
 		}
+
+		if (mappingOutputTuples.isEmpty()) {
+
+			return Optional.empty();
+		}
+
+		return Optional.of(mappingOutputTuples);
 	}
 
-	private void mapMappingInputToMappingOutput(final Mapping mapping,
-	                                            final Element rules) throws DMPConverterException {
+	/**
+	 * _1 = mapping output
+	 * _2 = mapping output attributes - last attribute
+	 * _3 = last attribute of mapping output
+	 * _4 = mapping output 'data' element
+	 *
+	 * @param mapping
+	 * @param rules
+	 * @return
+	 * @throws DMPConverterException
+	 */
+	private Optional<Tuple4<Optional<String>, javaslang.collection.List<String>, String, Element>> mapMappingInputToMappingOutput(final Mapping mapping,
+	                                                                                                                              final Element rules) throws DMPConverterException {
 
 		final Set<MappingAttributePathInstance> inputMappingAttributePathInstances = mapping.getInputAttributePaths();
 
@@ -825,16 +854,16 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 			LOG.debug("there are no mapping inputs for mapping '{}'", mapping.getName());
 
-			return;
+			return Optional.empty();
 		}
 
-		final MappingAttributePathInstance outputMappingAttributePathInstance = mapping.getOutputAttributePath();
+		final MappingAttributePathInstance mappingOutput = mapping.getOutputAttributePath();
 
-		if (outputMappingAttributePathInstance == null) {
+		if (mappingOutput == null) {
 
 			LOG.debug("there is no mapping output for mapping '{}'", mapping.getName());
 
-			return;
+			return Optional.empty();
 		}
 
 		final MappingAttributePathInstance inputMappingAttributePathInstance = inputMappingAttributePathInstances.iterator().next();
@@ -872,13 +901,12 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 			inputVariable = MF_VARIABLE_PREFIX + var1000;
 		}
 
-		final Element data = doc.createElement(METAMORPH_ELEMENT_DATA);
-		data.setAttribute(METAMORPH_DATA_SOURCE, inputVariable);
+		final Element mappingOutputElement = doc.createElement(METAMORPH_ELEMENT_DATA);
+		mappingOutputElement.setAttribute(METAMORPH_DATA_SOURCE, inputVariable);
 
-		data.setAttribute(METAMORPH_DATA_TARGET,
-				StringEscapeUtils.escapeXml(outputMappingAttributePathInstance.getAttributePath().toAttributePath()));
+		final Tuple3<Optional<String>, javaslang.collection.List<String>, String> mappingOutputTuple = determineMappingOutputAttribute(mappingOutput).get();
 
-		rules.appendChild(data);
+		return Optional.of(Tuple.of(mappingOutputTuple._1, mappingOutputTuple._2, mappingOutputTuple._3, mappingOutputElement));
 	}
 
 	private void processTransformationComponentFunction(final Component transformationComponent,
@@ -1033,9 +1061,9 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 		rules.appendChild(data);
 	}
 
-	private Set<String> determineSourceAttributes(final Component component,
-	                                              final Map<String, List<String>> mappingInputsVariablesMap,
-	                                              final String[] inputStrings)
+	private static Set<String> determineSourceAttributes(final Component component,
+	                                                     final Map<String, List<String>> mappingInputsVariablesMap,
+	                                                     final String[] inputStrings)
 			throws DMPConverterException {
 
 		// this is a list of input variable names related to current component, which should be unique and ordered
@@ -1090,9 +1118,9 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 		return attributes.length;
 	}
 
-	private boolean isXmlSchema(Optional<DataModel> optionalInputDataModel) {
+	private static boolean isXmlSchema(Optional<DataModel> optionalInputDataModel) {
 
-		if(!optionalInputDataModel.isPresent()) {
+		if (!optionalInputDataModel.isPresent()) {
 
 			return false;
 		}
@@ -1103,138 +1131,13 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 				.flatMap(configuration -> Optional.ofNullable(configuration.getParameter(ConfigurationStatics.STORAGE_TYPE)))
 				.map(JsonNode::asText);
 
-		if(optionalStorageType.isPresent()
+		if (optionalStorageType.isPresent()
 				&& ConfigurationUtils.getXMLStorageTypes().contains(optionalStorageType.get())) {
 
 			return true;
 		}
 
 		return false;
-	}
-
-	private static Optional<String> determineDeepestMappingInputAttributePath(final Mapping mapping,
-	                                                                          final Optional<Map<String, Integer>> optionalInputSchemaMap) {
-
-		final Optional<Set<MappingAttributePathInstance>> optionalMappingInputAttributePathInstances = Optional.ofNullable(mapping.getInputAttributePaths());
-
-		return optionalMappingInputAttributePathInstances.filter(mappingInputAttributePathInstances -> !mappingInputAttributePathInstances.isEmpty())
-				.flatMap(mappingInputAttributePathInstances -> {
-
-					final Set<String> uniqueInputAttributePaths = mappingInputAttributePathInstances.stream()
-							.map(mappingInputAttributePathInstance -> StringEscapeUtils.escapeXml(mappingInputAttributePathInstance.getAttributePath().toAttributePath()))
-							.collect(Collectors.toSet());
-
-					final Optional<String> optionalDeepestMappingInputAttributePath;
-
-					if (!uniqueInputAttributePaths.isEmpty()) {
-
-						if (optionalInputSchemaMap.isPresent()) {
-
-							// note: this algorithm might not be working as expected, i.e., maybe we need to compare the length (number of attributes) of the attribute path as well
-
-							final Map<String, Integer> inputSchemaMap = optionalInputSchemaMap.get();
-
-							int highestOrder = 0;
-							String tempDeepestMappingInputAttributePath = uniqueInputAttributePaths.iterator().next();
-
-							for (final String inputAttributePath : uniqueInputAttributePaths) {
-
-								final Integer attributePathOrder = inputSchemaMap.getOrDefault(inputAttributePath, 0);
-
-								if (attributePathOrder > highestOrder) {
-
-									highestOrder = attributePathOrder;
-									tempDeepestMappingInputAttributePath = inputAttributePath;
-								}
-							}
-
-							optionalDeepestMappingInputAttributePath = Optional.of(tempDeepestMappingInputAttributePath);
-						} else {
-
-							// try to determine deepest mapping input attribute path without given input schema
-
-							if (uniqueInputAttributePaths.size() == 1) {
-
-								// simply take this one
-
-								optionalDeepestMappingInputAttributePath = Optional.of(uniqueInputAttributePaths.iterator().next());
-							} else {
-
-								// take the longest attribute path
-
-								int biggestLength = 0;
-								String longestAttributePath = uniqueInputAttributePaths.iterator().next();
-
-								for (final String inputAttributePath : uniqueInputAttributePaths) {
-
-									int attributePathSize = determineAttributePathLength(inputAttributePath);
-
-									if (attributePathSize >= biggestLength) {
-
-										biggestLength = attributePathSize;
-										longestAttributePath = inputAttributePath;
-									}
-								}
-
-								optionalDeepestMappingInputAttributePath = Optional.of(longestAttributePath);
-							}
-						}
-					} else {
-
-						// deepest mapping input attribute path cannot be calculated
-
-						optionalDeepestMappingInputAttributePath = Optional.empty();
-					}
-
-					return optionalDeepestMappingInputAttributePath;
-				});
-	}
-
-	private Optional<String> determineCommonAttributePathOfMappingInputs(final Mapping mapping,
-	                                                                     final Optional<Schema> optionalInputSchema,
-	                                                                     final boolean isXmlSchema) {
-
-		final Optional<Set<MappingAttributePathInstance>> optionalMappingInputAttributePathInstances = Optional.ofNullable(mapping.getInputAttributePaths())
-				.filter(mappingInputAttributePathInstances -> !mappingInputAttributePathInstances.isEmpty());
-
-		if (!optionalMappingInputAttributePathInstances.isPresent()) {
-
-			// no mapping inputs available
-
-			return Optional.empty();
-		}
-
-		return optionalMappingInputAttributePathInstances.flatMap(mappingInputAttributePathInstances -> {
-
-			final Set<String> uniqueInputAttributePaths = mappingInputAttributePathInstances.stream()
-					.map(mappingInputAttributePathInstance -> StringEscapeUtils.escapeXml(mappingInputAttributePathInstance.getAttributePath().toAttributePath()))
-					.collect(Collectors.toSet());
-
-			if (optionalInputSchema.isPresent()
-					&& optionalInputSchema.get().getContentSchema() != null
-					&& optionalInputSchema.get().getContentSchema().getValueAttributePath() != null
-					&& uniqueInputAttributePaths.size() == 1
-					&& optionalInputSchema.get().getContentSchema().getValueAttributePath().toAttributePath().equals(uniqueInputAttributePaths.iterator().next())) {
-
-				// mapping inputs are on value attribute path of content
-
-				return Optional.empty();
-			}
-
-			final Set<String> finalUniqueInputAttributePaths = uniqueInputAttributePaths.stream().map(attributePath -> {
-
-				if(isXmlSchema && attributePath.endsWith(GDMUtil.RDF_value)) {
-
-					return attributePath.substring(0, attributePath.length() - GDMUtil.RDF_value.length() - 1);
-				}
-
-				return attributePath;
-			}).collect(Collectors.toSet());
-
-			final String[] attributePaths = new String[finalUniqueInputAttributePaths.size()];
-
-			return Optional.of(determineCommonAttributePath(finalUniqueInputAttributePaths, attributePaths, 0));
-		});
 	}
 
 	private Element createCollectionTag(final Component multipleInputComponent,
@@ -1330,7 +1233,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 		return collection;
 	}
 
-	private String getComponentName(final Component component) throws DMPConverterException {
+	private static String getComponentName(final Component component) throws DMPConverterException {
 
 		final String componentName = component.getName();
 
@@ -1345,7 +1248,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 		}
 	}
 
-	private String getComponentFunctionName(final Component component) {
+	private static String getComponentFunctionName(final Component component) {
 
 		final String componentFunctionName = component.getFunction().getName();
 
@@ -1357,7 +1260,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 		return componentFunctionName;
 	}
 
-	private String determineTransformationOutputVariable(final Component transformationComponent) {
+	private static String determineTransformationOutputVariable(final Component transformationComponent) {
 
 		if (transformationComponent == null) {
 
@@ -1471,8 +1374,8 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 	 * @param multipleInputComponent
 	 * @param collectionSourceAttributes
 	 */
-	private void convertConcatFunction(final Component multipleInputComponent,
-	                                   final Set<String> collectionSourceAttributes) {
+	private static void convertConcatFunction(final Component multipleInputComponent,
+	                                          final Set<String> collectionSourceAttributes) {
 
 		final Map<String, String> parameters = multipleInputComponent.getParameterMappings();
 
@@ -1537,8 +1440,8 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 	 *
 	 * @param multipleInputComponent
 	 */
-	private void convertCollectFunction(final Component multipleInputComponent,
-	                                    final Optional<String> optionalCommonAttributePathOfMappingInputs) {
+	private static void convertCollectFunction(final Component multipleInputComponent,
+	                                           final Optional<String> optionalCommonAttributePathOfMappingInputs) {
 
 		final String flushWithEntity;
 
@@ -1601,5 +1504,293 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 		collectionData.setAttribute(METAMORPH_DATA_TARGET, targetName);
 
 		collection.appendChild(collectionData);
+	}
+
+	private static Optional<Map<String, Integer>> generateSchemaMap(final Schema schema) {
+
+		final AtomicInteger counter = new AtomicInteger(0);
+
+		return Optional.ofNullable(schema.getAttributePaths())
+				.filter(attributePaths -> !attributePaths.isEmpty())
+				.map(attributePaths -> attributePaths.stream()
+						.filter(schemaAttributePathInstance -> Optional.ofNullable(schemaAttributePathInstance.getAttributePath()).isPresent())
+						.filter(schemaAttributePathInstance1 -> Optional.ofNullable(schemaAttributePathInstance1.getAttributePath().toAttributePath()).isPresent())
+						.map(schemaAttributePathInstance2 -> Tuple.of(StringEscapeUtils.escapeXml(schemaAttributePathInstance2.getAttributePath().toAttributePath()), counter.getAndIncrement()))
+						.collect(Collectors.toMap(Tuple2::_1, Tuple2::_2))
+				);
+	}
+
+	private static Optional<Map<String, Integer>> generateInputSchemaMap(final Task task) {
+
+		return Optional.ofNullable(task)
+				.flatMap(task1 -> Optional.ofNullable(task1.getInputDataModel()))
+				.flatMap(inputDataModel -> Optional.ofNullable(inputDataModel.getSchema()))
+				.flatMap(MorphScriptBuilder::generateSchemaMap);
+	}
+
+	private static Optional<String> determineDeepestMappingInputAttributePath(final Mapping mapping,
+	                                                                          final Optional<Map<String, Integer>> optionalInputSchemaMap) {
+
+		return Optional.ofNullable(mapping.getInputAttributePaths())
+				.filter(mappingInputAttributePathInstances -> !mappingInputAttributePathInstances.isEmpty())
+				.flatMap(mappingInputAttributePathInstances -> {
+
+					final Set<String> uniqueInputAttributePaths = mappingInputAttributePathInstances.stream()
+							.map(mappingInputAttributePathInstance -> StringEscapeUtils.escapeXml(mappingInputAttributePathInstance.getAttributePath().toAttributePath()))
+							.collect(Collectors.toSet());
+
+					final Optional<String> optionalDeepestMappingInputAttributePath;
+
+					if (!uniqueInputAttributePaths.isEmpty()) {
+
+						if (optionalInputSchemaMap.isPresent()) {
+
+							// note: this algorithm might not be working as expected, i.e., maybe we need to compare the length (number of attributes) of the attribute path as well
+
+							final Map<String, Integer> inputSchemaMap = optionalInputSchemaMap.get();
+
+							int highestOrder = 0;
+							String tempDeepestMappingInputAttributePath = uniqueInputAttributePaths.iterator().next();
+
+							for (final String inputAttributePath : uniqueInputAttributePaths) {
+
+								final Integer attributePathOrder = inputSchemaMap.getOrDefault(inputAttributePath, 0);
+
+								if (attributePathOrder > highestOrder) {
+
+									highestOrder = attributePathOrder;
+									tempDeepestMappingInputAttributePath = inputAttributePath;
+								}
+							}
+
+							optionalDeepestMappingInputAttributePath = Optional.of(tempDeepestMappingInputAttributePath);
+						} else {
+
+							// try to determine deepest mapping input attribute path without given input schema
+
+							if (uniqueInputAttributePaths.size() == 1) {
+
+								// simply take this one
+
+								optionalDeepestMappingInputAttributePath = Optional.of(uniqueInputAttributePaths.iterator().next());
+							} else {
+
+								// take the longest attribute path
+
+								int biggestLength = 0;
+								String longestAttributePath = uniqueInputAttributePaths.iterator().next();
+
+								for (final String inputAttributePath : uniqueInputAttributePaths) {
+
+									int attributePathSize = determineAttributePathLength(inputAttributePath);
+
+									if (attributePathSize >= biggestLength) {
+
+										biggestLength = attributePathSize;
+										longestAttributePath = inputAttributePath;
+									}
+								}
+
+								optionalDeepestMappingInputAttributePath = Optional.of(longestAttributePath);
+							}
+						}
+					} else {
+
+						// deepest mapping input attribute path cannot be calculated
+
+						optionalDeepestMappingInputAttributePath = Optional.empty();
+					}
+
+					return optionalDeepestMappingInputAttributePath;
+				});
+	}
+
+	private Optional<String> determineCommonAttributePathOfMappingInputs(final Mapping mapping,
+	                                                                     final Optional<Schema> optionalInputSchema,
+	                                                                     final boolean isXmlSchema) {
+
+		return Optional.ofNullable(mapping.getInputAttributePaths())
+				.filter(mappingInputAttributePathInstances -> !mappingInputAttributePathInstances.isEmpty())
+				.flatMap(mappingInputAttributePathInstances -> {
+
+					final Set<String> uniqueInputAttributePaths = mappingInputAttributePathInstances.stream()
+							.map(mappingInputAttributePathInstance -> StringEscapeUtils.escapeXml(mappingInputAttributePathInstance.getAttributePath().toAttributePath()))
+							.collect(Collectors.toSet());
+
+					if (optionalInputSchema.isPresent()
+							&& optionalInputSchema.get().getContentSchema() != null
+							&& optionalInputSchema.get().getContentSchema().getValueAttributePath() != null
+							&& uniqueInputAttributePaths.size() == 1
+							&& optionalInputSchema.get().getContentSchema().getValueAttributePath().toAttributePath().equals(uniqueInputAttributePaths.iterator().next())) {
+
+						// mapping inputs are on value attribute path of content
+
+						return Optional.empty();
+					}
+
+					final Set<String> finalUniqueInputAttributePaths = uniqueInputAttributePaths.stream().map(attributePath -> {
+
+						if (isXmlSchema && attributePath.endsWith(GDMUtil.RDF_value)) {
+
+							return attributePath.substring(0, attributePath.length() - GDMUtil.RDF_value.length() - 1);
+						}
+
+						return attributePath;
+					}).collect(Collectors.toSet());
+
+					final String[] attributePaths = new String[finalUniqueInputAttributePaths.size()];
+
+					return Optional.of(determineCommonAttributePath(finalUniqueInputAttributePaths, attributePaths, 0));
+				});
+	}
+
+	/**
+	 * _1 = mapping output
+	 * _2 = mapping output attributes - last attribute
+	 * _3 = last attribute of mapping output
+	 * _4 = mapping output 'data' element
+	 * _5 = optional common attribute path of mapping inputs
+	 *
+	 * @param mappingOutputs
+	 */
+	private static void createMappingOutputs(final List<Tuple5<Optional<String>, javaslang.collection.List<String>, String, Element, Optional<String>>> mappingOutputs,
+	                                         final Element rules,
+	                                         final Document doc) {
+
+		// _1 = mapping output attributes
+		// _2 = optional common attribute path of mapping inputs
+		final javaslang.collection.List<Tuple2<javaslang.collection.List<String>, Optional<String>>> entityMappingOutputTuples = javaslang.collection.List.ofAll(mappingOutputs)
+				.filter(mappingOutputTuple -> mappingOutputTuple._1.isPresent())
+				// _1 just for sorting
+				.map(mappingOutputTuple -> Tuple.of(mappingOutputTuple._1.get(), mappingOutputTuple._2, mappingOutputTuple._5))
+				.sortBy(mappingOutputTuple -> mappingOutputTuple._1)
+				.map(mappingOutputTuple -> Tuple.of(mappingOutputTuple._2, mappingOutputTuple._3));
+
+		final Map<String, Element> entityElements = createEntityElements(entityMappingOutputTuples, rules, doc);
+
+		mappingOutputs.forEach(mappingOutputTuple -> {
+
+			final String mappingOutputAttribute = mappingOutputTuple._3;
+			final Element mappingOutputElement = mappingOutputTuple._4;
+
+			mappingOutputElement.setAttribute(MF_ELEMENT_NAME_ATTRIBUTE_IDENTIFIER, mappingOutputAttribute);
+
+			final Optional<String> optionalMappintOutputAttributePath = mappingOutputTuple._1;
+
+			if (!optionalMappintOutputAttributePath.isPresent()) {
+
+				rules.appendChild(mappingOutputElement);
+
+				return;
+			}
+
+			final String mappingOutputAttributePath = optionalMappintOutputAttributePath.get();
+
+			entityElements.computeIfPresent(mappingOutputAttributePath, (mappingOutputAttributePath1, entityElement) -> {
+
+				entityElement.appendChild(mappingOutputElement);
+
+				return entityElement;
+			});
+		});
+	}
+
+	/**
+	 * _1 = mapping output attributes - last attribute
+	 * _2 = optional common attribute path of mapping inputs
+	 *
+	 * @param entityMappingOutputTuples
+	 * @param rules
+	 * @return
+	 */
+	private static Map<String, Element> createEntityElements(final javaslang.collection.List<Tuple2<javaslang.collection.List<String>, Optional<String>>> entityMappingOutputTuples,
+	                                                         final Element rules,
+	                                                         final Document doc) {
+
+
+		final Map<String, Element> entityElements = new ConcurrentHashMap<>();
+
+		// could probably be rewritten to foldLeft
+		entityMappingOutputTuples.forEach(entityMappingOutputTuple -> {
+
+			final javaslang.collection.List<String> mappingOutputAttributes = entityMappingOutputTuple._1;
+			final Optional<String> optionalCommonAttributePathOfMappingInputs = entityMappingOutputTuple._2;
+
+			mappingOutputAttributes.foldLeft(javaslang.collection.List.empty(), (currentAttributePath, currentAttribute) -> {
+
+				javaslang.collection.List currentAttributes = currentAttributePath.append(currentAttribute);
+
+				final Optional<String> optionalParentAttributePath = Optional.of(currentAttributePath.mkString(ATTRIBUTE_DELIMITER))
+						.filter(attributePath -> !attributePath.isEmpty());
+				final String attributePath = currentAttributes.mkString(ATTRIBUTE_DELIMITER);
+
+				entityElements.computeIfAbsent(attributePath, attributePath1 -> {
+
+					final Element entityElement = doc.createElement(METAMORPH_ELEMENT_ENTITY);
+					entityElement.setAttribute(MF_ELEMENT_NAME_ATTRIBUTE_IDENTIFIER, currentAttribute);
+
+					if (!optionalParentAttributePath.isPresent()) {
+
+						rules.appendChild(entityElement);
+
+						// set flushWith only at parent entity
+
+						optionalCommonAttributePathOfMappingInputs.ifPresent(commonAttributePathOfMappingInputs -> {
+
+							entityElement.setAttribute(MF_FLUSH_WITH_ATTRIBUTE_IDENTIFIER, commonAttributePathOfMappingInputs);
+							entityElement.setAttribute(MF_COLLECTOR_RESET_ATTRIBUTE_IDENTIFIER, BOOLEAN_VALUE_TRUE);
+						});
+					}
+
+					optionalParentAttributePath.ifPresent(parentAttributePath -> entityElements
+							.computeIfPresent(parentAttributePath, (parentAttributePath1, parentAttributePathEntityElement) -> {
+
+								parentAttributePathEntityElement.appendChild(entityElement);
+
+								return parentAttributePathEntityElement;
+							}));
+
+					return entityElement;
+				});
+
+				return currentAttributes;
+			});
+		});
+
+		return entityElements;
+	}
+
+	/**
+	 * _1 = mapping output - last attribute
+	 * _2 = mapping output attributes - last attribute
+	 * _3 = last attribute of mapping output
+	 *
+	 * @param mappingOutput
+	 * @return
+	 */
+	private static Optional<Tuple3<Optional<String>, javaslang.collection.List<String>, String>> determineMappingOutputAttribute(final MappingAttributePathInstance mappingOutput) {
+
+		return Optional.ofNullable(mappingOutput)
+				.flatMap(mappingOutput1 -> Optional.ofNullable(mappingOutput1.getAttributePath()))
+				.flatMap(attributePath -> Optional.ofNullable(attributePath.toAttributePath()))
+				.flatMap(attributePathString -> {
+
+					// .ESCAPE_XML11.with(NumericEntityEscaper.between(0x7f, Integer.MAX_VALUE)).translate( <- also doesn't work
+					final String escapedMappingOutputAP = StringEscapeUtils.escapeXml(attributePathString);
+
+					final javaslang.collection.List<String> mappingOutputAttributes = javaslang.collection.List.of(escapedMappingOutputAP.split(ATTRIBUTE_DELIMITER));
+
+					if (mappingOutputAttributes.isEmpty()) {
+
+						return Optional.of(Tuple.of(Optional.empty(), mappingOutputAttributes.init(), escapedMappingOutputAP));
+					}
+
+					final String lastAttribute = mappingOutputAttributes.last();
+
+					final String mappingOutputRoot = mappingOutputAttributes.init().mkString(ATTRIBUTE_DELIMITER);
+					final Optional<String> optionalMappingOutputRoot = Optional.of(mappingOutputRoot).filter(mappingOutputRoot1 -> !mappingOutputRoot1.isEmpty());
+
+					return Optional.of(Tuple.of(optionalMappingOutputRoot, mappingOutputAttributes.init(), lastAttribute));
+				});
 	}
 }

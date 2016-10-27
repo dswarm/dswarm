@@ -25,13 +25,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.dswarm.converter.flow.JSONTransformationFlow;
-import org.dswarm.converter.flow.JSONTransformationFlowFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import org.dswarm.converter.GuicedTest;
+import org.dswarm.converter.flow.JSONTransformationFlow;
+import org.dswarm.converter.flow.JSONTransformationFlowFactory;
 import org.dswarm.converter.flow.utils.DMPConverterUtils;
 import org.dswarm.converter.morph.MorphScriptBuilder;
 import org.dswarm.persistence.model.job.Task;
@@ -42,7 +42,7 @@ public class FilterTransformationFlowTest extends GuicedTest {
 	@Test
 	public void testFilterEndToEndWithOneResult() throws Exception {
 
-		testFilter("test-mabxml.tuples.json", Optional.<String>empty(), "filtermorph.xml", "test-mabxml.filter.result.json");
+		testFilter("test-mabxml.tuples.json", Optional.empty(), "filtermorph.xml", "test-mabxml.filter.result.json");
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class FilterTransformationFlowTest extends GuicedTest {
 	@Test
 	public void testFilterEndToEndWithOneResult2() throws Exception {
 
-		testFilter("test-mabxml.tuples.3.json", Optional.<String>empty(), "filtermorph.xml", "test-mabxml.filter.result.1.2.json");
+		testFilter("test-mabxml.tuples.3.json", Optional.empty(), "filtermorph.xml", "test-mabxml.filter.result.1.2.json");
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class FilterTransformationFlowTest extends GuicedTest {
 	@Test
 	public void testFilterEndToEndWithMultipleResults() throws Exception {
 
-		testFilter("test-mabxml.tuples.2.json", Optional.<String>empty(), "filtermorph2.xml", "test-mabxml.filter.result.2.json");
+		testFilter("test-mabxml.tuples.2.json", Optional.empty(), "filtermorph2.xml", "test-mabxml.filter.result.2.json");
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class FilterTransformationFlowTest extends GuicedTest {
 	@Test
 	public void testFilterEndToEndWithMultipleResults2() throws Exception {
 
-		testFilter("test-mabxml.tuples.json", Optional.<String>empty(), "filtermorph2.xml", "test-mabxml.filter.result.2.1.json");
+		testFilter("test-mabxml.tuples.json", Optional.empty(), "filtermorph2.xml", "test-mabxml.filter.result.2.1.json");
 	}
 
 	@Test
@@ -119,7 +119,7 @@ public class FilterTransformationFlowTest extends GuicedTest {
 	@Test
 	public void testFilterEndToEndWithMultipleResultsAndRepeatableElements() throws Exception {
 
-		testFilter("test-mabxml.tuples.json", Optional.<String>empty(), "filtermorph3.xml", "test-mabxml.filter.result.3.json");
+		testFilter("test-mabxml.tuples.json", Optional.empty(), "filtermorph3.xml", "test-mabxml.filter.result.3.json");
 	}
 
 	/**
@@ -149,7 +149,7 @@ public class FilterTransformationFlowTest extends GuicedTest {
 	@Test
 	public void testFilterEndToEndWithMultipleResultsAndSelectingSpecificIndex() throws Exception {
 
-		testFilter("test-mabxml.tuples.json", Optional.<String>empty(), "filtermorph4.xml", "test-mabxml.filter.result.4.json");
+		testFilter("test-mabxml.tuples.json", Optional.empty(), "filtermorph4.xml", "test-mabxml.filter.result.4.json");
 	}
 
 	/**
@@ -166,7 +166,7 @@ public class FilterTransformationFlowTest extends GuicedTest {
 	@Test
 	public void testFilterAndSelectingValueIsOnAnotherHierarchy() throws Exception {
 
-		testFilter("ralfs_mabxml.tuples.json", Optional.<String>empty(), "filtermorph5.xml", "test-ralfs_mabxml.filter.result.5.json");
+		testFilter("ralfs_mabxml.tuples.json", Optional.empty(), "filtermorph5.xml", "test-ralfs_mabxml.filter.result.5.json");
 	}
 
 	@Test
@@ -178,7 +178,7 @@ public class FilterTransformationFlowTest extends GuicedTest {
 	@Test
 	public void testFilterAndSelectingValueIsOnAnotherHierarchy2() throws Exception {
 
-		testFilter("ralfs_mabxml.tuples.json", Optional.<String>empty(), "filtermorph7.xml", "test-ralfs_mabxml.filter.result.7.json");
+		testFilter("ralfs_mabxml.tuples.json", Optional.empty(), "filtermorph7.xml", "test-ralfs_mabxml.filter.result.7.json");
 	}
 
 	@Test
@@ -190,7 +190,7 @@ public class FilterTransformationFlowTest extends GuicedTest {
 	@Test
 	public void testFilterAndSelectingValueIsOnAnotherHierarchyAndSelectingSpecificIndex() throws Exception {
 
-		testFilter("ralfs_mabxml.tuples.json", Optional.<String>empty(), "filtermorph6.xml", "test-ralfs_mabxml.filter.result.6.json");
+		testFilter("ralfs_mabxml.tuples.json", Optional.empty(), "filtermorph6.xml", "test-ralfs_mabxml.filter.result.6.json");
 	}
 
 	@Test

@@ -1,45 +1,64 @@
-[{
-    "http://data.slub-dresden.de/datamodels/4/records/8d2da158-08ab-4d99-8cb0-b284b6a82d5d": [{
-        "http://example.org/humans": [{
-            "http://example.org/person": [{
-                "http://purl.org/dc/terms/contributor": [{
+[
+  {
+    "http://data.slub-dresden.de/datamodels/4/records/8d2da158-08ab-4d99-8cb0-b284b6a82d5d": [
+      {
+        "http://example.org/humans": [
+          {
+            "http://example.org/person": [
+              {
+                "http://purl.org/dc/terms/contributor": [
+                  {
                     "http://xmlns.com/foaf/0.1/familyName": "test1"
-                }, {
-                    "http://xmlns.com/foaf/0.1/givenName": ["test1", "ZS"]
-                }, {
-                    "__record_id": "http://data.slub-dresden.de//resource/eefcc0c3-dd30-4d38-963f-8e7e15d846da"
-                }]
-            }, {
-                "__record_id": "http://data.slub-dresden.de//resource/d4c39ce6-efd0-4273-b460-1dc0b39ad584"
-            }]
-        }, {
-            "__record_id": "http://data.slub-dresden.de//resource/bc9d4bce-a87d-4f7b-b254-00da2c4a129d"
-        }]
-    }, {
+                  },
+                  {
+                    "http://xmlns.com/foaf/0.1/givenName": [
+                      "test1",
+                      "ZS"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
         "http://purl.org/dc/elements/1.1/title": "a|||||||||||||"
-    }, {
+      },
+      {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }]
-}, {
-    "http://data.slub-dresden.de/datamodels/4/records/460ef315-106e-4fc2-a906-74ca8244060e": [{
-        "http://example.org/humans": [{
-            "http://example.org/person": [{
-                "http://purl.org/dc/terms/contributor": [{
+      }
+    ]
+  },
+  {
+    "http://data.slub-dresden.de/datamodels/4/records/460ef315-106e-4fc2-a906-74ca8244060e": [
+      {
+        "http://example.org/humans": [
+          {
+            "http://example.org/person": [
+              {
+                "http://purl.org/dc/terms/contributor": [
+                  {
                     "http://xmlns.com/foaf/0.1/familyName": "test2"
-                }, {
-                    "http://xmlns.com/foaf/0.1/givenName": ["test2", "MB"]
-                }, {
-                    "__record_id": "http://data.slub-dresden.de//resource/9320d455-00d0-4d37-96ea-9c2d913280cf"
-                }]
-            }, {
-                "__record_id": "http://data.slub-dresden.de//resource/c1e2deda-3da4-4a67-ba9f-24de6b2ef8af"
-            }]
-        }, {
-            "__record_id": "http://data.slub-dresden.de//resource/ec095d07-593d-4015-b09c-6b1cee466b58"
-        }]
-    }, {
+                  },
+                  {
+                    "http://xmlns.com/foaf/0.1/givenName": [
+                      "test2",
+                      "MB"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
         "http://purl.org/dc/elements/1.1/title": "a|||||||||||||"
-    }, {
+      },
+      {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-    }]
-}]
+      }
+    ]
+  }
+]

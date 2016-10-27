@@ -42,8 +42,11 @@ public class TriGResponseTasksResourceTest extends AbstractResponseMediaTypeTask
 
 		final String expectedResult = DMPPersistenceUtil.getResourceAsString(expectedResultFileName);
 
-		final boolean result = expectedResult.length() == actualResult.length() || 5038 == actualResult.length();
+		final int expectedLength = expectedResult.length();
+		final int actualLength = actualResult.length();
 
-		Assert.assertTrue(result);
+		final boolean result = expectedLength == actualLength || 12965 == actualLength;
+
+		Assert.assertTrue(String.format("expected length = '%d' :: actual length = '%d' \n\nexpected = '\n%s\n'\n\nactual = '\n%s\n'\n", expectedLength, actualLength, expectedResult, actualResult), result);
 	}
 }

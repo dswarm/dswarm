@@ -15,12 +15,12 @@
  */
 package org.dswarm.controller.resources.job.test;
 
-import org.dswarm.common.MediaTypeUtil;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
+import java.io.IOException;
+
 import org.junit.Assert;
 
-import javax.ws.rs.core.MediaType;
-import java.io.IOException;
+import org.dswarm.common.MediaTypeUtil;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * Created by tgaengler on 04.03.16.
@@ -43,8 +43,11 @@ public class NTriplesResponseTasksResourceTest extends AbstractResponseMediaType
 
 		final String expectedResult = DMPPersistenceUtil.getResourceAsString(expectedResultFileName);
 
-		final boolean result = expectedResult.length() == actualResult.length() || 1618 == actualResult.length();
+		final int expectedLength = expectedResult.length();
+		final int actualLength = actualResult.length();
 
-		Assert.assertTrue(result);
+		final boolean result = expectedLength == actualLength || 1618 == actualLength;
+
+		Assert.assertTrue(String.format("expected length = '%d' :: actual length = '%d' \n\nexpected = '\n%s\n'\n\nactual = '\n%s\n'\n", expectedLength, actualLength, expectedResult, actualResult), result);
 	}
 }

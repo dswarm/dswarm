@@ -15,6 +15,8 @@
  */
 package org.dswarm.converter.flow.model;
 
+import java.util.Optional;
+
 import com.codahale.metrics.Timer;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.culturegraph.mf.framework.ObjectPipe;
@@ -22,19 +24,16 @@ import org.culturegraph.mf.framework.StreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.stream.pipe.Filter;
-import org.dswarm.common.types.Tuple;
-import org.dswarm.converter.mf.stream.GDMEncoder;
-import org.dswarm.converter.mf.stream.GDMModelReceiver;
-import org.dswarm.converter.pipe.StreamUnflattener;
-import org.dswarm.converter.pipe.timing.ObjectTimer;
-import org.dswarm.converter.pipe.timing.StreamTimer;
-import org.dswarm.converter.pipe.timing.TimerBasedFactory;
-import org.dswarm.init.util.DMPStatics;
-import org.dswarm.persistence.model.resource.DataModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Optional;
+import org.dswarm.common.types.Tuple;
+import org.dswarm.converter.mf.stream.GDMEncoder;
+import org.dswarm.converter.mf.stream.GDMModelReceiver;
+import org.dswarm.converter.pipe.timing.ObjectTimer;
+import org.dswarm.converter.pipe.timing.StreamTimer;
+import org.dswarm.converter.pipe.timing.TimerBasedFactory;
+import org.dswarm.persistence.model.resource.DataModel;
 
 /**
  * Created by tgaengler on 03.03.16.
@@ -61,12 +60,8 @@ public class MorphTask {
 
 		LOG.debug("start processing some records in transformation engine");
 
-		// final String recordDummy = "record";
-
 		final StreamTimer inputTimer = timerBasedFactory.forStream("stream-input");
 		final ObjectTimer gdmModelsTimer = timerBasedFactory.forObject("gdm-models");
-		final StreamUnflattener unflattener = new StreamUnflattener("", DMPStatics.ATTRIBUTE_DELIMITER);
-		//		final StreamJsonCollapser collapser = new StreamJsonCollapser();
 		converter = new GDMEncoder(outputDataModel);
 
 		writer = new GDMModelReceiver(transformationEngineIdentifier);
@@ -87,7 +82,6 @@ public class MorphTask {
 
 		starter
 				.setReceiver(transformer)
-				.setReceiver(unflattener)
 				.setReceiver(converter)
 				.setReceiver(gdmModelsTimer)
 				.setReceiver(writer);

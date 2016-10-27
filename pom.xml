@@ -96,6 +96,7 @@
 		<version.umlgraph-doclet>5.1</version.umlgraph-doclet>
 		<version.xmlunit>2.2.1</version.xmlunit>
 		<version.xmlenhancer>0.0.2-SNAPSHOT</version.xmlenhancer>
+		<version.javaslang>2.0.4</version.javaslang>
 	</properties>
 
 	<repositories>
@@ -797,6 +798,12 @@
 					<groupId>org.apache.commons</groupId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>io.javaslang</groupId>
+			<artifactId>javaslang</artifactId>
+			<version>${version.javaslang}</version>
 		</dependency>
 	</dependencies>
 </project>

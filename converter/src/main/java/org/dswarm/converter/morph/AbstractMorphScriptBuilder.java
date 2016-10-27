@@ -27,6 +27,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -50,9 +51,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.google.common.collect.Iterators;
-import com.google.common.collect.Maps;
 import com.google.common.io.CharSource;
 import com.google.common.io.Resources;
+import javaslang.Tuple;
+import javaslang.Tuple2;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -61,7 +63,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.morph.model.FilterExpression;
 import org.dswarm.converter.morph.model.FilterExpressionType;
@@ -145,6 +146,8 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 	protected static final String METAMORPH_ELEMENT_MAP_CONTAINER = "maps";
 
 	protected static final String METAMORPH_ELEMENT_DATA = "data";
+
+	protected static final String METAMORPH_ELEMENT_ENTITY = "entity";
 
 	protected static final String METAMORPH_FUNCTION_COMBINE = "combine";
 
@@ -315,10 +318,10 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 		return (MORPHSCRIPTBUILDERIMPL) this;
 	}
 
-	protected Tuple<Optional<Map<String, FilterExpression>>, Optional<FilterExpression>> determineCombineAsFilterDataOutFilter(final Map<String, FilterExpression> filterExpressionMap,
-	                                                                                                                           final String inputAttributePathStringXMLEscaped) {
+	protected Tuple2<Optional<Map<String, FilterExpression>>, Optional<FilterExpression>> determineCombineAsFilterDataOutFilter(final Map<String, FilterExpression> filterExpressionMap,
+	                                                                                                                            final String inputAttributePathStringXMLEscaped) {
 
-		return Tuple.tuple(Optional.ofNullable(filterExpressionMap).filter(filterExpressionMap2 -> !filterExpressionMap2.isEmpty()), Optional.empty());
+		return Tuple.of(Optional.ofNullable(filterExpressionMap).filter(filterExpressionMap2 -> !filterExpressionMap2.isEmpty()), Optional.empty());
 	}
 
 	protected Element createFilterFunction(final FilterExpression filterExpression) throws DMPConverterException {
@@ -390,10 +393,10 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 		combineAsFilter
 				.setAttribute(MF_ELEMENT_VALUE_ATTRIBUTE_IDENTIFIER, MF_VALUE_VARIABLE_PREFIX + combineValueVariable + MF_VALUE_VARIABLE_POSTFIX);
 
-		final Tuple<Optional<Map<String, FilterExpression>>, Optional<FilterExpression>> result = determineCombineAsFilterDataOutFilter(filterExpressionMap, inputAttributePathStringXMLEscaped);
+		final Tuple2<Optional<Map<String, FilterExpression>>, Optional<FilterExpression>> result = determineCombineAsFilterDataOutFilter(filterExpressionMap, inputAttributePathStringXMLEscaped);
 
-		final Optional<Map<String, FilterExpression>> optionalNewFilterExpressionMap = result.v1();
-		final Optional<FilterExpression> optionalCombineAsFilterDataOutFilter = result.v2();
+		final Optional<Map<String, FilterExpression>> optionalNewFilterExpressionMap = result._1;
+		final Optional<FilterExpression> optionalCombineAsFilterDataOutFilter = result._2;
 
 		if (optionalNewFilterExpressionMap.isPresent()) {
 
@@ -481,7 +484,7 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 			return null;
 		}
 
-		final Map<String, FilterExpression> filterExpressionMap = Maps.newLinkedHashMap();
+		final Map<String, FilterExpression> filterExpressionMap = new LinkedHashMap<>();
 
 		try {
 

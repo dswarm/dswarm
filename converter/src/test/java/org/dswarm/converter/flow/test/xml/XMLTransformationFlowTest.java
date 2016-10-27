@@ -420,6 +420,18 @@ public class XMLTransformationFlowTest extends GuicedTest {
 		testXMLMorphWithTuples("base.allfields.task.result.json", "base.allfields.task.morph.xml", "base_dc_testdaten.tuples.json");
 	}
 
+	@Test
+	public void testDD1399Morph() throws Exception {
+
+		testXMLMorphWithTuples("dd-1399/dd-1399.morph.result.json", "dd-1399/dd-1399.task.morph.xml", "dd-1399/dd-1399.input.tuples.json");
+	}
+
+	@Test
+	public void testDD1399Task() throws Exception {
+
+		testXMLTaskWithTuples("dd-1399/dd-1399.result.json", "dd-1399/dd-1399.task.json", "dd-1399/dd-1399.input.tuples.json");
+	}
+
 	/**
 	 *
 	 * @throws Exception

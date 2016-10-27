@@ -7,7 +7,6 @@
         <data name="@note_displayLabel__0__" source="http://www.loc.gov/mods/v3#note&#30;http://www.loc.gov/mods/v3#displayLabel"/>
         <data name="@note_lang__0__" source="http://www.loc.gov/mods/v3#note&#30;http://www.loc.gov/mods/v3#lang"/>
         <data name="@note_value__0__" source="http://www.loc.gov/mods/v3#note&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
-        <data name="http://purl.org/dc/terms/alternative" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
         <combine name="@component1402483352013" reset="true" value="(${note_value__0__}#${note_lang__0__})">
             <data name="note_value__0__" source="@note_value__0__"/>
             <data name="note_lang__0__" source="@note_lang__0__"/>
@@ -17,7 +16,6 @@
             <data name="note_displayLabel__0__" source="@note_displayLabel__0__"/>
         </combine>
         <data name="@titleInfo_title_value__1__" source="http://www.loc.gov/mods/v3#titleInfo&#30;http://www.loc.gov/mods/v3#title&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
-        <data name="http://purl.org/dc/elements/1.1/title" source="@__TRANSFORMATION_OUTPUT_VARIABLE__2"/>
         <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__2" source="@titleInfo_title_value__1__"/>
         <combine flushWith="http://www.loc.gov/mods/v3#originInfo&#30;http://www.loc.gov/mods/v3#dateIssued" includeSubEntities="true" name="@originInfo_dateIssued_value__2__" reset="true" sameEntity="true" value="${originInfo_dateIssued_value__2__.filtered}">
             <if>
@@ -29,8 +27,10 @@
             </if>
             <data name="originInfo_dateIssued_value__2__.filtered" source="http://www.loc.gov/mods/v3#originInfo&#30;http://www.loc.gov/mods/v3#dateIssued&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
         </combine>
-        <data name="http://purl.org/ontology/bibo/edition" source="@__TRANSFORMATION_OUTPUT_VARIABLE__3"/>
         <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__3" source="@originInfo_dateIssued_value__2__"/>
+        <data name="http://purl.org/dc/terms/alternative" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
+        <data name="http://purl.org/dc/elements/1.1/title" source="@__TRANSFORMATION_OUTPUT_VARIABLE__2"/>
+        <data name="http://purl.org/ontology/bibo/edition" source="@__TRANSFORMATION_OUTPUT_VARIABLE__3"/>
     </rules>
     <maps/>
 </metamorph>

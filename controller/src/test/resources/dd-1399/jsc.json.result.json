@@ -1,0 +1,39 @@
+[ {
+  "authors" : [ {
+    "rft.aulast" : "Thomas",
+    "rft.au" : "Neethal Thomas",
+    "rft.aufirst" : "Neethal"
+  }, {
+    "rft.aulast" : "Vichare",
+    "rft.au" : "Geeta Vichare",
+    "rft.aufirst" : "Geeta"
+  }, {
+    "rft.aulast" : "Sinha",
+    "rft.au" : "A. K. Sinha",
+    "rft.aufirst" : "A. K."
+  } ]
+}, {
+  "authors" : [ {
+    "rft.aulast" : "Thomas",
+    "rft.au" : "Neethal Thomas",
+    "rft.aufirst" : "Neethal"
+  }, {
+    "rft.aulast" : "Vichare",
+    "rft.au" : "Geeta Vichare",
+    "rft.aufirst" : "Geeta"
+  }, {
+    "rft.aulast" : "Sinha",
+    "rft.au" : "A. K. Sinha",
+    "rft.aufirst" : "A. K."
+  } ]
+}, {
+  "authors" : [ {
+    "rft.aulast" : "Thol",
+    "rft.au" : "Monika Thol",
+    "rft.aufirst" : "Monika"
+  }, {
+    "rft.aulast" : "Lemmon",
+    "rft.au" : "Eric W. Lemmon",
+    "rft.aufirst" : "Eric W."
+  } ]
+} ]

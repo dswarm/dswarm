@@ -1,51 +1,188 @@
 [
     {
-        "http://data.slub-dresden.de/datamodels/DataModel-9667d543-7480-467a-a93f-0f7af4e85f99/records/7d462758-bb20-493d-994d-9b5dbba05ccc": [
+        "http://data.slub-dresden.de/datamodels/DataModel-e2f4e20c-9711-41ce-b23d-092efdb7f6f8/records/3f293122-b95b-434e-be44-9300b08471f8": [
             {
                 "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld": [
-                    {
-                        "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": [
-                            "001",
-                            "002",
-                            "003",
-                            "005",
-                            "029",
-                            "030",
-                            "037",
-                            "050",
-                            "051",
-                            "070",
-                            "070",
-                            "076",
-                            "076",
-                            "076",
-                            "077",
-                            "077",
-                            "100",
-                            "102",
-                            "104",
-                            "106",
-                            "108",
-                            "110",
-                            "112",
-                            "114",
-                            "116",
-                            "118",
-                            "120",
-                            "122",
-                            "331",
-                            "334",
-                            "335",
-                            "359",
-                            "410",
-                            "412",
-                            "433",
-                            "501"
-                        ]
-                    },
-                    {
-                        "__record_id": "http://data.slub-dresden.de/resource/52017321-66ef-4421-a037-6214600ef10a"
-                    }
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "001"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "002"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "003"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "005"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "029"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "030"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "037"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "050"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "051"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "070"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "070"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "076"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "076"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "076"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "077"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "077"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "100"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "102"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "104"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "106"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "108"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "110"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "112"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "114"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "116"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "118"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "120"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "122"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "331"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "334"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "335"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "359"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "410"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "412"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "433"
+                        }
+                    ],
+                    [
+                        {
+                            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "501"
+                        }
+                    ]
                 ]
             },
             {

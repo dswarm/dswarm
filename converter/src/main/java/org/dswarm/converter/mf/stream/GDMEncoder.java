@@ -24,6 +24,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
+import javaslang.Tuple;
+import javaslang.Tuple2;
 import org.apache.commons.lang3.StringUtils;
 import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultStreamPipe;
@@ -37,7 +39,6 @@ import org.culturegraph.mf.morph.functions.model.ValueType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.dswarm.common.types.Tuple;
 import org.dswarm.graph.json.LiteralNode;
 import org.dswarm.graph.json.Model;
 import org.dswarm.graph.json.Node;
@@ -64,31 +65,30 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 	private static final Logger LOG = LoggerFactory.getLogger(GDMEncoder.class);
 
-	private static final  String RESOURCE_IDENTIFIER = "resource";
-	private static final String RESOURCE_BASE_URI   = SchemaUtils.BASE_URI + RESOURCE_IDENTIFIER + SchemaUtils.SLASH;
+	private static final String RESOURCE_IDENTIFIER = "resource";
+	private static final String RESOURCE_BASE_URI = SchemaUtils.BASE_URI + RESOURCE_IDENTIFIER + SchemaUtils.SLASH;
 	private static final String KEY_PREFIX = "::";
 
-	private       String                                currentId;
-	private       Model                                 internalGDMModel;
-	private       ResourceNode                          recordNode;
-	private       ResourceNode                          entityNode;
-	private       Resource                              currentResource;
-	private       Stack<Tuple<ResourceNode, Predicate>> entityStack;
-	private final Stack<Resource>                       resourceStack;
+	private String currentId;
+	private Model internalGDMModel;
+	private ResourceNode recordNode;
+	private Node entityNode;
+	private Resource currentResource;
+	private Stack<Tuple2<Node, Predicate>> entityStack;
 
 	private ResourceNode recordType;
-	private Resource     recordResource;
+	private Resource recordResource;
 
 	private final Optional<DataModel> dataModel;
-	private final Optional<String>    dataModelUri;
+	private final Optional<String> dataModelUri;
 
-	private final Map<String, Predicate>  predicates   = new HashMap<>();
+	private final Map<String, Predicate> predicates = new HashMap<>();
 	private final Map<String, AtomicLong> valueCounter = new HashMap<>();
-	private final Map<String, String>     uris         = new HashMap<>();
+	private final Map<String, String> uris = new HashMap<>();
 	private Map<String, ResourceNode> resourceNodeCache;
-	private AtomicLong                bnodeCounter;
-	private Map<String, Long>         bnodeMap;
-	private Map<String, Node>         bnodeCache;
+	private AtomicLong bnodeCounter;
+	private Map<String, Long> bnodeMap;
+	private Map<String, Node> bnodeCache;
 
 	private final AtomicInteger inComingCounter = new AtomicInteger(0);
 	private final AtomicInteger outGoingCounter = new AtomicInteger(0);
@@ -102,8 +102,6 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		this.dataModel = dataModel;
 		dataModelUri = init(dataModel);
-
-		resourceStack = new Stack<>();
 
 	}
 
@@ -149,8 +147,6 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		recordNode = getOrCreateResourceNode(currentId);
 
-		resourceStack.push(recordResource);
-
 		currentResource = recordResource;
 
 		// init
@@ -165,8 +161,6 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 		assert !isClosed();
 
 		outGoingCounter2.incrementAndGet();
-
-		resourceStack.clear();
 
 		currentResource = null;
 
@@ -193,30 +187,25 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		assert !isClosed();
 
+		currentResource = null;
+
 		final Predicate entityPredicate = getPredicate(name);
 
 		final String entityUri = mintEntityUri();
 
-		final Resource entityResource = getOrCreateResource(entityUri);
-
-		entityNode = getOrCreateResourceNode(entityUri);
+		entityNode = getOrCreateBNode(entityUri);
 
 		if (entityStack.empty()) {
 
 			addStatement(recordNode, entityPredicate, entityNode);
 		} else {
 
-			final Tuple<ResourceNode, Predicate> parentEntityTuple = entityStack.peek();
+			final Tuple2<Node, Predicate> parentEntityTuple = entityStack.peek();
 
-			addStatement(parentEntityTuple.v1(), entityPredicate, entityNode);
+			addStatement(parentEntityTuple._1, entityPredicate, entityNode);
 		}
 
-		currentResource = entityResource;
-
-		entityStack.push(new Tuple<>(entityNode, entityPredicate));
-
-		resourceStack.push(entityResource);
-
+		entityStack.push(Tuple.of(entityNode, entityPredicate));
 	}
 
 	@Override
@@ -224,15 +213,11 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		assert !isClosed();
 
-		resourceStack.pop();
-
-		currentResource = resourceStack.peek();
-
 		entityStack.pop();
 
 		if (!entityStack.isEmpty()) {
 
-			entityNode = entityStack.peek().v1();
+			entityNode = entityStack.peek()._1;
 		} else {
 
 			entityNode = null;
@@ -302,7 +287,7 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 							final ResourceNode resourceTypeNode = getOrCreateResourceNode(realValue);
 							objectNode = resourceTypeNode;
 
-							if (currentResource.equals(recordResource)) {
+							if (recordResource.equals(currentResource)) {
 
 								recordType = resourceTypeNode;
 							}
@@ -359,7 +344,7 @@ public final class GDMEncoder extends DefaultStreamPipe<ObjectReceiver<GDMModel>
 
 		final Long order = valueCounter.computeIfAbsent(key, key1 -> new AtomicLong(0)).incrementAndGet();
 
-		currentResource.addStatement(subject, predicate, object, order);
+		recordResource.addStatement(subject, predicate, object, order);
 	}
 
 	private String getURI(final String id) {

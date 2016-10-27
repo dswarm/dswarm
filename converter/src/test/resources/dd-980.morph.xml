@@ -1,45 +1,87 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
-    <meta>
-        <name>mappingaf54c61d-811a-6680-98d3-d43843b4614b, mapping49689c34-311c-6abb-6b51-4f1d8fb9d462, mapping80284b7a-f329-133c-645d-3705fa7523ed</name>
-    </meta>
-    <rules>
-        <combine flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield" includeSubEntities="true" name="@metadata_record_datafield_subfield_value__3c629327-6bb6-dda8-b5ff-c979affc735b__0__" reset="true" sameEntity="true" value="${metadata_record_datafield_subfield_value__3c629327-6bb6-dda8-b5ff-c979affc735b__0__.filtered}">
-            <if>
-                <all flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag" includeSubEntities="true" name="CONDITION_ALL" reset="true">
-                    <data source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag">
-                        <regexp match="331"/>
-                    </data>
-                </all>
-            </if>
-            <data name="metadata_record_datafield_subfield_value__3c629327-6bb6-dda8-b5ff-c979affc735b__0__.filtered" source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
-        </combine>
-        <data name="http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#sort&#30;http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#title&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value" source="@__TRANSFORMATION_OUTPUT_VARIABLE__2"/>
-        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__2" source="@metadata_record_datafield_subfield_value__3c629327-6bb6-dda8-b5ff-c979affc735b__0__"/>
-        <combine flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield" includeSubEntities="true" name="@metadata_record_datafield_subfield_value__2bba13eb-1c30-9d6b-c3c7-8f7ca4fd03d6__1__" reset="true" sameEntity="true" value="${metadata_record_datafield_subfield_value__2bba13eb-1c30-9d6b-c3c7-8f7ca4fd03d6__1__.filtered}">
-            <if>
-                <all flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag" includeSubEntities="true" name="CONDITION_ALL" reset="true">
-                    <data source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag">
-                        <regexp match="331"/>
-                    </data>
-                </all>
-            </if>
-            <data name="metadata_record_datafield_subfield_value__2bba13eb-1c30-9d6b-c3c7-8f7ca4fd03d6__1__.filtered" source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
-        </combine>
-        <data name="http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#search&#30;http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#title&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value" source="@__TRANSFORMATION_OUTPUT_VARIABLE__4"/>
-        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__4" source="@metadata_record_datafield_subfield_value__2bba13eb-1c30-9d6b-c3c7-8f7ca4fd03d6__1__"/>
-        <combine flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield" includeSubEntities="true" name="@metadata_record_datafield_subfield_value__b99ab5ec-7e37-bbeb-649b-c31811a73931__2__" reset="true" sameEntity="true" value="${metadata_record_datafield_subfield_value__b99ab5ec-7e37-bbeb-649b-c31811a73931__2__.filtered}">
-            <if>
-                <all flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag" includeSubEntities="true" name="CONDITION_ALL" reset="true">
-                    <data source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#tag">
-                        <regexp match="331"/>
-                    </data>
-                </all>
-            </if>
-            <data name="metadata_record_datafield_subfield_value__b99ab5ec-7e37-bbeb-649b-c31811a73931__2__.filtered" source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#record&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#datafield&#30;http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#subfield&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
-        </combine>
-        <data name="http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#display&#30;http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#title&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value" source="@__TRANSFORMATION_OUTPUT_VARIABLE__6"/>
-        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__6" source="@metadata_record_datafield_subfield_value__b99ab5ec-7e37-bbeb-649b-c31811a73931__2__"/>
-    </rules>
-    <maps/>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+	<meta>
+		<name>mappingaf54c61d-811a-6680-98d3-d43843b4614b, mapping49689c34-311c-6abb-6b51-4f1d8fb9d462,
+			mapping80284b7a-f329-133c-645d-3705fa7523ed
+		</name>
+	</meta>
+	<rules>
+		<combine
+				flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield"
+				includeSubEntities="true"
+				name="@metadata_record_datafield_subfield_value__3c629327-6bb6-dda8-b5ff-c979affc735b__0__" reset="true"
+				sameEntity="true"
+				value="${metadata_record_datafield_subfield_value__3c629327-6bb6-dda8-b5ff-c979affc735b__0__.filtered}">
+			<if>
+				<all flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#tag"
+				     includeSubEntities="true" name="CONDITION_ALL" reset="true">
+					<data source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#tag">
+						<regexp match="331"/>
+					</data>
+				</all>
+			</if>
+			<data name="metadata_record_datafield_subfield_value__3c629327-6bb6-dda8-b5ff-c979affc735b__0__.filtered"
+			      source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#subfield&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+		</combine>
+		<data name="@__TRANSFORMATION_OUTPUT_VARIABLE__2"
+		      source="@metadata_record_datafield_subfield_value__3c629327-6bb6-dda8-b5ff-c979affc735b__0__"/>
+		<combine
+				flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield"
+				includeSubEntities="true"
+				name="@metadata_record_datafield_subfield_value__2bba13eb-1c30-9d6b-c3c7-8f7ca4fd03d6__1__" reset="true"
+				sameEntity="true"
+				value="${metadata_record_datafield_subfield_value__2bba13eb-1c30-9d6b-c3c7-8f7ca4fd03d6__1__.filtered}">
+			<if>
+				<all flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#tag"
+				     includeSubEntities="true" name="CONDITION_ALL" reset="true">
+					<data source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#tag">
+						<regexp match="331"/>
+					</data>
+				</all>
+			</if>
+			<data name="metadata_record_datafield_subfield_value__2bba13eb-1c30-9d6b-c3c7-8f7ca4fd03d6__1__.filtered"
+			      source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#subfield&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+		</combine>
+		<data name="@__TRANSFORMATION_OUTPUT_VARIABLE__4"
+		      source="@metadata_record_datafield_subfield_value__2bba13eb-1c30-9d6b-c3c7-8f7ca4fd03d6__1__"/>
+		<combine
+				flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield"
+				includeSubEntities="true"
+				name="@metadata_record_datafield_subfield_value__b99ab5ec-7e37-bbeb-649b-c31811a73931__2__" reset="true"
+				sameEntity="true"
+				value="${metadata_record_datafield_subfield_value__b99ab5ec-7e37-bbeb-649b-c31811a73931__2__.filtered}">
+			<if>
+				<all flushWith="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#tag"
+				     includeSubEntities="true" name="CONDITION_ALL" reset="true">
+					<data source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#tag">
+						<regexp match="331"/>
+					</data>
+				</all>
+			</if>
+			<data name="metadata_record_datafield_subfield_value__b99ab5ec-7e37-bbeb-649b-c31811a73931__2__.filtered"
+			      source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#subfield&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+		</combine>
+		<data name="@__TRANSFORMATION_OUTPUT_VARIABLE__6"
+		      source="@metadata_record_datafield_subfield_value__b99ab5ec-7e37-bbeb-649b-c31811a73931__2__"/>
+		<entity name="http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#sort">
+			<entity name="http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#title">
+				<data name="http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+				      source="@__TRANSFORMATION_OUTPUT_VARIABLE__2"/>
+			</entity>
+		</entity>
+		<entity name="http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#search">
+			<entity name="http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#title">
+				<data name="http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+				      source="@__TRANSFORMATION_OUTPUT_VARIABLE__4"/>
+			</entity>
+		</entity>
+		<entity name="http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#display">
+			<entity name="http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#title">
+				<data name="http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
+				      source="@__TRANSFORMATION_OUTPUT_VARIABLE__6"/>
+			</entity>
+		</entity>
+	</rules>
+	<maps/>
 </metamorph>

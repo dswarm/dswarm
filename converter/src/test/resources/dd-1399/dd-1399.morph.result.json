@@ -1,0 +1,123 @@
+[
+  {
+    "http://data.slub-dresden.de/datamodels/DataModel-23214174-863c-4ef4-81d6-3c7c281499f8/records/3fc01a5e-3b28-45d5-94fa-01be02aa235e": [
+      {
+        "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/authors": [
+          [
+            {
+              "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aulast": "Thomas"
+            },
+            {
+              "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.au": "Neethal Thomas"
+            },
+            {
+              "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aufirst": "Neethal"
+            }
+          ],
+          [
+            {
+              "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aulast": "Vichare"
+            },
+            {
+              "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.au": "Geeta Vichare"
+            },
+            {
+              "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aufirst": "Geeta"
+            }
+          ],
+          [
+            {
+              "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aulast": "Sinha"
+            },
+            {
+              "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.au": "A. K. Sinha"
+            },
+            {
+              "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aufirst": "A. K."
+            }
+          ]
+        ]
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://data.slub-dresden.de/datamodels/DataModel-23214174-863c-4ef4-81d6-3c7c281499f8/records/036b9539-52b4-4684-b2b4-7cfc4f55c8fe": [
+      {
+        "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/authors": [
+          [
+            {
+              "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aulast": "Thol"
+            },
+            {
+              "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.au": "Monika Thol"
+            },
+            {
+              "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aufirst": "Monika"
+            }
+          ],
+          [
+            {
+              "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aulast": "Lemmon"
+            },
+            {
+              "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.au": "Eric W. Lemmon"
+            },
+            {
+              "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aufirst": "Eric W."
+            }
+          ]
+        ]
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://data.slub-dresden.de/datamodels/DataModel-23214174-863c-4ef4-81d6-3c7c281499f8/records/51a4e602-c37d-404a-b529-ca224dd42466": [
+      {
+        "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/authors": [
+          [
+            {
+              "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aulast": "Thomas"
+            },
+            {
+              "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.au": "Neethal Thomas"
+            },
+            {
+              "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aufirst": "Neethal"
+            }
+          ],
+          [
+            {
+              "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aulast": "Vichare"
+            },
+            {
+              "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.au": "Geeta Vichare"
+            },
+            {
+              "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aufirst": "Geeta"
+            }
+          ],
+          [
+            {
+              "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aulast": "Sinha"
+            },
+            {
+              "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.au": "A. K. Sinha"
+            },
+            {
+              "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aufirst": "A. K."
+            }
+          ]
+        ]
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  }
+]

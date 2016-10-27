@@ -5,7 +5,6 @@
     </meta>
     <rules>
         <data name="@val4__0__" source="http://data.slub-dresden.de/resources/1/schema#val4"/>
-        <data name="http://purl.org/dc/elements/1.1/title" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
         <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__1" source="@component1401873587659">
             <occurrence only="2"/>
         </data>
@@ -15,6 +14,7 @@
         <data name="@component1401873587659" source="@component1401873556606">
             <compose postfix="\\$\$$`}{[" prefix="\\@\@@{`é="/>
         </data>
+        <data name="http://purl.org/dc/elements/1.1/title" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
     </rules>
     <maps/>
 </metamorph>

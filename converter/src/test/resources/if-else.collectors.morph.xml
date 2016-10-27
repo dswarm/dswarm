@@ -30,11 +30,11 @@
             </if>
             <data name="feld_value__0__.filtered" source="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
         </combine>
-        <data name="http://purl.org/dc/elements/1.1/title" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
         <choose name="@__TRANSFORMATION_OUTPUT_VARIABLE__1">
             <data name="ifelse-component_-1402409200649_if-branch" source="@feld_value__0__"/>
             <data name="ifelse-component_-1402409200649_else-branch" source="@feld_value__1__"/>
         </choose>
+        <data name="http://purl.org/dc/elements/1.1/title" source="@__TRANSFORMATION_OUTPUT_VARIABLE__1"/>
     </rules>
     <maps/>
 </metamorph>

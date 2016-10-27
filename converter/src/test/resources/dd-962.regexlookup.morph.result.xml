@@ -14,10 +14,10 @@
             </if>
             <data name="metadata_record_datafield_subfield_value__784d1e66-5be7-0d0f-5728-63009a403833__0__.filtered" source="http://www.openarchives.org/OAI/2.0/metadata&#30;http://www.loc.gov/MARC21/slim#record&#30;http://www.loc.gov/MARC21/slim#datafield&#30;http://www.loc.gov/MARC21/slim#subfield&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
         </combine>
-        <data name="http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/language" source="@__TRANSFORMATION_OUTPUT_VARIABLE__4"/>
         <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__4" source="@metadata_record_datafield_subfield_value__784d1e66-5be7-0d0f-5728-63009a403833__0__">
             <regexlookup default="466" map="componentff86ec88-c3ba-3075-3cfb-1ba9acdb5bf3"/>
         </data>
+        <data name="http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/language" source="@__TRANSFORMATION_OUTPUT_VARIABLE__4"/>
     </rules>
     <maps>
         <map name="componentff86ec88-c3ba-3075-3cfb-1ba9acdb5bf3">

@@ -1,101 +1,193 @@
 [
   {
-    "__record_id": "http://data.slub-dresden.de/datamodels/DataModel-90c733f4-644b-4095-b1d2-751d527ee174/records/00f10752-0d16-4c72-9f4e-de52667653dc",
+    "__record_id": "http://data.slub-dresden.de/datamodels/DataModel-32b6e22b-7175-4c80-9090-76ac426b636e/records/90e4f882-7331-4bdc-a81c-790cddcd872b",
     "__record_data": [
       {
         "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld": [
-          {
-            "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": [
-              "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp2?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp5?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp5?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp2?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp2?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp5?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>",
-              "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>"
-            ]
-          },
-          {
-            "__record_id": "http://data.slub-dresden.de/resource/2a207023-7c03-402a-acaf-121edda44a5a"
-          }
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp2?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp5?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp5?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp2?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp2?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp5?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>"
+            }
+          ],
+          [
+            {
+              "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>"
+            }
+          ]
         ]
       },
       {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-      }
-    ]
-  },
-  {
-    "__record_id": "http://data.slub-dresden.de/resource/2a207023-7c03-402a-acaf-121edda44a5a",
-    "__record_data": [
-      {
-        "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr": [
-          "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp2?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp5?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp5?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp2?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp2?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp5?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>",
-          "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>"
-        ]
       }
     ]
   }

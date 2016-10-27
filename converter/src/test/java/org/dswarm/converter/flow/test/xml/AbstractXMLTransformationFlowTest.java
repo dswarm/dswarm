@@ -66,6 +66,8 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 	protected final String recordTag;
 
+	protected final String storageType;
+
 	protected final String xmlNamespace;
 
 	protected final String exampleDataResourceFileName;
@@ -76,6 +78,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 			final String taskJSONFileNameArg,
 			final String expectedResultJSONFileNameArg,
 			final String recordTagArg,
+			final String storageTypeArg,
 			final String xmlNamespaceArg,
 			final String exampleDataResourceFileNameArg) {
 
@@ -84,6 +87,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		taskJSONFileName = taskJSONFileNameArg;
 		expectedResultJSONFileName = expectedResultJSONFileNameArg;
 		recordTag = recordTagArg;
+		storageType = storageTypeArg;
 		xmlNamespace = xmlNamespaceArg;
 		exampleDataResourceFileName = exampleDataResourceFileNameArg;
 	}
@@ -105,7 +109,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 			configuration.addParameter(ConfigurationStatics.XML_NAMESPACE, new TextNode(xmlNamespace));
 		}
 
-		configuration.addParameter(ConfigurationStatics.STORAGE_TYPE, new TextNode("xml"));
+		configuration.addParameter(ConfigurationStatics.STORAGE_TYPE, new TextNode(storageType));
 
 		final Configuration updatedConfiguration = configurationService.updateObjectTransactional(configuration).getObject();
 
@@ -125,9 +129,11 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		final DataModel updatedInputDataModel = dataModelService.updateObjectTransactional(inputDataModel).getObject();
 
+		final boolean utiliseExistingSchema = !"xml".equals(storageType);
+
 		final XMLSourceResourceGDMStmtsFlow flow2 = injector
 				.getInstance(XmlResourceFlowFactory.class)
-				.fromDataModel(updatedInputDataModel, false);
+				.fromDataModel(updatedInputDataModel, utiliseExistingSchema);
 
 		final List<GDMModel> gdmModels = flow2.applyResource(exampleDataResourceFileName).toList().toBlocking().first();
 
@@ -180,7 +186,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		Assert.assertNotNull(response);
 
 		final Observable<Map<String, Model>> optionalModelMapObservable = gdmService
-				.getObjects(updatedInputDataModel.getUuid(), Optional.<Integer>empty())
+				.getObjects(updatedInputDataModel.getUuid(), Optional.empty())
 				.toMap(Tuple::v1, Tuple::v2);
 		final Optional<Map<String, Model>> optionalModelMap = optionalModelMapObservable.map(Optional::of).toBlocking()
 				.firstOrDefault(Optional.empty());
