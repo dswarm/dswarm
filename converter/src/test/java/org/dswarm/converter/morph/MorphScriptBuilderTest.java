@@ -164,6 +164,18 @@ public class MorphScriptBuilderTest extends GuicedTest {
 	}
 
 	@Test
+	public void testSipHashTask() throws Exception {
+
+		compareTaskGeneratedMorphscript("siphash.task.json", "siphash.morph.xml");
+	}
+
+	@Test
+	public void testBase64Task() throws Exception {
+
+		compareTaskGeneratedMorphscript("base64.task.json", "base64.morph.xml");
+	}
+
+	@Test
 	public void testRegexLookupMap() throws Exception {
 
 		compareTaskGeneratedMorphscript("dd-962.task.json", "dd-962.regexlookup.morph.result.xml");

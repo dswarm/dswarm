@@ -159,6 +159,18 @@ public class XMLTransformationFlowTest extends GuicedTest {
 	}
 
 	@Test
+	public void testSipHashTask() throws Exception {
+
+		testXMLTaskWithTuples("siphash.mabxml.task.result.json", "siphash.task.json", "issn.mabxml_dmp.tuples.json");
+	}
+
+	@Test
+	public void testBase64Task() throws Exception {
+
+		testXMLTaskWithTuples("base64.mabxml.task.result.json", "base64.task.json", "issn.mabxml_dmp.tuples.json");
+	}
+
+	@Test
 	public void testCollectTask() throws Exception {
 
 		testXMLTaskWithTuples("dd-1220.mabxml.task.result.json", "dd-1220.mabxml.task.json", "test-mabxml.tuples.json");
