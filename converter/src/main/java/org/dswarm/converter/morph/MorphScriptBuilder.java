@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -50,6 +50,7 @@ import org.w3c.dom.Element;
 
 import org.dswarm.common.DMPStatics;
 import org.dswarm.common.xml.utils.XMLUtils;
+import org.dswarm.converter.DMPConverterError;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.morph.model.FilterExpression;
 import org.dswarm.persistence.model.job.Component;
@@ -1623,10 +1624,29 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 							&& uniqueInputAttributePaths.size() == 1
 							&& optionalInputSchema.get().getContentSchema().getValueAttributePath().toAttributePath().equals(uniqueInputAttributePaths.iterator().next())) {
 
-						// mapping inputs are on value attribute path of content
+						// mapping inputs are on value attribute path of content schema
 
 						return Optional.empty();
 					}
+
+					// add attribute paths from filters as well
+					mappingInputAttributePathInstances.stream()
+							.forEach(mappingAttributePathInstance -> Optional.ofNullable(getFilterExpression(mappingAttributePathInstance))
+									.ifPresent(filterExpressionString -> {
+
+										try {
+
+											final Map<String, FilterExpression> filterExpressionMap = extractFilterExpressions(filterExpressionString);
+
+											if(filterExpressionMap != null) {
+
+												uniqueInputAttributePaths.addAll(filterExpressionMap.keySet());
+											}
+										} catch (final DMPConverterException e) {
+
+											throw DMPConverterError.wrap(e);
+										}
+									}));
 
 					final Set<String> finalUniqueInputAttributePaths = uniqueInputAttributePaths.stream().map(attributePath -> {
 

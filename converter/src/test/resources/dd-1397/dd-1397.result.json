@@ -1,0 +1,42 @@
+[
+  {
+    "http://data.slub-dresden.de/datamodels/DataModel-89364646-e8a5-46b6-b0fc-efd9c7abce28/records/84454944-ca96-4ce9-b162-58fc4866017a": [
+      {
+        "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/author": "Jeanne"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/RecordType"
+      }
+    ]
+  },
+  {
+    "http://data.slub-dresden.de/datamodels/DataModel-89364646-e8a5-46b6-b0fc-efd9c7abce28/records/0708f2b9-2ccb-4b1c-8df0-c51f5bd44406": [
+      {
+        "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/author": "Fukushima"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/RecordType"
+      }
+    ]
+  },
+  {
+    "http://data.slub-dresden.de/datamodels/DataModel-89364646-e8a5-46b6-b0fc-efd9c7abce28/records/0dba203c-df3e-44a8-a183-031f04004241": [
+      {
+        "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/author": "Niwińska"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/RecordType"
+      }
+    ]
+  },
+  {
+    "http://data.slub-dresden.de/datamodels/DataModel-89364646-e8a5-46b6-b0fc-efd9c7abce28/records/905e2e34-89a9-4178-921a-7baaed5e36b4": [
+      {
+        "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/author": "Tanaka"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/RecordType"
+      }
+    ]
+  }
+]
