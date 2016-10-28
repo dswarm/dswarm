@@ -34,6 +34,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -55,6 +56,7 @@ import javax.xml.stream.XMLStreamException;
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -93,6 +95,7 @@ import org.dswarm.converter.flow.GDMModelTransformationFlowFactory;
 import org.dswarm.converter.morph.MorphScriptBuilder;
 import org.dswarm.graph.json.Model;
 import org.dswarm.graph.json.stream.ModelBuilder;
+import org.dswarm.graph.json.util.Util;
 import org.dswarm.persistence.DMPPersistenceError;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
@@ -1199,6 +1202,7 @@ public class TasksResource {
 	                                        final Func1<GDMModel, JsonNode> transformationFunction) throws DMPControllerException {
 
 		final AtomicInteger resultCounter = new AtomicInteger(0);
+		final AtomicLong statementCounter = new AtomicLong(0);
 		final BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(bos));
 
 		return gdmModelObservable.onBackpressureBuffer(10000)
@@ -1209,8 +1213,22 @@ public class TasksResource {
 
 					if (resultCounter.get() == 1) {
 
-						TasksResource.LOG.debug("received first result for {} export in task resource", responseMediaType);
+						TasksResource.LOG.debug("received first result (with '{}' statements) for {} export in task resource", resultObj.getModel().size(), responseMediaType);
+
+						try {
+
+							TasksResource.LOG.trace("first result = '{}'", Util.getJSONObjectMapper().writeValueAsString(resultObj.getModel()));
+						} catch (JsonProcessingException e) {
+
+							TasksResource.LOG.trace("something went wrong with serializing first result");
+						}
 					}
+				})
+				.map(gdmModel -> {
+
+					statementCounter.addAndGet(gdmModel.getModel().size());
+
+					return gdmModel;
 				})
 				.map(transformationFunction)
 				.map(model -> {
@@ -1239,7 +1257,7 @@ public class TasksResource {
 						throw DMPPersistenceError.wrap(new DMPPersistenceException(String.format("something went wrong while serialising the %s", responseMediaType), e));
 					}
 
-					TasksResource.LOG.debug("received '{}' results for {} export in task resource overall", resultCounter.get(), responseMediaType);
+					TasksResource.LOG.debug("received '{}' results (with '{}' statements) for {} export in task resource overall", resultCounter.get(), statementCounter.get(), responseMediaType);
 				})
 				.ignoreElements().cast(Void.class);
 	}

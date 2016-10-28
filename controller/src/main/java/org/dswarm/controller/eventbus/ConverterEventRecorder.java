@@ -235,7 +235,7 @@ public abstract class ConverterEventRecorder<CONVERTER_EVENT_IMPL extends Conver
 					if (counter.incrementAndGet() == 1) {
 
 						LOG.debug(
-								"transformed first record of {} data resource at to GDM for data model '{}' with '{}' statements (data resource at '{}')",
+								"transformed first record of {} data resource to GDM for data model '{}' with '{}' statements (data resource at '{}')",
 								type, dataModel.getUuid(), statementCounter.get(), path);
 					}
 
@@ -308,7 +308,7 @@ public abstract class ConverterEventRecorder<CONVERTER_EVENT_IMPL extends Conver
 								}
 
 								LOG.info(
-										"transformed {} data resource at to GDM for data model '{}' - transformed '{}' records with '{}' statements (data resource at '{}')",
+										"transformed {} data resource to GDM for data model '{}' - transformed '{}' records with '{}' statements (data resource at '{}')",
 										type, dataModel.getUuid(), recordCount, statementCounter.get(), path);
 							})
 					.doOnSubscribe(() -> LOG.debug("subscribed to {} ingest", type))
