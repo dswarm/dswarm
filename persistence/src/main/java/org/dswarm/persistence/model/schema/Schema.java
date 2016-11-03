@@ -39,6 +39,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.common.base.Charsets;
+import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -69,6 +70,13 @@ public class Schema extends BasicDMPJPAObject {
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger LOG = LoggerFactory.getLogger(Schema.class);
+
+	/**
+	 * The base URI of the schema
+	 */
+	@Column(name = "BASE_URI")
+	@XmlElement(name = "base_uri")
+	private String baseURI;
 
 	/**
 	 * All attribute path (instances) of the schema.
@@ -132,6 +140,26 @@ public class Schema extends BasicDMPJPAObject {
 	public Schema(final String uuid) {
 
 		super(uuid);
+	}
+
+	/**
+	 * Gets the base URI of the schema.
+	 *
+	 * @return the base URI of the schema
+	 */
+	public String getBaseURI() {
+
+		return baseURI;
+	}
+
+	/**
+	 * Sets the base URI of the schema.
+	 *
+	 * @param baseURI the base URI of the schema
+	 */
+	public void setBaseURI(final String baseURI) {
+
+		this.baseURI = baseURI;
 	}
 
 	/**
@@ -346,6 +374,7 @@ public class Schema extends BasicDMPJPAObject {
 	public boolean completeEquals(final Object obj) {
 
 		return Schema.class.isInstance(obj) && super.completeEquals(obj)
+				&& Objects.equal(((Schema) obj).getBaseURI(), getBaseURI())
 				&& DMPPersistenceUtil.getSchemaAttributePathInstanceUtils()
 				.completeEquals(((Schema) obj).getUniqueAttributePaths(), getUniqueAttributePaths())
 				// note: we need also to compare the ordered list of schema attribute path instances here

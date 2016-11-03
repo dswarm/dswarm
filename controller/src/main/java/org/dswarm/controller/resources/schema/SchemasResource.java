@@ -407,6 +407,10 @@ public class SchemasResource extends BasicDMPResource<SchemaService, ProxySchema
 
 		super.prepareObjectForUpdate(objectFromJSON, object);
 
+		final String baseURI = objectFromJSON.getBaseURI();
+
+		object.setBaseURI(baseURI);
+
 		final Collection<SchemaAttributePathInstance> attributePaths = objectFromJSON.getAttributePaths();
 
 		object.setAttributePaths(attributePaths);

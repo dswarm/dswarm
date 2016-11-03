@@ -73,6 +73,8 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 
 		super.compareObjects(expectedSchema, actualSchema);
 
+		Assert.assertEquals("the schema base uris should be equal", expectedSchema.getBaseURI(), actualSchema.getBaseURI());
+
 		if (expectedSchema.getUniqueAttributePaths() == null || expectedSchema.getUniqueAttributePaths().isEmpty()) {
 
 			final boolean actualSchemaHasNoAttributePaths = (actualSchema.getUniqueAttributePaths() == null || actualSchema
@@ -190,8 +192,10 @@ public class SchemaServiceTestUtils extends BasicDMPJPAServiceTestUtils<SchemaSe
 
 		super.prepareObjectForUpdate(objectWithUpdates, object);
 
+		final String baseURI = objectWithUpdates.getBaseURI();
 		final Set<SchemaAttributePathInstance> attributePaths = objectWithUpdates.getUniqueAttributePaths();
 
+		object.setBaseURI(baseURI);
 		object.setAttributePaths(attributePaths);
 
 		final Clasz recordClass = objectWithUpdates.getRecordClass();
