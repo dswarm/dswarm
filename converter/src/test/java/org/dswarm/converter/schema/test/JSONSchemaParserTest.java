@@ -53,7 +53,11 @@ public class JSONSchemaParserTest extends AbstractJSONSchemaParserTest {
 	                                                      final Optional<String> optionalContentSchemaIdentifier) throws IOException, DMPPersistenceException {
 
 		final JSONSchemaParser schemaParser = GuicedTest.injector.getInstance(JSONSchemaParser.class);
-		final Schema schema = parseSchema("is-0.9.json", null, SchemaUtils.UBL_INTERMEDIATE_FORMAT_SCHEMA_UUID, "UBL Intermediate Format schema", optionalAttributePathsSAPIUUIDs, schemaParser);
+
+		final String schemaName = "UBL Intermediate Format schema";
+		final String baseURI = SchemaUtils.determineSchemaNamespaceURI(SchemaUtils.UBL_INTERMEDIATE_FORMAT_SCHEMA_UUID);
+
+		final Schema schema = parseSchema("is-0.9.json", null, SchemaUtils.UBL_INTERMEDIATE_FORMAT_SCHEMA_UUID, schemaName, baseURI, optionalAttributePathsSAPIUUIDs, schemaParser);
 
 		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(schema);
 

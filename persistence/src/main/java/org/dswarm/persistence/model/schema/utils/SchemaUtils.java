@@ -160,9 +160,17 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 		return mintTermUri(possibleTermURI, possibleTermURI, baseURI);
 	}
 
-	public static String mintSchemaTermURI(final String possibleTermURI, final String schemaUuid) {
+	public static String mintSchemaTermURI(final String possibleTermURI, final String schemaUuid, Optional<String> optionalBaseURI) {
 
-		final String schemaNamespaceURI = determineSchemaNamespaceURI(schemaUuid);
+		final String schemaNamespaceURI;
+
+		if(optionalBaseURI.isPresent() && !optionalBaseURI.get().trim().isEmpty()) {
+
+			schemaNamespaceURI = optionalBaseURI.get();
+		} else {
+
+			schemaNamespaceURI = determineSchemaNamespaceURI(schemaUuid);
+		}
 
 		return mintTermUri(possibleTermURI, possibleTermURI, schemaNamespaceURI);
 	}
@@ -336,7 +344,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 			for (final String attributeString : attributePathFromHelper) {
 
-				final String attributeURI = SchemaUtils.mintSchemaTermURI(attributeString, schema.getUuid());
+				final String attributeURI = SchemaUtils.mintSchemaTermURI(attributeString, schema.getUuid(), Optional.ofNullable(schema.getBaseURI()));
 
 				final ProxyAttribute proxyAttribute = attributeService.createOrGetObjectTransactional(attributeURI);
 

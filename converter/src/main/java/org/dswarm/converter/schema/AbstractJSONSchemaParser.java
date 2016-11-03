@@ -101,29 +101,32 @@ public abstract class AbstractJSONSchemaParser {
 	public Optional<Schema> parse(final String schemaFilePath,
 	                              final String recordTag,
 	                              final String uuid,
-	                              final String schemaName) throws DMPPersistenceException {
+	                              final String schemaName,
+	                              final String baseURI) throws DMPPersistenceException {
 
-		return parse(schemaFilePath, recordTag, uuid, schemaName, Optional.empty());
+		return parse(schemaFilePath, recordTag, uuid, schemaName, baseURI, Optional.empty());
 	}
 
 	public Optional<Schema> parse(final String schemaFilePath,
 	                              final String recordTag,
 	                              final String uuid,
 	                              final String schemaName,
+	                              final String baseURI,
 	                              final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs) throws DMPPersistenceException {
 
-		return parse(schemaFilePath, recordTag, uuid, schemaName, optionalAttributePathsSAPIUUIDs, Optional.empty());
+		return parse(schemaFilePath, recordTag, uuid, schemaName, baseURI, optionalAttributePathsSAPIUUIDs, Optional.empty());
 	}
 
 	public Optional<Schema> parse(final String schemaFilePath,
 	                              final String recordTag,
 	                              final String uuid,
 	                              final String schemaName,
+	                              final String baseURI,
 	                              final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
 	                              final Optional<Set<String>> optionalExcludeAttributePathStubs) throws DMPPersistenceException {
 
 		final Optional<Tuple<Schema, Set<AttributePathHelper>>> optionalResult = parseSeparatelyInternal(schemaFilePath, recordTag, uuid,
-				schemaName);
+				schemaName, baseURI);
 
 		if (!optionalResult.isPresent()) {
 
@@ -144,10 +147,11 @@ public abstract class AbstractJSONSchemaParser {
 	public Optional<Tuple<Schema, Map<String, AttributePathHelper>>> parseSeparately(final String schemaFilePath,
 	                                                                                 final String recordTag,
 	                                                                                 final String uuid,
-	                                                                                 final String schemaName) throws DMPPersistenceException {
+	                                                                                 final String schemaName,
+	                                                                                 final String baseURI) throws DMPPersistenceException {
 
 		final Optional<Tuple<Schema, Set<AttributePathHelper>>> optionalResult = parseSeparatelyInternal(schemaFilePath, recordTag, uuid,
-				schemaName);
+				schemaName, baseURI);
 
 		if (!optionalResult.isPresent()) {
 
@@ -174,7 +178,8 @@ public abstract class AbstractJSONSchemaParser {
 	private Optional<Tuple<Schema, Set<AttributePathHelper>>> parseSeparatelyInternal(final String schemaFilePath,
 	                                                                                  final String recordTag,
 	                                                                                  final String uuid,
-	                                                                                  final String schemaName)
+	                                                                                  final String schemaName,
+	                                                                                  final String baseURI)
 			throws DMPPersistenceException {
 
 		final Optional<List<JsonNode>> optionalRecordTags = getRecordTagNodes(schemaFilePath, recordTag);
@@ -186,7 +191,7 @@ public abstract class AbstractJSONSchemaParser {
 
 		final List<JsonNode> recordTagNodes = optionalRecordTags.get();
 
-		final Optional<Schema> optionalSchema = createSchema(uuid, schemaName);
+		final Optional<Schema> optionalSchema = createSchema(uuid, schemaName, baseURI);
 
 		if (!optionalSchema.isPresent()) {
 
@@ -618,7 +623,8 @@ public abstract class AbstractJSONSchemaParser {
 	}
 
 	private Optional<Schema> createSchema(final String uuid,
-	                                      final String name) throws DMPPersistenceException {
+	                                      final String name,
+	                                      final String baseURI) throws DMPPersistenceException {
 
 		final Optional<Schema> optionalSchema = createSchema(uuid);
 
@@ -632,6 +638,11 @@ public abstract class AbstractJSONSchemaParser {
 		if (name != null) {
 
 			schema.setName(name);
+		}
+
+		if(baseURI != null) {
+
+			schema.setBaseURI(baseURI);
 		}
 
 		return Optional.of(schema);
@@ -742,7 +753,7 @@ public abstract class AbstractJSONSchemaParser {
 				finalRecordTagAttribute = recordTagAttribute;
 			}
 
-			final String recordTagAttributeURI = SchemaUtils.mintSchemaTermURI(finalRecordTagAttribute, schema.getUuid());
+			final String recordTagAttributeURI = SchemaUtils.mintSchemaTermURI(finalRecordTagAttribute, schema.getUuid(), Optional.ofNullable(schema.getBaseURI()));
 
 			final String recordClassUri = recordTagAttributeURI + RECORD_CLASS_POSTFIX;
 
