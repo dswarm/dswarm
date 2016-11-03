@@ -1035,6 +1035,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:
 			case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
 			case ConfigurationStatics.SRU_11_PICAPLUSXML_GLOBAL_STORAGE_TYPE:
+			case ConfigurationStatics.SPRINGER_JOURNALS_STORAGE_TYPE:
 
 				// eventBusProvider.get().post(new XMLConverterEvent(dataModel));
 
@@ -1166,6 +1167,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 			case ConfigurationStatics.OAIPMH_DC_TERMS_STORAGE_TYPE:
 			case ConfigurationStatics.OAIPMH_MARCXML_STORAGE_TYPE:
 			case ConfigurationStatics.SRU_11_PICAPLUSXML_GLOBAL_STORAGE_TYPE:
+			case ConfigurationStatics.SPRINGER_JOURNALS_STORAGE_TYPE:
 
 				// found XML data resource
 

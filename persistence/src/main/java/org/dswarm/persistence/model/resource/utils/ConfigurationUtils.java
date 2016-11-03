@@ -41,6 +41,7 @@ public final class ConfigurationUtils extends ExtendedBasicDMPJPAObjectUtils<Con
 		xmlStorageTypes.add(ConfigurationStatics.PICAPLUSXML_STORAGE_TYPE);
 		xmlStorageTypes.add(ConfigurationStatics.PNX_STORAGE_TYPE);
 		xmlStorageTypes.add(ConfigurationStatics.SRU_11_PICAPLUSXML_GLOBAL_STORAGE_TYPE);
+		xmlStorageTypes.add(ConfigurationStatics.SPRINGER_JOURNALS_STORAGE_TYPE);
 	}
 
 	public static Collection<String> getXMLStorageTypes() {

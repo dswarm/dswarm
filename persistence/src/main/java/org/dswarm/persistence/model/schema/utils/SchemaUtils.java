@@ -88,6 +88,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 	public static final String SRU_11_PICAPLUSXML_GLOBAL_SCHEMA_UUID = "Schema-93cd8d2a-a583-48f1-83e3-2867e9f85ec8";
 	public static final String OAI_PMH_DC_ELEMENTS_AND_EDM_SCHEMA_UUID = "Schema-e6d4ff86-07d9-494f-9299-9d67d3a0d9e8";
 	public static final String UBL_INTERMEDIATE_FORMAT_SCHEMA_UUID = "Schema-d06726be-a8e2-412a-b5e7-76cba340108b";
+	public static final String SPRINGER_JOURNALS_SCHEMA_UUID = "Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8";
 
 	private static final Collection<String> inbuiltSchemaUuids = new ArrayList<>();
 
@@ -109,6 +110,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 		inbuiltSchemaUuids.add(SRU_11_PICAPLUSXML_GLOBAL_SCHEMA_UUID);
 		inbuiltSchemaUuids.add(OAI_PMH_DC_ELEMENTS_AND_EDM_SCHEMA_UUID);
 		inbuiltSchemaUuids.add(UBL_INTERMEDIATE_FORMAT_SCHEMA_UUID);
+		inbuiltSchemaUuids.add(SPRINGER_JOURNALS_SCHEMA_UUID);
 	}
 
 	public static Collection<String> getInbuiltSchemaUuids() {

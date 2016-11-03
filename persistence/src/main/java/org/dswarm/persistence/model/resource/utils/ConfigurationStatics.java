@@ -151,4 +151,6 @@ public interface ConfigurationStatics {
 	String OAIPMH_MARCXML_STORAGE_TYPE = "oai-pmh+marcxml";
 
 	String SRU_11_PICAPLUSXML_GLOBAL_STORAGE_TYPE = "sru11+picaplusxml-global";
+
+	String SPRINGER_JOURNALS_STORAGE_TYPE = "springer-journals";
 }

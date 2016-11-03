@@ -58,6 +58,12 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 	}
 
 	@Test
+	public void testAttributePathsParsingForSpringerJournals() throws IOException {
+
+		testAttributePathsParsing("springer_journals.xsd", "Publisher", "springer_journals.attribute_paths.txt", false, XML_SCHEMA_PARSER);
+	}
+
+	@Test
 	public void testAttributePathsParsingForMarcXml() throws IOException {
 
 		testAttributePathsParsing("MARC21slim.xsd", "record", "marcxml_schema_attribute_paths.txt", false, XML_SCHEMA_PARSER);
@@ -571,6 +577,31 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 	public void parsePNXSchema() throws IOException, DMPPersistenceException {
 
 		parsePNXSchema(Optional.empty(), Optional.empty());
+	}
+
+	/**
+	 * creates the Springer Journals schema from the given XML schema file from scratch (by optionally reutilising existing SAPIs)
+	 *
+	 * @throws IOException
+	 * @throws DMPPersistenceException
+	 */
+	public static Schema parseSpringerJournalsSchema(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs) throws IOException, DMPPersistenceException {
+
+		final Schema schema = parseSchema("springer_journals.xsd", "Publisher", SchemaUtils.SPRINGER_JOURNALS_SCHEMA_UUID, "Springer Journals schema", optionalAttributePathsSAPIUUIDs, GuicedTest.injector.getInstance(XMLSchemaParser.class));
+
+		return schema;
+	}
+
+	/**
+	 * creates the Springer Journals schema from the given XML schema file from scratch
+	 *
+	 * @throws IOException
+	 * @throws DMPPersistenceException
+	 */
+	@Test
+	public void parseSpringerJournalsSchema() throws IOException, DMPPersistenceException {
+
+		parseSpringerJournalsSchema(Optional.empty());
 	}
 
 	/**
