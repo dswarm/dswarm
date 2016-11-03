@@ -31,6 +31,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import com.google.common.net.UrlEscapers;
 import com.google.inject.Provider;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -489,18 +490,37 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 	public static String mintUri(final String uri, final String localName) {
 
-		final String finalLocalName = UrlEscapers.urlFormParameterEscaper().escape(localName);
+		// 1. uri ends with slash
+		// 2. uri ends with hash
+		// 3. local name starts with hash
 
-		// allow has and slash uris
+		final boolean localNameStartsWithHash = localName.startsWith(HASH);
+
+		// allow hash and slash uris
 		if (uri != null && uri.endsWith(SLASH)) {
 
-			return uri + finalLocalName;
+			final String finalLocalNameForSlash;
+
+			if(localNameStartsWithHash) {
+
+				finalLocalNameForSlash = StringUtils.stripStart(localName, HASH);
+			} else {
+
+				finalLocalNameForSlash = localName;
+			}
+
+			final String finalLocalNameForSlashEscaped = UrlEscapers.urlFormParameterEscaper().escape(finalLocalNameForSlash);
+
+			return uri + finalLocalNameForSlashEscaped;
 		}
 
-		if (localName.startsWith(HASH)) {
+
+		if (localNameStartsWithHash) {
 
 			return uri + localName;
 		}
+
+		final String finalLocalName = UrlEscapers.urlFormParameterEscaper().escape(localName);
 
 		if (uri != null && uri.endsWith(HASH)) {
 
