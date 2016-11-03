@@ -587,7 +587,11 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 	 */
 	public static Schema parseSpringerJournalsSchema(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs) throws IOException, DMPPersistenceException {
 
-		final Schema schema = parseSchema("springer_journals.xsd", "Publisher", SchemaUtils.SPRINGER_JOURNALS_SCHEMA_UUID, "Springer Journals schema", optionalAttributePathsSAPIUUIDs, GuicedTest.injector.getInstance(XMLSchemaParser.class));
+		final String schemaName = "Springer Journals schema";
+		final String baseURI = SchemaUtils.determineSchemaNamespaceURI(SchemaUtils.SPRINGER_JOURNALS_SCHEMA_UUID);
+		final String recordIdentifier = "Publisher";
+
+		final Schema schema = parseSchema("springer_journals.xsd", recordIdentifier, SchemaUtils.SPRINGER_JOURNALS_SCHEMA_UUID, schemaName, baseURI, optionalAttributePathsSAPIUUIDs, GuicedTest.injector.getInstance(XMLSchemaParser.class));
 
 		return schema;
 	}
