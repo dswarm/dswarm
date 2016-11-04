@@ -64,13 +64,13 @@ import org.dswarm.persistence.util.GDMUtil;
 @Out(GDMModel.class)
 public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>> {
 
-	private       String                        currentId;
-	private       Model                         model;
-	private       Resource                      recordResource;
-	private       ResourceNode                  recordNode;
-	private       Node                          entityNode;
-	private       Stack<Tuple<Node, Predicate>> entityStack;
-	private final Stack<String>                 elementURIStack;
+	private String currentId;
+	private Model model;
+	private Resource recordResource;
+	private ResourceNode recordNode;
+	private Node entityNode;
+	private Stack<Tuple<Node, Predicate>> entityStack;
+	private final Stack<String> elementURIStack;
 
 	private static final String DATA_MODEL_BASE_URI = SchemaUtils.DATA_MODEL_BASE_URI + "%s";
 
@@ -89,20 +89,20 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 
 	private boolean inRecord;
 	private StringBuilder valueBuffer = new StringBuilder();
-	private String       uri;
+	private String uri;
 	private ResourceNode recordType;
 
-	private final Optional<DataModel>                         dataModel;
-	private final Optional<Schema>                            optionalSchema;
+	private final Optional<DataModel> dataModel;
+	private final Optional<Schema> optionalSchema;
 	private final Optional<Map<String, AdvancedDMPJPAObject>> optionalTermMap;
-	private final Optional<String>                            dataModelUri;
+	private final Optional<String> dataModelUri;
 
-	private       long                      nodeIdCounter = 1;
-	private final Predicate                 rdfType       = new Predicate(GDMUtil.RDF_type);
-	private final Map<String, Predicate>    predicates    = Maps.newHashMap();
-	private final Map<String, ResourceNode> types         = Maps.newHashMap();
-	private final Map<String, AtomicLong>   valueCounter  = Maps.newHashMap();
-	private final Map<String, String>       uris          = Maps.newHashMap();
+	private long nodeIdCounter = 1;
+	private final Predicate rdfType = new Predicate(GDMUtil.RDF_type);
+	private final Map<String, Predicate> predicates = Maps.newHashMap();
+	private final Map<String, ResourceNode> types = Maps.newHashMap();
+	private final Map<String, AtomicLong> valueCounter = Maps.newHashMap();
+	private final Map<String, String> uris = Maps.newHashMap();
 
 	public XMLGDMEncoder(final Optional<DataModel> dataModel, final boolean utiliseExistingSchema) {
 
@@ -342,7 +342,18 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 	}
 
 	private static Optional<String> init(final Optional<DataModel> dataModel) {
-		return dataModel.map(dm -> StringUtils.stripEnd(DataModelUtils.determineDataModelSchemaBaseURI(dm), SchemaUtils.HASH));
+
+		return dataModel.map(dm -> {
+
+			final String dataModelSchemaBaseURI = DataModelUtils.determineDataModelSchemaBaseURI(dm);
+
+			if(dataModelSchemaBaseURI.endsWith(SchemaUtils.HASH)) {
+
+				return StringUtils.stripEnd(dataModelSchemaBaseURI, SchemaUtils.HASH);
+			}
+
+			return dataModelSchemaBaseURI;
+		});
 	}
 
 	private String mintDataModelUri(@Nullable final String uri) {
@@ -433,11 +444,11 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 
 	private String getRecordTagURI(final String uri, final String localName) {
 
-		final String typedLocalName = localName  + SchemaUtils.TYPE_POSTFIX;
+		final String typedLocalName = localName + SchemaUtils.TYPE_POSTFIX;
 
 		final String typeRecordTagURI = getTermURI(uri, typedLocalName);
 
-		if(!typeRecordTagURI.endsWith(SchemaUtils.TYPE_POSTFIX)) {
+		if (!typeRecordTagURI.endsWith(SchemaUtils.TYPE_POSTFIX)) {
 
 			return recordTagUri;
 		}

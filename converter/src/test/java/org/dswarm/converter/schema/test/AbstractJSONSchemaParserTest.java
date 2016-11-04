@@ -59,21 +59,23 @@ public abstract class AbstractJSONSchemaParserTest extends GuicedTest {
 	                          final String recordIdentifier,
 	                          final String schemaUUID,
 	                          final String schemaName,
+	                          final String baseURI,
 	                          final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
 	                          final AbstractJSONSchemaParser schemaParser) throws DMPPersistenceException {
 
-		return parseSchema(schemaFileName, recordIdentifier, schemaUUID, schemaName, optionalAttributePathsSAPIUUIDs, Optional.empty(), schemaParser);
+		return parseSchema(schemaFileName, recordIdentifier, schemaUUID, schemaName, baseURI, optionalAttributePathsSAPIUUIDs, Optional.empty(), schemaParser);
 	}
 
 	static Schema parseSchema(final String schemaFileName,
 	                          final String recordIdentifier,
 	                          final String schemaUUID,
 	                          final String schemaName,
+	                          final String baseURI,
 	                          final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
 	                          final Optional<Set<String>> optionalExcludeAttributePathStubs,
 	                          final AbstractJSONSchemaParser schemaParser) throws DMPPersistenceException {
 
-		final Optional<Schema> optionalSchema = schemaParser.parse(schemaFileName, recordIdentifier, schemaUUID, schemaName, optionalAttributePathsSAPIUUIDs, optionalExcludeAttributePathStubs);
+		final Optional<Schema> optionalSchema = schemaParser.parse(schemaFileName, recordIdentifier, schemaUUID, schemaName, baseURI, optionalAttributePathsSAPIUUIDs, optionalExcludeAttributePathStubs);
 
 		Assert.assertTrue(optionalSchema.isPresent());
 

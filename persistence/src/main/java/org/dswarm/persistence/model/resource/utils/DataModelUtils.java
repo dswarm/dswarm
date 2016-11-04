@@ -22,10 +22,12 @@ import java.util.Collection;
 import java.util.UUID;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.dswarm.persistence.model.resource.DataModel;
+import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.model.utils.ExtendedBasicDMPJPAObjectUtils;
 
 /**
@@ -93,28 +95,29 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 
 	public static String determineDataModelSchemaBaseURI(final DataModel dataModel) {
 
-		if (dataModel != null && dataModel.getSchema() != null && dataModel.getSchema().getUuid() != null) {
+		if (dataModel != null && dataModel.getSchema() != null) {
 
-			final String schemaUuid = dataModel.getSchema().getUuid();
+			final Schema schema = dataModel.getSchema();
 
-			return BASE_URI + SCHEMAS_DIRECTIVE + SLASH + schemaUuid + HASH;
+			if(!Strings.isNullOrEmpty(schema.getBaseURI())) {
+
+				// utilize assigned base URI
+
+				return schema.getBaseURI();
+			} else if(!Strings.isNullOrEmpty(schema.getUuid())) {
+
+				// make use of schema identifier
+
+				final String schemaUuid = dataModel.getSchema().getUuid();
+
+				return BASE_URI + SCHEMAS_DIRECTIVE + SLASH + schemaUuid + HASH;
+			} else {
+
+				return generateLegacyDataModelSchemaBaseURI(dataModel);
+			}
 		} else {
 
-			// for legacy purpose (?)
-
-			final String dataModelBaseURI = DataModelUtils.determineDataModelBaseURI(dataModel);
-
-			if (dataModelBaseURI == null) {
-
-				return null;
-			}
-
-			if (dataModelBaseURI.endsWith(SLASH)) {
-
-				return dataModelBaseURI + SCHEMA_IDENTIFIER + HASH;
-			}
-
-			return dataModelBaseURI + SLASH + SCHEMA_IDENTIFIER + HASH;
+			return generateLegacyDataModelSchemaBaseURI(dataModel);
 		}
 	}
 
@@ -238,5 +241,23 @@ public final class DataModelUtils extends ExtendedBasicDMPJPAObjectUtils<DataMod
 		final String recordURI = sb.append(UUID.randomUUID()).toString();
 
 		return new org.dswarm.graph.json.Resource(recordURI);
+	}
+
+	private static String generateLegacyDataModelSchemaBaseURI(final DataModel dataModel) {
+		// for legacy purpose (?)
+
+		final String dataModelBaseURI = DataModelUtils.determineDataModelBaseURI(dataModel);
+
+		if (dataModelBaseURI == null) {
+
+			return null;
+		}
+
+		if (dataModelBaseURI.endsWith(SLASH)) {
+
+			return dataModelBaseURI + SCHEMA_IDENTIFIER + HASH;
+		}
+
+		return dataModelBaseURI + SLASH + SCHEMA_IDENTIFIER + HASH;
 	}
 }

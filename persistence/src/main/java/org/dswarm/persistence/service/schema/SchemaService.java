@@ -68,9 +68,12 @@ public class SchemaService extends BasicDMPJPAService<ProxySchema, Schema> {
 	public void updateObjectInternal(final Schema object, final Schema updateObject)
 			throws DMPPersistenceException {
 
+		final String baseURI = object.getBaseURI();
 		final Collection<SchemaAttributePathInstance> attributePaths = object.getAttributePaths();
 		final Clasz recordClass = object.getRecordClass();
 		final ContentSchema contentSchema = object.getContentSchema();
+
+		updateObject.setBaseURI(baseURI);
 
 		// if (attributePaths != null) {
 		//

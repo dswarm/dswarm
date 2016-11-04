@@ -257,8 +257,12 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 	                                                           final Optional<String> optionalContentSchemaIdentifier) throws DMPPersistenceException {
 
 		final String childSchemaName = "DC Elements + EDM";
-		final Tuple<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("OAI-PMH.xsd", "record",
-				SchemaUtils.OAI_PMH_DC_ELEMENTS_AND_EDM_SCHEMA_UUID, "OAI-PMH + " + childSchemaName + " schema");
+		final String schemaName = "OAI-PMH + " + childSchemaName + " schema";
+		final String baseURI = null;
+		final String recordIdentifier = "record";
+
+		final Tuple<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("OAI-PMH.xsd", recordIdentifier,
+				SchemaUtils.OAI_PMH_DC_ELEMENTS_AND_EDM_SCHEMA_UUID, schemaName, baseURI);
 
 		final Map<String, AttributePathHelper> rootAttributePaths = result.v2();
 
@@ -394,7 +398,11 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 		final String schemaUUID = UUIDService.getUUID(Schema.class.getSimpleName());
 
 		final XMLSchemaParser schemaParser = GuicedTest.injector.getInstance(XMLSchemaParser.class);
-		final java.util.Optional<Schema> optionalSchema = schemaParser.parse("mabxml-1.xsd", "datensatz", schemaUUID, "mabxml schema");
+		final String schemaName = "mabxml schema";
+		final String baseURI = "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#";
+		final String recordIdentifier = "datensatz";
+
+		final java.util.Optional<Schema> optionalSchema = schemaParser.parse("mabxml-1.xsd", recordIdentifier, schemaUUID, schemaName, baseURI);
 
 		Assert.assertTrue(optionalSchema.isPresent());
 	}
@@ -408,7 +416,11 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 	public static Schema parseMabxmlSchema(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
 	                                       final Optional<String> optionalContentSchemaIdentifier) throws IOException, DMPPersistenceException {
 
-		final Schema schema = parseSchema("mabxml-1.xsd", "datensatz", SchemaUtils.MABXML_SCHEMA_UUID, "mabxml schema", optionalAttributePathsSAPIUUIDs, GuicedTest.injector.getInstance(XMLSchemaParser.class));
+		final String schemaName = "mabxml schema";
+		final String baseURI = "http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#";
+		final String recordIdentifier = "datensatz";
+
+		final Schema schema = parseSchema("mabxml-1.xsd", recordIdentifier, SchemaUtils.MABXML_SCHEMA_UUID, schemaName, baseURI, optionalAttributePathsSAPIUUIDs, GuicedTest.injector.getInstance(XMLSchemaParser.class));
 
 		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(schema);
 
@@ -440,7 +452,11 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 	public static Schema parsePicaPlusXmlSchema(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
 	                                            final Optional<String> optionalContentSchemaIdentifier) throws IOException, DMPPersistenceException {
 
-		final Schema schema = parseSchema("ppxml-1.0.xsd", "record", SchemaUtils.PICAPLUSXML_SCHEMA_UUID, "PICA+ XML schema", optionalAttributePathsSAPIUUIDs, XML_SCHEMA_PARSER);
+		final String schemaName = "PICA+ XML schema";
+		final String baseURI = "http://www.oclcpica.org/xmlns/ppxml-1.0#";
+		final String recordIdentifier = "record";
+
+		final Schema schema = parseSchema("ppxml-1.0.xsd", recordIdentifier, SchemaUtils.PICAPLUSXML_SCHEMA_UUID, schemaName, baseURI, optionalAttributePathsSAPIUUIDs, XML_SCHEMA_PARSER);
 
 		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(schema);
 
@@ -477,7 +493,11 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 
 		excludeAttributePathStubs.add("http://www.oclcpica.org/xmlns/ppxml-1.0#owner");
 
-		final Schema schema = parseSchema("ppxml-1.0.xsd", "record", SchemaUtils.PICAPLUSXML_GLOBAL_SCHEMA_UUID, "PICA+ XML 'global' schema", optionalAttributePathsSAPIUUIDs, Optional.of(excludeAttributePathStubs), XML_SCHEMA_PARSER);
+		final String schemaName = "PICA+ XML 'global' schema";
+		final String baseURI = "http://www.oclcpica.org/xmlns/ppxml-1.0#";
+		final String recordIdentifier = "record";
+
+		final Schema schema = parseSchema("ppxml-1.0.xsd", recordIdentifier, SchemaUtils.PICAPLUSXML_GLOBAL_SCHEMA_UUID, schemaName, baseURI, optionalAttributePathsSAPIUUIDs, Optional.of(excludeAttributePathStubs), XML_SCHEMA_PARSER);
 
 		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(schema);
 
@@ -522,7 +542,11 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 	public static Schema parsePNXSchema(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
 	                                    final Optional<String> optionalContentSchemaIdentifier) throws IOException, DMPPersistenceException {
 
-		final Schema schema = parseSchema("pnx.xsd", "record", SchemaUtils.PNX_SCHEMA_UUID, "pnx schema", optionalAttributePathsSAPIUUIDs, GuicedTest.injector.getInstance(XMLSchemaParser.class));
+		final String schemaName = "pnx schema";
+		final String baseURI = "http://www.exlibrisgroup.com/xsd/primo/primo_nm_bib#";
+		final String recordIdentifier = "record";
+
+		final Schema schema = parseSchema("pnx.xsd", recordIdentifier, SchemaUtils.PNX_SCHEMA_UUID, schemaName, baseURI, optionalAttributePathsSAPIUUIDs, GuicedTest.injector.getInstance(XMLSchemaParser.class));
 
 		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(schema);
 
@@ -558,7 +582,11 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 	public static Schema parseMarcXmlSchema(final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
 	                                        final Optional<String> optionalContentSchemaIdentifier) throws IOException, DMPPersistenceException {
 
-		final Schema schema = parseSchema("MARC21slim.xsd", "record", SchemaUtils.MARCXML_SCHEMA_UUID, "MARCXML schema", optionalAttributePathsSAPIUUIDs, GuicedTest.injector.getInstance(XMLSchemaParser.class));
+		final String schemaName = "MARCXML schema";
+		final String baseURI = "http://www.loc.gov/MARC21/slim#";
+		final String recordIdentifier = "record";
+
+		final Schema schema = parseSchema("MARC21slim.xsd", recordIdentifier, SchemaUtils.MARCXML_SCHEMA_UUID, schemaName, baseURI, optionalAttributePathsSAPIUUIDs, GuicedTest.injector.getInstance(XMLSchemaParser.class));
 
 		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(schema);
 
@@ -602,19 +630,21 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 	private static Schema parseSchema(final String xsdFileName,
 	                                  final String recordIdentifier,
 	                                  final String schemaUUID,
-	                                  final String schemaName) throws DMPPersistenceException {
+	                                  final String schemaName,
+	                                  final String baseURI) throws DMPPersistenceException {
 
 
-		return parseSchema(xsdFileName, recordIdentifier, schemaUUID, schemaName, Optional.empty(), XML_SCHEMA_PARSER);
+		return parseSchema(xsdFileName, recordIdentifier, schemaUUID, schemaName, baseURI, Optional.empty(), XML_SCHEMA_PARSER);
 	}
 
 	private static Tuple<Schema, Map<String, AttributePathHelper>> parseSchemaSeparately(final String xsdFileName,
 	                                                                                     final String recordIdentifier,
 	                                                                                     final String schemaUUID,
-	                                                                                     final String schemaName) throws DMPPersistenceException {
+	                                                                                     final String schemaName,
+	                                                                                     final String baseURI) throws DMPPersistenceException {
 
 		final java.util.Optional<Tuple<Schema, Map<String, AttributePathHelper>>> optionalResult = GuicedTest.injector.getInstance(XMLSchemaParser.class).parseSeparately(xsdFileName,
-				recordIdentifier, schemaUUID, schemaName);
+				recordIdentifier, schemaUUID, schemaName, baseURI);
 
 		Assert.assertTrue(optionalResult.isPresent());
 
@@ -679,8 +709,12 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 	                                             final boolean includeRecordTag,
 	                                             final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs) throws DMPPersistenceException {
 
-		final Tuple<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("OAI-PMH.xsd", "record", schemaUUID,
-				"OAI-PMH + " + childSchemaName + " schema");
+		final String schemaName = "OAI-PMH + " + childSchemaName + " schema";
+		final String baseURI = null;
+		final String recordIdentifier = "record";
+
+		final Tuple<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("OAI-PMH.xsd", recordIdentifier, schemaUUID,
+				schemaName, baseURI);
 
 		final Map<String, AttributePathHelper> rootAttributePaths = result.v2();
 
@@ -705,8 +739,12 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 	                                            final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
 	                                            final Optional<Set<String>> optionalExcludeAttributePathStubs) throws DMPPersistenceException {
 
-		final Tuple<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("srw-types.1_1.xsd", "record", schemaUUID,
-				"SRU 1.1 + " + childSchemaName + " schema");
+		final String schemaName = "SRU 1.1 + " + childSchemaName + " schema";
+		final String baseURI = null;
+		final String recordIdentifier = "record";
+
+		final Tuple<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("srw-types.1_1.xsd", recordIdentifier, schemaUUID,
+				schemaName, baseURI);
 
 		final Map<String, AttributePathHelper> rootAttributePaths = result.v2();
 

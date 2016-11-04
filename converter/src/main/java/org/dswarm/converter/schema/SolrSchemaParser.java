@@ -34,7 +34,6 @@ import javax.xml.xpath.XPathFactory;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.dswarm.persistence.service.schema.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -53,6 +52,11 @@ import org.dswarm.persistence.model.schema.proxy.ProxyAttributePath;
 import org.dswarm.persistence.model.schema.proxy.ProxySchema;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 import org.dswarm.persistence.service.UUIDService;
+import org.dswarm.persistence.service.schema.AttributePathService;
+import org.dswarm.persistence.service.schema.AttributeService;
+import org.dswarm.persistence.service.schema.ClaszService;
+import org.dswarm.persistence.service.schema.SchemaAttributePathInstanceService;
+import org.dswarm.persistence.service.schema.SchemaService;
 
 /**
  * Transforms a given Solr schema file (schema.xml) to a d:swarm schema.
@@ -107,6 +111,7 @@ public class SolrSchemaParser {
 	public Optional<Schema> parse(final String solrSchemaFilePath,
 	                              final String schemaUUID,
 	                              final String schemaName,
+	                              final String baseURI,
 	                              final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs) throws DMPPersistenceException {
 
 		final Optional<Document> optionalDocument = readXML(solrSchemaFilePath);
@@ -129,8 +134,16 @@ public class SolrSchemaParser {
 			return Optional.empty();
 		}
 
-		final Schema schema = createSchema(schemaUUID, schemaName);
-		final String schemaBaseURI = SchemaUtils.determineSchemaNamespaceURI(schema.getUuid());
+		final Schema schema = createSchema(schemaUUID, schemaName, baseURI);
+		final String schemaBaseURI;
+
+		if(baseURI != null && !baseURI.trim().isEmpty()) {
+
+			schemaBaseURI = baseURI;
+		} else {
+
+			schemaBaseURI = SchemaUtils.determineSchemaNamespaceURI(schema.getUuid());
+		}
 
 		final NodeList fields = optionalFields.get();
 		final List<Attribute> attributes = determineAndCreateAttributes(fields, schemaBaseURI);
@@ -147,7 +160,7 @@ public class SolrSchemaParser {
 
 		if (attributePaths.isEmpty()) {
 
-			LOG.error("couldn't create any attribute path from the extracted attributes from the Solr schem at '{}'", solrSchemaFilePath);
+			LOG.error("couldn't create any attribute path from the extracted attributes from the Solr schema at '{}'", solrSchemaFilePath);
 
 			return Optional.empty();
 		}
@@ -177,9 +190,10 @@ public class SolrSchemaParser {
 
 	public Optional<Schema> parse(final String solrSchemaFilePath,
 	                              final String schemaUUID,
-	                              final String schemaName) throws DMPPersistenceException {
+	                              final String schemaName,
+	                              final String baseURI) throws DMPPersistenceException {
 
-		return parse(solrSchemaFilePath, schemaUUID, schemaName, Optional.empty());
+		return parse(solrSchemaFilePath, schemaUUID, schemaName, baseURI, Optional.empty());
 	}
 
 	private Optional<Document> readXML(final String solrSchemaFilePath) {
@@ -322,7 +336,7 @@ public class SolrSchemaParser {
 		return attributePaths;
 	}
 
-	private Schema createSchema(final String uuid, final String name) {
+	private Schema createSchema(final String uuid, final String name, final String baseURI) {
 
 		final String finalUUID;
 
@@ -339,6 +353,11 @@ public class SolrSchemaParser {
 		if (name != null && !name.trim().isEmpty()) {
 
 			schema.setName(name);
+		}
+
+		if(baseURI != null && !baseURI.trim().isEmpty()) {
+
+			schema.setBaseURI(baseURI);
 		}
 
 		return schema;

@@ -15,22 +15,27 @@
  */
 package org.dswarm.converter.schema.test;
 
-import org.dswarm.converter.GuicedTest;
-import org.dswarm.converter.schema.SolrSchemaParser;
-import org.dswarm.persistence.DMPPersistenceException;
-import org.dswarm.persistence.model.schema.*;
-import org.dswarm.persistence.model.schema.utils.SchemaUtils;
-import org.dswarm.persistence.service.UUIDService;
-import org.dswarm.persistence.service.schema.SchemaService;
-import org.dswarm.persistence.util.DMPPersistenceUtil;
-import org.junit.Assert;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import org.dswarm.converter.GuicedTest;
+import org.dswarm.converter.schema.SolrSchemaParser;
+import org.dswarm.persistence.DMPPersistenceException;
+import org.dswarm.persistence.model.schema.Attribute;
+import org.dswarm.persistence.model.schema.AttributePath;
+import org.dswarm.persistence.model.schema.ContentSchema;
+import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.model.schema.SchemaAttributePathInstance;
+import org.dswarm.persistence.model.schema.utils.SchemaUtils;
+import org.dswarm.persistence.service.UUIDService;
+import org.dswarm.persistence.service.schema.SchemaService;
+import org.dswarm.persistence.util.DMPPersistenceUtil;
 
 /**
  * @author tgaengler
@@ -86,8 +91,9 @@ public class SolrSchemaParserTest extends GuicedTest {
 	                                         final Optional<String> optionalContentSchemaIdentifier) throws DMPPersistenceException {
 
 		final String name = "finc Solr schema";
+		final String baseURI = SchemaUtils.determineSchemaNamespaceURI(SchemaUtils.FINC_SOLR_SCHEMA_UUID);
 
-		final Schema schema = parseSchema("finc-solr-schema.xml", SchemaUtils.FINC_SOLR_SCHEMA_UUID, name, optionalAttributePathsSAPIUUIDs);
+		final Schema schema = parseSchema("finc-solr-schema.xml", SchemaUtils.FINC_SOLR_SCHEMA_UUID, name, baseURI, optionalAttributePathsSAPIUUIDs);
 
 		return addFincSolrContentSchema(schema, optionalContentSchemaIdentifier);
 	}
@@ -100,10 +106,11 @@ public class SolrSchemaParserTest extends GuicedTest {
 	private static Schema parseSchema(final String solrSchemaFileName,
 	                                  final String schemaUUID,
 	                                  final String schemaName,
+	                                  final String baseURI,
 	                                  final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs) throws DMPPersistenceException {
 
 		final SolrSchemaParser solrSchemaParser = GuicedTest.injector.getInstance(SolrSchemaParser.class);
-		final Optional<Schema> optionalSchema = solrSchemaParser.parse(solrSchemaFileName, schemaUUID, schemaName, optionalAttributePathsSAPIUUIDs);
+		final Optional<Schema> optionalSchema = solrSchemaParser.parse(solrSchemaFileName, schemaUUID, schemaName, baseURI, optionalAttributePathsSAPIUUIDs);
 
 		Assert.assertTrue(optionalSchema.isPresent());
 
@@ -112,9 +119,10 @@ public class SolrSchemaParserTest extends GuicedTest {
 
 	private static Schema parseSchema(final String solrSchemaFileName,
 	                                  final String schemaUUID,
-	                                  final String schemaName) throws DMPPersistenceException {
+	                                  final String schemaName,
+	                                  final String baseURI) throws DMPPersistenceException {
 
-		return parseSchema(solrSchemaFileName, schemaUUID, schemaName, Optional.empty());
+		return parseSchema(solrSchemaFileName, schemaUUID, schemaName, baseURI, Optional.empty());
 	}
 
 	private static Schema addFincSolrContentSchema(final Schema schema,
