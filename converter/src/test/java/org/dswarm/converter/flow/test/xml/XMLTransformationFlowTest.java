@@ -439,6 +439,12 @@ public class XMLTransformationFlowTest extends GuicedTest {
 	}
 
 	@Test
+	public void testDD1406Morph() throws Exception {
+
+		testXMLMorphWithTuples("dd-1406/dd-1406.morph.result.json", "dd-1406/dd-1406.task.morph.xml", "dd-1406/dd-1406.input.tuples.json");
+	}
+
+	@Test
 	public void testDD1397Morph() throws Exception {
 
 		testXMLMorphWithTuples("dd-1397/dd-1397.morph.result.json", "dd-1397/dd-1397.task.morph.xml", "dd-1397/dd-1397.input.tuples.json");
@@ -448,6 +454,12 @@ public class XMLTransformationFlowTest extends GuicedTest {
 	public void testDD1399Task() throws Exception {
 
 		testXMLTaskWithTuples("dd-1399/dd-1399.result.json", "dd-1399/dd-1399.task.json", "dd-1399/dd-1399.input.tuples.json");
+	}
+
+	@Test
+	public void testDD1406Task() throws Exception {
+
+		testXMLTaskWithTuples("dd-1406/dd-1406.result.json", "dd-1406/dd-1406.task.json", "dd-1406/dd-1406.input.tuples.json");
 	}
 
 	@Test

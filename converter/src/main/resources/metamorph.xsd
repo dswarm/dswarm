@@ -724,6 +724,7 @@
 			<element ref="tns:count" />
 			<element ref="tns:urlencode" />
 			<element ref="tns:buffer" />
+			<element ref="tns:tail" />
 			<element ref="tns:name" />
 			<element ref="tns:switch-name-value" />
 			<element ref="tns:unique" />
@@ -1183,8 +1184,18 @@
 
 	<element name="buffer">
 		<annotation>
-			<documentation>Buffers literals and resleases them on a flush signal.
-				(Used to delay litereals)</documentation>
+			<documentation>Buffers literals and releases them on a flush signal.
+				(Used to delay literals)</documentation>
+		</annotation>
+		<complexType>
+			<attribute name="flushWith" type="string" use="optional"
+			           default="record" />
+		</complexType>
+	</element>
+
+	<element name="tail">
+		<annotation>
+			<documentation>Emit all received literals except of the first one.</documentation>
 		</annotation>
 		<complexType>
 			<attribute name="flushWith" type="string" use="optional"
