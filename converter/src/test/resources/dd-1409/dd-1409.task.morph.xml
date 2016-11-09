@@ -1,0 +1,60 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+	<meta>
+		<name>mappinga09482ad-4b57-76d8-bf59-f5f7988dbabf, mapping9e5ce05e-1426-6972-9285-1209a4d643d3,
+			mappingec9af6f9-72da-fcc3-b479-4498aadb110f
+		</name>
+	</meta>
+	<rules>
+		<data name="@Journal_Volume_Issue_Article_ArticleInfo_ArticleSubTitle_value__431ffd3d-2ea3-c1bd-805a-5e42560c9836__2__"
+		      source="http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Journal&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Volume&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Issue&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Article&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/ArticleInfo&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/ArticleSubTitle&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+		<data name="@Journal_Volume_Issue_Article_ArticleInfo_ArticleTitle_value__58347249-71a4-a20a-81e4-3d81cb6e8ee0__2__"
+		      source="http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Journal&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Volume&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Issue&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Article&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/ArticleInfo&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/ArticleTitle&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+		<data name="@Journal_Volume_Issue_Article_ArticleInfo_ArticleSuperTitle_value__76210285-b795-ce90-7403-9d738ab908dc__2__"
+		      source="http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Journal&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Volume&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Issue&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Article&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/ArticleInfo&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/ArticleSuperTitle&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+		<concat delimiter="; "
+		        flushWith="http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Journal&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Volume&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Issue&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Article&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/ArticleInfo"
+		        name="@__TRANSFORMATION_OUTPUT_VARIABLE__7b8a8512-900b-d229-746c-cd46b33e3b11" reset="true">
+			<data name="componente02acf82-72f6-ff0a-b2b8-c4d3569328de"
+			      source="@componente02acf82-72f6-ff0a-b2b8-c4d3569328de">
+				<buffer flushWith="http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Journal&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Volume&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Issue&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Article&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/ArticleInfo" />
+			</data>
+			<data name="component812e04c3-3ad9-a695-6493-4740e0fcf24b"
+			      source="@component812e04c3-3ad9-a695-6493-4740e0fcf24b">
+				<buffer flushWith="http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Journal&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Volume&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Issue&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Article&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/ArticleInfo" />
+			</data>
+			<data name="component9f8e310d-2841-4659-0867-ee96f7d2b752"
+			      source="@component9f8e310d-2841-4659-0867-ee96f7d2b752">
+				<buffer flushWith="http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Journal&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Volume&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Issue&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/Article&#30;http://data.slub-dresden.de/schemas/Schema-f7fd6d5d-9b85-4103-85d0-f062c8de52f8/ArticleInfo" />
+			</data>
+		</concat>
+		<data name="@component56427e8e-afe2-b2d4-b853-64217536cd1e"
+		      source="@Journal_Volume_Issue_Article_ArticleInfo_ArticleTitle_value__58347249-71a4-a20a-81e4-3d81cb6e8ee0__2__">
+			<occurrence only="1"/>
+		</data>
+		<data name="@componente02acf82-72f6-ff0a-b2b8-c4d3569328de"
+		      source="@componente2a05365-19b8-bf94-76e4-d04c1c7cdee3">
+			<trim/>
+		</data>
+		<data name="@componente2a05365-19b8-bf94-76e4-d04c1c7cdee3"
+		      source="@Journal_Volume_Issue_Article_ArticleInfo_ArticleSubTitle_value__431ffd3d-2ea3-c1bd-805a-5e42560c9836__2__">
+			<occurrence only="1"/>
+		</data>
+		<data name="@component9f8e310d-2841-4659-0867-ee96f7d2b752"
+		      source="@componentda329e9b-85a2-3442-a9e0-74f69e59c5bc">
+			<trim/>
+		</data>
+		<data name="@component812e04c3-3ad9-a695-6493-4740e0fcf24b"
+		      source="@component56427e8e-afe2-b2d4-b853-64217536cd1e">
+			<trim/>
+		</data>
+		<data name="@componentda329e9b-85a2-3442-a9e0-74f69e59c5bc"
+		      source="@Journal_Volume_Issue_Article_ArticleInfo_ArticleSuperTitle_value__76210285-b795-ce90-7403-9d738ab908dc__2__">
+			<occurrence only="1"/>
+		</data>
+		<data name="http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/title_full"
+		      source="@__TRANSFORMATION_OUTPUT_VARIABLE__7b8a8512-900b-d229-746c-cd46b33e3b11"/>
+	</rules>
+	<maps/>
+</metamorph>
