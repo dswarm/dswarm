@@ -147,6 +147,8 @@ public abstract class AbstractMorphScriptBuilder<MORPHSCRIPTBUILDERIMPL extends 
 
 	protected static final String METAMORPH_ELEMENT_DATA = "data";
 
+	protected static final String METAMORPH_ELEMENT_BUFFER = "buffer";
+
 	protected static final String METAMORPH_ELEMENT_ENTITY = "entity";
 
 	protected static final String METAMORPH_FUNCTION_COMBINE = "combine";

@@ -469,6 +469,12 @@ public class XMLTransformationFlowTest extends GuicedTest {
 	}
 
 	@Test
+	public void testDD1409Task() throws Exception {
+
+		testXMLTaskWithTuples("dd-1409/dd-1409.result.json", "dd-1409/dd-1409.task.json", "dd-1409/dd-1409.input.tuples.json");
+	}
+
+	@Test
 	public void testDD1397Task() throws Exception {
 
 		testXMLTaskWithTuples("dd-1397/dd-1397.result.json", "dd-1397/dd-1397.task.json", "dd-1397/dd-1397.input.tuples.json");

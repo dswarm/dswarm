@@ -1,21 +1,21 @@
 [ {
-  "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/d4e2be1a-a7e3-4954-9fbd-455981f79db0" : [ {
+  "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/b670c805-96b8-4aeb-9936-658483c2d06c" : [ {
     "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/authors" : [ [ {
       "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aulast" : "Thomas"
     }, {
-      "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.au" : "Neethal Thomas"
+      "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.au" : "Thomas Neethal"
     }, {
       "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aufirst" : "Neethal"
     } ], [ {
       "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aulast" : "Vichare"
     }, {
-      "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.au" : "Geeta Vichare"
+      "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.au" : "Vichare Geeta"
     }, {
       "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aufirst" : "Geeta"
     } ], [ {
       "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aulast" : "Sinha"
     }, {
-      "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.au" : "A. K. Sinha"
+      "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.au" : "Sinha A. K."
     }, {
       "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aufirst" : "A. K."
     } ] ]
@@ -23,23 +23,23 @@
     "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/RecordType"
   } ]
 }, {
-  "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/de8ad047-1a52-44de-9781-2a72db46793f" : [ {
+  "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/e446cfa2-779a-455c-b5cc-ce2c58f2aa3e" : [ {
     "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/authors" : [ [ {
       "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aulast" : "Thomas"
     }, {
-      "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.au" : "Neethal Thomas"
+      "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.au" : "Thomas Neethal"
     }, {
       "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aufirst" : "Neethal"
     } ], [ {
       "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aulast" : "Vichare"
     }, {
-      "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.au" : "Geeta Vichare"
+      "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.au" : "Vichare Geeta"
     }, {
       "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aufirst" : "Geeta"
     } ], [ {
       "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aulast" : "Sinha"
     }, {
-      "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.au" : "A. K. Sinha"
+      "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.au" : "Sinha A. K."
     }, {
       "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aufirst" : "A. K."
     } ] ]
@@ -47,17 +47,17 @@
     "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/RecordType"
   } ]
 }, {
-  "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/f11cd584-6049-4d30-807e-a520bd7ee5d8" : [ {
+  "http://data.slub-dresden.de/datamodels/DataModel-2e0c9850-6def-4942-abed-b513d3f56eba/records/3442056a-1298-40d5-8701-2d5d4ae65333" : [ {
     "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/authors" : [ [ {
       "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aulast" : "Thol"
     }, {
-      "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.au" : "Monika Thol"
+      "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.au" : "Thol Monika"
     }, {
       "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aufirst" : "Monika"
     } ], [ {
       "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aulast" : "Lemmon"
     }, {
-      "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.au" : "Eric W. Lemmon"
+      "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.au" : "Lemmon Eric W."
     }, {
       "http://data.slub-dresden.de/schemas/Schema-d06726be-a8e2-412a-b5e7-76cba340108b/rft.aufirst" : "Eric W."
     } ] ]

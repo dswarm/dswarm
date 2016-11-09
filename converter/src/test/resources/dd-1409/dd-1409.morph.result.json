@@ -1,8 +1,8 @@
 [
   {
-    "http://data.slub-dresden.de/datamodels/DataModel-111512c7-6d88-4f5c-8aff-670cbeef67de/records/54639322-0e13-4b32-bcf2-097856ff0a06": [
+    "http://data.slub-dresden.de/datamodels/DataModel-ee5901f9-5059-4e4b-8162-281f5a6ec998/records/4521b55d-6ff5-473a-93dd-a99ed6cf74bd": [
       {
-        "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/title_full": "Erste Erfahrungen; Stapeschirurgie bei Otosklerose mit einer neuen Titanprothese mit superelastischem Nitinol-Clip"
+        "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/title_full": "Institut empfiehlt umfassende Evaluation; Pflegeberufsgesetz"
       },
       {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
@@ -10,7 +10,7 @@
     ]
   },
   {
-    "http://data.slub-dresden.de/datamodels/DataModel-111512c7-6d88-4f5c-8aff-670cbeef67de/records/bb12ef2c-d8e3-4b90-ba74-549d30c7ccc4": [
+    "http://data.slub-dresden.de/datamodels/DataModel-ee5901f9-5059-4e4b-8162-281f5a6ec998/records/00809a89-ce34-4365-b4c4-4c9d85efcff7": [
       {
         "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/title_full": "Matricellular TSP-1 as a target of interest for impeding melanoma spreading: towards a therapeutic use for TAX2 peptide"
       },
@@ -20,17 +20,7 @@
     ]
   },
   {
-    "http://data.slub-dresden.de/datamodels/DataModel-111512c7-6d88-4f5c-8aff-670cbeef67de/records/a524f19e-b418-468f-bd6b-3813e15c7680": [
-      {
-        "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/title_full": "Quo vadis?; Optische Diagnoseverfahren zur Tumorfrühdiagnostik im oberen Luft-Speise-Weg"
-      },
-      {
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
-      }
-    ]
-  },
-  {
-    "http://data.slub-dresden.de/datamodels/DataModel-111512c7-6d88-4f5c-8aff-670cbeef67de/records/2abfa085-db94-4262-9bec-d342c4552d66": [
+    "http://data.slub-dresden.de/datamodels/DataModel-ee5901f9-5059-4e4b-8162-281f5a6ec998/records/7c0321f5-48e5-46bd-945b-28cc587ff963": [
       {
         "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/title_full": "Control of hair growth using long-pulsed alexandrite laser is an efficient and cost effective therapy for patients suffering from recurrent pilonidal disease"
       },
@@ -40,7 +30,37 @@
     ]
   },
   {
-    "http://data.slub-dresden.de/datamodels/DataModel-111512c7-6d88-4f5c-8aff-670cbeef67de/records/31732b78-fb36-484a-8678-26dfd65130d6": [
+    "http://data.slub-dresden.de/datamodels/DataModel-ee5901f9-5059-4e4b-8162-281f5a6ec998/records/3cbc2aac-ff56-4495-bda1-e128afd28835": [
+      {
+        "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/title_full": "Quo vadis?; Optische Diagnoseverfahren zur Tumorfrühdiagnostik im oberen Luft-Speise-Weg"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://data.slub-dresden.de/datamodels/DataModel-ee5901f9-5059-4e4b-8162-281f5a6ec998/records/f2bcdee7-7442-450e-aa77-2f1163022c25": [
+      {
+        "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/title_full": "Erste Erfahrungen; Stapeschirurgie bei Otosklerose mit einer neuen Titanprothese mit superelastischem Nitinol-Clip"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://data.slub-dresden.de/datamodels/DataModel-ee5901f9-5059-4e4b-8162-281f5a6ec998/records/65e173da-bf02-4a46-a501-df833fcd871d": [
+      {
+        "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/title_full": "Infektionsschutz: Schlechte Noten für Ärzte und Pflegende"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://data.slub-dresden.de/datamodels/DataModel-ee5901f9-5059-4e4b-8162-281f5a6ec998/records/f795f53f-e1cd-448d-a63c-19b30136fb7b": [
       {
         "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/title_full": "Brain metastases as site of first and isolated recurrence of breast cancer: the role of systemic therapy after local treatment"
       },

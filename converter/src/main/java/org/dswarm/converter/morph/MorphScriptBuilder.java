@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -1160,21 +1160,25 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 				collection = doc.createElement(METAMORPH_FUNCTION_COMBINE);
 
-				return convertCollectionFunction(multipleInputComponent, collectionNameAttribute, collectionSourceAttributes, collection);
+				return convertCollectionFunction(multipleInputComponent, collectionNameAttribute, collectionSourceAttributes, collection, Optional.empty());
 			case DSWARM_FUNCTION_COLLECT:
 
-				convertCollectFunction(multipleInputComponent, optionalCommonAttributePathOfMappingInputs);
+				final String flushWithEntityForCollect = determineFlushWithEntity(optionalCommonAttributePathOfMappingInputs);
+
+				convertCollectFunction(multipleInputComponent, flushWithEntityForCollect);
 
 				collection = doc.createElement(METAMORPH_FUNCTION_CONCAT);
 
-				return convertCollectionFunction(multipleInputComponent, collectionNameAttribute, collectionSourceAttributes, collection);
+				return convertCollectionFunction(multipleInputComponent, collectionNameAttribute, collectionSourceAttributes, collection, Optional.empty());
 			case DSWARM_FUNCTION_MULTI_COLLECT:
 
-				convertCollectFunction(multipleInputComponent, optionalCommonAttributePathOfMappingInputs);
+				final String flushWithEntityForCollectMultiCollect = determineFlushWithEntity(optionalCommonAttributePathOfMappingInputs);
+
+				convertCollectFunction(multipleInputComponent, flushWithEntityForCollectMultiCollect);
 
 				collection = doc.createElement(METAMORPH_FUNCTION_CONCAT);
 
-				return convertCollectionFunction(multipleInputComponent, collectionNameAttribute, collectionSourceAttributes, collection);
+				return convertCollectionFunction(multipleInputComponent, collectionNameAttribute, collectionSourceAttributes, collection, Optional.of(flushWithEntityForCollectMultiCollect));
 			case DSWARM_FUNCTION_IFELSE:
 
 				collection = doc.createElement(METAMORPH_FUNCTION_CHOOSE);
@@ -1184,7 +1188,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 				collection = doc.createElement(functionName);
 
-				final Element collectionElement = convertCollectionFunction(multipleInputComponent, collectionNameAttribute, collectionSourceAttributes, collection);
+				final Element collectionElement = convertCollectionFunction(multipleInputComponent, collectionNameAttribute, collectionSourceAttributes, collection, Optional.empty());
 
 				collectionElement.setAttribute(MF_COLLECTOR_RESET_ATTRIBUTE_IDENTIFIER, BOOLEAN_VALUE_TRUE);
 
@@ -1212,7 +1216,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 				collection = doc.createElement(functionName);
 
-				return convertCollectionFunction(multipleInputComponent, collectionNameAttribute, collectionSourceAttributes, collection);
+				return convertCollectionFunction(multipleInputComponent, collectionNameAttribute, collectionSourceAttributes, collection, Optional.empty());
 		}
 	}
 
@@ -1220,7 +1224,8 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 	private Element convertCollectionFunction(final Component multipleInputComponent,
 	                                          final String collectionNameAttribute,
 	                                          final Set<String> collectionSourceAttributes,
-	                                          final Element collection) {
+	                                          final Element collection,
+	                                          final Optional<String> optionalFlushWithEntity) {
 
 		createParameters(multipleInputComponent, collection);
 
@@ -1228,7 +1233,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 		for (final String sourceAttribute : collectionSourceAttributes) {
 
-			createDataElement(collection, sourceAttribute, sourceAttribute);
+			createDataElement(collection, sourceAttribute, sourceAttribute, optionalFlushWithEntity);
 		}
 
 		return collection;
@@ -1442,20 +1447,16 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 	 * @param multipleInputComponent
 	 */
 	private static void convertCollectFunction(final Component multipleInputComponent,
-	                                           final Optional<String> optionalCommonAttributePathOfMappingInputs) {
+	                                           final String flushWithEntity) {
 
-		final String flushWithEntity;
-
-		if (optionalCommonAttributePathOfMappingInputs.isPresent()) {
-
-			flushWithEntity = optionalCommonAttributePathOfMappingInputs.get();
-		} else {
-
-			flushWithEntity = METAFACTURE_RECORD_IDENTIFIER;
-		}
 
 		multipleInputComponent.addParameterMapping(MF_FLUSH_WITH_ATTRIBUTE_IDENTIFIER, flushWithEntity);
 		multipleInputComponent.addParameterMapping(MF_COLLECTOR_RESET_ATTRIBUTE_IDENTIFIER, BOOLEAN_VALUE_TRUE);
+	}
+
+	private static String determineFlushWithEntity(final Optional<String> optionalCommonAttributePathOfMappingInputs) {
+
+		return optionalCommonAttributePathOfMappingInputs.orElse(METAFACTURE_RECORD_IDENTIFIER);
 	}
 
 	private Element convertIfElseFunction(final Component multipleInputComponent,
@@ -1488,21 +1489,32 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 		collection.setAttribute(METAMORPH_DATA_TARGET, MF_VARIABLE_PREFIX + collectionNameAttribute);
 
-		createDataElement(collection, ifBranchComponentVariableName, ifElseComponentName + IF_BRANCH_POSTFIX);
-		createDataElement(collection, elseBranchComponentVariableName, ifElseComponentName + ELSE_BRANCH_POSTFIX);
+		createDataElement(collection, ifBranchComponentVariableName, ifElseComponentName + IF_BRANCH_POSTFIX, Optional.empty());
+		createDataElement(collection, elseBranchComponentVariableName, ifElseComponentName + ELSE_BRANCH_POSTFIX, Optional.empty());
 
 		return collection;
 	}
 
 	private void createDataElement(final Element collection,
 	                               final String sourceAttribute,
-	                               final String targetName) {
+	                               final String targetName,
+	                               final Optional<String> optionalFlushWithEntity) {
 
 		final Element collectionData = doc.createElement(METAMORPH_ELEMENT_DATA);
 
 		collectionData.setAttribute(METAMORPH_DATA_SOURCE, MF_VARIABLE_PREFIX + sourceAttribute);
-
 		collectionData.setAttribute(METAMORPH_DATA_TARGET, targetName);
+
+		if(optionalFlushWithEntity.isPresent()) {
+
+			final String flushWithEntity = optionalFlushWithEntity.get();
+
+			final Element buffer = doc.createElement(METAMORPH_ELEMENT_BUFFER);
+
+			buffer.setAttribute(MF_FLUSH_WITH_ATTRIBUTE_IDENTIFIER, flushWithEntity);
+
+			collectionData.appendChild(buffer);
+		}
 
 		collection.appendChild(collectionData);
 	}
@@ -1638,7 +1650,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 											final Map<String, FilterExpression> filterExpressionMap = extractFilterExpressions(filterExpressionString);
 
-											if(filterExpressionMap != null) {
+											if (filterExpressionMap != null) {
 
 												uniqueInputAttributePaths.addAll(filterExpressionMap.keySet());
 											}
