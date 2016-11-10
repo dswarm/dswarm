@@ -11,11 +11,11 @@
         <data name="@component_id_12" source="@familyName">
             <replace pattern="=" with=""/>
         </data>
-        <data name="@component_id_13" source="@component_id_14">
-            <case to="lower"/>
-        </data>
         <data name="@component_id_14" source="@component_id_12">
             <trim/>
+        </data>
+        <data name="@component_id_13" source="@component_id_14">
+            <case to="lower"/>
         </data>
         <data name="@component_id_15" source="@firstName">
             <replace pattern="=" with=""/>

@@ -26,6 +26,9 @@
         </combine>
         <data name="@title__2__" source="http://data.slub-dresden.de/resources/1/schema#title"/>
         <data name="@subtitle__2__" source="http://data.slub-dresden.de/resources/1/schema#subtitle"/>
+        <data name="@component1402409257014" source="@title__2__">
+            <substring end="3" start="2"/>
+        </data>
         <data name="@component1402409245895" source="@subtitle__2__">
             <trim/>
         </data>
@@ -36,19 +39,16 @@
             <data name="component1402409245895" source="@component1402409245895"/>
             <data name="component1402409261374" source="@component1402409261374"/>
         </combine>
-        <data name="@component1402409257014" source="@title__2__">
-            <substring end="3" start="2"/>
-        </data>
         <data name="@givenname__3__" source="http://data.slub-dresden.de/resources/1/schema#givenname"/>
         <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__12" source="@givenname__3__"/>
         <data name="@sn__4__" source="http://data.slub-dresden.de/resources/1/schema#sn"/>
         <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__13" source="@sn__4__"/>
         <data name="@isbn__9__" source="http://data.slub-dresden.de/resources/1/schema#isbn"/>
-        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__18" source="@component1402409710693">
-            <htmlanchor prefix="www.doi.org/isbn/" title="@Title"/>
-        </data>
         <data name="@component1402409710693" source="@isbn__9__">
             <isbn to="clean"/>
+        </data>
+        <data name="@__TRANSFORMATION_OUTPUT_VARIABLE__18" source="@component1402409710693">
+            <htmlanchor prefix="www.doi.org/isbn/" title="@Title"/>
         </data>
         <data name="@attributes__6__" source="http://data.slub-dresden.de/resources/1/schema#attributes"/>
         <data name="@component1402409341363" source="@attributes__6__">
