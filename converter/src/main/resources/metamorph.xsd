@@ -725,6 +725,7 @@
 			<element ref="tns:urlencode" />
 			<element ref="tns:buffer" />
 			<element ref="tns:tail" />
+			<element ref="tns:head" />
 			<element ref="tns:name" />
 			<element ref="tns:switch-name-value" />
 			<element ref="tns:unique" />
@@ -1196,6 +1197,16 @@
 	<element name="tail">
 		<annotation>
 			<documentation>Emit all received literals except of the first one.</documentation>
+		</annotation>
+		<complexType>
+			<attribute name="flushWith" type="string" use="optional"
+			           default="record" />
+		</complexType>
+	</element>
+
+	<element name="head">
+		<annotation>
+			<documentation>Emit only the first literal (all others are dropped).</documentation>
 		</annotation>
 		<complexType>
 			<attribute name="flushWith" type="string" use="optional"

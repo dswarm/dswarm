@@ -15,22 +15,22 @@
             </if>
             <data name="controlfield_value__d933eb95-4bc6-431e-1643-82a5f04f35f1__0__.filtered" source="http://www.loc.gov/MARC21/slim#controlfield&#30;http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
         </combine>
+        <data name="@component2cddddba-6ef9-a5f6-6d7c-97c8401cd865" source="@leader_value__c1437cd4-b391-6e7a-2cb6-b7d75ab97a6e__0__">
+            <trim/>
+        </data>
         <data name="@componentcd95b2ac-36c5-ea38-d038-2a591bf52633" source="@controlfield_value__d933eb95-4bc6-431e-1643-82a5f04f35f1__0__">
             <trim/>
+        </data>
+        <data name="@componentaffb6c1d-61fe-aa8d-7624-313132090cc2" source="@componentcd95b2ac-36c5-ea38-d038-2a591bf52633">
+            <lookup in="componentaffb6c1d-61fe-aa8d-7624-313132090cc2"/>
+        </data>
+        <data name="@componentf0e57174-04bf-dd18-a357-5b5912cbd8dd" source="@component2cddddba-6ef9-a5f6-6d7c-97c8401cd865">
+            <lookup in="componentf0e57174-04bf-dd18-a357-5b5912cbd8dd"/>
         </data>
         <combine name="@__TRANSFORMATION_OUTPUT_VARIABLE__9224501e-d371-6659-8089-32d1f50ef94f" value="${componentf0e57174-04bf-dd18-a357-5b5912cbd8dd} &gt;&gt;&gt;&gt; ${componentaffb6c1d-61fe-aa8d-7624-313132090cc2}">
             <data name="componentf0e57174-04bf-dd18-a357-5b5912cbd8dd" source="@componentf0e57174-04bf-dd18-a357-5b5912cbd8dd"/>
             <data name="componentaffb6c1d-61fe-aa8d-7624-313132090cc2" source="@componentaffb6c1d-61fe-aa8d-7624-313132090cc2"/>
         </combine>
-        <data name="@componentaffb6c1d-61fe-aa8d-7624-313132090cc2" source="@componentcd95b2ac-36c5-ea38-d038-2a591bf52633">
-            <lookup in="componentaffb6c1d-61fe-aa8d-7624-313132090cc2"/>
-        </data>
-        <data name="@component2cddddba-6ef9-a5f6-6d7c-97c8401cd865" source="@leader_value__c1437cd4-b391-6e7a-2cb6-b7d75ab97a6e__0__">
-            <trim/>
-        </data>
-        <data name="@componentf0e57174-04bf-dd18-a357-5b5912cbd8dd" source="@component2cddddba-6ef9-a5f6-6d7c-97c8401cd865">
-            <lookup in="componentf0e57174-04bf-dd18-a357-5b5912cbd8dd"/>
-        </data>
         <data name="http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/id" source="@__TRANSFORMATION_OUTPUT_VARIABLE__9224501e-d371-6659-8089-32d1f50ef94f"/>
     </rules>
     <maps>

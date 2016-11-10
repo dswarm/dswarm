@@ -1,0 +1,69 @@
+[
+  {
+    "http://data.slub-dresden.de/datamodels/DataModel-ee5901f9-5059-4e4b-8162-281f5a6ec998/records/4521b55d-6ff5-473a-93dd-a99ed6cf74bd": [
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://data.slub-dresden.de/datamodels/DataModel-ee5901f9-5059-4e4b-8162-281f5a6ec998/records/00809a89-ce34-4365-b4c4-4c9d85efcff7": [
+      {
+        "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/vf1_author": "Jeanne, Albin"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://data.slub-dresden.de/datamodels/DataModel-ee5901f9-5059-4e4b-8162-281f5a6ec998/records/7c0321f5-48e5-46bd-945b-28cc587ff963": [
+      {
+        "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/vf1_author": "Khan, Muhammad Adil Abbas"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://data.slub-dresden.de/datamodels/DataModel-ee5901f9-5059-4e4b-8162-281f5a6ec998/records/3cbc2aac-ff56-4495-bda1-e128afd28835": [
+      {
+        "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/vf1_author": "Betz, C. S."
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://data.slub-dresden.de/datamodels/DataModel-ee5901f9-5059-4e4b-8162-281f5a6ec998/records/f2bcdee7-7442-450e-aa77-2f1163022c25": [
+      {
+        "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/vf1_author": "Zirkler, J."
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://data.slub-dresden.de/datamodels/DataModel-ee5901f9-5059-4e4b-8162-281f5a6ec998/records/65e173da-bf02-4a46-a501-df833fcd871d": [
+      {
+        "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/vf1_author": "tm"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  },
+  {
+    "http://data.slub-dresden.de/datamodels/DataModel-ee5901f9-5059-4e4b-8162-281f5a6ec998/records/f795f53f-e1cd-448d-a63c-19b30136fb7b": [
+      {
+        "http://data.slub-dresden.de/schemas/Schema-5664ba0e-ccb3-4b71-8823-13281490de30/vf1_author": "Niwińska, Anna"
+      },
+      {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "http://purl.org/ontology/bibo/Document"
+      }
+    ]
+  }
+]

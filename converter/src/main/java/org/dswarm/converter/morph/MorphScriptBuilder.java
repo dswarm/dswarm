@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *         http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,6 +31,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -41,6 +42,7 @@ import javaslang.Tuple3;
 import javaslang.Tuple4;
 import javaslang.Tuple5;
 import javaslang.collection.HashSet;
+import javaslang.control.Option;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +55,7 @@ import org.dswarm.common.xml.utils.XMLUtils;
 import org.dswarm.converter.DMPConverterError;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.morph.model.FilterExpression;
+import org.dswarm.persistence.model.DMPObject;
 import org.dswarm.persistence.model.job.Component;
 import org.dswarm.persistence.model.job.Function;
 import org.dswarm.persistence.model.job.FunctionType;
@@ -977,7 +980,9 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 					return;
 				}
 
-				for (final Component component : components) {
+				final javaslang.collection.List<Component> sortedComponents = sortComponents(components);
+
+				for (final Component component : sortedComponents) {
 
 					processComponent(component, mappingInputsVariablesMap, finalTransformationOutputVariableIdentifier, optionalDeepestMappingInput, optionalSelectValueFromSameSubEntity, optionalCommonAttributePathOfMappingInputs, rules);
 				}
@@ -1505,7 +1510,7 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 		collectionData.setAttribute(METAMORPH_DATA_SOURCE, MF_VARIABLE_PREFIX + sourceAttribute);
 		collectionData.setAttribute(METAMORPH_DATA_TARGET, targetName);
 
-		if(optionalFlushWithEntity.isPresent()) {
+		if (optionalFlushWithEntity.isPresent()) {
 
 			final String flushWithEntity = optionalFlushWithEntity.get();
 
@@ -1824,5 +1829,71 @@ public class MorphScriptBuilder extends AbstractMorphScriptBuilder<MorphScriptBu
 
 					return Optional.of(Tuple.of(optionalMappingOutputRoot, mappingOutputAttributes.init(), lastAttribute));
 				});
+	}
+
+	/**
+	 * sort components re. their natural order (begin from the end, i.e., component without output components)
+	 *
+	 * @param components original components set
+	 * @return
+	 */
+	private static javaslang.collection.List<Component> sortComponents(final Set<Component> components) {
+
+		final Optional<Component> optionalLastComponent = components.stream()
+				.filter(component -> {
+
+					final Set<Component> outputComponents = component.getOutputComponents();
+
+					return outputComponents == null || outputComponents.isEmpty();
+				})
+				.findFirst();
+
+		if (!optionalLastComponent.isPresent()) {
+
+			return javaslang.collection.List.ofAll(components);
+		}
+
+		final Component lastComponent = optionalLastComponent.get();
+		final javaslang.collection.List<Component> lastComponentList = javaslang.collection.List.of(lastComponent);
+		final javaslang.collection.Map<String, Component> componentMap = javaslang.collection.HashSet.ofAll(components)
+				.toMap(component -> Tuple.of(component.getUuid(), component));
+		final javaslang.collection.List<Component> emptyComponentList = javaslang.collection.List.empty();
+
+		return addComponents(lastComponentList, componentMap, emptyComponentList);
+	}
+
+	private static javaslang.collection.List<Component> addComponents(final javaslang.collection.List<Component> components,
+	                                                                  final javaslang.collection.Map<String, Component> componentMap,
+	                                                                  final javaslang.collection.List<Component> componentList) {
+
+		final javaslang.collection.Map<String, Component> newComponentMap = componentMap.removeAll(components.map(DMPObject::getUuid));
+		final javaslang.collection.List<Component> newComponentList = componentList.prependAll(components);
+
+		if (newComponentMap.isEmpty()) {
+
+			return newComponentList;
+		}
+
+		final javaslang.collection.List<Component> emptyPreviousComponentList = javaslang.collection.List.empty();
+
+		javaslang.collection.List<Component> previousComponents = components.foldLeft(emptyPreviousComponentList, (currentComponentList, currentComponent) -> {
+
+			final Set<Component> inputComponents = currentComponent.getInputComponents();
+
+			if (inputComponents == null) {
+
+				return currentComponentList;
+			}
+
+			final Set<Component> properInputComponents = inputComponents.stream()
+					.map(inputComponent -> newComponentMap.get(inputComponent.getUuid()))
+					.filter(optionInputComponent -> !optionInputComponent.isEmpty())
+					.map(Option::get)
+					.collect(Collectors.toSet());
+
+			return currentComponentList.prependAll(properInputComponents);
+		});
+
+		return addComponents(previousComponents, newComponentMap, newComponentList);
 	}
 }
