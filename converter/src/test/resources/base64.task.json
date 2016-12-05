@@ -22,15 +22,27 @@
                     "dsl": "metafacture",
                     "reference": "base64",
                     "description": "Base64 hashing.",
-                    "parameters": null
+                    "parameters": {
+                      "encoderType": {
+                        "type": "radio",
+                        "choices": [
+                          "DEFAULT_ENCODER",
+                          "URL_ENCODER"
+                        ],
+                        "optional": true,
+                        "description": "to specify the concrete base64 encoder that should be utilised; you can choose between DEFAULT_ENCODER and an URL conform base64 encoder variant (URL_ENCODER); default is DEFAULT_ENCODER"
+                      }
+                    }
                   },
-                  "parameters": null,
+                  "parameters": ["encoderType"],
                   "type": "Function",
                   "uuid": "323"
                 },
                 "name": "component1402409200787",
                 "description": "{\"x\":\"medium\",\"y\":0}",
-                "parameter_mappings": null,
+                "parameter_mappings": {
+                  "encoderType": "URL_ENCODER"
+                },
                 "uuid": "-1402409200649"
               }
             ]

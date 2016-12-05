@@ -672,6 +672,13 @@
 		</restriction>
 	</simpleType>
 
+	<simpleType name="base64EncoderType">
+		<restriction base="string">
+			<enumeration value="DEFAULT_ENCODER" />
+			<enumeration value="URL_ENCODER" />
+		</restriction>
+	</simpleType>
+
 	<group name="literal-rule">
 		<choice>
 
@@ -980,6 +987,12 @@
 			<documentation>Base64 hashing.</documentation>
 		</annotation>
 		<complexType>
+			<attribute name="encoderType" type="tns:base64EncoderType" use="optional" default="DEFAULT_ENCODER">
+				<annotation>
+					<documentation>to specify the concrete base64 encoder that should be utilised; you can choose between DEFAULT_ENCODER and an URL conform base64 encoder variant (URL_ENCODER; without padding); default is DEFAULT_ENCODER
+					</documentation>
+				</annotation>
+			</attribute>
 		</complexType>
 	</element>
 
