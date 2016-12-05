@@ -1,5 +1,5 @@
-<?xml version="1.0"?>
-<!-- 
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
 /**
  * finc-solr biblio schema
  *
@@ -7,7 +7,7 @@
  *
  * @author   Finc Team <team@finc.info>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU GPLv2
- *  
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2,
  * as published by the Free Software Foundation.
@@ -21,7 +21,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- */ 
+ */
 -->
 <schema name="VuFind Bibliographic Index" version="1.2">
   <types>
@@ -198,7 +198,7 @@
     <field name="vf1_author_corp_orig" type="textProper" indexed="true" stored="true" multiValued="false"/>
     <field name="vf1_author_corp2" type="textProper" indexed="true" stored="true" multiValued="true"/>
     <field name="vf1_author_corp2_orig" type="textProper" indexed="true" stored="true" multiValued="true"/>
-    <field name="vf1_author2-role" type="string" indexed="true" stored="true" multiValued="true"/>
+    <field name="vf1_author2_role" type="string" indexed="true" stored="true" multiValued="true"/>
     <!-- <field name="auth_browse" type="string" indexed="true" stored="false" multiValued="true"/> -->
 
     <!-- finc:vufind3 -->
@@ -216,8 +216,8 @@
     <field name="author_corporate2" type="textProper" indexed="true" stored="true" multiValued="true"/>
     <field name="author_corporate2_orig" type="textProper" indexed="true" stored="true" multiValued="true"/>
     <field name="author_corporate2_role" type="string" indexed="true" stored="true" multiValued="true"/>
-    <field name="author_fuller" type="textProper" indexed="true" stored="true" multiValued="true" />
-    <field name="author2_fuller" type="textProper" indexed="true" stored="true" multiValued="true" />
+    <field name="author_fuller" type="textProper" indexed="true" stored="true" multiValued="true"/>
+    <field name="author2_fuller" type="textProper" indexed="true" stored="true" multiValued="true"/>
     <field name="author_additional" type="textProper" indexed="true" stored="true" multiValued="true"/>
 
 
@@ -324,19 +324,47 @@
     <!-- Tracking fields to keep track of oldest and most recent index times -->
     <field name="first_indexed" type="date" indexed="true" stored="true"/>
     <field name="last_indexed" type="date" indexed="true" stored="true"/>
+    <!-- finc-spezifisch UND bibliotheksspezifisch -->
+    <field name="misc_dech1" type="codetokenized" indexed="true" stored="false" multiValued="true"/>
+    <field name="misc_del152" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="misc_de105" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="branch_de15" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="branch_dech1" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="branch_de105" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="branch_de520" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="branch_dezwi2" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="branch_dezi4" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="collcode_de15" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="collcode_dech1" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="collcode_de105" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="collcode_de520" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="collcode_dezwi2" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="collcode_dezi4" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="format_de14"                        type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="format_de15" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="format_del152" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="format_dech1" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="format_de105" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="format_de520" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="format_del189" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="format_dezwi2" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="format_dezi4" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="format_de540" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="format_ded117" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="format_degla1" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="format_nrw" default="not assigned" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="local_heading_facet_del152" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="local_heading_dezwi2" type="text" indexed="true" stored="true" multiValued="true"/>
+    <field name="local_heading_facet_dezwi2" type="textFacet" indexed="true" stored="true" multiValued="true"/>
+    <field name="local_heading_del242" type="text" indexed="true" stored="true" multiValued="true"/>
+    <field name="local_class_del242" type="code" indexed="true" stored="true" multiValued="true"/>
+    <field name="udk_raw_de105" default="not assigned" type="code" indexed="true" stored="true" multiValued="true"/>
+    <field name="udk_facet_de105" default="not assigned" type="string" indexed="true" stored="true" multiValued="true"/>
+    <field name="udk_raw_del189" default="not assigned" type="code" indexed="true" stored="true" multiValued="true"/>
     <!-- Dynamic fields for customization without schema modification -->
     <dynamicField name="callnumber_*" type="code" indexed="true" stored="true" multiValued="true"/>
     <dynamicField name="barcode_*" type="code" indexed="true" stored="true" multiValued="true"/>
-    <dynamicField name="misc_*" type="textFacet" indexed="true" stored="true" multiValued="true"/>
-    <dynamicField name="branch_*" type="textFacet" indexed="true" stored="true" multiValued="true"/>
-    <dynamicField name="collcode_*" type="textFacet" indexed="true" stored="true" multiValued="true"/>
-    <dynamicField name="format_*" type="textFacet" indexed="true" stored="true" multiValued="true"/>
     <dynamicField name="facet_*" type="textFacet" indexed="true" stored="true" multiValued="true"/>
-    <dynamicField name="local_heading_facet_*" type="textFacet" indexed="true" stored="true" multiValued="true"/>
-    <dynamicField name="local_heading_*" type="text" indexed="true" stored="true" multiValued="true"/>
-    <dynamicField name="local_class_*" type="code" indexed="true" stored="true" multiValued="true"/>
-    <dynamicField name="udk_raw_*" type="code" indexed="true" stored="true" multiValued="true"/>
-    <dynamicField name="udk_facet_*" type="string" indexed="true" stored="true" multiValued="true"/>
     <dynamicField name="date_*" type="date" indexed="true" stored="true"/>
     <dynamicField name="*_date" type="date" indexed="true" stored="true"/>
     <dynamicField name="*_date_mv" type="date" indexed="true" stored="true" multiValued="true"/>
@@ -386,6 +414,8 @@
   <copyField source="author2" dest="author_browse"/>
   <copyField source="author_corporate" dest="author_browse"/>
   <!-- CopyFields for All Fields -->
+  <copyField source="facet_*" dest="allfields"/>
+  <copyField source="facet_*" dest="allfields_unstemmed"/>
   <copyField source="format" dest="allfields"/>
   <copyField source="format" dest="allfields_unstemmed"/>
   <!-- CopyFields for call numbers -->
