@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,6 +33,8 @@ import javax.xml.xpath.XPathFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import javaslang.Tuple;
+import javaslang.Tuple2;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,16 +79,17 @@ public class SolrSchemaParser {
 
 	private final Provider<SchemaAttributePathInstanceService> schemaAttributePathInstanceServiceProvider;
 
-	private static final String SCHEMA_IDENTIFIER               = "schema";
-	private static final String FIELDS_IDENTIFIER               = "fields";
-	private static final String FIELD_IDENTIFIER                = "field";
-	private static final String FIELDS_XPATH_EXPRESSION         =
+	private static final String SCHEMA_IDENTIFIER = "schema";
+	private static final String FIELDS_IDENTIFIER = "fields";
+	private static final String FIELD_IDENTIFIER = "field";
+	private static final String FIELDS_XPATH_EXPRESSION =
 			SchemaUtils.SLASH + SCHEMA_IDENTIFIER + SchemaUtils.SLASH + FIELDS_IDENTIFIER + SchemaUtils.SLASH + FIELD_IDENTIFIER;
-	private static final String NAME_IDENTIFIER                 = "name";
+	private static final String NAME_IDENTIFIER = "name";
+	private static final String MULTI_VALUED_IDENTIFIER = "multiValued";
 	private static final String DEFAULT_RECORD_CLASS_LOCAL_NAME = "RecordType";
 
 	private static final DocumentBuilderFactory documentBuilderFactory;
-	private static final XPathFactory           xPathfactory;
+	private static final XPathFactory xPathfactory;
 
 	static {
 
@@ -137,7 +140,7 @@ public class SolrSchemaParser {
 		final Schema schema = createSchema(schemaUUID, schemaName, baseURI);
 		final String schemaBaseURI;
 
-		if(baseURI != null && !baseURI.trim().isEmpty()) {
+		if (baseURI != null && !baseURI.trim().isEmpty()) {
 
 			schemaBaseURI = baseURI;
 		} else {
@@ -146,9 +149,9 @@ public class SolrSchemaParser {
 		}
 
 		final NodeList fields = optionalFields.get();
-		final List<Attribute> attributes = determineAndCreateAttributes(fields, schemaBaseURI);
+		final javaslang.collection.List<Tuple2<Attribute, Optional<Boolean>>> attributesList = determineAndCreateAttributes(fields, schemaBaseURI);
 
-		if (attributes.isEmpty()) {
+		if (attributesList.isEmpty()) {
 
 			LOG.error("could not extract any attribute from the Solr schema at '{}'", solrSchemaFilePath);
 
@@ -156,9 +159,9 @@ public class SolrSchemaParser {
 		}
 
 		// attribute paths
-		final List<AttributePath> attributePaths = createAttributePaths(attributes);
+		final javaslang.collection.List<Tuple2<AttributePath, Optional<Boolean>>> attributePathsList = createAttributePaths(attributesList);
 
-		if (attributePaths.isEmpty()) {
+		if (attributePathsList.isEmpty()) {
 
 			LOG.error("couldn't create any attribute path from the extracted attributes from the Solr schema at '{}'", solrSchemaFilePath);
 
@@ -166,9 +169,9 @@ public class SolrSchemaParser {
 		}
 
 		// schema attribute paths
-		for (final AttributePath attributePath : attributePaths) {
+		for (final Tuple2<AttributePath, Optional<Boolean>> attributePathTuple : attributePathsList) {
 
-			final SchemaAttributePathInstance schemaAttributePathInstance = createOrGetSchemaAttributePathInstance(attributePath, optionalAttributePathsSAPIUUIDs);
+			final SchemaAttributePathInstance schemaAttributePathInstance = createOrGetSchemaAttributePathInstance(attributePathTuple, optionalAttributePathsSAPIUUIDs);
 
 			schema.addAttributePath(schemaAttributePathInstance);
 		}
@@ -262,9 +265,9 @@ public class SolrSchemaParser {
 		return Optional.ofNullable(result);
 	}
 
-	private List<Attribute> determineAndCreateAttributes(final NodeList fields, final String schemaBaseURI) throws DMPPersistenceException {
+	private javaslang.collection.List<Tuple2<Attribute, Optional<Boolean>>> determineAndCreateAttributes(final NodeList fields, final String schemaBaseURI) throws DMPPersistenceException {
 
-		final List<Attribute> attributes = new ArrayList<>();
+		final List<Tuple2<Attribute, Optional<Boolean>>> attributes = new ArrayList<>();
 
 		// determine and mint attributes
 		for (int i = 0; i < fields.getLength(); i++) {
@@ -309,31 +312,46 @@ public class SolrSchemaParser {
 				continue;
 			}
 
+			final Optional<Node> optionalMultiValuedNode = Optional.ofNullable(fieldAttributes.getNamedItem(MULTI_VALUED_IDENTIFIER));
+
+			final Optional<Boolean> optionalIsMultiValued;
+
+			if (optionalMultiValuedNode.isPresent()) {
+
+				final Node multiValuedNode = optionalMultiValuedNode.get();
+
+				optionalIsMultiValued = Optional.ofNullable(Boolean.valueOf(multiValuedNode.getNodeValue()));
+			} else {
+
+				optionalIsMultiValued = Optional.empty();
+			}
+
 			final Optional<Attribute> optionalAttribute = createAttribute(schemaBaseURI, optionalName.get());
 
 			if (optionalAttribute.isPresent()) {
 
-				attributes.add(optionalAttribute.get());
+				attributes.add(Tuple.of(optionalAttribute.get(), optionalIsMultiValued));
 			}
 		}
 
-		return attributes;
+		return javaslang.collection.List.ofAll(attributes);
 	}
 
-	private List<AttributePath> createAttributePaths(final List<Attribute> attributes) throws DMPPersistenceException {
+	private javaslang.collection.List<Tuple2<AttributePath, Optional<Boolean>>> createAttributePaths(final javaslang.collection.List<Tuple2<Attribute, Optional<Boolean>>> attributesList) throws DMPPersistenceException {
 
-		final List<AttributePath> attributePaths = new ArrayList<>();
+		final List<Tuple2<AttributePath, Optional<Boolean>>> attributePaths = new ArrayList<>();
 
-		for (final Attribute attribute : attributes) {
+		for (final Tuple2<Attribute, Optional<Boolean>> attributeTuple : attributesList) {
 
-			final Optional<AttributePath> optionalAttributePath = createAttributePath(attribute);
+			final Optional<AttributePath> optionalAttributePath = createAttributePath(attributeTuple._1);
 
 			if (optionalAttributePath.isPresent()) {
 
-				attributePaths.add(optionalAttributePath.get());
+				attributePaths.add(Tuple.of(optionalAttributePath.get(), attributeTuple._2));
 			}
 		}
-		return attributePaths;
+
+		return javaslang.collection.List.ofAll(attributePaths);
 	}
 
 	private Schema createSchema(final String uuid, final String name, final String baseURI) {
@@ -355,7 +373,7 @@ public class SolrSchemaParser {
 			schema.setName(name);
 		}
 
-		if(baseURI != null && !baseURI.trim().isEmpty()) {
+		if (baseURI != null && !baseURI.trim().isEmpty()) {
 
 			schema.setBaseURI(baseURI);
 		}
@@ -399,44 +417,68 @@ public class SolrSchemaParser {
 		return Optional.ofNullable(optionalProxyAttributePath.get().getObject());
 	}
 
-	private SchemaAttributePathInstance createOrGetSchemaAttributePathInstance(final AttributePath attributePath,
+	private SchemaAttributePathInstance createOrGetSchemaAttributePathInstance(final Tuple2<AttributePath, Optional<Boolean>> attributePathTuple,
 	                                                                           final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs) throws DMPPersistenceException {
 
-		if(!optionalAttributePathsSAPIUUIDs.isPresent()) {
+		if (!optionalAttributePathsSAPIUUIDs.isPresent()) {
 
-			return createSchemaAttributePathInstance(attributePath);
+			return createSchemaAttributePathInstance(attributePathTuple);
 		}
 
 		final Map<String, String> attributePathsSAPIUUIDs = optionalAttributePathsSAPIUUIDs.get();
 
-		final String attributePathString = attributePath.toAttributePath();
+		final String attributePathString = attributePathTuple._1.toAttributePath();
 
 		final Optional<String> optionalSAPIUUID = Optional.ofNullable(attributePathsSAPIUUIDs.getOrDefault(attributePathString, null));
 
-		if(!optionalSAPIUUID.isPresent()) {
+		if (!optionalSAPIUUID.isPresent()) {
 
-			return createSchemaAttributePathInstance(attributePath);
+			return createSchemaAttributePathInstance(attributePathTuple);
 		}
 
 		final String sapiUUID = optionalSAPIUUID.get();
 
 		final Optional<SchemaAttributePathInstance> optionalSAPI = Optional.ofNullable(schemaAttributePathInstanceServiceProvider.get().getObject(sapiUUID));
 
-		if(!optionalSAPI.isPresent()) {
+		if (!optionalSAPI.isPresent()) {
 
-			return createSchemaAttributePathInstance(attributePath);
+			return createSchemaAttributePathInstance(attributePathTuple);
 		}
 
 		// utilise existing SAPI
-		return optionalSAPI.get();
+		final SchemaAttributePathInstance schemaAttributePathInstance = optionalSAPI.get();
+
+		final Optional<Boolean> optionalIsMultiValued = attributePathTuple._2;
+		final Boolean finalIsMultiValued;
+
+		if(optionalIsMultiValued.isPresent()) {
+
+			finalIsMultiValued = optionalIsMultiValued.get();
+		} else {
+
+			finalIsMultiValued = null;
+		}
+
+		schemaAttributePathInstance.setMultivalue(finalIsMultiValued);
+
+		return schemaAttributePathInstance;
 	}
 
-	private SchemaAttributePathInstance createSchemaAttributePathInstance(final AttributePath attributePath) throws DMPPersistenceException {
+	private SchemaAttributePathInstance createSchemaAttributePathInstance(final Tuple2<AttributePath, Optional<Boolean>> attributePathTuple) throws DMPPersistenceException {
 
 		final String uuid = UUIDService.getUUID(SchemaAttributePathInstance.class.getSimpleName());
 
 		final SchemaAttributePathInstance schemaAttributePathInstance = new SchemaAttributePathInstance(uuid);
-		schemaAttributePathInstance.setAttributePath(attributePath);
+		schemaAttributePathInstance.setAttributePath(attributePathTuple._1);
+
+		final Optional<Boolean> optionalIsMultiValued = attributePathTuple._2;
+
+		if (optionalIsMultiValued.isPresent()) {
+
+			final Boolean isMultiValued = optionalIsMultiValued.get();
+
+			schemaAttributePathInstance.setMultivalue(isMultiValued);
+		}
 
 		return schemaAttributePathInstance;
 	}
