@@ -52,10 +52,12 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
+import javaslang.Tuple;
+import javaslang.Tuple2;
+import javaslang.control.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.dswarm.common.types.Tuple;
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.ExtendedBasicDMPResource;
 import org.dswarm.controller.resources.POJOFormat;
@@ -85,6 +87,7 @@ import org.dswarm.persistence.model.schema.proxy.ProxyAttributePath;
 import org.dswarm.persistence.model.schema.proxy.ProxyClasz;
 import org.dswarm.persistence.model.schema.utils.SchemaUtils;
 import org.dswarm.persistence.service.UUIDService;
+import org.dswarm.persistence.service.job.FunctionService;
 import org.dswarm.persistence.service.job.ProjectService;
 import org.dswarm.persistence.service.resource.DataModelService;
 import org.dswarm.persistence.service.schema.AttributePathService;
@@ -137,6 +140,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	private final Provider<AttributePathService> attributePathPersistenceServiceProvider;
 	private final Provider<ClaszService> classPersistenceServiceProvider;
 	private final Provider<SchemaService> schemaPersistenceServiceProvider;
+	private final Provider<FunctionService> functionPersistenceServiceProvider;
 
 	/**
 	 * Creates a new resource (controller service) for {@link Project}s with the provider of the project persistence service, the
@@ -152,6 +156,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	                        final Provider<AttributePathService> attributePathPersistenceServiceProviderArg,
 	                        final Provider<ClaszService> classPersistenceServiceProviderArg,
 	                        final Provider<SchemaService> schemaPersistenceServiceProviderArg,
+	                        final Provider<FunctionService> functionPersistenceServiceProviderArg,
 	                        final Provider<ObjectMapper> objectMapperProviderArg) throws DMPControllerException {
 
 		super(Project.class, persistenceServiceProviderArg, objectMapperProviderArg);
@@ -161,6 +166,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 		attributePathPersistenceServiceProvider = attributePathPersistenceServiceProviderArg;
 		classPersistenceServiceProvider = classPersistenceServiceProviderArg;
 		schemaPersistenceServiceProvider = schemaPersistenceServiceProviderArg;
+		functionPersistenceServiceProvider = functionPersistenceServiceProviderArg;
 	}
 
 	/**
@@ -249,6 +255,10 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 
 			replaceMappingOutputs(projectFromJSON, outputSchema);
 		}
+
+		final javaslang.collection.Map<String, Function> persistentFunctions = retrievePersistentFunctions();
+
+		replaceFunctions(projectFromJSON, persistentFunctions);
 
 		return super.createObject(projectFromJSON);
 	}
@@ -343,9 +353,9 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 
 		LOG.debug("try to create new project (copy mappings) with help of existing entities");
 
-		final Tuple<DataModel, Project> migrationInput = getMigrationInput(requestJsonObjectString);
-		final DataModel inputDataModel = migrationInput.v1();
-		final Project referenceProject = migrationInput.v2();
+		final Tuple2<DataModel, Project> migrationInput = getMigrationInput(requestJsonObjectString);
+		final DataModel inputDataModel = migrationInput._1;
+		final Project referenceProject = migrationInput._2;
 
 		LOG.debug("try to create new project (copy mappings) with help of input data model '{}' and reference project '{}", inputDataModel.getUuid(), referenceProject.getUuid());
 
@@ -383,9 +393,9 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 
 		LOG.debug("try to create new project (migrate mappings) with help of existing entities");
 
-		final Tuple<DataModel, Project> migrationInput = getMigrationInput(requestJsonObjectString);
-		final DataModel inputDataModel = migrationInput.v1();
-		final Project referenceProject = migrationInput.v2();
+		final Tuple2<DataModel, Project> migrationInput = getMigrationInput(requestJsonObjectString);
+		final DataModel inputDataModel = migrationInput._1;
+		final Project referenceProject = migrationInput._2;
 
 		LOG.debug("try to create new project (migrate mappings) with help of input data model '{}' and reference project '{}", inputDataModel.getUuid(), referenceProject.getUuid());
 
@@ -441,7 +451,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 		return Optional.ofNullable(project);
 	}
 
-	private Tuple<DataModel, Project> getMigrationInput(final String requestJsonObjectString) throws DMPControllerException {
+	private Tuple2<DataModel, Project> getMigrationInput(final String requestJsonObjectString) throws DMPControllerException {
 
 		if (requestJsonObjectString == null) {
 
@@ -513,7 +523,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 
 		final DataModel inputDataModel = optionalFinalInputDataModel.get();
 
-		return Tuple.tuple(inputDataModel, referenceProject);
+		return Tuple.of(inputDataModel, referenceProject);
 	}
 
 	private static Project createNewProjectForMigration(final DataModel inputDataModel, final Project referenceProject, final String newProjectId, final String type) {
@@ -559,7 +569,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 			newMapping.setOutputAttributePath(referenceMapping.getOutputAttributePath());
 
 			final Component referenceMappingTransformationComponent = referenceMapping.getTransformation();
-			createCopyOfComponent(referenceMappingTransformationComponent).ifPresent(referenceAndNewComponentTuple -> newMapping.setTransformation(referenceAndNewComponentTuple.v2()));
+			createCopyOfComponent(referenceMappingTransformationComponent).ifPresent(referenceAndNewComponentTuple -> newMapping.setTransformation(referenceAndNewComponentTuple._2));
 
 			newMappings.add(newMapping);
 		}
@@ -753,7 +763,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 			newMapping.setOutputAttributePath(referenceMapping.getOutputAttributePath());
 
 			final Component referenceMappingTransformationComponent = referenceMapping.getTransformation();
-			createCopyOfComponent(referenceMappingTransformationComponent).ifPresent(referenceAndNewComponentTuple -> newMapping.setTransformation(referenceAndNewComponentTuple.v2()));
+			createCopyOfComponent(referenceMappingTransformationComponent).ifPresent(referenceAndNewComponentTuple -> newMapping.setTransformation(referenceAndNewComponentTuple._2));
 
 			newMappings.add(newMapping);
 		}
@@ -894,7 +904,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 	 * @param referenceComponent the references component where the copy should be created from
 	 * @return a tuple with the reference component as first part and the new component as second part
 	 */
-	private static Optional<Tuple<Component, Component>> createCopyOfComponent(final Component referenceComponent) {
+	private static Optional<Tuple2<Component, Component>> createCopyOfComponent(final Component referenceComponent) {
 
 		if (referenceComponent == null) {
 
@@ -931,7 +941,7 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 
 		newComponent.setFunction(newFunction);
 
-		return Optional.of(Tuple.tuple(referenceComponent, newComponent));
+		return Optional.of(Tuple.of(referenceComponent, newComponent));
 	}
 
 	private static Optional<Component> wireNewComponents(final Component referenceComponent, final Map<String, String> componentUUIDs, final Map<String, Component> newComponentsMaps) {
@@ -967,24 +977,24 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 
 		if (referenceComponents != null) {
 
-			final List<Tuple<Component, Component>> referenceAndNewComponents = referenceComponents.parallelStream()
+			final List<Tuple2<Component, Component>> referenceAndNewComponents = referenceComponents.parallelStream()
 					.map(ProjectsResource::createCopyOfComponent)
 					.filter(Optional::isPresent)
 					.map(Optional::get)
 					.collect(Collectors.toList());
 
 			final Map<String, String> componentUUIDs = referenceAndNewComponents.parallelStream()
-					.collect(Collectors.toMap(referenceAndNewComponentTuple -> referenceAndNewComponentTuple.v1().getUuid(),
-							referenceAndNewComponentTuple -> referenceAndNewComponentTuple.v2().getUuid()));
+					.collect(Collectors.toMap(referenceAndNewComponentTuple -> referenceAndNewComponentTuple._1.getUuid(),
+							referenceAndNewComponentTuple -> referenceAndNewComponentTuple._2.getUuid()));
 
 			final Map<String, Component> newComponentsMap = referenceAndNewComponents.parallelStream()
-					.map(Tuple::v2)
+					.map(Tuple2::_2)
 					.collect(Collectors.toMap(DMPObject::getUuid, newComponent -> newComponent));
 
 			final Set<Component> newComponents = referenceAndNewComponents.parallelStream().map(referenceAndNewComponentTuple -> {
 
-				final Component referenceComponent = referenceAndNewComponentTuple.v1();
-				final Component newComponent = referenceAndNewComponentTuple.v2();
+				final Component referenceComponent = referenceAndNewComponentTuple._1;
+				final Component newComponent = referenceAndNewComponentTuple._2;
 
 				final Set<Component> referenceInputComponents = referenceComponent.getInputComponents();
 
@@ -1296,6 +1306,133 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 
 					replaceAttributePath(outputAttributePath, outputAttributePathMap);
 				});
+	}
+
+	private static void replaceFunctions(final Project projectFromJSON,
+	                                     final javaslang.collection.Map<String, Function> persistentFunctions) {
+
+		replaceProjectFunctions(projectFromJSON, persistentFunctions);
+		replaceMappingsFunctions(projectFromJSON, persistentFunctions);
+	}
+
+	private static void replaceProjectFunctions(final Project projectFromJSON,
+	                                            final javaslang.collection.Map<String, Function> persistentFunctions) {
+
+		final javaslang.collection.Set<Function> projectFunctions = javaslang.collection.LinkedHashSet.ofAll(projectFromJSON.getFunctions());
+
+		final javaslang.collection.Set<Function> emptyNewProjectFunctions = javaslang.collection.LinkedHashSet.empty();
+
+		final javaslang.collection.Set<Function> finalNewProjectFunctions = projectFunctions.foldLeft(emptyNewProjectFunctions, (currentNewProjectFunctions, projectFunction) -> {
+
+			final Option<Function> optionPersistentFunction = persistentFunctions.get(projectFunction.getUuid());
+
+			return currentNewProjectFunctions.add(optionPersistentFunction.getOrElse(projectFunction));
+		});
+
+		projectFromJSON.setFunctions(finalNewProjectFunctions.toJavaSet());
+	}
+
+	private static void replaceMappingsFunctions(final Project projectFromJSON,
+	                                             final javaslang.collection.Map<String, Function> persistentFunctions) {
+
+		final javaslang.collection.Set<Mapping> projectMappings = javaslang.collection.LinkedHashSet.ofAll(projectFromJSON.getMappings());
+
+		final javaslang.collection.Set<Mapping> emptyNewProjectMappings = javaslang.collection.LinkedHashSet.empty();
+
+		final javaslang.collection.Set<Mapping> finalNewProjectMappings = projectMappings.foldLeft(emptyNewProjectMappings, (currentNewProjectMappings, projectMapping) -> {
+
+			final Mapping newProjectMapping = replaceMappingFunctions(projectMapping, persistentFunctions);
+
+			return currentNewProjectMappings.add(newProjectMapping);
+		});
+
+		projectFromJSON.setMappings(finalNewProjectMappings.toJavaSet());
+	}
+
+	private static Mapping replaceMappingFunctions(final Mapping projectMapping,
+	                                               final javaslang.collection.Map<String, Function> persistentFunctions) {
+
+		final Option<Function> optionMappingFunction = Option.of(projectMapping.getTransformation())
+				.flatMap(mappingFunctionComponent -> Option.of(mappingFunctionComponent.getFunction()));
+
+		if (optionMappingFunction.isEmpty()) {
+
+			return projectMapping;
+		}
+
+		final Function mappingFunction = optionMappingFunction.get();
+
+		final Function newMappingFunction = replaceFunctionFunctions(mappingFunction, persistentFunctions);
+
+		projectMapping.getTransformation().setFunction(newMappingFunction);
+
+		return projectMapping;
+	}
+
+	private static Function replaceFunctionFunctions(final Function function,
+	                                                 final javaslang.collection.Map<String, Function> persistentFunctions) {
+
+		if (function == null) {
+
+			return function;
+		}
+
+		final FunctionType functionType = function.getFunctionType();
+
+		final Function newFunction;
+
+		switch (functionType) {
+
+			case Function:
+
+				newFunction = persistentFunctions.get(function.getUuid()).getOrElse(function);
+
+				break;
+			case Transformation:
+
+				final Transformation mappingTransformation = (Transformation) function;
+
+				newFunction = replaceTransformationFunctions(mappingTransformation, persistentFunctions);
+
+				break;
+			default:
+
+				newFunction = null;
+		}
+
+		return newFunction;
+	}
+
+	private static Function replaceTransformationFunctions(final Transformation mappingTransformation,
+	                                                       final javaslang.collection.Map<String, Function> persistentFunctions) {
+
+		final javaslang.collection.Set<Component> components = javaslang.collection.LinkedHashSet.ofAll(mappingTransformation.getComponents());
+
+		final javaslang.collection.Set<Component> emptyNewComponents = javaslang.collection.LinkedHashSet.empty();
+
+		final javaslang.collection.Set<Component> finalNewComponents = components.foldLeft(emptyNewComponents, (currentNewComponents, component) -> {
+
+			final Function componentFunction = replaceFunctionFunctions(component.getFunction(), persistentFunctions);
+
+			component.setFunction(componentFunction);
+
+			return currentNewComponents.add(component);
+		});
+
+		mappingTransformation.setComponents(finalNewComponents.toJavaSet());
+
+		return mappingTransformation;
+	}
+
+	private javaslang.collection.Map<String, Function> retrievePersistentFunctions() {
+
+		final FunctionService functionService = functionPersistenceServiceProvider.get();
+
+		final List<Function> persistentFunctions = functionService.getObjects();
+
+		final javaslang.collection.List<Function> persistentFunctionList = javaslang.collection.List.ofAll(persistentFunctions);
+
+		return persistentFunctionList.toMap(function -> Tuple.of(function.getUuid(), function));
 	}
 
 	private static void replaceAttributePaths(final Set<MappingAttributePathInstance> attributePaths,
