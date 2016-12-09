@@ -29,8 +29,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Provider;
+import javaslang.Tuple;
+import javaslang.Tuple2;
 
-import org.dswarm.common.types.Tuple;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelper;
 import org.dswarm.persistence.model.internal.helper.AttributePathHelperHelper;
@@ -125,7 +126,7 @@ public abstract class AbstractJSONSchemaParser {
 	                              final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
 	                              final Optional<Set<String>> optionalExcludeAttributePathStubs) throws DMPPersistenceException {
 
-		final Optional<Tuple<Schema, Set<AttributePathHelper>>> optionalResult = parseSeparatelyInternal(schemaFilePath, recordTag, uuid,
+		final Optional<Tuple2<Schema, Set<AttributePathHelper>>> optionalResult = parseSeparatelyInternal(schemaFilePath, recordTag, uuid,
 				schemaName, baseURI);
 
 		if (!optionalResult.isPresent()) {
@@ -133,8 +134,8 @@ public abstract class AbstractJSONSchemaParser {
 			return Optional.empty();
 		}
 
-		final Schema schema = optionalResult.get().v1();
-		final Set<AttributePathHelper> attributePaths = optionalResult.get().v2();
+		final Schema schema = optionalResult.get()._1;
+		final Set<AttributePathHelper> attributePaths = optionalResult.get()._2;
 
 		SchemaUtils.addAttributePaths(schema, attributePaths, attributePathServiceProvider, schemaAttributePathInstanceServiceProvider,
 				attributeServiceProvider, optionalAttributePathsSAPIUUIDs, optionalExcludeAttributePathStubs);
@@ -144,13 +145,13 @@ public abstract class AbstractJSONSchemaParser {
 		return Optional.ofNullable(updatedSchema);
 	}
 
-	public Optional<Tuple<Schema, Map<String, AttributePathHelper>>> parseSeparately(final String schemaFilePath,
-	                                                                                 final String recordTag,
-	                                                                                 final String uuid,
-	                                                                                 final String schemaName,
-	                                                                                 final String baseURI) throws DMPPersistenceException {
+	public Optional<Tuple2<Schema, Map<String, AttributePathHelper>>> parseSeparately(final String schemaFilePath,
+	                                                                                  final String recordTag,
+	                                                                                  final String uuid,
+	                                                                                  final String schemaName,
+	                                                                                  final String baseURI) throws DMPPersistenceException {
 
-		final Optional<Tuple<Schema, Set<AttributePathHelper>>> optionalResult = parseSeparatelyInternal(schemaFilePath, recordTag, uuid,
+		final Optional<Tuple2<Schema, Set<AttributePathHelper>>> optionalResult = parseSeparatelyInternal(schemaFilePath, recordTag, uuid,
 				schemaName, baseURI);
 
 		if (!optionalResult.isPresent()) {
@@ -158,11 +159,11 @@ public abstract class AbstractJSONSchemaParser {
 			return Optional.empty();
 		}
 
-		final Schema schema = optionalResult.get().v1();
-		final Set<AttributePathHelper> attributePaths = optionalResult.get().v2();
+		final Schema schema = optionalResult.get()._1;
+		final Set<AttributePathHelper> attributePaths = optionalResult.get()._2;
 		final Optional<Map<String, AttributePathHelper>> optionalAttributePathsMap = convertSetToMap(Optional.of(attributePaths));
 
-		return Optional.of(Tuple.tuple(schema, optionalAttributePathsMap.get()));
+		return Optional.of(Tuple.of(schema, optionalAttributePathsMap.get()));
 	}
 
 	/**
@@ -175,11 +176,11 @@ public abstract class AbstractJSONSchemaParser {
 	 * @return
 	 * @throws org.dswarm.persistence.DMPPersistenceException
 	 */
-	private Optional<Tuple<Schema, Set<AttributePathHelper>>> parseSeparatelyInternal(final String schemaFilePath,
-	                                                                                  final String recordTag,
-	                                                                                  final String uuid,
-	                                                                                  final String schemaName,
-	                                                                                  final String baseURI)
+	private Optional<Tuple2<Schema, Set<AttributePathHelper>>> parseSeparatelyInternal(final String schemaFilePath,
+	                                                                                   final String recordTag,
+	                                                                                   final String uuid,
+	                                                                                   final String schemaName,
+	                                                                                   final String baseURI)
 			throws DMPPersistenceException {
 
 		final Optional<List<JsonNode>> optionalRecordTags = getRecordTagNodes(schemaFilePath, recordTag);
@@ -202,9 +203,9 @@ public abstract class AbstractJSONSchemaParser {
 
 		addRecordClass(recordTagNodes, schema);
 
-		final Set<AttributePathHelper> attributePaths = parseAttributePaths(recordTagNodes);
+		final Set<AttributePathHelper> attributePaths = parseAttributePaths(recordTagNodes, Optional.ofNullable(schema.getUuid()), Optional.ofNullable(baseURI));
 
-		return Optional.of(Tuple.tuple(schema, attributePaths));
+		return Optional.of(Tuple.of(schema, attributePaths));
 	}
 
 	public Optional<Set<AttributePathHelper>> parseAttributePaths(final String schemaFilePath,
@@ -310,18 +311,24 @@ public abstract class AbstractJSONSchemaParser {
 		}
 
 		final List<JsonNode> recordTagNodes = optionalRecordTags.get();
+		final Optional<String> optionalSchemaUUID = Optional.empty();
+		final Optional<String> optionalBaseURI = Optional.empty();
 
-		final Set<AttributePathHelper> attributePaths = parseAttributePaths(recordTagNodes, optionalExcludeAttributePathStubs);
+		final Set<AttributePathHelper> attributePaths = parseAttributePaths(recordTagNodes, optionalSchemaUUID, optionalBaseURI, optionalExcludeAttributePathStubs);
 
 		return Optional.ofNullable(attributePaths);
 	}
 
-	private Set<AttributePathHelper> parseAttributePaths(final List<JsonNode> recordTagNodes) {
+	private Set<AttributePathHelper> parseAttributePaths(final List<JsonNode> recordTagNodes,
+	                                                     final Optional<String> optionalSchemaUUID,
+	                                                     final Optional<String> optionalBaseURI) {
 
-		return parseAttributePaths(recordTagNodes, Optional.empty());
+		return parseAttributePaths(recordTagNodes, optionalSchemaUUID, optionalBaseURI, Optional.empty());
 	}
 
 	private Set<AttributePathHelper> parseAttributePaths(final List<JsonNode> recordTagNodes,
+	                                                     final Optional<String> optionalSchemaUUID,
+	                                                     final Optional<String> optionalBaseURI,
 	                                                     final Optional<Set<String>> optionalExcludeAttributePathStubs) {
 
 		final Set<AttributePathHelper> attributePaths = Sets.newCopyOnWriteArraySet();
@@ -331,7 +338,7 @@ public abstract class AbstractJSONSchemaParser {
 
 			Set<AttributePathHelper> recordTagNodeAttributePaths = Sets.newLinkedHashSet();
 
-			recordTagNodeAttributePaths = determineAttributePaths(recordTagNode, recordTagNodeAttributePaths, new AttributePathHelper(), includeRecordTag);
+			recordTagNodeAttributePaths = determineAttributePaths(recordTagNode, optionalSchemaUUID, optionalBaseURI, recordTagNodeAttributePaths, new AttributePathHelper(), includeRecordTag);
 
 			if (recordTagNodeAttributePaths != null && !recordTagNodeAttributePaths.isEmpty()) {
 
@@ -414,7 +421,7 @@ public abstract class AbstractJSONSchemaParser {
 
 		final JsonNode newCurrentJSONSchemaNode = optionalCurrentJSONSchemaNode.get();
 
-		if(recordTag == null) {
+		if (recordTag == null) {
 
 			// take everything from the root on (since no record tag was given)
 
@@ -455,12 +462,33 @@ public abstract class AbstractJSONSchemaParser {
 
 	abstract protected Optional<ObjectNode> getJSONSchema(final String schemaFilePath);
 
-	protected String determineAttributeName(final String attribute) {
+	protected String determineAttributeURI(final String attribute,
+	                                       final Optional<String> optionalSchemaUUID,
+	                                       final Optional<String> optionalBaseURI) {
 
-		return attribute;
+		if (optionalSchemaUUID.isPresent()) {
+
+			final String schemaUUID = optionalSchemaUUID.get();
+
+			return SchemaUtils.mintSchemaTermURI(attribute, schemaUUID, optionalBaseURI);
+		}
+
+		final String baseURI;
+
+		if (optionalBaseURI.isPresent()) {
+
+			baseURI = optionalBaseURI.get();
+		} else {
+
+			baseURI = null;
+		}
+
+		return SchemaUtils.mintTermUri(attribute, baseURI);
 	}
 
 	private Set<AttributePathHelper> determineAttributePaths(final JsonNode jsonSchemaAttributeNode,
+	                                                         final Optional<String> optionalSchemaUUID,
+	                                                         final Optional<String> optionalBaseURI,
 	                                                         final Set<AttributePathHelper> attributePaths,
 	                                                         final AttributePathHelper attributePath,
 	                                                         final boolean addRootAttribute) {
@@ -483,23 +511,23 @@ public abstract class AbstractJSONSchemaParser {
 			// do something with the array, i.e., go deeper in hierarchy (via recursion)
 			final JsonNode jsonSchemaAttributeItemsNode = jsonSchemaAttributeContentNode.get(AbstractJSONSchemaParser.JSON_SCHEMA_ITEMS_IDENTIFIER);
 
-			if(jsonSchemaAttributeItemsNode == null) {
+			if (jsonSchemaAttributeItemsNode == null) {
 
 				return attributePaths;
 			}
 
 			final String arrayType = determineJSONSchemaNodeType(jsonSchemaAttributeItemsNode);
 
-			if(arrayType.equals(AbstractJSONSchemaParser.STRING_JSON_SCHEMA_ATTRIBUTE_TYPE)
+			if (arrayType.equals(AbstractJSONSchemaParser.STRING_JSON_SCHEMA_ATTRIBUTE_TYPE)
 					&& (jsonSchemaAttributeItemsNode.get(AbstractJSONSchemaParser.JSON_SCHEMA_ENUM_IDENTIFIER) != null
-						|| jsonSchemaAttributeItemsNode.get(AbstractJSONSchemaParser.JSON_SCHEMA_PATTERN_IDENTIFIER) != null
-						|| jsonSchemaAttributeItemsNode.size() == 1)) {
+					|| jsonSchemaAttributeItemsNode.get(AbstractJSONSchemaParser.JSON_SCHEMA_PATTERN_IDENTIFIER) != null
+					|| jsonSchemaAttributeItemsNode.size() == 1)) {
 
 				// attribute has enum values, or a pattern, or is simply an array, i.e., simply add the attribute path
 
-				final String finalAttribute = determineAttributeName(attribute);
+				final String finalAttributeURI = determineAttributeURI(attribute, optionalSchemaUUID, optionalBaseURI);
 				final boolean multivalue = true;
-				AttributePathHelperHelper.addAttributePath(finalAttribute, multivalue, attributePaths, attributePath);
+				AttributePathHelperHelper.addAttributePath(finalAttributeURI, multivalue, attributePaths, attributePath);
 
 				return attributePaths;
 			}
@@ -507,13 +535,13 @@ public abstract class AbstractJSONSchemaParser {
 			final JsonNode finalJsonSchemaAttributeItemsNode;
 			final AttributePathHelper finalAttributePath;
 
-			if(arrayType.equals(AbstractJSONSchemaParser.OBJECT_JSON_SCHEMA_ATTRIBUTE_TYPE)) {
+			if (arrayType.equals(AbstractJSONSchemaParser.OBJECT_JSON_SCHEMA_ATTRIBUTE_TYPE)) {
 
 				finalJsonSchemaAttributeItemsNode = jsonSchemaAttributeItemsNode.get(AbstractJSONSchemaParser.JSON_SCHEMA_PROPERTIES_IDENTIFIER);
 
-				final String finalAttribute = determineAttributeName(attribute);
+				final String finalAttributeURI = determineAttributeURI(attribute, optionalSchemaUUID, optionalBaseURI);
 				final boolean multivalue = true;
-				finalAttributePath = AttributePathHelperHelper.addAttributePath(finalAttribute, multivalue, attributePaths, attributePath);
+				finalAttributePath = AttributePathHelperHelper.addAttributePath(finalAttributeURI, multivalue, attributePaths, attributePath);
 
 				optionalAddRDFTypeAttributePath(attributePaths, arrayType, attribute, finalAttributePath);
 			} else {
@@ -522,23 +550,23 @@ public abstract class AbstractJSONSchemaParser {
 				finalAttributePath = attributePath;
 			}
 
-			final Tuple<List<JsonNode>, List<JsonNode>> resultSet = determineAttributeAndElementNodes(finalJsonSchemaAttributeItemsNode);
+			final Tuple2<List<JsonNode>, List<JsonNode>> resultSet = determineAttributeAndElementNodes(finalJsonSchemaAttributeItemsNode);
 
-			determineAttributePaths(attributePaths, finalAttributePath, resultSet.v1());
-			determineAttributePaths(attributePaths, finalAttributePath, resultSet.v2());
+			determineAttributePaths(optionalSchemaUUID, optionalBaseURI, attributePaths, finalAttributePath, resultSet._1);
+			determineAttributePaths(optionalSchemaUUID, optionalBaseURI, attributePaths, finalAttributePath, resultSet._2);
 
 			return attributePaths;
 
 		} else {
 
-			final String finalAttribute = determineAttributeName(attribute);
+			final String finalAttributeURI = determineAttributeURI(attribute, optionalSchemaUUID, optionalBaseURI);
 
 			final AttributePathHelper finalAttributePathHelper;
 
 			if (addRootAttribute) {
 
 				final Boolean multivalue = null;
-				finalAttributePathHelper = AttributePathHelperHelper.addAttributePath(finalAttribute, multivalue, attributePaths, attributePath);
+				finalAttributePathHelper = AttributePathHelperHelper.addAttributePath(finalAttributeURI, multivalue, attributePaths, attributePath);
 			} else {
 
 				finalAttributePathHelper = attributePath;
@@ -559,11 +587,11 @@ public abstract class AbstractJSONSchemaParser {
 				return attributePaths;
 			}
 
-			final Tuple<List<JsonNode>, List<JsonNode>> resultSet = determineAttributeAndElementNodes(jsonSchemaAttributePropertiesNode);
+			final Tuple2<List<JsonNode>, List<JsonNode>> resultSet = determineAttributeAndElementNodes(jsonSchemaAttributePropertiesNode);
 
-			determineAttributePaths(attributePaths, finalAttributePathHelper, resultSet.v1());
+			determineAttributePaths(optionalSchemaUUID, optionalBaseURI, attributePaths, finalAttributePathHelper, resultSet._1);
 			optionalAddRDFValueAttributePath(addRDFValueAttributePath, attributePaths, finalAttributePathHelper);
-			determineAttributePaths(attributePaths, finalAttributePathHelper, resultSet.v2());
+			determineAttributePaths(optionalSchemaUUID, optionalBaseURI, attributePaths, finalAttributePathHelper, resultSet._2);
 
 			return attributePaths;
 		}
@@ -582,13 +610,15 @@ public abstract class AbstractJSONSchemaParser {
 	                                                         final Set<AttributePathHelper> attributePaths,
 	                                                         final AttributePathHelper attributePath);
 
-	private void determineAttributePaths(final Set<AttributePathHelper> attributePaths,
+	private void determineAttributePaths(final Optional<String> optionalSchemaUUID,
+	                                     final Optional<String> optionalBaseURI,
+	                                     final Set<AttributePathHelper> attributePaths,
 	                                     final AttributePathHelper finalAttributePathHelper,
 	                                     final List<JsonNode> newJSONSchemaAttributeNodes) {
 
 		for (final JsonNode newJSONSchemaAttributeNode : newJSONSchemaAttributeNodes) {
 
-			determineAttributePaths(newJSONSchemaAttributeNode, attributePaths, finalAttributePathHelper, true);
+			determineAttributePaths(newJSONSchemaAttributeNode, optionalSchemaUUID, optionalBaseURI, attributePaths, finalAttributePathHelper, true);
 		}
 	}
 
@@ -640,7 +670,7 @@ public abstract class AbstractJSONSchemaParser {
 			schema.setName(name);
 		}
 
-		if(baseURI != null) {
+		if (baseURI != null) {
 
 			schema.setBaseURI(baseURI);
 		}
@@ -692,7 +722,7 @@ public abstract class AbstractJSONSchemaParser {
 	 * @param jsonSchemaAttributeContentSubNode
 	 * @return
 	 */
-	private Tuple<List<JsonNode>, List<JsonNode>> determineAttributeAndElementNodes(final JsonNode jsonSchemaAttributeContentSubNode) {
+	private Tuple2<List<JsonNode>, List<JsonNode>> determineAttributeAndElementNodes(final JsonNode jsonSchemaAttributeContentSubNode) {
 
 		final Iterator<Map.Entry<String, JsonNode>> iter = jsonSchemaAttributeContentSubNode.fields();
 
@@ -712,7 +742,7 @@ public abstract class AbstractJSONSchemaParser {
 			addAttributeNode(newAttributeNodes, newElementNodes, newJSONSchemaAttributeNode, newAttribute);
 		}
 
-		return Tuple.tuple(newAttributeNodes, newElementNodes);
+		return Tuple.of(newAttributeNodes, newElementNodes);
 	}
 
 	protected abstract void addAttributeNode(List<JsonNode> newAttributeNodes, List<JsonNode> newElementNodes, ObjectNode newJSONSchemaAttributeNode, String newAttribute);
@@ -745,7 +775,7 @@ public abstract class AbstractJSONSchemaParser {
 
 			final String finalRecordTagAttribute;
 
-			if(recordTagAttribute.equals(AbstractJSONSchemaParser.ROOT_NODE_IDENTIFIER)) {
+			if (recordTagAttribute.equals(AbstractJSONSchemaParser.ROOT_NODE_IDENTIFIER)) {
 
 				finalRecordTagAttribute = DEFAULT_RECORD_CLASS_IDENTIFIER;
 			} else {

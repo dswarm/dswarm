@@ -24,10 +24,10 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.google.inject.Provider;
+import javaslang.Tuple2;
 import org.junit.Assert;
 import org.junit.Test;
 
-import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.schema.AbstractJSONSchemaParser;
 import org.dswarm.converter.schema.XMLSchemaParser;
@@ -267,14 +267,14 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 		final String baseURI = null;
 		final String recordIdentifier = "record";
 
-		final Tuple<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("OAI-PMH.xsd", recordIdentifier,
+		final Tuple2<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("OAI-PMH.xsd", recordIdentifier,
 				SchemaUtils.OAI_PMH_DC_ELEMENTS_AND_EDM_SCHEMA_UUID, schemaName, baseURI);
 
-		final Map<String, AttributePathHelper> rootAttributePaths = result.v2();
+		final Map<String, AttributePathHelper> rootAttributePaths = result._2;
 
 		final Map<String, AttributePathHelper> newAttributePaths = buildOAIPMHPlusDCElementsAndEDMAttributePaths(rootAttributePaths);
 
-		final Schema schema = result.v1();
+		final Schema schema = result._1;
 		final Schema updatedSchema = addChildSchemataAttributePathsToSchema(newAttributePaths, schema, optionalAttributePathsSAPIUUIDs);
 
 		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(updatedSchema);
@@ -672,13 +672,13 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 		return parseSchema(xsdFileName, recordIdentifier, schemaUUID, schemaName, baseURI, Optional.empty(), XML_SCHEMA_PARSER);
 	}
 
-	private static Tuple<Schema, Map<String, AttributePathHelper>> parseSchemaSeparately(final String xsdFileName,
+	private static Tuple2<Schema, Map<String, AttributePathHelper>> parseSchemaSeparately(final String xsdFileName,
 	                                                                                     final String recordIdentifier,
 	                                                                                     final String schemaUUID,
 	                                                                                     final String schemaName,
 	                                                                                     final String baseURI) throws DMPPersistenceException {
 
-		final java.util.Optional<Tuple<Schema, Map<String, AttributePathHelper>>> optionalResult = GuicedTest.injector.getInstance(XMLSchemaParser.class).parseSeparately(xsdFileName,
+		final java.util.Optional<Tuple2<Schema, Map<String, AttributePathHelper>>> optionalResult = GuicedTest.injector.getInstance(XMLSchemaParser.class).parseSeparately(xsdFileName,
 				recordIdentifier, schemaUUID, schemaName, baseURI);
 
 		Assert.assertTrue(optionalResult.isPresent());
@@ -748,10 +748,10 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 		final String baseURI = null;
 		final String recordIdentifier = "record";
 
-		final Tuple<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("OAI-PMH.xsd", recordIdentifier, schemaUUID,
+		final Tuple2<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("OAI-PMH.xsd", recordIdentifier, schemaUUID,
 				schemaName, baseURI);
 
-		final Map<String, AttributePathHelper> rootAttributePaths = result.v2();
+		final Map<String, AttributePathHelper> rootAttributePaths = result._2;
 
 		final String rootAttributePathIdentifier = "http://www.openarchives.org/OAI/2.0/metadata";
 		final AttributePathHelper rootAttributePath = rootAttributePaths.get(rootAttributePathIdentifier);
@@ -761,7 +761,7 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 
 		final Map<String, AttributePathHelper> newAttributePaths = composeAttributePaths(rootAttributePaths, rootAttributePath, childAttributePaths);
 
-		final Schema schema = result.v1();
+		final Schema schema = result._1;
 
 		return addChildSchemataAttributePathsToSchema(newAttributePaths, schema, optionalAttributePathsSAPIUUIDs);
 	}
@@ -778,10 +778,10 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 		final String baseURI = null;
 		final String recordIdentifier = "record";
 
-		final Tuple<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("srw-types.1_1.xsd", recordIdentifier, schemaUUID,
+		final Tuple2<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("srw-types.1_1.xsd", recordIdentifier, schemaUUID,
 				schemaName, baseURI);
 
-		final Map<String, AttributePathHelper> rootAttributePaths = result.v2();
+		final Map<String, AttributePathHelper> rootAttributePaths = result._2;
 
 		final String rootAttributePathIdentifier = "http://www.loc.gov/zing/srw/recordData";
 		final AttributePathHelper rootAttributePath = rootAttributePaths.get(rootAttributePathIdentifier);
@@ -791,7 +791,7 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 
 		final Map<String, AttributePathHelper> newAttributePaths = composeAttributePaths(rootAttributePaths, rootAttributePath, childAttributePaths);
 
-		final Schema schema = result.v1();
+		final Schema schema = result._1;
 
 		return addChildSchemataAttributePathsToSchema(newAttributePaths, schema, optionalAttributePathsSAPIUUIDs);
 	}
