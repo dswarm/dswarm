@@ -70,6 +70,7 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 	private static final String TERM_BASE_URI = BASE_URI + "terms/%s";
 	public static final String HASH = "#";
 	public static final String SLASH = "/";
+	public static final String AT = "@";
 	public static final String TYPE_POSTFIX = "Type";
 	private static final String SCHEMA_BASE_URI = BASE_URI + "schemas/";
 
@@ -494,9 +495,11 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 		// 1. uri ends with slash
 		// 2. uri ends with hash
-		// 3. local name starts with hash
+		// 3. local name starts with hash (#)
+		// 4. local name starts with at (@)
 
 		final boolean localNameStartsWithHash = localName.startsWith(HASH);
+		final boolean localNameStartsWithAt = localName.startsWith(AT);
 
 		// allow hash and slash uris
 		if (uri != null && uri.endsWith(SLASH)) {
@@ -506,6 +509,9 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 			if(localNameStartsWithHash) {
 
 				finalLocalNameForSlash = StringUtils.stripStart(localName, HASH);
+			} else if(localNameStartsWithAt) {
+
+				finalLocalNameForSlash = StringUtils.stripStart(localName, AT);
 			} else {
 
 				finalLocalNameForSlash = localName;
@@ -755,11 +761,21 @@ public final class SchemaUtils extends BasicDMPJPAObjectUtils<Schema> {
 
 	private static String mintTermUri(final String termUri, final String localTermName, final String baseUri) {
 
-		final boolean isValidURI = isValidUri(localTermName);
+		final String finalLocalTermName;
+
+		if(localTermName.startsWith(AT)) {
+
+			finalLocalTermName = StringUtils.stripStart(localTermName, AT);
+		} else {
+
+			finalLocalTermName = localTermName;
+		}
+
+		final boolean isValidURI = isValidUri(finalLocalTermName);
 
 		if (isValidURI) {
 
-			return localTermName;
+			return finalLocalTermName;
 		} else {
 
 			final Optional<String> optionalBaseUri = Optional.ofNullable(baseUri);

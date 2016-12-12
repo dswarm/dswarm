@@ -38,13 +38,13 @@ public class AttributePathHelperHelper {
 		return AttributePathHelperHelper.addAttributePath(attribute, multivalue, attributePaths, attributePath);
 	}
 
-	public static AttributePathHelper addAttributePath(final String attribute,
+	public static AttributePathHelper addAttributePath(final String attributeURI,
 	                                                   final Boolean multivalue,
 	                                                   final Set<AttributePathHelper> attributePaths,
 	                                                   final AttributePathHelper attributePath) {
 
 		final List<String> currentAttributePath = Lists.newArrayList(attributePath.getAttributePath());
-		currentAttributePath.add(attribute);
+		currentAttributePath.add(attributeURI);
 		final Boolean required = null;
 		final AttributePathHelper schemaNormalizerHelper = new AttributePathHelper(currentAttributePath, required, multivalue);
 		attributePaths.add(schemaNormalizerHelper);

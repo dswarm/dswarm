@@ -24,10 +24,10 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.google.inject.Provider;
+import javaslang.Tuple2;
 import org.junit.Assert;
 import org.junit.Test;
 
-import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.schema.AbstractJSONSchemaParser;
 import org.dswarm.converter.schema.XMLSchemaParser;
@@ -54,71 +54,114 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 	@Test
 	public void testAttributePathsParsingForMabxml() throws IOException {
 
-		testAttributePathsParsing("mabxml-1.xsd", "datensatz", "mabxml-1.attribute_paths.txt", false, XML_SCHEMA_PARSER);
+		// TODO: set with concrete content (if necessary)
+		final Optional<String> optionalSchemaUUID = Optional.empty();
+		final Optional<String> optionalBaseURI = Optional.empty();
+
+		testAttributePathsParsing("mabxml-1.xsd", "datensatz", "mabxml-1.attribute_paths.txt", false, optionalSchemaUUID, optionalBaseURI, XML_SCHEMA_PARSER);
 	}
 
 	@Test
 	public void testAttributePathsParsingForSpringerJournals() throws IOException {
 
-		testAttributePathsParsing("springer_journals.xsd", "Publisher", "springer_journals.attribute_paths.txt", false, XML_SCHEMA_PARSER);
+		final Optional<String> optionalSchemaUUID = Optional.of(SchemaUtils.SPRINGER_JOURNALS_SCHEMA_UUID);
+		final Optional<String> optionalBaseURI = Optional.of(SchemaUtils.determineSchemaNamespaceURI(SchemaUtils.SPRINGER_JOURNALS_SCHEMA_UUID));
+
+		testAttributePathsParsing("springer_journals.xsd", "Publisher", "springer_journals.attribute_paths.txt", false, optionalSchemaUUID, optionalBaseURI, XML_SCHEMA_PARSER);
 	}
 
 	@Test
 	public void testAttributePathsParsingForMarcXml() throws IOException {
 
-		testAttributePathsParsing("MARC21slim.xsd", "record", "marcxml_schema_attribute_paths.txt", false, XML_SCHEMA_PARSER);
+		// TODO: set with concrete content (if necessary)
+		final Optional<String> optionalSchemaUUID = Optional.empty();
+		final Optional<String> optionalBaseURI = Optional.empty();
+
+		testAttributePathsParsing("MARC21slim.xsd", "record", "marcxml_schema_attribute_paths.txt", false, optionalSchemaUUID, optionalBaseURI, XML_SCHEMA_PARSER);
 	}
 
 	@Test
 	public void testAttributePathsParsingForPNX() throws IOException {
 
-		testAttributePathsParsing("pnx.xsd", "record", "pnx_schema_-_attribute_paths.txt", false, XML_SCHEMA_PARSER);
+		// TODO: set with concrete content (if necessary)
+		final Optional<String> optionalSchemaUUID = Optional.empty();
+		final Optional<String> optionalBaseURI = Optional.empty();
+
+		testAttributePathsParsing("pnx.xsd", "record", "pnx_schema_-_attribute_paths.txt", false, optionalSchemaUUID, optionalBaseURI, XML_SCHEMA_PARSER);
 	}
 
 	@Test
 	public void testAttributePathsParsingForDCElements() throws IOException {
 
-		testAttributePathsParsing("dc.xsd", null, "dc_elements_schema_-_attribute_paths.txt", false, XML_SCHEMA_PARSER);
+		// TODO: set with concrete content (if necessary)
+		final Optional<String> optionalSchemaUUID = Optional.empty();
+		final Optional<String> optionalBaseURI = Optional.empty();
+
+		testAttributePathsParsing("dc.xsd", null, "dc_elements_schema_-_attribute_paths.txt", false, optionalSchemaUUID, optionalBaseURI, XML_SCHEMA_PARSER);
 	}
 
 	@Test
 	public void testAttributePathsParsingForOAIDCElements() throws IOException {
 
-		testAttributePathsParsing("oai_dc.xsd", "dc", "oai_dc_elements_schema_-_attribute_paths.txt", true, XML_SCHEMA_PARSER);
+		// TODO: set with concrete content (if necessary)
+		final Optional<String> optionalSchemaUUID = Optional.empty();
+		final Optional<String> optionalBaseURI = Optional.empty();
+
+		testAttributePathsParsing("oai_dc.xsd", "dc", "oai_dc_elements_schema_-_attribute_paths.txt", true, optionalSchemaUUID, optionalBaseURI, XML_SCHEMA_PARSER);
 	}
 
 	@Test
 	public void testAttributePathsParsingForDCTerms() throws IOException {
 
-		testAttributePathsParsing("dcterms.xsd", null, "dc_terms_schema_-_attribute_paths.txt", false, XML_SCHEMA_PARSER);
+		// TODO: set with concrete content (if necessary)
+		final Optional<String> optionalSchemaUUID = Optional.empty();
+		final Optional<String> optionalBaseURI = Optional.empty();
+
+		testAttributePathsParsing("dcterms.xsd", null, "dc_terms_schema_-_attribute_paths.txt", false, optionalSchemaUUID, optionalBaseURI, XML_SCHEMA_PARSER);
 	}
 
 	@Test
 	public void testAttributePathsParsingForOAIPMH() throws IOException {
 
-		testAttributePathsParsing("OAI-PMH.xsd", "record", "oai-pmh_schema_-_attribute_paths.txt", false, XML_SCHEMA_PARSER);
+		// TODO: set with concrete content (if necessary)
+		final Optional<String> optionalSchemaUUID = Optional.empty();
+		final Optional<String> optionalBaseURI = Optional.empty();
+
+		testAttributePathsParsing("OAI-PMH.xsd", "record", "oai-pmh_schema_-_attribute_paths.txt", false, optionalSchemaUUID, optionalBaseURI, XML_SCHEMA_PARSER);
 	}
 
 	@Test
 	public void testAttributePathsParsingForSRU11() throws IOException {
 
-		testAttributePathsParsing("srw-types.1_1.xsd", "record", "sru_1_1_schema_-_attribute_paths.txt", false, XML_SCHEMA_PARSER);
+		// TODO: set with concrete content (if necessary)
+		final Optional<String> optionalSchemaUUID = Optional.empty();
+		final Optional<String> optionalBaseURI = Optional.empty();
+
+		testAttributePathsParsing("srw-types.1_1.xsd", "record", "sru_1_1_schema_-_attribute_paths.txt", false, optionalSchemaUUID, optionalBaseURI, XML_SCHEMA_PARSER);
 	}
 
 	@Test
 	public void testAttributePathsParsingForPICAPlusXml() throws IOException {
 
-		testAttributePathsParsing("ppxml-1.0.xsd", "record", "pica_schema_-_attribute_paths.txt", false, XML_SCHEMA_PARSER);
+		// TODO: set with concrete content (if necessary)
+		final Optional<String> optionalSchemaUUID = Optional.empty();
+		final Optional<String> optionalBaseURI = Optional.empty();
+
+		testAttributePathsParsing("ppxml-1.0.xsd", "record", "pica_schema_-_attribute_paths.txt", false, optionalSchemaUUID, optionalBaseURI, XML_SCHEMA_PARSER);
 	}
 
 	@Test
 	public void testAttributePathsParsingForPICAPlusXmlGlobal() throws IOException {
 
+		// TODO: set with concrete content (if necessary)
+		final Optional<String> optionalSchemaUUID = Optional.empty();
+		final Optional<String> optionalBaseURI = Optional.empty();
+
 		final Set<String> excludeAttributePathStubs = new HashSet<>();
 
 		excludeAttributePathStubs.add("http://www.oclcpica.org/xmlns/ppxml-1.0#owner");
 
-		testAttributePathsParsing("ppxml-1.0.xsd", "record", "pica_global_schema_-_attribute_paths.txt", false, Optional.of(excludeAttributePathStubs), XML_SCHEMA_PARSER);
+		testAttributePathsParsing("ppxml-1.0.xsd", "record", "pica_global_schema_-_attribute_paths.txt", false, optionalSchemaUUID, optionalBaseURI, Optional.of(excludeAttributePathStubs), XML_SCHEMA_PARSER);
 	}
 
 	/**
@@ -129,7 +172,11 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 	@Test
 	public void testAttributePathsParsingForEDM() throws IOException {
 
-		testAttributePathsParsing("dd-1168/EDM-COMMON-MAIN.xsd", null, "dd-1168/edm_schema_-_attribute_paths.txt", false, XML_SCHEMA_PARSER);
+		// TODO: set with concrete content (if necessary)
+		final Optional<String> optionalSchemaUUID = Optional.empty();
+		final Optional<String> optionalBaseURI = Optional.empty();
+
+		testAttributePathsParsing("dd-1168/EDM-COMMON-MAIN.xsd", null, "dd-1168/edm_schema_-_attribute_paths.txt", false, optionalSchemaUUID, optionalBaseURI, XML_SCHEMA_PARSER);
 	}
 
 	@Test
@@ -165,11 +212,15 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 		final String rootAttributePathIdentifier = "http://www.loc.gov/zing/srw/recordData";
 		final AttributePathHelper rootAttributePath = rootAttributePaths.get(rootAttributePathIdentifier);
 
+		// TODO: set with concrete content (if necessary)
+		final Optional<String> optionalSchemaUUID = Optional.empty();
+		final Optional<String> optionalBaseURI = Optional.empty();
+
 		final Set<String> excludeAttributePathStubs = new HashSet<>();
 
 		excludeAttributePathStubs.add("http://www.oclcpica.org/xmlns/ppxml-1.0#record\u001Ehttp://www.oclcpica.org/xmlns/ppxml-1.0#owner");
 
-		final Map<String, AttributePathHelper> childAttributePaths = parseAttributePaths("ppxml-1.0.xsd", "record", true, Optional.of(excludeAttributePathStubs), XML_SCHEMA_PARSER);
+		final Map<String, AttributePathHelper> childAttributePaths = parseAttributePaths("ppxml-1.0.xsd", "record", true, optionalSchemaUUID, optionalBaseURI, Optional.of(excludeAttributePathStubs), XML_SCHEMA_PARSER);
 
 		final Map<String, AttributePathHelper> newAttributePaths = composeAttributePaths(rootAttributePaths, rootAttributePath, childAttributePaths);
 
@@ -267,14 +318,14 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 		final String baseURI = null;
 		final String recordIdentifier = "record";
 
-		final Tuple<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("OAI-PMH.xsd", recordIdentifier,
+		final Tuple2<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("OAI-PMH.xsd", recordIdentifier,
 				SchemaUtils.OAI_PMH_DC_ELEMENTS_AND_EDM_SCHEMA_UUID, schemaName, baseURI);
 
-		final Map<String, AttributePathHelper> rootAttributePaths = result.v2();
+		final Map<String, AttributePathHelper> rootAttributePaths = result._2;
 
 		final Map<String, AttributePathHelper> newAttributePaths = buildOAIPMHPlusDCElementsAndEDMAttributePaths(rootAttributePaths);
 
-		final Schema schema = result.v1();
+		final Schema schema = result._1;
 		final Schema updatedSchema = addChildSchemataAttributePathsToSchema(newAttributePaths, schema, optionalAttributePathsSAPIUUIDs);
 
 		final Map<String, AttributePath> aps = SchemaUtils.generateAttributePathMap(updatedSchema);
@@ -672,13 +723,13 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 		return parseSchema(xsdFileName, recordIdentifier, schemaUUID, schemaName, baseURI, Optional.empty(), XML_SCHEMA_PARSER);
 	}
 
-	private static Tuple<Schema, Map<String, AttributePathHelper>> parseSchemaSeparately(final String xsdFileName,
+	private static Tuple2<Schema, Map<String, AttributePathHelper>> parseSchemaSeparately(final String xsdFileName,
 	                                                                                     final String recordIdentifier,
 	                                                                                     final String schemaUUID,
 	                                                                                     final String schemaName,
 	                                                                                     final String baseURI) throws DMPPersistenceException {
 
-		final java.util.Optional<Tuple<Schema, Map<String, AttributePathHelper>>> optionalResult = GuicedTest.injector.getInstance(XMLSchemaParser.class).parseSeparately(xsdFileName,
+		final java.util.Optional<Tuple2<Schema, Map<String, AttributePathHelper>>> optionalResult = GuicedTest.injector.getInstance(XMLSchemaParser.class).parseSeparately(xsdFileName,
 				recordIdentifier, schemaUUID, schemaName, baseURI);
 
 		Assert.assertTrue(optionalResult.isPresent());
@@ -748,10 +799,10 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 		final String baseURI = null;
 		final String recordIdentifier = "record";
 
-		final Tuple<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("OAI-PMH.xsd", recordIdentifier, schemaUUID,
+		final Tuple2<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("OAI-PMH.xsd", recordIdentifier, schemaUUID,
 				schemaName, baseURI);
 
-		final Map<String, AttributePathHelper> rootAttributePaths = result.v2();
+		final Map<String, AttributePathHelper> rootAttributePaths = result._2;
 
 		final String rootAttributePathIdentifier = "http://www.openarchives.org/OAI/2.0/metadata";
 		final AttributePathHelper rootAttributePath = rootAttributePaths.get(rootAttributePathIdentifier);
@@ -761,7 +812,7 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 
 		final Map<String, AttributePathHelper> newAttributePaths = composeAttributePaths(rootAttributePaths, rootAttributePath, childAttributePaths);
 
-		final Schema schema = result.v1();
+		final Schema schema = result._1;
 
 		return addChildSchemataAttributePathsToSchema(newAttributePaths, schema, optionalAttributePathsSAPIUUIDs);
 	}
@@ -774,24 +825,28 @@ public class XMLSchemaParserTest extends AbstractJSONSchemaParserTest {
 	                                            final Optional<Map<String, String>> optionalAttributePathsSAPIUUIDs,
 	                                            final Optional<Set<String>> optionalExcludeAttributePathStubs) throws DMPPersistenceException {
 
+		// TODO: set with concrete content (if necessary)
+		final Optional<String> optionalSchemaUUID = Optional.empty();
+		final Optional<String> optionalBaseURI = Optional.empty();
+
 		final String schemaName = "SRU 1.1 + " + childSchemaName + " schema";
 		final String baseURI = null;
 		final String recordIdentifier = "record";
 
-		final Tuple<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("srw-types.1_1.xsd", recordIdentifier, schemaUUID,
+		final Tuple2<Schema, Map<String, AttributePathHelper>> result = parseSchemaSeparately("srw-types.1_1.xsd", recordIdentifier, schemaUUID,
 				schemaName, baseURI);
 
-		final Map<String, AttributePathHelper> rootAttributePaths = result.v2();
+		final Map<String, AttributePathHelper> rootAttributePaths = result._2;
 
 		final String rootAttributePathIdentifier = "http://www.loc.gov/zing/srw/recordData";
 		final AttributePathHelper rootAttributePath = rootAttributePaths.get(rootAttributePathIdentifier);
 
 		final Map<String, AttributePathHelper> childAttributePaths = parseAttributePaths(childSchemaFileName, childRecordIdentifier,
-				includeRecordTag, optionalExcludeAttributePathStubs, XML_SCHEMA_PARSER);
+				includeRecordTag, optionalSchemaUUID, optionalBaseURI, optionalExcludeAttributePathStubs, XML_SCHEMA_PARSER);
 
 		final Map<String, AttributePathHelper> newAttributePaths = composeAttributePaths(rootAttributePaths, rootAttributePath, childAttributePaths);
 
-		final Schema schema = result.v1();
+		final Schema schema = result._1;
 
 		return addChildSchemataAttributePathsToSchema(newAttributePaths, schema, optionalAttributePathsSAPIUUIDs);
 	}
