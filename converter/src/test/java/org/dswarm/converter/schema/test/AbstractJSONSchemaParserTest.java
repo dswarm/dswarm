@@ -86,9 +86,11 @@ public abstract class AbstractJSONSchemaParserTest extends GuicedTest {
 	                                      final String recordIdentifier,
 	                                      final String resultFileName,
 	                                      final boolean includeRecordTag,
+	                                      final Optional<String> optionalSchemaUUID,
+	                                      final Optional<String> optionalBaseURI,
 	                                      final AbstractJSONSchemaParser schemaParser) throws IOException {
 
-		testAttributePathsParsing(schemaFileName, recordIdentifier, resultFileName, includeRecordTag, Optional.empty(), schemaParser);
+		testAttributePathsParsing(schemaFileName, recordIdentifier, resultFileName, includeRecordTag, optionalSchemaUUID, optionalBaseURI, Optional.empty(), schemaParser);
 	}
 
 	static Map<String, AttributePathHelper> parseAttributePaths(final String schemaFileName,
@@ -96,19 +98,27 @@ public abstract class AbstractJSONSchemaParserTest extends GuicedTest {
 	                                                            final boolean includeRecordTag,
 	                                                            final AbstractJSONSchemaParser schemaParser) {
 
-		return parseAttributePaths(schemaFileName, recordIdentifier, includeRecordTag, Optional.empty(), schemaParser);
+		// TODO delegate to upper (?)
+		final Optional<String> optionalSchemaUUID = Optional.empty();
+		final Optional<String> optionalBaseURI = Optional.empty();
+
+		return parseAttributePaths(schemaFileName, recordIdentifier, includeRecordTag, optionalSchemaUUID, optionalBaseURI, Optional.empty(), schemaParser);
 	}
 
 
 	static Map<String, AttributePathHelper> parseAttributePaths(final String schemaFileName,
 	                                                            final String recordIdentifier,
 	                                                            final boolean includeRecordTag,
+	                                                            final Optional<String> optionalSchemaUUID,
+	                                                            final Optional<String> optionalBaseURI,
 	                                                            final Optional<Set<String>> optionalExcludeAttributePathStubs,
 	                                                            final AbstractJSONSchemaParser schemaParser) {
 
 		schemaParser.setIncludeRecordTag(includeRecordTag);
 		final Optional<Map<String, AttributePathHelper>> optionalAttributePaths = schemaParser.parseAttributePathsMap(schemaFileName,
 				Optional.ofNullable(recordIdentifier),
+				optionalSchemaUUID,
+				optionalBaseURI,
 				optionalExcludeAttributePathStubs);
 
 		Assert.assertTrue(optionalAttributePaths.isPresent());
@@ -120,10 +130,12 @@ public abstract class AbstractJSONSchemaParserTest extends GuicedTest {
 	                                      final String recordIdentifier,
 	                                      final String resultFileName,
 	                                      final boolean includeRecordTag,
+	                                      final Optional<String> optionalSchemaUUID,
+	                                      final Optional<String> optionalBaseURI,
 	                                      final Optional<Set<String>> optionalExcludeAttributePathStubs,
 	                                      final AbstractJSONSchemaParser schemaParser) throws IOException {
 
-		final Map<String, AttributePathHelper> attributePaths = parseAttributePaths(schemaFileName, recordIdentifier, includeRecordTag, optionalExcludeAttributePathStubs, schemaParser);
+		final Map<String, AttributePathHelper> attributePaths = parseAttributePaths(schemaFileName, recordIdentifier, includeRecordTag, optionalSchemaUUID, optionalBaseURI, optionalExcludeAttributePathStubs, schemaParser);
 
 		compareAttributePaths(resultFileName, attributePaths);
 	}

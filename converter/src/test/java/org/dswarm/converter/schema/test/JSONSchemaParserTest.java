@@ -40,7 +40,10 @@ public class JSONSchemaParserTest extends AbstractJSONSchemaParserTest {
 	@Test
 	public void testAttributePathsParsingForUBLIntermediateFormat() throws IOException {
 
-		testAttributePathsParsing("is-0.9.json", null, "is-0.9.attribute_paths.txt", false, JSON_SCHEMA_PARSER);
+		final Optional<String> optionalSchemaUUID = Optional.of(SchemaUtils.UBL_INTERMEDIATE_FORMAT_SCHEMA_UUID);
+		final Optional<String> optionalBaseURI = Optional.of(SchemaUtils.determineSchemaNamespaceURI(SchemaUtils.UBL_INTERMEDIATE_FORMAT_SCHEMA_UUID));
+
+		testAttributePathsParsing("is-0.9.json", null, "is-0.9.attribute_paths.txt", false, optionalSchemaUUID, optionalBaseURI, JSON_SCHEMA_PARSER);
 	}
 
 	/**

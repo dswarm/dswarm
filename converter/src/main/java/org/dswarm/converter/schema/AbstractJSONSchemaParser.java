@@ -223,43 +223,60 @@ public abstract class AbstractJSONSchemaParser {
 	public Optional<Map<String, AttributePathHelper>> parseAttributePathsMap(final String schemaFilePath,
 	                                                                         final Optional<String> optionalRecordTag) {
 
-		return parseAttributePathsMap(schemaFilePath, optionalRecordTag, Optional.empty());
+		// TODO: delegate to upper (?)
+		final Optional<String> optionalSchemaUUID = Optional.empty();
+		final Optional<String> optionalBaseURI = Optional.empty();
+
+		return parseAttributePathsMap(schemaFilePath, optionalRecordTag, optionalSchemaUUID, optionalBaseURI, Optional.empty());
 	}
 
 	public Optional<Map<String, AttributePathHelper>> parseAttributePathsMap(final String schemaFilePath,
 	                                                                         final Optional<String> optionalRecordTag,
+	                                                                         final Optional<String> optionalSchemaUUID,
+	                                                                         final Optional<String> optionalBaseURI,
 	                                                                         final Optional<Set<String>> optionalExcludeAttributePathStubs) {
 
 		if (optionalRecordTag.isPresent()) {
 
-			return convertSetToMap(parseAttributePaths(schemaFilePath, optionalRecordTag.get(), optionalExcludeAttributePathStubs));
+			return convertSetToMap(parseAttributePaths(schemaFilePath, optionalRecordTag.get(), optionalSchemaUUID, optionalBaseURI, optionalExcludeAttributePathStubs));
 		} else {
 
-			return convertSetToMap(parseAttributePaths2(schemaFilePath, optionalExcludeAttributePathStubs));
+			return convertSetToMap(parseAttributePaths2(schemaFilePath, optionalSchemaUUID, optionalBaseURI, optionalExcludeAttributePathStubs));
 		}
 	}
 
 	public Optional<Set<AttributePathHelper>> parseAttributePaths(final String schemaFilePath,
 	                                                              final String recordTag) {
 
-		return parseAttributePaths(schemaFilePath, recordTag, Optional.empty());
+		// TODO: delegate to upper (?)
+		final Optional<String> optionalSchemaUUID = Optional.empty();
+		final Optional<String> optionalBaseURI = Optional.empty();
+
+		return parseAttributePaths(schemaFilePath, recordTag, optionalSchemaUUID, optionalBaseURI, Optional.empty());
 	}
 
 	public Optional<Set<AttributePathHelper>> parseAttributePaths(final String schemaFilePath,
 	                                                              final String recordTag,
+	                                                              final Optional<String> optionalSchemaUUID,
+	                                                              final Optional<String> optionalBaseURI,
 	                                                              final Optional<Set<String>> optionalExcludeAttributePathStubs) {
 
 		final Optional<List<JsonNode>> optionalRecordTags = getRecordTagNodes(schemaFilePath, recordTag);
 
-		return parseAttributePaths(optionalRecordTags, optionalExcludeAttributePathStubs);
+		return parseAttributePaths(optionalRecordTags, optionalSchemaUUID, optionalBaseURI, optionalExcludeAttributePathStubs);
 	}
 
 	public Optional<Set<AttributePathHelper>> parseAttributePaths(final String schemaFilePath) {
 
-		return parseAttributePaths2(schemaFilePath, Optional.empty());
+		final Optional<String> optionalSchemaUUID = Optional.empty();
+		final Optional<String> optionalBaseURI = Optional.empty();
+
+		return parseAttributePaths2(schemaFilePath, optionalSchemaUUID, optionalBaseURI, Optional.empty());
 	}
 
 	public Optional<Set<AttributePathHelper>> parseAttributePaths2(final String schemaFilePath,
+	                                                               final Optional<String> optionalSchemaUUID,
+	                                                               final Optional<String> optionalBaseURI,
 	                                                               final Optional<Set<String>> optionalExcludeAttributePathStubs) {
 
 		final Optional<ObjectNode> optionalJSONSchema = getJSONSchema(schemaFilePath);
@@ -294,15 +311,20 @@ public abstract class AbstractJSONSchemaParser {
 
 		final Optional<List<JsonNode>> optionalRootNodes = Optional.of(rootNodes);
 
-		return parseAttributePaths(optionalRootNodes, optionalExcludeAttributePathStubs);
+		return parseAttributePaths(optionalRootNodes, optionalSchemaUUID, optionalBaseURI, optionalExcludeAttributePathStubs);
 	}
 
 	private Optional<Set<AttributePathHelper>> parseAttributePaths(final Optional<List<JsonNode>> optionalRecordTags) {
 
-		return parseAttributePaths(optionalRecordTags, Optional.empty());
+		final Optional<String> optionalSchemaUUID = Optional.empty();
+		final Optional<String> optionalBaseURI = Optional.empty();
+
+		return parseAttributePaths(optionalRecordTags, optionalSchemaUUID, optionalBaseURI, Optional.empty());
 	}
 
 	private Optional<Set<AttributePathHelper>> parseAttributePaths(final Optional<List<JsonNode>> optionalRecordTags,
+	                                                               final Optional<String> optionalSchemaUUID,
+	                                                               final Optional<String> optionalBaseURI,
 	                                                               final Optional<Set<String>> optionalExcludeAttributePathStubs) {
 
 		if (!optionalRecordTags.isPresent()) {
@@ -311,8 +333,6 @@ public abstract class AbstractJSONSchemaParser {
 		}
 
 		final List<JsonNode> recordTagNodes = optionalRecordTags.get();
-		final Optional<String> optionalSchemaUUID = Optional.empty();
-		final Optional<String> optionalBaseURI = Optional.empty();
 
 		final Set<AttributePathHelper> attributePaths = parseAttributePaths(recordTagNodes, optionalSchemaUUID, optionalBaseURI, optionalExcludeAttributePathStubs);
 
@@ -745,7 +765,10 @@ public abstract class AbstractJSONSchemaParser {
 		return Tuple.of(newAttributeNodes, newElementNodes);
 	}
 
-	protected abstract void addAttributeNode(List<JsonNode> newAttributeNodes, List<JsonNode> newElementNodes, ObjectNode newJSONSchemaAttributeNode, String newAttribute);
+	protected abstract void addAttributeNode(final List<JsonNode> newAttributeNodes,
+	                                         final List<JsonNode> newElementNodes,
+	                                         final ObjectNode newJSONSchemaAttributeNode,
+	                                         final String newAttribute);
 
 	private Optional<Map<String, AttributePathHelper>> convertSetToMap(final Optional<Set<AttributePathHelper>> optionalAttributePaths) {
 
