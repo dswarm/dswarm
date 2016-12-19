@@ -54,15 +54,18 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 import javaslang.Tuple;
 import javaslang.Tuple2;
+import javaslang.collection.HashMap;
 import javaslang.control.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.dswarm.common.web.URI;
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.resources.ExtendedBasicDMPResource;
 import org.dswarm.controller.resources.POJOFormat;
 import org.dswarm.controller.utils.JsonUtils;
 import org.dswarm.init.DMPException;
+import org.dswarm.init.util.DMPStatics;
 import org.dswarm.persistence.DMPPersistenceError;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.DMPObject;
@@ -637,64 +640,31 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 				.collect(Collectors.toMap(uniqueReferenceSAPI -> uniqueReferenceSAPI.getAttributePath().toAttributePath(),
 						AttributePathInstance::getAttributePath));
 
+		final Set<String> referenceAPStrings = referenceAPs.keySet();
+		final Map<String, String> referenceAPsLocalAPs = determineLocalNameAttributePaths(referenceAPStrings);
+
 		final Map<String, AttributePath> newAPs = uniqueNewSAPIs.parallelStream()
 				.collect(Collectors.toMap(uniqueNewSAPI -> uniqueNewSAPI.getAttributePath().toAttributePath(),
 						AttributePathInstance::getAttributePath));
 
 		final Set<String> newAPStrings = newAPs.keySet();
+		final Map<String, String> localAPsNewAPs = HashMap.ofAll(determineLocalNameAttributePaths(newAPStrings))
+				.map(tuple -> Tuple.of(tuple._2, tuple._1))
+				.toJavaSet().stream()
+				.collect(Collectors.toMap(Tuple2::_1, Tuple2::_2));
 
 		final Map<AttributePath, AttributePath> attributePathMap = new ConcurrentHashMap<>();
 
 		referenceAPs.forEach((referenceAPString, referenceAP) -> {
 
-			final Collection<String> matchedNewAttributePaths = matchAttributePaths(referenceAPString, newAPStrings);
+			final Optional<String> optionalMatchedNewAPString = matchAttributePaths(referenceAPString, newAPStrings, referenceAPsLocalAPs, localAPsNewAPs);
 
-			final String matchedNewAPString;
+			if (!optionalMatchedNewAPString.isPresent()) {
 
-			if (matchedNewAttributePaths.size() == 1) {
-
-				// should be one match exactly
-				matchedNewAPString = matchedNewAttributePaths.iterator().next();
-			} else if (matchedNewAttributePaths.isEmpty()) {
-
-				// try it the other way around, i.e., scan reference APs with most similar match from new APs (requires "most-similar-match" determination first)
-				// might be the case, when reference AP is longer than new APs
-
-				// 1. determine candidates for "most-similar-match" from new APs
-				final Collection<String> mostSimilarMatchCandidates = matchAttributePaths2(referenceAPString, newAPStrings);
-
-				// 2. determine longest match
-				final Optional<String> optionalMostSimilarAP = determineLongestMatchedAttributePath(mostSimilarMatchCandidates);
-
-				if (!optionalMostSimilarAP.isPresent()) {
-
-					// TODO: no match - > what should we here???
-
-					LOG.debug(
-							"couldn't determine the most similar new attribute path from candidates (site = '{}') for reference attribute path '{}'",
-							mostSimilarMatchCandidates.size(), referenceAPString);
-
-					return;
-				}
-
-				matchedNewAPString = optionalMostSimilarAP.get();
-			} else {
-
-				// matchedNewAttributePaths.size() > 1
-
-				LOG.debug("found multiple matches ('{}') in new attribute paths for reference attribute path '{}'; try to determine shortest match",
-						matchedNewAttributePaths.size(), referenceAPString);
-
-				final Optional<String> optionalMostSimilarAP = determineShortestMatchedAttributePath(matchedNewAttributePaths);
-
-				if (!optionalMostSimilarAP.isPresent()) {
-
-					LOG.debug("couldn't determine shortest match for in matched new attribute paths (size = '{}') for reference attribute path '{}'",
-							matchedNewAttributePaths.size(), referenceAPString);
-				}
-
-				matchedNewAPString = optionalMostSimilarAP.get();
+				return;
 			}
+
+			final String matchedNewAPString = optionalMatchedNewAPString.get();
 
 			final AttributePath matchedNewAttributePath = newAPs.get(matchedNewAPString);
 
@@ -704,6 +674,108 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 		// TODO: align result set to smaller collection (this could be the reference attribute paths collection or the new attribute paths collection), otherwise the relationship is not bi-unique (1:1)
 
 		return attributePathMap;
+	}
+
+	private static Optional<String> matchAttributePaths(final String referenceAPString,
+	                                                    final Set<String> newAPStrings,
+	                                                    final Map<String, String> referenceAPsLocalAPs,
+	                                                    final Map<String, String> newAPsLocalAPs) {
+
+		final Collection<String> matchedNewAttributePaths = matchAttributePaths(referenceAPString, newAPStrings);
+
+		if (matchedNewAttributePaths.size() == 1) {
+
+			// should be one match exactly
+			return Optional.of(matchedNewAttributePaths.iterator().next());
+		} else if (matchedNewAttributePaths.isEmpty()) {
+
+			// try it the other way around, i.e., scan reference APs with most similar match from new APs (requires "most-similar-match" determination first)
+			// might be the case, when reference AP is longer than new APs
+
+			// 1. determine candidates for "most-similar-match" from new APs
+			final Collection<String> mostSimilarMatchCandidates = matchAttributePaths2(referenceAPString, newAPStrings);
+
+			// 2. determine longest match
+			final Optional<String> optionalMostSimilarAP = determineLongestMatchedAttributePath(mostSimilarMatchCandidates);
+
+			if (!optionalMostSimilarAP.isPresent()) {
+
+				// try to match with help of local attribute paths
+				final String localReferenceAPString = referenceAPsLocalAPs.get(referenceAPString);
+
+				if (newAPsLocalAPs.containsKey(localReferenceAPString)) {
+
+					return Optional.of(newAPsLocalAPs.get(localReferenceAPString));
+				}
+
+				// TODO: no match - > what should we here???
+
+				LOG.debug(
+						"couldn't determine the most similar new attribute path from candidates (site = '{}') for reference attribute path '{}'",
+						mostSimilarMatchCandidates.size(), referenceAPString);
+
+				return Optional.empty();
+			}
+
+			return Optional.of(optionalMostSimilarAP.get());
+		} else {
+
+			// matchedNewAttributePaths.size() > 1
+
+			LOG.debug("found multiple matches ('{}') in new attribute paths for reference attribute path '{}'; try to determine shortest match",
+					matchedNewAttributePaths.size(), referenceAPString);
+
+			final Optional<String> optionalMostSimilarAP = determineShortestMatchedAttributePath(matchedNewAttributePaths);
+
+			if (!optionalMostSimilarAP.isPresent()) {
+
+				LOG.debug("couldn't determine shortest match for in matched new attribute paths (size = '{}') for reference attribute path '{}'",
+						matchedNewAttributePaths.size(), referenceAPString);
+			}
+
+			return optionalMostSimilarAP;
+		}
+	}
+
+	private static Map<String, String> determineLocalNameAttributePaths(final Set<String> attributePathStrings) {
+
+		return attributePathStrings.stream().map(attributePathString -> {
+
+			final String localNameAttributePath = determineLocalNameAttributePath(attributePathString);
+
+			return Tuple.of(attributePathString, localNameAttributePath);
+		}).collect(Collectors.toMap(Tuple2::_1, Tuple2::_2));
+	}
+
+	private static String determineLocalNameAttributePath(final String attributePathString) {
+
+		final String[] attributes = attributePathString.split(DMPStatics.ATTRIBUTE_DELIMITER.toString());
+
+		if (attributes.length <= 0) {
+
+			return null;
+		}
+
+		final StringBuilder sb = new StringBuilder();
+
+		for (int i = 0; i < attributes.length; i++) {
+
+			final String localNameAttribute = determineLocalNameAttribute(attributes[i]);
+
+			sb.append(localNameAttribute);
+
+			if (i < (attributes.length - 1)) {
+
+				sb.append(DMPStatics.ATTRIBUTE_DELIMITER);
+			}
+		}
+
+		return sb.toString();
+	}
+
+	private static String determineLocalNameAttribute(final String attribute) {
+
+		return URI.determineParts(attribute).v2();
 	}
 
 	private static Collection<String> matchAttributePaths(final String inputAttributePath, final Collection<String> haystack) {
