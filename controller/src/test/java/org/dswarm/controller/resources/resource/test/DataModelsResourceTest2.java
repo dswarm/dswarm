@@ -31,6 +31,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.io.Resources;
 import com.google.inject.Key;
+import javaslang.Tuple;
+import javaslang.Tuple2;
 import org.apache.commons.io.FileUtils;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
@@ -41,7 +43,6 @@ import org.slf4j.LoggerFactory;
 import rx.Observable;
 
 import org.dswarm.common.DMPStatics;
-import org.dswarm.common.types.Tuple;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.ResourcesResourceTestUtils;
 import org.dswarm.controller.resources.test.BasicResourceTest;
@@ -215,10 +216,10 @@ public class DataModelsResourceTest2 extends
 
 		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
 
-		final Tuple<Optional<Map<String, Model>>, ObjectNode> result = readData(updateDataModel, Optional.<Integer>empty());
+		final Tuple2<Optional<Map<String, Model>>, ObjectNode> result = readData(updateDataModel, Optional.empty());
 
-		final Optional<Map<String, Model>> data = result.v1();
-		final ObjectNode assoziativeJsonArray = result.v2();
+		final Optional<Map<String, Model>> data = result._1;
+		final ObjectNode assoziativeJsonArray = result._2;
 
 		Assert.assertTrue(data.isPresent());
 		Assert.assertNotNull(assoziativeJsonArray);
@@ -266,10 +267,10 @@ public class DataModelsResourceTest2 extends
 
 		Assert.assertNotNull("the response JSON shouldn't be null", responseString);
 
-		final Tuple<Optional<Map<String, Model>>, ObjectNode> result = readData(updateDataModel, Optional.<Integer>empty());
+		final Tuple2<Optional<Map<String, Model>>, ObjectNode> result = readData(updateDataModel, Optional.empty());
 
-		final Optional<Map<String, Model>> data = result.v1();
-		final ObjectNode assoziativeJsonArray = result.v2();
+		final Optional<Map<String, Model>> data = result._1;
+		final ObjectNode assoziativeJsonArray = result._2;
 
 		Assert.assertTrue(data.isPresent());
 		Assert.assertNotNull(assoziativeJsonArray);
@@ -293,11 +294,11 @@ public class DataModelsResourceTest2 extends
 		final String configurationFileName = "xml-configuration.json";
 		final String dataModelName = "mabxml";
 
-		final Tuple<JsonNode, JsonNode> resultTuple = testXMLDataInternal(dataResourceResourceFileName, dataResourceFileName,
+		final Tuple2<JsonNode, JsonNode> resultTuple = testXMLDataInternal(dataResourceResourceFileName, dataResourceFileName,
 				configurationFileName, dataModelName, true, false);
 
-		final JsonNode json = resultTuple.v1();
-		final JsonNode expectedJson = resultTuple.v2();
+		final JsonNode json = resultTuple._1;
+		final JsonNode expectedJson = resultTuple._2;
 
 		Assert.assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", json),
 				CoreMatchers.equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", expectedJson)));
@@ -321,11 +322,11 @@ public class DataModelsResourceTest2 extends
 		final String configurationFileName = "xml-configuration.json";
 		final String dataModelName = "mabxml";
 
-		final Tuple<JsonNode, JsonNode> resultTuple = testXMLDataInternal(dataResourceResourceFileName, dataResourceFileName,
+		final Tuple2<JsonNode, JsonNode> resultTuple = testXMLDataInternal(dataResourceResourceFileName, dataResourceFileName,
 				configurationFileName, dataModelName, true, true);
 
-		final JsonNode json = resultTuple.v1();
-		final JsonNode expectedJson = resultTuple.v2();
+		final JsonNode json = resultTuple._1;
+		final JsonNode expectedJson = resultTuple._2;
 
 		Assert.assertThat(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", json),
 				CoreMatchers.equalTo(getValue("http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#status", expectedJson)));
@@ -349,11 +350,11 @@ public class DataModelsResourceTest2 extends
 		final String configurationFileName = "oai-pmh_mets_mods_config.json";
 		final String dataModelName = "OAI-PMH + Mets + Mods + X";
 
-		final Tuple<JsonNode, JsonNode> resultTuple = testXMLDataInternal(dataResourceResourceFileName, dataResourceFileName,
+		final Tuple2<JsonNode, JsonNode> resultTuple = testXMLDataInternal(dataResourceResourceFileName, dataResourceFileName,
 				configurationFileName, dataModelName, true, false);
 
-		final JsonNode json = resultTuple.v1();
-		final JsonNode expectedJson = resultTuple.v2();
+		final JsonNode json = resultTuple._1;
+		final JsonNode expectedJson = resultTuple._2;
 
 		Assert.assertNotNull("the expected data JSON shouldn't be null", expectedJson);
 
@@ -377,11 +378,11 @@ public class DataModelsResourceTest2 extends
 		final String configurationFileName = "xml_w_doctype_config.json";
 		final String dataModelName = "XML with DOCTYPE";
 
-		final Tuple<JsonNode, JsonNode> resultTuple = testXMLDataInternal(dataResourceResourceFileName, dataResourceFileName,
+		final Tuple2<JsonNode, JsonNode> resultTuple = testXMLDataInternal(dataResourceResourceFileName, dataResourceFileName,
 				configurationFileName, dataModelName, true, false);
 
-		final JsonNode json = resultTuple.v1();
-		final JsonNode expectedJson = resultTuple.v2();
+		final JsonNode json = resultTuple._1;
+		final JsonNode expectedJson = resultTuple._2;
 
 		Assert.assertNotNull("the expected data JSON shouldn't be null", expectedJson);
 
@@ -407,11 +408,11 @@ public class DataModelsResourceTest2 extends
 		final String configurationFileName = "xml_w_doctype_config.json";
 		final String dataModelName = "XML with DOCTYPE";
 
-		final Tuple<JsonNode, JsonNode> resultTuple = testXMLDataInternal(dataResourceResourceFileName, dataResourceFileName,
+		final Tuple2<JsonNode, JsonNode> resultTuple = testXMLDataInternal(dataResourceResourceFileName, dataResourceFileName,
 				configurationFileName, dataModelName, true, true);
 
-		final JsonNode json = resultTuple.v1();
-		final JsonNode expectedJson = resultTuple.v2();
+		final JsonNode json = resultTuple._1;
+		final JsonNode expectedJson = resultTuple._2;
 
 		Assert.assertNotNull("the expected data JSON shouldn't be null", expectedJson);
 
@@ -442,10 +443,10 @@ public class DataModelsResourceTest2 extends
 
 		final int atMost = 1;
 
-		final Tuple<Optional<Map<String, Model>>, ObjectNode> result = readData(dataModel, Optional.of(atMost));
+		final Tuple2<Optional<Map<String, Model>>, ObjectNode> result = readData(dataModel, Optional.of(atMost));
 
-		final Optional<Map<String, Model>> data = result.v1();
-		final ObjectNode assoziativeJsonArray = result.v2();
+		final Optional<Map<String, Model>> data = result._1;
+		final ObjectNode assoziativeJsonArray = result._2;
 		final String recordId = data.get().keySet().iterator().next();
 
 		Assert.assertThat(assoziativeJsonArray.size(), CoreMatchers.equalTo(atMost));
@@ -874,10 +875,10 @@ public class DataModelsResourceTest2 extends
 
 		final int atMost = 1;
 
-		final Tuple<Optional<Map<String, Model>>, ObjectNode> result = readData(dataModel, Optional.of(atMost));
+		final Tuple2<Optional<Map<String, Model>>, ObjectNode> result = readData(dataModel, Optional.of(atMost));
 
-		final Optional<Map<String, Model>> data = result.v1();
-		final ObjectNode assoziativeJsonArray = result.v2();
+		final Optional<Map<String, Model>> data = result._1;
+		final ObjectNode assoziativeJsonArray = result._2;
 		final String recordId = data.get().keySet().iterator().next();
 
 		Assert.assertThat(assoziativeJsonArray.size(), CoreMatchers.equalTo(atMost));
@@ -904,14 +905,14 @@ public class DataModelsResourceTest2 extends
 		return dataModel;
 	}
 
-	private Tuple<Optional<Map<String, Model>>, ObjectNode> readData(final DataModel dataModel, final Optional<Integer> optionalAtMost)
+	private Tuple2<Optional<Map<String, Model>>, ObjectNode> readData(final DataModel dataModel, final Optional<Integer> optionalAtMost)
 			throws DMPPersistenceException {
 
 		final InternalModelServiceFactory serviceFactory = GuicedTest.injector.getInstance(Key.get(InternalModelServiceFactory.class));
 		final InternalModelService service = serviceFactory.getInternalGDMGraphService();
 		final Observable<Map<String, Model>> dataObservable = service
 				.getObjects(dataModel.getUuid(), optionalAtMost)
-				.toMap(Tuple::v1, Tuple::v2);
+				.toMap(Tuple2::_1, Tuple2::_2);
 		final Optional<Map<String, Model>> data = dataObservable.map(Optional::of).toBlocking().firstOrDefault(Optional.empty());
 
 		Assert.assertTrue(data.isPresent());
@@ -940,10 +941,10 @@ public class DataModelsResourceTest2 extends
 
 		final ObjectNode assoziativeJsonArray = response.readEntity(ObjectNode.class);
 
-		return Tuple.tuple(data, assoziativeJsonArray);
+		return Tuple.of(data, assoziativeJsonArray);
 	}
 
-	private Tuple<JsonNode, JsonNode> testXMLDataInternal(final String dataResourceResourceFileName,
+	private Tuple2<JsonNode, JsonNode> testXMLDataInternal(final String dataResourceResourceFileName,
 	                                                      final String dataResourceFileName,
 	                                                      final String configurationFileName,
 	                                                      final String dataModelName,
@@ -962,10 +963,10 @@ public class DataModelsResourceTest2 extends
 
 		final int atMost = 1;
 
-		final Tuple<Optional<Map<String, Model>>, ObjectNode> result = readData(dataModel, Optional.of(atMost));
+		final Tuple2<Optional<Map<String, Model>>, ObjectNode> result = readData(dataModel, Optional.of(atMost));
 
-		final Optional<Map<String, Model>> data = result.v1();
-		final ObjectNode assoziativeJsonArray = result.v2();
+		final Optional<Map<String, Model>> data = result._1;
+		final ObjectNode assoziativeJsonArray = result._2;
 		final String recordId = data.get().keySet().iterator().next();
 
 		Assert.assertThat(assoziativeJsonArray.size(), CoreMatchers.equalTo(atMost));
@@ -976,6 +977,6 @@ public class DataModelsResourceTest2 extends
 
 		Assert.assertNotNull("the expected data JSON shouldn't be null", expectedJson);
 
-		return Tuple.tuple(json, expectedJson);
+		return Tuple.of(json, expectedJson);
 	}
 }

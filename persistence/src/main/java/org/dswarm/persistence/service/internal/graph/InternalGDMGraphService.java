@@ -54,6 +54,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+import javaslang.Tuple;
+import javaslang.Tuple2;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.rx.RxWebTarget;
@@ -72,7 +74,6 @@ import rx.subjects.PublishSubject;
 
 import org.dswarm.common.DMPStatics;
 import org.dswarm.common.model.util.AttributePathUtil;
-import org.dswarm.common.types.Tuple;
 import org.dswarm.graph.json.Resource;
 import org.dswarm.graph.json.stream.ModelBuilder;
 import org.dswarm.graph.json.stream.ModelParser;
@@ -178,7 +179,8 @@ public class InternalGDMGraphService implements InternalModelService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Observable<Response> createObject(final String dataModelUuid, final Observable<Model> model) throws DMPPersistenceException {
+	public Observable<Response> createObject(final String dataModelUuid,
+	                                         final Observable<Model> model) throws DMPPersistenceException {
 
 		LOG.debug("try to create data model '{}' in data hub", dataModelUuid);
 
@@ -190,8 +192,10 @@ public class InternalGDMGraphService implements InternalModelService {
 		return result;
 	}
 
-	@Override public Observable<Response> updateObject(final String dataModelUuid, final Observable<Model> model, final UpdateFormat updateFormat,
-			final boolean enableVersioning)
+	@Override public Observable<Response> updateObject(final String dataModelUuid,
+	                                                   final Observable<Model> model,
+	                                                   final UpdateFormat updateFormat,
+	                                                   final boolean enableVersioning)
 			throws DMPPersistenceException {
 
 		LOG.debug("try to update data model '{}' in data hub", dataModelUuid);
@@ -208,8 +212,8 @@ public class InternalGDMGraphService implements InternalModelService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Observable<Tuple<String, Model>> getObjects(final String dataModelUuid, final Optional<Integer> optionalAtMost)
-			throws DMPPersistenceException {
+	public Observable<Tuple2<String, Model>> getObjects(final String dataModelUuid,
+	                                                    final Optional<Integer> optionalAtMost) throws DMPPersistenceException {
 
 		if (dataModelUuid == null) {
 
@@ -257,9 +261,9 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		final String recordClassUri = recordClass.getUri();
 
-		final Tuple<Observable<Resource>, InputStream> readResult = readGDMFromDB(recordClassUri, dataModelURI, optionalAtMost);
-		final Observable<Resource> recordResourcesObservable = readResult.v1();
-		final InputStream inputStream = readResult.v2();
+		final Tuple2<Observable<Resource>, InputStream> readResult = readGDMFromDB(recordClassUri, dataModelURI, optionalAtMost);
+		final Observable<Resource> recordResourcesObservable = readResult._1;
+		final InputStream inputStream = readResult._2;
 
 		// TODO: this won'T be done right now, but is maybe also not really necessary any more
 		//		final Set<Resource> recordResources = GDMUtil.getRecordResources(recordClassUri, model);
@@ -291,7 +295,7 @@ public class InternalGDMGraphService implements InternalModelService {
 						LOG.debug("retrieved and processed '{}' records", current);
 					}
 				})
-				.map(gdm -> Tuple.tuple(gdm.getRecordURIs().iterator().next(), (Model) gdm))
+				.map(gdm -> Tuple.of(gdm.getRecordURIs().iterator().next(), (Model) gdm))
 				.doOnCompleted(DMPPersistenceError.wrapped(() -> closeResource(inputStream, OBJECT_RETRIEVAL)))
 				.doOnCompleted(() -> LOG.debug("finally, retrieved and processed '{}' records", counter.get()));
 	}
@@ -361,8 +365,8 @@ public class InternalGDMGraphService implements InternalModelService {
 				});
 	}
 
-	@Override public Observable<Response> deprecateRecords(final Collection<String> recordURIs, final String dataModelUuid)
-			throws DMPPersistenceException {
+	@Override public Observable<Response> deprecateRecords(final Collection<String> recordURIs,
+	                                                       final String dataModelUuid) throws DMPPersistenceException {
 
 		if (dataModelUuid == null) {
 
@@ -417,8 +421,10 @@ public class InternalGDMGraphService implements InternalModelService {
 		return Optional.of(schema);
 	}
 
-	@Override public Observable<Tuple<String, Model>> searchObjects(final String dataModelUuid, final String keyAttributePathString,
-			final String searchValue, final Optional<Integer> optionalAtMost) throws DMPPersistenceException {
+	@Override public Observable<Tuple2<String, Model>> searchObjects(final String dataModelUuid,
+	                                                                 final String keyAttributePathString,
+	                                                                 final String searchValue,
+	                                                                 final Optional<Integer> optionalAtMost) throws DMPPersistenceException {
 
 		if (dataModelUuid == null) {
 
@@ -492,12 +498,13 @@ public class InternalGDMGraphService implements InternalModelService {
 					final org.dswarm.graph.json.Model recordModel = new org.dswarm.graph.json.Model();
 					recordModel.addResource(resource);
 					final GDMModel gdmModel = new GDMModel(recordModel, resource.getUri());
-					return Tuple.tuple(resource.getUri(), gdmModel);
+					return Tuple.of(resource.getUri(), gdmModel);
 				});
 
 	}
 
-	@Override public Observable<Model> getRecord(final String recordIdentifier, final String dataModelUuid) throws DMPPersistenceException {
+	@Override public Observable<Model> getRecord(final String recordIdentifier,
+	                                             final String dataModelUuid) throws DMPPersistenceException {
 
 		if (recordIdentifier == null) {
 
@@ -541,8 +548,8 @@ public class InternalGDMGraphService implements InternalModelService {
 		});
 	}
 
-	@Override public Observable<Tuple<String, Model>> getRecords(final Set<String> recordIdentifiers, final String dataModelUuid)
-			throws DMPPersistenceException {
+	@Override public Observable<Tuple2<String, Model>> getRecords(final Set<String> recordIdentifiers,
+	                                                              final String dataModelUuid) throws DMPPersistenceException {
 
 		if (recordIdentifiers == null) {
 
@@ -587,13 +594,15 @@ public class InternalGDMGraphService implements InternalModelService {
 							model.addResource(resource);
 							final Model gdmModel = new GDMModel(model, recordIdentifier);
 
-							return Tuple.tuple(recordIdentifier, gdmModel);
+							return Tuple.of(recordIdentifier, gdmModel);
 						})
 		);
 	}
 
-	private Observable<Response> createOrUpdateObject(final String dataModelUuid, final Observable<Model> model, final UpdateFormat updateFormat,
-			final boolean enableVersioning) throws DMPPersistenceException {
+	private Observable<Response> createOrUpdateObject(final String dataModelUuid,
+	                                                  final Observable<Model> model,
+	                                                  final UpdateFormat updateFormat,
+	                                                  final boolean enableVersioning) throws DMPPersistenceException {
 
 		if (dataModelUuid == null) {
 
@@ -771,8 +780,8 @@ public class InternalGDMGraphService implements InternalModelService {
 		return asyncPost;
 	}
 
-	private Observable<Response> deprecateRecordsInternal(final Collection<String> recordURIs, final String dataModelURI)
-			throws DMPPersistenceException {
+	private Observable<Response> deprecateRecordsInternal(final Collection<String> recordURIs,
+	                                                      final String dataModelURI) throws DMPPersistenceException {
 
 		LOG.debug("try to deprecate '{}' records in data model '{}' in data hub", recordURIs.size(), dataModelURI);
 
@@ -827,8 +836,8 @@ public class InternalGDMGraphService implements InternalModelService {
 		return recordURIsArray;
 	}
 
-	private Tuple<Observer<org.dswarm.graph.json.Resource>, Observable<Response>> writeGDMToDB(final String dataModelUri, final String metadata)
-			throws DMPPersistenceException {
+	private Tuple2<Observer<org.dswarm.graph.json.Resource>, Observable<Response>> writeGDMToDB(final String dataModelUri,
+	                                                                                            final String metadata) throws DMPPersistenceException {
 
 		LOG.debug("try to write GDM data for data model '{}' into data hub", dataModelUri);
 
@@ -887,7 +896,7 @@ public class InternalGDMGraphService implements InternalModelService {
 
 			post.subscribe(asyncPost);
 
-			return Tuple.tuple(modelConsumer, asyncPost);
+			return Tuple.of(modelConsumer, asyncPost);
 		} catch (final InterruptedException | ExecutionException e) {
 
 			throw new DMPPersistenceException("couldn't store GDM data into database successfully", e);
@@ -953,9 +962,9 @@ public class InternalGDMGraphService implements InternalModelService {
 		}
 	}
 
-	private Tuple<Observable<Resource>, InputStream> readGDMFromDB(final String recordClassUri, final String dataModelUri,
-			final Optional<Integer> optionalAtMost)
-			throws DMPPersistenceException {
+	private Tuple2<Observable<Resource>, InputStream> readGDMFromDB(final String recordClassUri,
+	                                                                final String dataModelUri,
+	                                                                final Optional<Integer> optionalAtMost) throws DMPPersistenceException {
 
 		LOG.debug("try to read GDM data for data model '{}' and record class '{}' from data hub", dataModelUri, recordClassUri);
 
@@ -1000,7 +1009,8 @@ public class InternalGDMGraphService implements InternalModelService {
 		return deserializeModel(body);
 	}
 
-	private Observable<Resource> readGDMRecordFromDB(final String recordUri, final String dataModelUri) {
+	private Observable<Resource> readGDMRecordFromDB(final String recordUri,
+	                                                 final String dataModelUri) {
 
 		final WebTarget target = gdmTarget(GET_GDM_RECORD_ENDPOINT);
 
@@ -1041,10 +1051,10 @@ public class InternalGDMGraphService implements InternalModelService {
 				.map(DMPPersistenceError.wrapped(this::deserializeResource));
 	}
 
-	private Observable<org.dswarm.graph.json.Model> searchGDMRecordsInDB(final String keyAttributePathString, final String searchValue,
-			final String dataModelUri,
-			final Optional<Integer> optionalAtMost)
-			throws DMPPersistenceException {
+	private Observable<org.dswarm.graph.json.Model> searchGDMRecordsInDB(final String keyAttributePathString,
+	                                                                     final String searchValue,
+	                                                                     final String dataModelUri,
+	                                                                     final Optional<Integer> optionalAtMost) throws DMPPersistenceException {
 
 		final WebTarget target = gdmTarget(SEARCH_GDM_RECORDS_ENDPOINT);
 
@@ -1092,9 +1102,9 @@ public class InternalGDMGraphService implements InternalModelService {
 
 					final InputStream body = response.readEntity(InputStream.class);
 
-					final Tuple<Observable<Resource>, InputStream> searchResultTuple = deserializeModel(body);
-					final Observable<Resource> searchResult = searchResultTuple.v1();
-					final InputStream is = searchResultTuple.v2();
+					final Tuple2<Observable<Resource>, InputStream> searchResultTuple = deserializeModel(body);
+					final Observable<Resource> searchResult = searchResultTuple._1;
+					final InputStream is = searchResultTuple._2;
 
 					return searchResult.reduce(
 							new org.dswarm.graph.json.Model(),
@@ -1103,12 +1113,12 @@ public class InternalGDMGraphService implements InternalModelService {
 				});
 	}
 
-	private Tuple<Observable<Resource>, InputStream> deserializeModel(final InputStream modelStream) {
+	private Tuple2<Observable<Resource>, InputStream> deserializeModel(final InputStream modelStream) {
 
 		final InputStream bis = new BufferedInputStream(modelStream, CHUNK_SIZE);
 		final ModelParser modelParser = new ModelParser(bis);
 
-		return Tuple.tuple(modelParser.parse(), bis);
+		return Tuple.of(modelParser.parse(), bis);
 	}
 
 	private Resource deserializeResource(final String modelString) throws DMPPersistenceException {
@@ -1217,9 +1227,11 @@ public class InternalGDMGraphService implements InternalModelService {
 		}
 	}
 
-	private String getMetadata(final String dataModelUri, final Optional<ContentSchema> optionalContentSchema,
-			final Optional<Boolean> optionalDeprecateMissingRecords, final Optional<String> optionalRecordClassUri, final boolean enableVersioning)
-			throws DMPPersistenceException {
+	private String getMetadata(final String dataModelUri,
+	                           final Optional<ContentSchema> optionalContentSchema,
+	                           final Optional<Boolean> optionalDeprecateMissingRecords,
+	                           final Optional<String> optionalRecordClassUri,
+	                           final boolean enableVersioning) throws DMPPersistenceException {
 
 		final ObjectNode metadata = objectMapperProvider.get().createObjectNode();
 		metadata.put(DMPStatics.DATA_MODEL_URI_IDENTIFIER, dataModelUri);
@@ -1242,7 +1254,8 @@ public class InternalGDMGraphService implements InternalModelService {
 		return serializeObject(metadata, METADATA_TYPE);
 	}
 
-	private String serializeObject(final ObjectNode object, final String type) throws DMPPersistenceException {
+	private String serializeObject(final ObjectNode object,
+	                               final String type) throws DMPPersistenceException {
 
 		try {
 
@@ -1257,7 +1270,8 @@ public class InternalGDMGraphService implements InternalModelService {
 		}
 	}
 
-	private static void closeResource(final Closeable closeable, final String type) throws DMPPersistenceException {
+	private static void closeResource(final Closeable closeable,
+	                                  final String type) throws DMPPersistenceException {
 
 		if (closeable != null) {
 
@@ -1284,8 +1298,12 @@ public class InternalGDMGraphService implements InternalModelService {
 
 		private final AtomicInteger counter = new AtomicInteger(0);
 
-		private GDMWriteRequestOperator(final DataModel dataModel, final boolean isSchemaAnInBuiltSchema, final String dataModelURI,
-				final Optional<Boolean> optionalDeprecateMissingRecords, final boolean enableVersioning) {
+		private GDMWriteRequestOperator(final DataModel dataModel,
+		                                final boolean isSchemaAnInBuiltSchema,
+		                                final String dataModelURI,
+		                                final Optional<Boolean> optionalDeprecateMissingRecords,
+		                                final boolean enableVersioning) {
+
 			this.dataModel = dataModel;
 			this.isSchemaAnInBuiltSchema = isSchemaAnInBuiltSchema;
 			this.dataModelURI = dataModelURI;
@@ -1358,12 +1376,12 @@ public class InternalGDMGraphService implements InternalModelService {
 									optionalRecordClassUri,
 									enableVersioning);
 
-							final Tuple<Observer<Resource>, Observable<Response>> observerObservableTuple = writeGDMToDB(dataModelURI, metadata);
-							final Observer<Resource> resourceObserver = observerObservableTuple.v1();
+							final Tuple2<Observer<Resource>, Observable<Response>> observerObservableTuple = writeGDMToDB(dataModelURI, metadata);
+							final Observer<Resource> resourceObserver = observerObservableTuple._1;
 							resourcePublishSubject.doOnError(e1 -> responseAsyncSubject.onError(e1))
 									.subscribe(resourceObserver);
 
-							final Observable<Response> responseObservable = observerObservableTuple.v2();
+							final Observable<Response> responseObservable = observerObservableTuple._2;
 							responseObservable.subscribe(responseAsyncSubject);
 						} catch (final DMPPersistenceException e) {
 

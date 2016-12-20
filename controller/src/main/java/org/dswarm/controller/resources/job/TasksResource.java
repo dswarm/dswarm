@@ -23,6 +23,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -68,6 +69,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
+import javaslang.Tuple2;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,7 +81,6 @@ import rx.observables.ConnectableObservable;
 import rx.schedulers.Schedulers;
 
 import org.dswarm.common.MediaTypeUtil;
-import org.dswarm.common.types.Tuple;
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.utils.DataModelUtil;
 import org.dswarm.controller.utils.JsonUtils;
@@ -101,11 +102,13 @@ import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.internal.gdm.GDMModelUtil;
 import org.dswarm.persistence.model.job.Job;
+import org.dswarm.persistence.model.job.Mapping;
 import org.dswarm.persistence.model.job.Task;
 import org.dswarm.persistence.model.job.Transformation;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
+import org.dswarm.persistence.model.schema.Schema;
 import org.dswarm.persistence.monitoring.MonitoringHelper;
 import org.dswarm.persistence.monitoring.MonitoringLogger;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
@@ -296,6 +299,26 @@ public class TasksResource {
 			throw new DMPConverterException(message);
 		}
 
+		final DataModel inputDataModel = getInputDataModel(task);
+
+		//check schema equality, i.e. is input schema equals to output schema
+		final boolean isOutputSchemaEqualsToInputSchema = isOutputSchemaEqualsToInputSchema(task, inputDataModel);
+
+		//check job / mappings
+		final boolean hasMappings = hasMappings(task);
+
+		if (isOutputSchemaEqualsToInputSchema && !hasMappings) {
+
+			// do simple format converting
+
+			final ConnectableObservable<Tuple2<String, JsonNode>> connectableInputData = Observable.from(Collections.<Tuple2<String, JsonNode>>emptyList()).publish();
+			final ConnectableObservable<GDMModel> connectableResult = getInputDataAsGDMModel(requestJSON, task, inputDataModel).publish();
+
+			doExport(requestHeaders, asyncResponse, task, connectableResult, connectableInputData);
+
+			return;
+		}
+
 		final Job job = task.getJob();
 
 		if (job == null) {
@@ -316,42 +339,9 @@ public class TasksResource {
 			throw new DMPConverterException(message);
 		}
 
-		final DataModel inputDataModel = task.getInputDataModel();
+		final Observable<Tuple2<String, JsonNode>> inputData = getInputDataAndMapToMappingInputFormat(requestJSON, task, inputDataModel);
 
-		if (inputDataModel == null) {
-
-			final String message = "there is no input data model for this task";
-
-			TasksResource.LOG.error(message);
-
-			throw new DMPConverterException(message);
-		}
-
-		final Resource dataResource = inputDataModel.getDataResource();
-
-		if (dataResource == null) {
-
-			final String message = "there is no data resource for this input data model of this task";
-
-			TasksResource.LOG.error(message);
-
-			throw new DMPConverterException(message);
-		}
-
-		final Configuration configuration = inputDataModel.getConfiguration();
-
-		if (configuration == null) {
-
-			final String message = "there is no configuration for this input data model of this task";
-
-			TasksResource.LOG.error(message);
-
-			throw new DMPConverterException(message);
-		}
-
-		final Observable<Tuple<String, JsonNode>> inputData = getInputData(requestJSON, task, inputDataModel);
-
-		final ConnectableObservable<Tuple<String, JsonNode>> connectableInputData = inputData.publish();
+		final ConnectableObservable<Tuple2<String, JsonNode>> connectableInputData = inputData.publish();
 
 		final boolean writeResultToDatahub = JsonUtils.getBooleanValue(TasksResource.PERSIST_IDENTIFIER, requestJSON, false);
 
@@ -405,6 +395,60 @@ public class TasksResource {
 		doExport(requestHeaders, asyncResponse, task, connectableResult, connectableInputData);
 	}
 
+	private boolean hasMappings(final Task task) throws DMPConverterException {
+
+		final Job job = task.getJob();
+
+		if (job == null) {
+
+			return false;
+		}
+
+		final Set<Mapping> mappings = job.getMappings();
+		if (mappings == null) {
+
+			return false;
+		}
+
+		if (!mappings.isEmpty()) {
+
+			return false;
+		}
+
+		return true;
+	}
+
+	private boolean isOutputSchemaEqualsToInputSchema(final Task task, final DataModel inputDataModel) {
+
+		final Schema inputSchema = inputDataModel.getSchema();
+
+		if (inputSchema == null) {
+
+			return false;
+		}
+
+		final DataModel outputDataModel = task.getOutputDataModel();
+
+		if (outputDataModel == null) {
+
+			return false;
+		}
+
+		final Schema outputSchema = outputDataModel.getSchema();
+
+		if (outputSchema == null) {
+
+			return false;
+		}
+
+		if (!(inputSchema.getUuid() != null && outputSchema.getUuid() != null && inputSchema.getUuid().equals(outputSchema.getUuid()))) {
+
+			return false;
+		}
+
+		return true;
+	}
+
 	/**
 	 * This endpoint returns the metamorph script of the given task as XML.
 	 *
@@ -453,9 +497,48 @@ public class TasksResource {
 		return new MorphScriptBuilder().apply(task).toString();
 	}
 
-	private Observable<Tuple<String, JsonNode>> getInputData(final ObjectNode requestJSON,
-	                                                         final Task task,
-	                                                         final DataModel inputDataModel) throws DMPControllerException {
+	private Observable<Tuple2<String, JsonNode>> getInputDataAndMapToMappingInputFormat(final ObjectNode requestJSON,
+	                                                                                   final Task task,
+	                                                                                   final DataModel inputDataModel) throws DMPControllerException {
+
+		final boolean doIngestOnTheFly = JsonUtils.getBooleanValue(TasksResource.DO_INGEST_ON_THE_FLY_IDENTIFIER, requestJSON, false);
+
+		if (doIngestOnTheFly) {
+
+			LOG.debug("do ingest on-the-fly for task execution of task '{}'", task.getUuid());
+
+			DataModelUtil.checkDataResource(inputDataModel);
+
+			final boolean utiliseExistingInputSchema = JsonUtils.getBooleanValue(TasksResource.UTILISE_EXISTING_INPUT_SCHEMA_IDENTIFIER, requestJSON,
+					false);
+
+			return dataModelUtil.doIngestAndMapToMappingInputFormat(inputDataModel, utiliseExistingInputSchema, INGEST_SCHEDULER);
+		}
+
+		final Optional<Set<String>> optionalSelectedRecords = JsonUtils.getStringSetValue(TasksResource.SELECTED_RECORDS_IDENTIFIER, requestJSON);
+
+		if (optionalSelectedRecords.isPresent()) {
+
+			// retrieve data only for selected records
+
+			return dataModelUtil.getRecordsDataAndMapToMappingInputFormat(optionalSelectedRecords.get(), inputDataModel.getUuid());
+		}
+
+		final Optional<Integer> optionalAtMost = JsonUtils.getIntValue(TasksResource.AT_MOST_IDENTIFIER, requestJSON);
+
+		if (optionalAtMost.isPresent()) {
+
+			final Integer count = optionalAtMost.get();
+
+			TasksResource.LOG.debug("do task execution on task '{}' with input data model '{}' for '{}' records", task.getUuid(), inputDataModel.getUuid(), count);
+		}
+
+		return dataModelUtil.getDataAndMapToMappingInputFormat(inputDataModel.getUuid(), optionalAtMost);
+	}
+
+	private Observable<GDMModel> getInputDataAsGDMModel(final ObjectNode requestJSON,
+	                                                    final Task task,
+	                                                    final DataModel inputDataModel) throws DMPControllerException {
 
 		final boolean doIngestOnTheFly = JsonUtils.getBooleanValue(TasksResource.DO_INGEST_ON_THE_FLY_IDENTIFIER, requestJSON, false);
 
@@ -477,7 +560,7 @@ public class TasksResource {
 
 			// retrieve data only for selected records
 
-			return dataModelUtil.getRecordsData(optionalSelectedRecords.get(), inputDataModel.getUuid());
+			return dataModelUtil.getRecordsDataAsGDMModel(optionalSelectedRecords.get(), inputDataModel.getUuid());
 		}
 
 		final Optional<Integer> optionalAtMost = JsonUtils.getIntValue(TasksResource.AT_MOST_IDENTIFIER, requestJSON);
@@ -489,14 +572,14 @@ public class TasksResource {
 			TasksResource.LOG.debug("do task execution on task '{}' with input data model '{}' for '{}' records", task.getUuid(), inputDataModel.getUuid(), count);
 		}
 
-		return dataModelUtil.getData(inputDataModel.getUuid(), optionalAtMost);
+		return dataModelUtil.getDataAsGDMModel(inputDataModel.getUuid(), optionalAtMost);
 	}
 
 	private void doExport(final HttpHeaders requestHeaders,
 	                      final AsyncResponse asyncResponse,
 	                      final Task task,
 	                      final ConnectableObservable<GDMModel> connectableResult,
-	                      final ConnectableObservable<Tuple<String, JsonNode>> connectableInputData) throws DMPControllerException {
+	                      final ConnectableObservable<Tuple2<String, JsonNode>> connectableInputData) throws DMPControllerException {
 
 		LOG.debug("do export for task execution of task '{}'", task.getUuid());
 
@@ -548,7 +631,7 @@ public class TasksResource {
 	private void generateResponseOutputStream(final AsyncResponse asyncResponse,
 	                                          final Task task,
 	                                          final ConnectableObservable<GDMModel> connectableResult,
-	                                          final ConnectableObservable<Tuple<String, JsonNode>> connectableInputData,
+	                                          final ConnectableObservable<Tuple2<String, JsonNode>> connectableInputData,
 	                                          final MediaType responseMediaType,
 	                                          final CountDownLatch countDownLatch,
 	                                          final OutputStream os) {
@@ -919,6 +1002,43 @@ public class TasksResource {
 		publish.connect();
 
 		return generate.ignoreElements().cast(Void.class);
+	}
+
+	private DataModel getInputDataModel(final Task task) throws DMPConverterException {
+
+		final DataModel inputDataModel = task.getInputDataModel();
+
+		if (inputDataModel == null) {
+
+			final String message = "there is no input data model for this task";
+
+			TasksResource.LOG.error(message);
+
+			throw new DMPConverterException(message);
+		}
+
+		final Resource dataResource = inputDataModel.getDataResource();
+
+		if (dataResource == null) {
+
+			final String message = "there is no data resource for this input data model of this task";
+
+			TasksResource.LOG.error(message);
+
+			throw new DMPConverterException(message);
+		}
+
+		final Configuration configuration = inputDataModel.getConfiguration();
+
+		if (configuration == null) {
+
+			final String message = "there is no configuration for this input data model of this task";
+
+			TasksResource.LOG.error(message);
+
+			throw new DMPConverterException(message);
+		}
+		return inputDataModel;
 	}
 
 	private DataModel getOutputDataModel(final Task task) throws DMPConverterException {

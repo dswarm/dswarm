@@ -26,6 +26,7 @@ import javax.ws.rs.core.Response;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.collect.Sets;
 import com.google.common.io.Resources;
+import javaslang.Tuple2;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -33,7 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
 
-import org.dswarm.common.types.Tuple;
 import org.dswarm.persistence.GuicedTest;
 import org.dswarm.persistence.model.internal.Model;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
@@ -121,8 +121,8 @@ public class InternalGDMGraphServiceTest extends GuicedTest {
 		final InternalGDMGraphService gdmGraphService = GuicedTest.injector.getInstance(InternalGDMGraphService.class);
 
 		final Observable<Map<String, Model>> optionalModelMapObservable = gdmGraphService
-				.getObjects(updatedDataModel.getUuid(), Optional.<Integer>empty())
-				.toMap(Tuple::v1, Tuple::v2);
+				.getObjects(updatedDataModel.getUuid(), Optional.empty())
+				.toMap(Tuple2::_1, Tuple2::_2);
 		final Optional<Map<String, Model>> optionalModelMap = optionalModelMapObservable.map(Optional::of).toBlocking()
 				.firstOrDefault(Optional.empty());
 

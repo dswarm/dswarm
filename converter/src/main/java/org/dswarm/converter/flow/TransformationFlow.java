@@ -22,13 +22,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
 import com.google.inject.Provider;
+import javaslang.Tuple2;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.culturegraph.mf.exceptions.MorphDefException;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.stream.pipe.Filter;
-import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.DMPConverterError;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.DMPMorphDefException;
@@ -147,8 +147,8 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 		}
 	}
 
-	public ConnectableObservable<RESULTFORMAT> apply(final Observable<Tuple<String, JsonNode>> tuples,
-	                                                 final ObjectPipe<Tuple<String, JsonNode>, StreamReceiver> opener,
+	public ConnectableObservable<RESULTFORMAT> apply(final Observable<Tuple2<String, JsonNode>> tuples,
+	                                                 final ObjectPipe<Tuple2<String, JsonNode>, StreamReceiver> opener,
 	                                                 final boolean writeResultToDatahub,
 	                                                 final boolean doNotReturnJsonToCaller,
 	                                                 final boolean enableVersioning,
@@ -184,7 +184,7 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 		return resultformatObservable;
 	}
 
-	public ConnectableObservable<RESULTFORMAT> apply(final Observable<Tuple<String, JsonNode>> tuples,
+	public ConnectableObservable<RESULTFORMAT> apply(final Observable<Tuple2<String, JsonNode>> tuples,
 	                                                 final boolean writeResultToDatahub,
 	                                                 final boolean doNotReturnJsonToCaller,
 	                                                 final boolean enableVersioning,
@@ -312,8 +312,8 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 	                                                                                    final Scheduler scheduler,
 	                                                                                    final Observable<Response> writeResponse,
 	                                                                                    final Context morphContext,
-	                                                                                    final Observable<Tuple<String, JsonNode>> tuples,
-	                                                                                    final ObjectPipe<Tuple<String, JsonNode>, StreamReceiver> opener,
+	                                                                                    final Observable<Tuple2<String, JsonNode>> tuples,
+	                                                                                    final ObjectPipe<Tuple2<String, JsonNode>, StreamReceiver> opener,
 	                                                                                    final GDMModelReceiver writer) {
 
 		return subscriber -> {
@@ -340,7 +340,7 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 
 			final AtomicInteger counter = new AtomicInteger(0);
 
-			final Observable<Tuple<String, JsonNode>> tupleObservable = tuples.observeOn(scheduler);
+			final Observable<Tuple2<String, JsonNode>> tupleObservable = tuples.observeOn(scheduler);
 
 			tupleObservable.doOnNext(tuple -> {
 
@@ -356,7 +356,7 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 
 	protected abstract AndThenWaitFor<RESULTFORMAT, Response> concatStreams(final Observable<Response> writeResponse);
 
-	protected static void logTransformationFlowEnd(final ObjectPipe<Tuple<String, JsonNode>, StreamReceiver> opener,
+	protected static void logTransformationFlowEnd(final ObjectPipe<Tuple2<String, JsonNode>, StreamReceiver> opener,
 	                                               final GDMEncoder converter,
 	                                               final GDMModelReceiver writer,
 	                                               final boolean writeResultToDatahub) {

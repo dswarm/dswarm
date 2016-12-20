@@ -60,6 +60,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
+import javaslang.Tuple2;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.slf4j.Logger;
@@ -68,7 +69,6 @@ import rx.Observable;
 import rx.Observer;
 
 import org.dswarm.common.DMPStatics;
-import org.dswarm.common.types.Tuple;
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.eventbus.CSVConverterEvent;
 import org.dswarm.controller.eventbus.CSVConverterEventRecorder;
@@ -428,7 +428,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 		DataModelsResource.LOG.debug("try to search records for key attribute path '{}' and search value '{}' in data model with uuid '{}'",
 				keyAttributePathString, searchValue, uuid);
 
-		final Observable<Tuple<String, JsonNode>> data = dataModelUtil.searchRecords(
+		final Observable<Tuple2<String, JsonNode>> data = dataModelUtil.searchRecords(
 				keyAttributePathString, searchValue, uuid, Optional.ofNullable(atMost));
 
 		data.subscribe(new StreamingDataObserver(uuid, objectMapperProvider.get(), pojoClassName, asyncResponse));
@@ -493,7 +493,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 		DataModelsResource.LOG.debug("try to select {} records in data model with uuid '{}'", selectedRecordURIs.size(), uuid);
 
-		final Observable<Tuple<String, JsonNode>> data = dataModelUtil.getRecordsData(selectedRecordURIs, uuid);
+		final Observable<Tuple2<String, JsonNode>> data = dataModelUtil.getRecordsDataAndMapToMappingInputFormat(selectedRecordURIs, uuid);
 
 		data.subscribe(new StreamingDataObserver(uuid, objectMapperProvider.get(), pojoClassName, asyncResponse));
 	}
@@ -1074,14 +1074,14 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 
 		DataModelsResource.LOG.debug("try to get data for data model with uuid '{}'", uuid);
 
-		final Observable<Tuple<String, JsonNode>> data;
+		final Observable<Tuple2<String, JsonNode>> data;
 
 		if (atMost != null) {
 			data = dataModelUtil
-					.getData(uuid, Optional.ofNullable(atMost))
+					.getDataAndMapToMappingInputFormat(uuid, Optional.ofNullable(atMost))
 					.limit(atMost);
 		} else {
-			data = dataModelUtil.getData(uuid, Optional.empty());
+			data = dataModelUtil.getDataAndMapToMappingInputFormat(uuid, Optional.empty());
 		}
 
 		data.subscribe(new StreamingDataObserver(uuid, objectMapperProvider.get(), pojoClassName, asyncResponse));
@@ -1246,7 +1246,7 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 		LOG.debug("enhanced data resource '{}'", dataResource.getUuid());
 	}
 
-	private static final class StreamingDataObserver implements Observer<Tuple<String, JsonNode>> {
+	private static final class StreamingDataObserver implements Observer<Tuple2<String, JsonNode>> {
 
 		private final ObjectMapper  objectMapper;
 		private final String        pojoClassName;
@@ -1298,9 +1298,9 @@ public class DataModelsResource extends ExtendedMediumBasicDMPResource<DataModel
 		}
 
 		@Override
-		public void onNext(final Tuple<String, JsonNode> tuple) {
+		public void onNext(final Tuple2<String, JsonNode> tuple) {
 			hasData = true;
-			json.set(tuple.v1(), tuple.v2());
+			json.set(tuple._1, tuple._2);
 		}
 	}
 

@@ -35,6 +35,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
+import javaslang.Tuple2;
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.stream.pipe.Filter;
 import org.slf4j.Logger;
@@ -103,11 +104,15 @@ public class JSONTransformationFlow extends TransformationFlow<JsonNode> {
 			return Observable.error(new DMPConverterException(msg));
 		}
 
+		final List<Tuple2<String, JsonNode>> finalTuplesList = javaslang.collection.List.ofAll(tuplesList)
+				.map(tuple -> javaslang.Tuple.of(tuple.v1(), tuple.v2()))
+				.toJavaList();
+
 		final boolean writeResultToDatahub = false;
 		final boolean doNotReturnJsonToCaller = false;
 		final boolean enableVersioning = true;
 
-		final ConnectableObservable<JsonNode> observable = apply(Observable.from(tuplesList), writeResultToDatahub, doNotReturnJsonToCaller, enableVersioning, Schedulers.newThread());
+		final ConnectableObservable<JsonNode> observable = apply(Observable.from(finalTuplesList), writeResultToDatahub, doNotReturnJsonToCaller, enableVersioning, Schedulers.newThread());
 
 		final Observable<String> result = observable.reduce(
 				DMPPersistenceUtil.getJSONObjectMapper().createArrayNode(),

@@ -35,6 +35,8 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Maps;
 import com.google.common.io.Resources;
+import javaslang.Tuple;
+import javaslang.Tuple2;
 import org.apache.commons.io.FileUtils;
 import org.culturegraph.mf.stream.converter.JsonEncoder;
 import org.culturegraph.mf.stream.sink.ObjectJavaIoWriter;
@@ -50,7 +52,6 @@ import rx.Observable;
 import rx.observables.ConnectableObservable;
 import rx.schedulers.Schedulers;
 
-import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.flow.CSVResourceFlowFactory;
 import org.dswarm.converter.flow.CSVSourceResourceTriplesFlow;
@@ -177,8 +178,8 @@ public class TransformationFlowTest extends GuicedTest {
 		final Schema schema = freshInputDataModel.getSchema();
 
 		final Observable<Map<String, Model>> optionalModelMapObservable = gdmService
-				.getObjects(updatedInputDataModel.getUuid(), Optional.<Integer>empty())
-				.toMap(Tuple::v1, Tuple::v2);
+				.getObjects(updatedInputDataModel.getUuid(), Optional.empty())
+				.toMap(Tuple2::_1, Tuple2::_2);
 		final Optional<Map<String, Model>> optionalModelMap = optionalModelMapObservable.map(Optional::of).toBlocking()
 				.firstOrDefault(Optional.empty());
 
@@ -186,7 +187,7 @@ public class TransformationFlowTest extends GuicedTest {
 		Assert.assertTrue("CSV record model map should be present", optionalModelMap.isPresent());
 		Assert.assertFalse("CSV record model map shouldn't be empty", optionalModelMap.get().isEmpty());
 
-		final Observable<Tuple<String, JsonNode>> tuples = Observable.from(dataIterable(optionalModelMap.get().entrySet()));
+		final Observable<Tuple2<String, JsonNode>> tuples = Observable.from(dataIterable(optionalModelMap.get().entrySet()));
 
 		// final List<Tuple<String, JsonNode>> tuplesList = Lists.newLinkedList();
 		//
@@ -326,7 +327,7 @@ public class TransformationFlowTest extends GuicedTest {
 		reader.setHeader(true);
 		final JsonEncoder converter = new JsonEncoder();
 		final StringWriter stringWriter = new StringWriter();
-		final ObjectJavaIoWriter<String> writer = new ObjectJavaIoWriter<String>(stringWriter);
+		final ObjectJavaIoWriter<String> writer = new ObjectJavaIoWriter<>(stringWriter);
 
 		opener.setReceiver(reader).setReceiver(converter).setReceiver(writer);
 
@@ -341,20 +342,20 @@ public class TransformationFlowTest extends GuicedTest {
 		Assert.assertEquals("the processing outputs are not equal", expectedResult, resultOutput);
 	}
 
-	private static Iterable<Tuple<String, JsonNode>> dataIterable(final Iterable<Map.Entry<String, Model>> triples) {
+	private static Iterable<Tuple2<String, JsonNode>> dataIterable(final Iterable<Map.Entry<String, Model>> triples) {
 		return () -> dataIterator(triples.iterator());
 	}
 
-	private static Iterator<Tuple<String, JsonNode>> dataIterator(final Iterator<Map.Entry<String, Model>> triples) {
-		return new AbstractIterator<Tuple<String, JsonNode>>() {
+	private static Iterator<Tuple2<String, JsonNode>> dataIterator(final Iterator<Map.Entry<String, Model>> triples) {
+		return new AbstractIterator<Tuple2<String, JsonNode>>() {
 
 			@Override
-			protected Tuple<String, JsonNode> computeNext() {
+			protected Tuple2<String, JsonNode> computeNext() {
 				if (triples.hasNext()) {
 					final Map.Entry<String, Model> nextTriple = triples.next();
 					final String recordId = nextTriple.getKey();
 					final JsonNode jsonNode = nextTriple.getValue().toRawJSON();
-					return Tuple.tuple(recordId, jsonNode);
+					return Tuple.of(recordId, jsonNode);
 				}
 				return endOfData();
 			}
