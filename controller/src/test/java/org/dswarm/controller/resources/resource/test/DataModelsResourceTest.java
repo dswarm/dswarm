@@ -38,6 +38,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.io.Resources;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
+import javaslang.Tuple2;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpStatus;
@@ -60,7 +61,6 @@ import rx.Observable;
 import rx.schedulers.Schedulers;
 
 import org.dswarm.common.MediaTypeUtil;
-import org.dswarm.common.types.Tuple;
 import org.dswarm.controller.eventbus.CSVConverterEvent;
 import org.dswarm.controller.eventbus.CSVConverterEventRecorder;
 import org.dswarm.controller.resources.POJOFormat;
@@ -943,7 +943,7 @@ public class DataModelsResourceTest extends
 		final InternalModelService service = serviceFactory.getInternalGDMGraphService();
 		final Observable<Map<String, Model>> dataObservable = service
 				.getObjects(dataModel.getUuid(), Optional.of(atMost))
-				.toMap(Tuple::v1, Tuple::v2);
+				.toMap(Tuple2::_1, Tuple2::_2);
 		final Optional<Map<String, Model>> data = dataObservable.map(Optional::of).toBlocking().firstOrDefault(Optional.empty());
 
 		Assert.assertTrue(data.isPresent());

@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import com.codahale.metrics.Timer;
 import com.fasterxml.jackson.databind.JsonNode;
+import javaslang.Tuple2;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.StreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
@@ -27,7 +28,6 @@ import org.culturegraph.mf.stream.pipe.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.mf.stream.GDMEncoder;
 import org.dswarm.converter.mf.stream.GDMModelReceiver;
 import org.dswarm.converter.pipe.timing.ObjectTimer;
@@ -53,7 +53,7 @@ public class MorphTask {
 	                 final Optional<DataModel> outputDataModel,
 	                 final String transformationEngineIdentifier,
 	                 final Optional<Filter> optionalSkipFilter,
-	                 final ObjectPipe<Tuple<String, JsonNode>, StreamReceiver> opener,
+	                 final ObjectPipe<Tuple2<String, JsonNode>, StreamReceiver> opener,
 	                 final Metamorph transformer) {
 
 		morphContext = morphTimer.time();

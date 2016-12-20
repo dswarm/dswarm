@@ -31,13 +31,15 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.collect.AbstractIterator;
 import com.google.inject.Provider;
 import org.dswarm.converter.flow.JSONTransformationFlowFactory;
+
+import javaslang.Tuple;
+import javaslang.Tuple2;
 import org.junit.Assert;
 import org.junit.Test;
 import rx.Observable;
 import rx.observables.ConnectableObservable;
 import rx.schedulers.Schedulers;
 
-import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.GuicedTest;
 import org.dswarm.converter.flow.JSONTransformationFlow;
 import org.dswarm.converter.flow.XMLSourceResourceGDMStmtsFlow;
@@ -187,7 +189,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		final Observable<Map<String, Model>> optionalModelMapObservable = gdmService
 				.getObjects(updatedInputDataModel.getUuid(), Optional.empty())
-				.toMap(Tuple::v1, Tuple::v2);
+				.toMap(Tuple2::_1, Tuple2::_2);
 		final Optional<Map<String, Model>> optionalModelMap = optionalModelMapObservable.map(Optional::of).toBlocking()
 				.firstOrDefault(Optional.empty());
 
@@ -197,7 +199,7 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 
 		Assert.assertNotNull("the model map shouldn't be null", modelMap);
 
-		final Observable<Tuple<String, JsonNode>> tuples = Observable.from(dataIterable(modelMap.entrySet()));
+		final Observable<Tuple2<String, JsonNode>> tuples = Observable.from(dataIterable(modelMap.entrySet()));
 
 		// final List<Tuple<String, JsonNode>> tuplesList = Lists.newLinkedList();
 		//
@@ -291,20 +293,20 @@ public abstract class AbstractXMLTransformationFlowTest extends GuicedTest {
 		Assert.assertEquals(finalExpectedJSONString.length(), finalActualJSONString.length());
 	}
 
-	private static Iterable<Tuple<String, JsonNode>> dataIterable(final Iterable<Map.Entry<String, Model>> triples) {
+	private static Iterable<Tuple2<String, JsonNode>> dataIterable(final Iterable<Map.Entry<String, Model>> triples) {
 		return () -> dataIterator(triples.iterator());
 	}
 
-	private static Iterator<Tuple<String, JsonNode>> dataIterator(final Iterator<Map.Entry<String, Model>> triples) {
-		return new AbstractIterator<Tuple<String, JsonNode>>() {
+	private static Iterator<Tuple2<String, JsonNode>> dataIterator(final Iterator<Map.Entry<String, Model>> triples) {
+		return new AbstractIterator<Tuple2<String, JsonNode>>() {
 
 			@Override
-			protected Tuple<String, JsonNode> computeNext() {
+			protected Tuple2<String, JsonNode> computeNext() {
 				if (triples.hasNext()) {
 					final Map.Entry<String, Model> nextTriple = triples.next();
 					final String recordId = nextTriple.getKey();
 					final JsonNode jsonNode = nextTriple.getValue().toRawJSON();
-					return Tuple.tuple(recordId, jsonNode);
+					return Tuple.of(recordId, jsonNode);
 				}
 				return endOfData();
 			}

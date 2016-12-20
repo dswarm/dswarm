@@ -35,6 +35,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
+import javaslang.Tuple2;
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.stream.pipe.Filter;
 import org.slf4j.Logger;
@@ -43,7 +44,6 @@ import rx.Observable;
 import rx.observables.ConnectableObservable;
 import rx.schedulers.Schedulers;
 
-import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.pipe.timing.TimerBasedFactory;
 import org.dswarm.persistence.model.resource.DataModel;
@@ -77,11 +77,11 @@ public class JSONTransformationFlow extends TransformationFlow<JsonNode> {
 	public Observable<String> applyRecord(final String record) throws DMPConverterException {
 
 		// TODO: convert JSON string to Iterator with tuples of string + JsonNode pairs
-		List<Tuple<String, JsonNode>> tuplesList = null;
+		List<Tuple2<String, JsonNode>> tuplesList = null;
 
 		try {
 
-			tuplesList = DMPPersistenceUtil.getJSONObjectMapper().readValue(record, new TypeReference<List<Tuple<String, JsonNode>>>() {
+			tuplesList = DMPPersistenceUtil.getJSONObjectMapper().readValue(record, new TypeReference<List<Tuple2<String, JsonNode>>>() {
 
 			});
 		} catch (final JsonParseException e) {

@@ -31,13 +31,14 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+import javaslang.Tuple;
+import javaslang.Tuple2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
 import rx.Scheduler;
 
 import org.dswarm.common.DMPStatics;
-import org.dswarm.common.types.Tuple;
 import org.dswarm.controller.DMPControllerException;
 import org.dswarm.controller.eventbus.CSVConverterEventRecorder;
 import org.dswarm.controller.eventbus.JSONConverterEventRecorder;
@@ -46,6 +47,7 @@ import org.dswarm.controller.eventbus.SchemaEventRecorder;
 import org.dswarm.controller.eventbus.XMLConverterEventRecorder;
 import org.dswarm.persistence.DMPPersistenceException;
 import org.dswarm.persistence.model.internal.Model;
+import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
@@ -71,22 +73,24 @@ import org.dswarm.persistence.service.resource.ResourceService;
 public class DataModelUtil {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DataModelUtil.class);
-	private final ObjectMapper                          objectMapper;
-	private final Provider<ResourceService>             resourceServiceProvider;
+	private final ObjectMapper objectMapper;
+	private final Provider<ResourceService> resourceServiceProvider;
 	private final Provider<InternalModelServiceFactory> internalServiceFactoryProvider;
-	private final Provider<DataModelService>            dataModelServiceProvider;
-	private final Provider<SchemaEventRecorder>         schemaEventRecorderProvider;
-	private final Provider<CSVConverterEventRecorder>   csvConverterEventRecorderProvider;
-	private final Provider<XMLConverterEventRecorder>   xmlConvertEventRecorderProvider;
-	private final Provider<JSONConverterEventRecorder>  jsonConvertEventRecorderProvider;
+	private final Provider<DataModelService> dataModelServiceProvider;
+	private final Provider<SchemaEventRecorder> schemaEventRecorderProvider;
+	private final Provider<CSVConverterEventRecorder> csvConverterEventRecorderProvider;
+	private final Provider<XMLConverterEventRecorder> xmlConvertEventRecorderProvider;
+	private final Provider<JSONConverterEventRecorder> jsonConvertEventRecorderProvider;
 
 	@Inject
-	public DataModelUtil(final ObjectMapper objectMapper, final Provider<ResourceService> resourceServiceProvider,
-			final Provider<InternalModelServiceFactory> internalServiceFactoryProvider, final Provider<DataModelService> dataModelServiceProvider,
-			final Provider<SchemaEventRecorder> schemaEventRecorderProviderArg,
-			final Provider<CSVConverterEventRecorder> csvConverterEventRecorderProviderArg,
-			final Provider<XMLConverterEventRecorder> xmlConverterEventRecorderProviderArg,
-			final Provider<JSONConverterEventRecorder> jsonConverterEventRecorderProviderArg) {
+	public DataModelUtil(final ObjectMapper objectMapper,
+	                     final Provider<ResourceService> resourceServiceProvider,
+	                     final Provider<InternalModelServiceFactory> internalServiceFactoryProvider,
+	                     final Provider<DataModelService> dataModelServiceProvider,
+	                     final Provider<SchemaEventRecorder> schemaEventRecorderProviderArg,
+	                     final Provider<CSVConverterEventRecorder> csvConverterEventRecorderProviderArg,
+	                     final Provider<XMLConverterEventRecorder> xmlConverterEventRecorderProviderArg,
+	                     final Provider<JSONConverterEventRecorder> jsonConverterEventRecorderProviderArg) {
 
 		this.objectMapper = objectMapper;
 		this.resourceServiceProvider = resourceServiceProvider;
@@ -104,9 +108,23 @@ public class DataModelUtil {
 	 * @param dataModelUuid the identifier of the data model.
 	 * @return the data of the given data model
 	 */
-	public Observable<Tuple<String, JsonNode>> getData(final String dataModelUuid) {
+	public Observable<Tuple2<String, JsonNode>> getDataAndMapToMappingInputFormat(final String dataModelUuid) {
 
-		return getData(dataModelUuid, Optional.empty());
+		return getDataAndMapToMappingInputFormat(dataModelUuid, Optional.empty());
+	}
+
+	public Observable<Tuple2<String, JsonNode>> getDataAndMapToMappingInputFormat(final String dataModelUuid,
+	                                                                              final Optional<Integer> atMost) {
+
+		return getData(dataModelUuid, atMost)
+				.map(this::transformDataNode);
+	}
+
+	public Observable<GDMModel> getDataAsGDMModel(final String dataModelUuid,
+	                                              final Optional<Integer> atMost) {
+
+		return getData(dataModelUuid, atMost)
+				.cast(org.dswarm.persistence.model.internal.gdm.GDMModel.class);
 	}
 
 	/**
@@ -116,13 +134,14 @@ public class DataModelUtil {
 	 * @param atMost        the number of records that should be retrieved
 	 * @return the data of the given data model
 	 */
-	public Observable<Tuple<String, JsonNode>> getData(final String dataModelUuid, final Optional<Integer> atMost) {
+	public Observable<Tuple2<String, Model>> getData(final String dataModelUuid,
+	                                                 final Optional<Integer> atMost) {
 
 		DataModelUtil.LOG.debug(String.format("try to get data for data model with id [%s]", dataModelUuid));
 
 		final InternalModelService internalService = internalServiceFactoryProvider.get().getInternalGDMGraphService();
 
-		final Observable<Tuple<String, Model>> modelObservable;
+		final Observable<Tuple2<String, Model>> modelObservable;
 
 		try {
 
@@ -133,23 +152,38 @@ public class DataModelUtil {
 			return Observable.empty();
 		}
 
-		return modelObservable.map(this::transformDataNode);
+		return modelObservable;
+	}
+
+	public Observable<GDMModel> getRecordsDataAsGDMModel(final Set<String> recordIdentifiers,
+	                                                     final String dataModelUuid) {
+
+		return getRecordsData(recordIdentifiers, dataModelUuid)
+				.cast(org.dswarm.persistence.model.internal.gdm.GDMModel.class);
+	}
+
+	public Observable<Tuple2<String, JsonNode>> getRecordsDataAndMapToMappingInputFormat(final Set<String> recordIdentifiers,
+	                                                                                     final String dataModelUuid) {
+
+		return getRecordsData(recordIdentifiers, dataModelUuid)
+				.map(this::transformDataNode);
 	}
 
 	/**
 	 * Gets the data of the records with the given record identifier in the given data model..
 	 *
 	 * @param recordIdentifiers the record identifiers
-	 * @param dataModelUuid the identifier of the data model
+	 * @param dataModelUuid     the identifier of the data model
 	 * @return the data of the given data model
 	 */
-	public Observable<Tuple<String, JsonNode>> getRecordsData(final Set<String> recordIdentifiers, final String dataModelUuid) {
+	public Observable<Tuple2<String, Model>> getRecordsData(final Set<String> recordIdentifiers,
+	                                                        final String dataModelUuid) {
 
 		DataModelUtil.LOG.debug(String.format("try to get record's data for some records in data model with id [%s]", dataModelUuid));
 
 		final InternalModelService internalService = internalServiceFactoryProvider.get().getInternalGDMGraphService();
 
-		final Observable<Tuple<String, Model>> maybeTriples;
+		final Observable<Tuple2<String, Model>> maybeTriples;
 
 		try {
 
@@ -160,26 +194,28 @@ public class DataModelUtil {
 			return Observable.empty();
 		}
 
-		return maybeTriples.map(this::transformDataNode);
+		return maybeTriples;
 	}
 
 	/**
 	 * Gets the data of the search result of the given data model and maximum in the given amount.
 	 *
 	 * @param keyAttributePathString the key attribute path
-	 * @param searchValue the search value
-	 * @param dataModelUuid the identifer of the data model
-	 * @param atMost        the number of records that should be retrieved
+	 * @param searchValue            the search value
+	 * @param dataModelUuid          the identifer of the data model
+	 * @param atMost                 the number of records that should be retrieved
 	 * @return the data of the given data model
 	 */
-	public Observable<Tuple<String, JsonNode>> searchRecords(final String keyAttributePathString, final String searchValue,
-			final String dataModelUuid, final Optional<Integer> atMost) {
+	public Observable<Tuple2<String, JsonNode>> searchRecords(final String keyAttributePathString,
+	                                                          final String searchValue,
+	                                                          final String dataModelUuid,
+	                                                          final Optional<Integer> atMost) {
 
 		DataModelUtil.LOG.debug(String.format("try to get data for data model with id [%s]", dataModelUuid));
 
 		final InternalModelService internalService = internalServiceFactoryProvider.get().getInternalGDMGraphService();
 
-		final Observable<Tuple<String, Model>> maybeTriples;
+		final Observable<Tuple2<String, Model>> maybeTriples;
 
 		try {
 
@@ -213,7 +249,8 @@ public class DataModelUtil {
 		}
 	}
 
-	public Observable<Response> deprecateRecords(final Collection<String> recordURIs, final String dataModelUuid) throws DMPControllerException {
+	public Observable<Response> deprecateRecords(final Collection<String> recordURIs,
+	                                             final String dataModelUuid) throws DMPControllerException {
 
 		DataModelUtil.LOG.debug(String.format("try to deprecated '%d' records data model with id [%s]", recordURIs.size(), dataModelUuid));
 
@@ -312,7 +349,9 @@ public class DataModelUtil {
 	 * @param configurationUuid a configuration identifier
 	 * @return (optional) the matched configuration
 	 */
-	public Optional<Configuration> fetchConfiguration(final String resourceUuid, final String configurationUuid) {
+	public Optional<Configuration> fetchConfiguration(final String resourceUuid,
+	                                                  final String configurationUuid) {
+
 		final Optional<Resource> resourceOptional = fetchResource(resourceUuid);
 
 		if (!resourceOptional.isPresent()) {
@@ -333,6 +372,7 @@ public class DataModelUtil {
 	 * @return (optional) the matched configuration
 	 */
 	public Optional<Configuration> fetchConfiguration(final String dataModelUuid) {
+
 		final Optional<DataModel> dataModelOptional = fetchDataModel(dataModelUuid);
 
 		if (!dataModelOptional.isPresent()) {
@@ -358,9 +398,16 @@ public class DataModelUtil {
 
 	}
 
-	public Observable<Tuple<String, JsonNode>> doIngest(final DataModel dataModel, final boolean utiliseExistingInputSchema,
-			final Scheduler scheduler)
-			throws DMPControllerException {
+	public Observable<Tuple2<String, JsonNode>> doIngestAndMapToMappingInputFormat(final DataModel dataModel,
+	                                                                               final boolean utiliseExistingInputSchema,
+	                                                                               final Scheduler scheduler) throws DMPControllerException {
+
+		return mapToMappingInput(doIngest(dataModel, utiliseExistingInputSchema, scheduler));
+	}
+
+	public Observable<GDMModel> doIngest(final DataModel dataModel,
+	                                     final boolean utiliseExistingInputSchema,
+	                                     final Scheduler scheduler) throws DMPControllerException {
 
 		DataModelUtil.LOG.debug("try to process data for data model with id '{}'", dataModel.getUuid());
 
@@ -439,12 +486,17 @@ public class DataModelUtil {
 				modelObservable = Observable.empty();
 		}
 
-		return modelObservable.cast(org.dswarm.persistence.model.internal.gdm.GDMModel.class)
-				.map(gdm -> Tuple.tuple(gdm.getRecordURIs().iterator().next(), (Model) gdm))
+		return modelObservable.cast(org.dswarm.persistence.model.internal.gdm.GDMModel.class);
+	}
+
+	public Observable<Tuple2<String, JsonNode>> mapToMappingInput(final Observable<GDMModel> modelObservable) {
+
+		return modelObservable.map(gdm -> Tuple.of(gdm.getRecordURIs().iterator().next(), (Model) gdm))
 				.map(this::transformDataNode);
 	}
 
-	public static Optional<String> determineOriginalDataModelType(final DataModel dataModel, final Optional<Configuration> optionalConfiguration) {
+	public static Optional<String> determineOriginalDataModelType(final DataModel dataModel,
+	                                                              final Optional<Configuration> optionalConfiguration) {
 
 		// original data model type
 		final Optional<String> optionalOriginalDataModelType;
@@ -600,11 +652,11 @@ public class DataModelUtil {
 		return dataResource;
 	}
 
-	private Tuple<String, JsonNode> transformDataNode(final Tuple<String, Model> input) {
+	private Tuple2<String, JsonNode> transformDataNode(final Tuple2<String, Model> input) {
 
-		final String recordId = input.v1();
-		final JsonNode jsonNode = input.v2().toRawJSON();
+		final String recordId = input._1;
+		final JsonNode jsonNode = input._2.toRawJSON();
 
-		return Tuple.tuple(recordId, jsonNode);
+		return Tuple.of(recordId, jsonNode);
 	}
 }

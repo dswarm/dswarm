@@ -35,6 +35,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.io.Resources;
 import com.google.inject.Key;
+import javaslang.Tuple2;
 import org.apache.commons.io.FileUtils;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
@@ -45,7 +46,6 @@ import org.slf4j.LoggerFactory;
 import rx.Observable;
 
 import org.dswarm.common.MediaTypeUtil;
-import org.dswarm.common.types.Tuple;
 import org.dswarm.controller.resources.job.TasksResource;
 import org.dswarm.controller.resources.job.test.utils.TasksResourceTestUtils;
 import org.dswarm.controller.resources.resource.test.utils.DataModelsResourceTestUtils;
@@ -222,7 +222,7 @@ public class TasksCsvResourceTest5 extends ResourceTest {
 		final InternalModelService service = serviceFactory.getInternalGDMGraphService();
 		final Observable<Map<String, Model>> inputDataObservable = service
 				.getObjects(inputDataModel.getUuid(), Optional.of(10))
-				.toMap(Tuple::v1, Tuple::v2);
+				.toMap(Tuple2::_1, Tuple2::_2);
 		final Optional<Map<String, Model>> inputData = inputDataObservable.map(Optional::of).toBlocking().firstOrDefault(Optional.empty());
 
 		Assert.assertTrue(inputData.isPresent());

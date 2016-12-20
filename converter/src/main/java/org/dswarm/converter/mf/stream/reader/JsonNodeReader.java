@@ -26,19 +26,17 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import javaslang.Tuple2;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import rx.Observable;
-
-import org.dswarm.common.types.Tuple;
 
 /**
  * @author phorn
  * @author tgaengler
  */
-public class JsonNodeReader extends DefaultObjectPipe<Tuple<String, JsonNode>, StreamReceiver> {
+public class JsonNodeReader extends DefaultObjectPipe<Tuple2<String, JsonNode>, StreamReceiver> {
 
 	private static final Logger		LOG	= LoggerFactory.getLogger(JsonNodeReader.class);
 	private final Optional<String>	recordPrefix;
@@ -59,19 +57,19 @@ public class JsonNodeReader extends DefaultObjectPipe<Tuple<String, JsonNode>, S
 	}
 
 	@Override
-	public void process(final Tuple<String, JsonNode> tuple) {
+	public void process(final Tuple2<String, JsonNode> tuple) {
 
 		counter.incrementAndGet();
 
 		final StreamReceiver receiver = getReceiver();
 
-		receiver.startRecord(tuple.v1());
+		receiver.startRecord(tuple._1);
 		if (recordPrefix.isPresent()) {
 			receiver.startEntity(recordPrefix.get());
 		}
 
 		try {
-			processArrayNode(receiver, tuple.v2());
+			processArrayNode(receiver, tuple._2);
 		} catch (final IOException e) {
 			JsonNodeReader.LOG.error(e.getMessage(), e);
 		}
@@ -82,7 +80,9 @@ public class JsonNodeReader extends DefaultObjectPipe<Tuple<String, JsonNode>, S
 		receiver.endRecord();
 	}
 
-	private void processObjectNode(final StreamReceiver receiver, final JsonNode jsonNode) throws IOException {
+	private void processObjectNode(final StreamReceiver receiver,
+	                               final JsonNode jsonNode) throws IOException {
+
 		Preconditions.checkArgument(jsonNode.isObject(), "we need an object for a record entry");
 
 		final Iterator<Map.Entry<String, JsonNode>> entryIterator = jsonNode.fields();
@@ -94,7 +94,9 @@ public class JsonNodeReader extends DefaultObjectPipe<Tuple<String, JsonNode>, S
 		}
 	}
 
-	private void processArrayNode(final StreamReceiver receiver, final JsonNode jsonNode) throws IOException {
+	private void processArrayNode(final StreamReceiver receiver,
+	                              final JsonNode jsonNode) throws IOException {
+
 		Preconditions.checkArgument(jsonNode.isArray(), "we need an array for a record entry");
 
 		final ArrayNode jsonArray = (ArrayNode) jsonNode;
@@ -109,7 +111,10 @@ public class JsonNodeReader extends DefaultObjectPipe<Tuple<String, JsonNode>, S
 		}
 	}
 
-	private void processNode(final StreamReceiver receiver, final String fieldName, final JsonNode node, final boolean isEntity) throws IOException {
+	private void processNode(final StreamReceiver receiver,
+	                         final String fieldName,
+	                         final JsonNode node,
+	                         final boolean isEntity) throws IOException {
 
 		// System.out.println("is entity = '" + isEntity + "'");
 
