@@ -44,6 +44,7 @@ import rx.Observable;
 import rx.observables.ConnectableObservable;
 import rx.schedulers.Schedulers;
 
+import org.dswarm.common.types.Tuple;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.pipe.timing.TimerBasedFactory;
 import org.dswarm.persistence.model.resource.DataModel;
@@ -77,11 +78,11 @@ public class JSONTransformationFlow extends TransformationFlow<JsonNode> {
 	public Observable<String> applyRecord(final String record) throws DMPConverterException {
 
 		// TODO: convert JSON string to Iterator with tuples of string + JsonNode pairs
-		List<Tuple2<String, JsonNode>> tuplesList = null;
+		List<Tuple<String, JsonNode>> tuplesList = null;
 
 		try {
 
-			tuplesList = DMPPersistenceUtil.getJSONObjectMapper().readValue(record, new TypeReference<List<Tuple2<String, JsonNode>>>() {
+			tuplesList = DMPPersistenceUtil.getJSONObjectMapper().readValue(record, new TypeReference<List<Tuple<String, JsonNode>>>() {
 
 			});
 		} catch (final JsonParseException e) {
@@ -103,11 +104,15 @@ public class JSONTransformationFlow extends TransformationFlow<JsonNode> {
 			return Observable.error(new DMPConverterException(msg));
 		}
 
+		final List<Tuple2<String, JsonNode>> finalTuplesList = javaslang.collection.List.ofAll(tuplesList)
+				.map(tuple -> javaslang.Tuple.of(tuple.v1(), tuple.v2()))
+				.toJavaList();
+
 		final boolean writeResultToDatahub = false;
 		final boolean doNotReturnJsonToCaller = false;
 		final boolean enableVersioning = true;
 
-		final ConnectableObservable<JsonNode> observable = apply(Observable.from(tuplesList), writeResultToDatahub, doNotReturnJsonToCaller, enableVersioning, Schedulers.newThread());
+		final ConnectableObservable<JsonNode> observable = apply(Observable.from(finalTuplesList), writeResultToDatahub, doNotReturnJsonToCaller, enableVersioning, Schedulers.newThread());
 
 		final Observable<String> result = observable.reduce(
 				DMPPersistenceUtil.getJSONObjectMapper().createArrayNode(),
