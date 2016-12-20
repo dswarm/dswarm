@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,6 +18,7 @@ package org.dswarm.controller.resources.job;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -648,9 +649,27 @@ public class ProjectsResource extends ExtendedBasicDMPResource<ProjectService, P
 						AttributePathInstance::getAttributePath));
 
 		final Set<String> newAPStrings = newAPs.keySet();
+		final Set<String> localAPs = new HashSet<>();
 		final Map<String, String> localAPsNewAPs = HashMap.ofAll(determineLocalNameAttributePaths(newAPStrings))
 				.map(tuple -> Tuple.of(tuple._2, tuple._1))
 				.toJavaSet().stream()
+				.filter(tuple -> {
+
+					// reduce keys to unique key set (since local attribute paths could exist multiple times
+					// this would skip other mappings right now
+					// TODO: improve this
+
+					final String localAP = tuple._1;
+
+					if (localAPs.contains(localAP)) {
+
+						return false;
+					}
+
+					localAPs.add(localAP);
+
+					return true;
+				})
 				.collect(Collectors.toMap(Tuple2::_1, Tuple2::_2));
 
 		final Map<AttributePath, AttributePath> attributePathMap = new ConcurrentHashMap<>();
