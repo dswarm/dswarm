@@ -109,6 +109,7 @@ import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.model.resource.Resource;
 import org.dswarm.persistence.model.schema.Schema;
+import org.dswarm.persistence.model.resource.utils.ResourceStatics;
 import org.dswarm.persistence.monitoring.MonitoringHelper;
 import org.dswarm.persistence.monitoring.MonitoringLogger;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
@@ -370,7 +371,7 @@ public class TasksResource {
 
 				final Integer count = optionalReturnAtMost.get();
 
-				TasksResource.LOG.debug("return at most '{}' records for task execution on task '{}' with input data model '{}'", count, task.getUuid(), inputDataModel.getUuid());
+				TasksResource.LOG.debug("return at most '{}' records for task execution on task '{}' with input data model '{}' (input data resource = '{}')", count, task.getUuid(), inputDataModel.getUuid(), getInputDataResourceFileName(task));
 
 				returnAtMost = buffer.take(count);
 			} else {
@@ -544,7 +545,7 @@ public class TasksResource {
 
 		if (doIngestOnTheFly) {
 
-			LOG.debug("do ingest on-the-fly for task execution of task '{}'", task.getUuid());
+			LOG.debug("do ingest on-the-fly for task execution of task '{}' (input data resource = '{}')", task.getUuid(), getInputDataResourceFileName(task));
 
 			DataModelUtil.checkDataResource(inputDataModel);
 
@@ -569,7 +570,7 @@ public class TasksResource {
 
 			final Integer count = optionalAtMost.get();
 
-			TasksResource.LOG.debug("do task execution on task '{}' with input data model '{}' for '{}' records", task.getUuid(), inputDataModel.getUuid(), count);
+			TasksResource.LOG.debug("do task execution on task '{}' with input data model '{}' (input data resource = '{}') for '{}' records", task.getUuid(), inputDataModel.getUuid(), getInputDataResourceFileName(task), count);
 		}
 
 		return dataModelUtil.getDataAsGDMModel(inputDataModel.getUuid(), optionalAtMost);
@@ -581,7 +582,7 @@ public class TasksResource {
 	                      final ConnectableObservable<GDMModel> connectableResult,
 	                      final ConnectableObservable<Tuple2<String, JsonNode>> connectableInputData) throws DMPControllerException {
 
-		LOG.debug("do export for task execution of task '{}'", task.getUuid());
+		LOG.debug("do export for task execution of task '{}' (input data resource = '{}')", task.getUuid(), getInputDataResourceFileName(task));
 
 		final Optional<MediaType> optionalResponseMediaType = determineResponseMediaType(requestHeaders);
 
@@ -744,7 +745,7 @@ public class TasksResource {
 					})
 					.doOnError(throwable -> {
 
-						final String message = String.format("couldn't process task (maybe %s export) successfully", responseMediaType.toString());
+						final String message = String.format("couldn't process task '%s' (maybe %s export; input data resource = '%s') successfully", task.getUuid(), responseMediaType.toString(), getInputDataResourceFileName(task));
 
 						TasksResource.LOG.error(message, throwable);
 
@@ -772,7 +773,7 @@ public class TasksResource {
 							os.close();
 						} catch (IOException e) {
 
-							final String message2 = String.format("couldn't process task (maybe %s export) successfully", responseMediaType.toString());
+							final String message2 = String.format("couldn't process task '%s' (maybe %s export; input data resource = '%s') successfully", task.getUuid(), responseMediaType.toString(), getInputDataResourceFileName(task));
 
 							TasksResource.LOG.error(message2, e);
 
@@ -797,7 +798,7 @@ public class TasksResource {
 			}
 		} catch (final XMLStreamException | DMPConverterException | DMPControllerException e) {
 
-			final String message = String.format("couldn't process task (maybe %s export) successfully", responseMediaType.toString());
+			final String message = String.format("couldn't process task '%s' (maybe %s export; input data resource = '%s') successfully", task.getUuid(), responseMediaType.toString(), getInputDataResourceFileName(task));
 
 			TasksResource.LOG.error(message, e);
 
@@ -1405,6 +1406,37 @@ public class TasksResource {
 
 			return optionalResult.get();
 		};
+	}
+
+	private static String getInputDataResourceFileName(final Task task) {
+
+		if(task == null) {
+
+			return null;
+		}
+
+		final DataModel inputDataModel = task.getInputDataModel();
+
+		if(inputDataModel == null) {
+
+			return null;
+		}
+
+		final Resource inputDataResource = inputDataModel.getDataResource();
+
+		if(inputDataResource == null) {
+
+			return null;
+		}
+
+		final JsonNode inputDataResourcePath = inputDataResource.getAttribute(ResourceStatics.PATH);
+
+		if(inputDataResourcePath == null) {
+
+			return inputDataResource.getName();
+		}
+
+		return inputDataResourcePath.asText();
 	}
 
 }
