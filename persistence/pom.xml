@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (C) 2013 – 2016 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
+    Copyright (C) 2013 – 2017 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -36,8 +36,8 @@
 		<version.hamcrest>1.3</version.hamcrest>
 		<version.javax.el-api>3.0.0</version.javax.el-api>
 		<version.lambdaj>2.4</version.lambdaj>
-		<version.mysql-connector-java>6.0.4</version.mysql-connector-java>
-		<version.eclipselink>2.6.4</version.eclipselink>
+		<version.mysql-connector-java>6.0.6</version.mysql-connector-java>
+		<version.eclipselink>2.7.0</version.eclipselink>
 		<version.jpa-schema-maven-plugin>0.2.3-SNAPSHOT</version.jpa-schema-maven-plugin>
 	</properties>
 
