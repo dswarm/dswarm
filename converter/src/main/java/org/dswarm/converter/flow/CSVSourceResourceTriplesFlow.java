@@ -65,15 +65,12 @@ public class CSVSourceResourceTriplesFlow extends AbstractCSVResourceFlow<Observ
 		pipe.setReceiver(new StreamToRecordTriples())
 				.setReceiver(tripleReceiver);
 
-		return Observable.create(new Observable.OnSubscribe<Collection<Triple>>() {
+		return Observable.create(subscriber -> {
 
-			@Override public void call(final Subscriber<? super Collection<Triple>> subscriber) {
+			tripleReceiver.getObservable().onBackpressureBuffer(10000).subscribe(subscriber);
 
-				tripleReceiver.getObservable().subscribe(subscriber);
-
-				opener.process(obj);
-				opener.closeStream();
-			}
+			opener.process(obj);
+			opener.closeStream();
 		});
 	}
 }
