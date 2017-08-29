@@ -443,7 +443,7 @@
 					<header>com/mycila/maven/plugin/license/templates/APACHE-2.txt</header>
 					<properties>
 						<owner>SLUB Dresden &amp; Avantgarde Labs GmbH</owner>
-						<project.inceptionYear>2013 &ndash; 2016</project.inceptionYear>
+						<project.inceptionYear>2013 &ndash; 2017</project.inceptionYear>
 						<email>&lt;code@dswarm.org&gt;</email>
 					</properties>
 					<useDefaultExcludes>true</useDefaultExcludes>
