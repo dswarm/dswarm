@@ -1,370 +1,370 @@
-<TriX xmlns="http://www.w3.org/2004/03/trix/trix-1/">
+<trix xmlns="http://www.w3.org/2004/03/trix/trix-1/">
   <graph>
     <uri>http://data.slub-dresden.de/datamodel/DataModel-cf998267-392a-4d87-a33a-88dd1bffb016/data</uri>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7fff</id>
+      <id>749eb916-fb81-46e3-867a-8c9edb0c8dc0</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7fff</id>
+      <id>749eb916-fb81-46e3-867a-8c9edb0c8dc0</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp0?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7ffe</id>
+      <id>b317957d-98c3-4aaf-b814-192703f17f6d</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7ffe</id>
+      <id>b317957d-98c3-4aaf-b814-192703f17f6d</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp0?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7ffd</id>
+      <id>b096a846-bbee-41e3-b974-760fe19f6554</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7ffd</id>
+      <id>b096a846-bbee-41e3-b974-760fe19f6554</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp0?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7ffc</id>
+      <id>fdbfcc8e-27d6-42cb-889f-4d2a7e524ee9</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7ffc</id>
+      <id>fdbfcc8e-27d6-42cb-889f-4d2a7e524ee9</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp0?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7ffb</id>
+      <id>34936b59-ca5f-448c-836d-99f735d2ef06</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7ffb</id>
+      <id>34936b59-ca5f-448c-836d-99f735d2ef06</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp2?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7ffa</id>
+      <id>778da5fe-b14b-4b10-b760-0e8ce50af8c6</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7ffa</id>
+      <id>778da5fe-b14b-4b10-b760-0e8ce50af8c6</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp3?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7ff9</id>
+      <id>2d4d6b7d-31dc-4192-b3d6-232560eca4a3</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7ff9</id>
+      <id>2d4d6b7d-31dc-4192-b3d6-232560eca4a3</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp3?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7ff8</id>
+      <id>f253e0ab-26bb-4785-9bef-9ec26582dde8</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7ff8</id>
+      <id>f253e0ab-26bb-4785-9bef-9ec26582dde8</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp5?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7ff7</id>
+      <id>fcb220bf-d4ee-4156-be4d-5b708294e411</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7ff7</id>
+      <id>fcb220bf-d4ee-4156-be4d-5b708294e411</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp5?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7ff6</id>
+      <id>f9b45627-d1fc-49d6-9b2c-894f9e1eb8f5</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7ff6</id>
+      <id>f9b45627-d1fc-49d6-9b2c-894f9e1eb8f5</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp7?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7ff5</id>
+      <id>eb826f94-f24f-463c-8f68-f5b15cd1b3a2</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7ff5</id>
+      <id>eb826f94-f24f-463c-8f68-f5b15cd1b3a2</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp7?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7ff4</id>
+      <id>a07d5c23-58ca-438d-aa96-4ce767029a37</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7ff4</id>
+      <id>a07d5c23-58ca-438d-aa96-4ce767029a37</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp7?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7ff3</id>
+      <id>d678c4aa-7734-4adb-9236-e5de4ab182c3</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7ff3</id>
+      <id>d678c4aa-7734-4adb-9236-e5de4ab182c3</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp7?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7ff2</id>
+      <id>42c2dc6d-95ab-43ec-abed-72a3305455b5</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7ff2</id>
+      <id>42c2dc6d-95ab-43ec-abed-72a3305455b5</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp7?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7ff1</id>
+      <id>0e9828dd-2676-4d28-8fcf-52e6d98bb9f5</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7ff1</id>
+      <id>0e9828dd-2676-4d28-8fcf-52e6d98bb9f5</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp7?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7ff0</id>
+      <id>bd5c3d37-1135-4186-b7cd-af2e257e9521</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7ff0</id>
+      <id>bd5c3d37-1135-4186-b7cd-af2e257e9521</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp7?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7fef</id>
+      <id>7d2ab3dd-4fe4-49ae-80f9-118e29f67387</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7fef</id>
+      <id>7d2ab3dd-4fe4-49ae-80f9-118e29f67387</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp0?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7fee</id>
+      <id>d74ad9e1-83e2-44fa-80f5-c30e67d7ce2d</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7fee</id>
+      <id>d74ad9e1-83e2-44fa-80f5-c30e67d7ce2d</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp0?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7fed</id>
+      <id>20c96e6f-6562-487e-9273-396721d226ab</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7fed</id>
+      <id>20c96e6f-6562-487e-9273-396721d226ab</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp0?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7fec</id>
+      <id>c501f0d3-8f70-4a78-a02d-a9d9a4081fa5</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7fec</id>
+      <id>c501f0d3-8f70-4a78-a02d-a9d9a4081fa5</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp0?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7feb</id>
+      <id>c295143b-c21b-4585-9ff3-47a59809974a</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7feb</id>
+      <id>c295143b-c21b-4585-9ff3-47a59809974a</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp0?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7fea</id>
+      <id>7e909509-d7d6-44d9-9696-7d258334c069</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7fea</id>
+      <id>7e909509-d7d6-44d9-9696-7d258334c069</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp1?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7fe9</id>
+      <id>1e6f6ec5-24d6-42a9-b65c-02fc0cae2dea</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7fe9</id>
+      <id>1e6f6ec5-24d6-42a9-b65c-02fc0cae2dea</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp1?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7fe8</id>
+      <id>d060987a-e004-436e-868c-95ba2726b348</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7fe8</id>
+      <id>d060987a-e004-436e-868c-95ba2726b348</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp1?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7fe7</id>
+      <id>bd632e5c-fe24-43ef-8a8e-5e0018c3158b</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7fe7</id>
+      <id>bd632e5c-fe24-43ef-8a8e-5e0018c3158b</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp1?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7fe6</id>
+      <id>3e013533-1fec-4b89-97fc-bba7da52d9a8</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7fe6</id>
+      <id>3e013533-1fec-4b89-97fc-bba7da52d9a8</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp1?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7fe5</id>
+      <id>81aa1803-4d4d-454d-8cd3-8c420caf1463</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7fe5</id>
+      <id>81aa1803-4d4d-454d-8cd3-8c420caf1463</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp2?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7fe4</id>
+      <id>8954116f-dddd-40d3-9332-ede31748df1e</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7fe4</id>
+      <id>8954116f-dddd-40d3-9332-ede31748df1e</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp2?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7fe3</id>
+      <id>ff2d91f6-54cd-4416-8d98-8c75eb9c180b</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7fe3</id>
+      <id>ff2d91f6-54cd-4416-8d98-8c75eb9c180b</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp3?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7fe2</id>
+      <id>8323a9d5-c3e5-46d6-9f47-4dd165e64e01</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7fe2</id>
+      <id>8323a9d5-c3e5-46d6-9f47-4dd165e64e01</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp3?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7fe1</id>
+      <id>bc208155-d70e-4620-bfaf-ce742a1ab4d8</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7fe1</id>
+      <id>bc208155-d70e-4620-bfaf-ce742a1ab4d8</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp3?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7fe0</id>
+      <id>ae50c502-dcd9-4766-834c-34299d03f41a</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7fe0</id>
+      <id>ae50c502-dcd9-4766-834c-34299d03f41a</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp5?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7fdf</id>
+      <id>c2d1b0de-56b5-4d40-bb10-66c081fd80b6</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7fdf</id>
+      <id>c2d1b0de-56b5-4d40-bb10-66c081fd80b6</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp1?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7fde</id>
+      <id>58a46576-59dc-4bf8-90d3-190ffec90e4b</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7fde</id>
+      <id>58a46576-59dc-4bf8-90d3-190ffec90e4b</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp1?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7fdd</id>
+      <id>bc86c149-f045-4f04-aab7-54ffaaebe77c</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7fdd</id>
+      <id>bc86c149-f045-4f04-aab7-54ffaaebe77c</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp3?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld</uri>
-      <id>-17d4a37a:157b91e4033:-7fdc</id>
+      <id>2253a215-a364-4fe3-a233-66d32a436b7d</id>
     </triple>
     <triple>
-      <id>-17d4a37a:157b91e4033:-7fdc</id>
+      <id>2253a215-a364-4fe3-a233-66d32a436b7d</id>
       <uri>http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr</uri>
       <typedLiteral datatype="http://www.w3.org/2001/XMLSchema#string">&lt;a href="http://av.gl/dmp0?foo"&gt;Lorem Ipsum&lt;/a&gt;</typedLiteral>
     </triple>
     <triple>
-      <uri>http://data.slub-dresden.de/datamodels/DataModel-079206e8-b46c-46f3-abcf-45258ef0af36/records/c05cbd83-ca6f-45fe-b2fe-511708fd7414</uri>
+      <uri>http://data.slub-dresden.de/datamodels/DataModel-e84adbaa-97c9-40ab-8c20-b1673ee46556/records/7495fb82-dac5-4b1c-9fb3-5f9a6dbd4af6</uri>
       <uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</uri>
       <uri>http://purl.org/ontology/bibo/Document</uri>
     </triple>
   </graph>
-</TriX>
+</trix>

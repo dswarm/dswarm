@@ -45,7 +45,7 @@ public class TriXResponseTasksResourceTest extends AbstractResponseMediaTypeTask
 		final int expectedLength = expectedResult.length();
 		final int actualLength = actualResult.length();
 
-		final boolean result = expectedLength == actualLength || 21292 == actualLength;
+		final boolean result = expectedLength == actualLength || 22012 == actualLength;
 
 		Assert.assertTrue(String.format("expected length = '%d' :: actual length = '%d' \n\nexpected = '\n%s\n'\n\nactual = '\n%s\n'\n", expectedLength, actualLength, expectedResult, actualResult), result);
 	}

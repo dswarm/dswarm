@@ -1,73 +1,73 @@
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7fff .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7fff <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7ffe .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7ffe <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7ffd .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7ffd <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7ffc .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7ffc <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7ffb .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7ffb <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp2?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7ffa .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7ffa <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7ff9 .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7ff9 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7ff8 .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7ff8 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp5?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7ff7 .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7ff7 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp5?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7ff6 .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7ff6 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7ff5 .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7ff5 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7ff4 .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7ff4 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7ff3 .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7ff3 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7ff2 .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7ff2 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7ff1 .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7ff1 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7ff0 .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7ff0 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7fef .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7fef <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7fee .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7fee <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7fed .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7fed <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7fec .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7fec <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7feb .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7feb <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7fea .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7fea <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7fe9 .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7fe9 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7fe8 .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7fe8 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7fe7 .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7fe7 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7fe6 .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7fe6 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7fe5 .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7fe5 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp2?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7fe4 .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7fe4 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp2?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7fe3 .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7fe3 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7fe2 .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7fe2 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7fe1 .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7fe1 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7fe0 .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7fe0 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp5?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7fdf .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7fdf <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7fde .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7fde <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7fdd .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7fdd <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:BX2D1dc18228X3A157b911a1c2X3AX2D7fdc .
-_:BX2D1dc18228X3A157b911a1c2X3AX2D7fdc <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>" .
-<http://data.slub-dresden.de/datamodels/DataModel-48bcf85e-0655-40cd-b5cf-f91790054c2b/records/28a01eeb-b15d-4741-8076-be1bbd5297b0> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/ontology/bibo/Document> .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:B03bd2e5bX2D7e93X2D4f14X2Db6b9X2D3c68384bb592 .
+_:B03bd2e5bX2D7e93X2D4f14X2Db6b9X2D3c68384bb592 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:Bd907d576X2D4d18X2D48acX2Db4dbX2Dbed006a33aa6 .
+_:Bd907d576X2D4d18X2D48acX2Db4dbX2Dbed006a33aa6 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:Beee64374X2DeadaX2D40ebX2Daf29X2D3d549f6e7eb3 .
+_:Beee64374X2DeadaX2D40ebX2Daf29X2D3d549f6e7eb3 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:Bad6ff38aX2Da811X2D4825X2D8774X2D9274de4ca903 .
+_:Bad6ff38aX2Da811X2D4825X2D8774X2D9274de4ca903 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:B4bb798ebX2D8cbaX2D41f5X2Da2dbX2D3768bd98a060 .
+_:B4bb798ebX2D8cbaX2D41f5X2Da2dbX2D3768bd98a060 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp2?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:B6ee36a6aX2D709aX2D490bX2Db808X2De2d7dd85e814 .
+_:B6ee36a6aX2D709aX2D490bX2Db808X2De2d7dd85e814 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:Bc7a86dabX2Dcc0cX2D48b6X2D9be4X2Dc0feb235b8b0 .
+_:Bc7a86dabX2Dcc0cX2D48b6X2D9be4X2Dc0feb235b8b0 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:B27603fb6X2Df48fX2D46a6X2D8366X2D3ce147183fd2 .
+_:B27603fb6X2Df48fX2D46a6X2D8366X2D3ce147183fd2 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp5?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:Bc406b804X2De9cdX2D4f7eX2Da0b2X2D01a41e43e604 .
+_:Bc406b804X2De9cdX2D4f7eX2Da0b2X2D01a41e43e604 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp5?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:B66cf360aX2Da86bX2D4d81X2D8689X2D87145a3fca65 .
+_:B66cf360aX2Da86bX2D4d81X2D8689X2D87145a3fca65 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:B77b24658X2Df1caX2D485bX2D8214X2Dd02d51121c64 .
+_:B77b24658X2Df1caX2D485bX2D8214X2Dd02d51121c64 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:Bae879201X2D311eX2D4efbX2D90c9X2D3952656e3d7b .
+_:Bae879201X2D311eX2D4efbX2D90c9X2D3952656e3d7b <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:B3248c94aX2D286cX2D44edX2Da956X2Dc7b0d6ecc155 .
+_:B3248c94aX2D286cX2D44edX2Da956X2Dc7b0d6ecc155 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:B8a3db669X2D2baaX2D4c78X2D8597X2D2e73afd7e63f .
+_:B8a3db669X2D2baaX2D4c78X2D8597X2D2e73afd7e63f <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:B655e16cbX2D7653X2D4451X2D885cX2D4e957758715a .
+_:B655e16cbX2D7653X2D4451X2D885cX2D4e957758715a <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:B49a269efX2D9b40X2D4313X2Db72dX2Dca9658b0e7e5 .
+_:B49a269efX2D9b40X2D4313X2Db72dX2Dca9658b0e7e5 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp7?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:Bed58f278X2Dec9eX2D425eX2Db577X2De2fd59f9b328 .
+_:Bed58f278X2Dec9eX2D425eX2Db577X2De2fd59f9b328 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:B4bde4851X2D11bdX2D4b02X2Daf7aX2D9ec52c43cfbc .
+_:B4bde4851X2D11bdX2D4b02X2Daf7aX2D9ec52c43cfbc <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:Bb10ead7aX2D14d8X2D4167X2Daa75X2D67b59bf126be .
+_:Bb10ead7aX2D14d8X2D4167X2Daa75X2D67b59bf126be <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:B3b7703a8X2D5da0X2D4b48X2Dae95X2D3ef8532ff53b .
+_:B3b7703a8X2D5da0X2D4b48X2Dae95X2D3ef8532ff53b <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:B14991110X2Df12bX2D4389X2D8e2aX2D887838afd1ff .
+_:B14991110X2Df12bX2D4389X2D8e2aX2D887838afd1ff <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:Bd177b1c9X2De9f0X2D475cX2D8920X2D17b57b2550d1 .
+_:Bd177b1c9X2De9f0X2D475cX2D8920X2D17b57b2550d1 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:Bd20db2d1X2D4173X2D4973X2D8c2cX2Dd241afbd5c37 .
+_:Bd20db2d1X2D4173X2D4973X2D8c2cX2Dd241afbd5c37 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:B9fdfbdd6X2Df86bX2D4ee2X2Dae60X2D3390cf41e006 .
+_:B9fdfbdd6X2Df86bX2D4ee2X2Dae60X2D3390cf41e006 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:B97c8bb2aX2D7d63X2D4116X2Dba6fX2Dcce71bd4505b .
+_:B97c8bb2aX2D7d63X2D4116X2Dba6fX2Dcce71bd4505b <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:Bc9e20152X2D7ec4X2D46adX2Dbf4eX2Dfd7572c2af05 .
+_:Bc9e20152X2D7ec4X2D46adX2Dbf4eX2Dfd7572c2af05 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:B728ab99dX2D85b4X2D4cbbX2D83dcX2D500789921bc1 .
+_:B728ab99dX2D85b4X2D4cbbX2D83dcX2D500789921bc1 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp2?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:B009073c2X2D1170X2D4271X2D83d2X2D55761cee2d7b .
+_:B009073c2X2D1170X2D4271X2D83d2X2D55761cee2d7b <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp2?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:B6a735a8eX2D58d8X2D4218X2Db0d2X2D9285152a431b .
+_:B6a735a8eX2D58d8X2D4218X2Db0d2X2D9285152a431b <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:Bc6cf8f27X2D3518X2D4114X2D91f7X2D334148a4eff6 .
+_:Bc6cf8f27X2D3518X2D4114X2D91f7X2D334148a4eff6 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:B5e6340e0X2Dc4dbX2D4d38X2D90e2X2D5880a7e030ef .
+_:B5e6340e0X2Dc4dbX2D4d38X2D90e2X2D5880a7e030ef <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:Bc15dddf0X2Da4a3X2D43ccX2D861dX2D7bd889e018d6 .
+_:Bc15dddf0X2Da4a3X2D43ccX2D861dX2D7bd889e018d6 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp5?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:Bc58f7764X2D2475X2D4cccX2Db7a6X2Daf27d5f54dbd .
+_:Bc58f7764X2D2475X2D4cccX2Db7a6X2Daf27d5f54dbd <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:B1bc4ad0eX2D5146X2D4253X2D86e9X2D175d631219bb .
+_:B1bc4ad0eX2D5146X2D4253X2D86e9X2D175d631219bb <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp1?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:B2edac1adX2D1df9X2D4d17X2D9839X2D8a17fcb9da10 .
+_:B2edac1adX2D1df9X2D4d17X2D9839X2D8a17fcb9da10 <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp3?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#feld> _:Ba252c63bX2D949fX2D4e82X2Dbda8X2Db9c8c14e7f4a .
+_:Ba252c63bX2D949fX2D4e82X2Dbda8X2Db9c8c14e7f4a <http://www.ddb.de/professionell/mabxml/mabxml-1.xsd#nr> "<a href=\"http://av.gl/dmp0?foo\">Lorem Ipsum</a>" .
+<http://data.slub-dresden.de/datamodels/DataModel-c67a4bdb-3d31-408f-b749-c2021488eb91/records/dd8ce40d-3130-4bca-a66a-4980b2572d29> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/ontology/bibo/Document> .
