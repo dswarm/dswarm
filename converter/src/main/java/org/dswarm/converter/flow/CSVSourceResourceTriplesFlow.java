@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 – 2016 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
+ * Copyright (C) 2013 – 2017 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,7 +67,7 @@ public class CSVSourceResourceTriplesFlow extends AbstractCSVResourceFlow<Observ
 
 		return Observable.create(subscriber -> {
 
-			tripleReceiver.getObservable().onBackpressureBuffer(10000).subscribe(subscriber);
+			tripleReceiver.getObservable().subscribe(subscriber);
 
 			opener.process(obj);
 			opener.closeStream();
