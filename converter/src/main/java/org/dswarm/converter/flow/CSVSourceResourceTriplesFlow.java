@@ -15,21 +15,22 @@
  */
 package org.dswarm.converter.flow;
 
+import java.io.Reader;
+import java.util.Collection;
+
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.types.Triple;
+import rx.Emitter;
+import rx.Observable;
+
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.mf.stream.converter.StreamToRecordTriples;
 import org.dswarm.converter.mf.stream.reader.CsvReader;
 import org.dswarm.persistence.model.resource.Configuration;
 import org.dswarm.persistence.model.resource.DataModel;
-import rx.Emitter;
-import rx.Observable;
-
-import java.io.Reader;
-import java.util.Collection;
 
 /**
  * @author phorn

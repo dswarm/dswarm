@@ -29,8 +29,8 @@ import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.stream.source.StringReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rx.Emitter;
 import rx.Observable;
-import rx.Subscriber;
 
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.mf.stream.GDMModelReceiver;
@@ -136,24 +136,21 @@ public class JSONSourceResourceGDMStmtsFlow {
 				.setReceiver(gdmModelsTimer)
 				.setReceiver(writer);
 
-		return Observable.create(new Observable.OnSubscribe<GDMModel>() {
+		return Observable.create(subscriber -> {
 
-			@Override public void call(final Subscriber<? super GDMModel> subscriber) {
+			try {
 
-				try {
+				writer.getObservable().subscribe(subscriber);
 
-					writer.getObservable().subscribe(subscriber);
+				opener.process(object);
+				opener.closeStream();
 
-					opener.process(object);
-					opener.closeStream();
+				morphContext.stop();
+			} catch (final Exception e) {
 
-					morphContext.stop();
-				} catch (final Exception e) {
-
-					writer.propagateError(e);
-				}
+				writer.propagateError(e);
 			}
-		});
+		}, Emitter.BackpressureMode.BUFFER);
 	}
 
 	private static Optional<String> getStringParameter(final Configuration configuration, final String key) throws DMPConverterException {
