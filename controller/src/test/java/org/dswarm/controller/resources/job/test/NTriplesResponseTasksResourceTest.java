@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 – 2016 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
+ * Copyright (C) 2013 – 2017 SLUB Dresden & Avantgarde Labs GmbH (<code@dswarm.org>)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ public class NTriplesResponseTasksResourceTest extends AbstractResponseMediaType
 		final int expectedLength = expectedResult.length();
 		final int actualLength = actualResult.length();
 
-		final boolean result = expectedLength == actualLength || 13798 == actualLength || 13942 == actualLength;
+		final boolean result = expectedLength == actualLength || 14662 == actualLength || 13942 == actualLength;
 
 		Assert.assertTrue(String.format("expected length = '%d' :: actual length = '%d' \n\nexpected = '\n%s\n'\n\nactual = '\n%s\n'\n", expectedLength, actualLength, expectedResult, actualResult), result);
 	}
