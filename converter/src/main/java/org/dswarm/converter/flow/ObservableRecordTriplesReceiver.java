@@ -55,6 +55,6 @@ final class ObservableRecordTriplesReceiver implements ObjectReceiver<Collection
 
 	public Observable<Collection<Triple>> getObservable() {
 
-		return tripleSubject.filter(NOT_NULL);
+		return tripleSubject.onBackpressureBuffer(10000).filter(NOT_NULL);
 	}
 }

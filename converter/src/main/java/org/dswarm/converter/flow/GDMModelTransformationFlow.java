@@ -15,28 +15,29 @@
  */
 package org.dswarm.converter.flow;
 
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import com.codahale.metrics.MetricRegistry;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
+import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.NotImplementedException;
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.stream.pipe.Filter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import rx.Observable;
+import rx.observables.ConnectableObservable;
+
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.pipe.timing.TimerBasedFactory;
 import org.dswarm.graph.json.Model;
 import org.dswarm.persistence.model.internal.gdm.GDMModel;
 import org.dswarm.persistence.model.resource.DataModel;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import rx.Observable;
-import rx.observables.ConnectableObservable;
-
-import javax.ws.rs.core.Response;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Flow that executes a given set of transformations on data of a given data model.

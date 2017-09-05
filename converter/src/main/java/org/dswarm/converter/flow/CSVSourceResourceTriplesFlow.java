@@ -23,8 +23,8 @@ import com.google.inject.assistedinject.AssistedInject;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.types.Triple;
+import rx.Emitter;
 import rx.Observable;
-import rx.Subscriber;
 
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.mf.stream.converter.StreamToRecordTriples;
@@ -71,6 +71,6 @@ public class CSVSourceResourceTriplesFlow extends AbstractCSVResourceFlow<Observ
 
 			opener.process(obj);
 			opener.closeStream();
-		});
+		}, Emitter.BackpressureMode.BUFFER);
 	}
 }

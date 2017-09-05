@@ -23,8 +23,8 @@ import com.google.inject.assistedinject.Assisted;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.types.Triple;
+import rx.Emitter;
 import rx.Observable;
-import rx.Subscriber;
 
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.mf.stream.converter.StreamToRecordTriples;
@@ -66,15 +66,12 @@ public class MonitoringCSVSourceResourceTriplesFlow extends CSVSourceResourceTri
 
 		opener.setReceiver(csvReaderTimer).setReceiver(pipe);
 
-		return Observable.create(new Observable.OnSubscribe<Collection<Triple>>() {
+		return Observable.create(subscriber -> {
 
-			@Override public void call(final Subscriber<? super Collection<Triple>> subscriber) {
+			tripleReceiver.getObservable().subscribe(subscriber);
 
-				tripleReceiver.getObservable().subscribe(subscriber);
-
-				opener.process(obj);
-				opener.closeStream();
-			}
-		});
+			opener.process(obj);
+			opener.closeStream();
+		}, Emitter.BackpressureMode.BUFFER);
 	}
 }
