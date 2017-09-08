@@ -15,6 +15,23 @@
  */
 package org.dswarm.converter.flow;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.codahale.metrics.Timer.Context;
@@ -23,12 +40,22 @@ import com.google.common.io.Files;
 import com.google.common.io.Resources;
 import com.google.inject.Provider;
 import javaslang.Tuple2;
+import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.culturegraph.mf.exceptions.MorphDefException;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.stream.pipe.Filter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import rx.Emitter;
+import rx.Observable;
+import rx.Scheduler;
+import rx.functions.Action1;
+import rx.observables.ConnectableObservable;
+import rx.schedulers.Schedulers;
+
 import org.dswarm.converter.DMPConverterError;
 import org.dswarm.converter.DMPConverterException;
 import org.dswarm.converter.DMPMorphDefException;
@@ -49,30 +76,6 @@ import org.dswarm.persistence.service.InternalModelService;
 import org.dswarm.persistence.service.InternalModelServiceFactory;
 import org.dswarm.persistence.util.DMPPersistenceUtil;
 import org.dswarm.persistence.util.GDMUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import rx.Observable;
-import rx.Scheduler;
-import rx.observables.ConnectableObservable;
-import rx.schedulers.Schedulers;
-
-import javax.ws.rs.core.Response;
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * Flow that executes a given set of transformations on data of a given data model.
@@ -174,7 +177,7 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 
 		final Observable<Response> writeResponse = writeResultToDatahub(writeResultToDatahub, enableVersioning, model);
 
-		final ConnectableObservable<RESULTFORMAT> resultformatObservable = Observable.create(wireTransformationFlowMorphConnector(doNotReturnJsonToCaller, optionalResultObservable, optionalConnectableResultObservable, scheduler, writeResponse, morphTask.getMorphContext(), tuples, opener, morphTask.getWriter()))
+		final ConnectableObservable<RESULTFORMAT> resultformatObservable = Observable.create(wireTransformationFlowMorphConnector(doNotReturnJsonToCaller, optionalResultObservable, optionalConnectableResultObservable, scheduler, writeResponse, morphTask.getMorphContext(), tuples, opener, morphTask.getWriter()), Emitter.BackpressureMode.BUFFER)
 				.doOnCompleted(() -> logTransformationFlowEnd(opener, morphTask.getConverter(), morphTask.getWriter(), writeResultToDatahub))
 				.observeOn(scheduler)
 				.publish();
@@ -306,15 +309,15 @@ public abstract class TransformationFlow<RESULTFORMAT> {
 
 	protected abstract ConnectableObservable<RESULTFORMAT> transformResultModel(final Observable<org.dswarm.persistence.model.internal.Model> model);
 
-	protected Observable.OnSubscribe<RESULTFORMAT> wireTransformationFlowMorphConnector(final boolean doNotReturnJsonToCaller,
-	                                                                                    final Optional<Observable<RESULTFORMAT>> optionalResultObservable,
-	                                                                                    final Optional<ConnectableObservable<RESULTFORMAT>> optionalConnectableResultObservable,
-	                                                                                    final Scheduler scheduler,
-	                                                                                    final Observable<Response> writeResponse,
-	                                                                                    final Context morphContext,
-	                                                                                    final Observable<Tuple2<String, JsonNode>> tuples,
-	                                                                                    final ObjectPipe<Tuple2<String, JsonNode>, StreamReceiver> opener,
-	                                                                                    final GDMModelReceiver writer) {
+	protected Action1<Emitter<RESULTFORMAT>> wireTransformationFlowMorphConnector(final boolean doNotReturnJsonToCaller,
+	                                                                              final Optional<Observable<RESULTFORMAT>> optionalResultObservable,
+	                                                                              final Optional<ConnectableObservable<RESULTFORMAT>> optionalConnectableResultObservable,
+	                                                                              final Scheduler scheduler,
+	                                                                              final Observable<Response> writeResponse,
+	                                                                              final Context morphContext,
+	                                                                              final Observable<Tuple2<String, JsonNode>> tuples,
+	                                                                              final ObjectPipe<Tuple2<String, JsonNode>, StreamReceiver> opener,
+	                                                                              final GDMModelReceiver writer) {
 
 		return subscriber -> {
 
