@@ -44,6 +44,7 @@
 		<java.target.version>1.8</java.target.version>
 		<maxallowedviolations>7000</maxallowedviolations>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<checkstyle.config.location>codequality/checkstyle.xml</checkstyle.config.location>
 		<version.apache.commons>3.6</version.apache.commons>
 		<version.commons-csv>1.4</version.commons-csv>
 		<version.commons-io>2.5</version.commons-io>
@@ -324,7 +325,6 @@
 					<artifactId>maven-checkstyle-plugin</artifactId>
 					<version>${version.maven.plugin.checkstyle}</version>
 					<configuration>
-						<configLocation>dmp_checkstyle.xml</configLocation>
 						<failsOnError>false</failsOnError>
 						<consoleOutput>true</consoleOutput>
 					</configuration>
@@ -483,15 +483,6 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>versions-maven-plugin</artifactId>
 				<version>${version.maven.plugin.version}</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>${version.maven.plugin.checkstyle}</version>
-				<configuration>
-					<configLocation>dmp_checkstyle.xml</configLocation>
-					<targetJdk>${java.source.version}</targetJdk>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
