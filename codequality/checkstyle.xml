@@ -66,7 +66,8 @@ http://checkstyle.sf.net (or in your downloaded distribution).
     </module>
 
     <!-- http://checkstyle.sourceforge.net/config_duplicates.html -->
-    <module name="StrictDuplicateCode"/>
+    <!-- has been remove from checkstyle, see https://github.com/checkstyle/checkstyle/blob/master/src/xdocs/releasenotes.xml#L4493 -->
+    <!-- <module name="StrictDuplicateCode"/> -->
 
     <!-- Checks for Headers                                -->
     <!-- See http://checkstyle.sf.net/config_header.html   -->
@@ -76,7 +77,7 @@ http://checkstyle.sf.net (or in your downloaded distribution).
     <!-- </module> -->
 
     <module name="TreeWalker">
-        <property name="cacheFile" value="target/cachefile"/>
+        <!-- <property name="cacheFile" value="target/cachefile"/> -->
         <property name="tabWidth" value="2"/>
 
         <!-- Checks for Javadoc comments.                     -->
@@ -212,7 +213,8 @@ http://checkstyle.sf.net (or in your downloaded distribution).
         <module name="InnerAssignment"/>
         <module name="MagicNumber"/>
         <module name="MissingSwitchDefault"/>
-        <module name="RedundantThrows"/>
+        <!-- has been remove in checkstyle 6.2, see https://github.com/checkstyle/checkstyle/issues/473#issuecomment-117051058 -->
+        <!-- <module name="RedundantThrows"/> -->
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
         <module name="CovariantEquals"/>
