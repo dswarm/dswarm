@@ -44,6 +44,7 @@
 		<java.target.version>1.8</java.target.version>
 		<maxallowedviolations>7000</maxallowedviolations>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<checkstyle.config.location>codequality/checkstyle.xml</checkstyle.config.location>
 		<version.apache.commons>3.6</version.apache.commons>
 		<version.commons-csv>1.4</version.commons-csv>
 		<version.commons-io>2.5</version.commons-io>
@@ -64,7 +65,7 @@
 		<version.maven.core>3.3.9</version.maven.core>
 		<version.maven.plugin.antrun>1.8</version.maven.plugin.antrun>
 		<version.maven.plugin.assembly>3.1.0</version.maven.plugin.assembly>
-		<version.maven.plugin.checkstyle>2.12.1</version.maven.plugin.checkstyle>
+		<version.maven.plugin.checkstyle>2.17</version.maven.plugin.checkstyle>
 		<version.maven.plugin.clean>3.0.0</version.maven.plugin.clean>
 		<version.maven.plugin.cobertura>2.7</version.maven.plugin.cobertura>
 		<version.maven.plugin.compiler>3.6.2</version.maven.plugin.compiler>
@@ -324,21 +325,10 @@
 					<artifactId>maven-checkstyle-plugin</artifactId>
 					<version>${version.maven.plugin.checkstyle}</version>
 					<configuration>
-						<configLocation>dmp_checkstyle.xml</configLocation>
 						<failsOnError>false</failsOnError>
 						<consoleOutput>true</consoleOutput>
 					</configuration>
 					<dependencies>
-						<dependency>
-							<groupId>com.google.guava</groupId>
-							<artifactId>guava-jdk5</artifactId>
-							<version>${version.guava-jdk5}</version>
-						</dependency>
-						<dependency>
-							<groupId>org.dswarm</groupId>
-							<artifactId>dswarm-init</artifactId>
-							<version>${dmp.version}</version>
-						</dependency>
 						<dependency>
 							<groupId>org.apache.maven</groupId>
 							<artifactId>maven-core</artifactId>
@@ -486,15 +476,6 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>${version.maven.plugin.checkstyle}</version>
-				<configuration>
-					<configLocation>dmp_checkstyle.xml</configLocation>
-					<targetJdk>${java.source.version}</targetJdk>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
 				<version>${version.maven.plugin.pmd}</version>
 				<configuration>
@@ -617,6 +598,12 @@
 					<groupId>org.slf4j</groupId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-checkstyle-plugin</artifactId>
+			<version>${version.maven.plugin.checkstyle}</version>
 		</dependency>
 
 		<!-- Utilities -->
