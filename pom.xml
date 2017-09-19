@@ -63,6 +63,7 @@
 		<version.junit>4.12</version.junit>
 		<version.logback>1.1.7</version.logback>
 		<version.maven.core>3.3.9</version.maven.core>
+		<version.plugin.maven.core>2.2.1</version.plugin.maven.core>
 		<version.maven.plugin.antrun>1.8</version.maven.plugin.antrun>
 		<version.maven.plugin.assembly>3.1.0</version.maven.plugin.assembly>
 		<version.maven.plugin.checkstyle>2.17</version.maven.plugin.checkstyle>
@@ -88,6 +89,7 @@
 		<version.maven.plugin.surefire>2.20</version.maven.plugin.surefire>
 		<version.maven.plugin.version>2.4</version.maven.plugin.version>
 		<version.maven.plugin.war>3.1.0</version.maven.plugin.war>
+		<version.cobertura>2.1.1</version.cobertura>
 		<version.metafacture-core>4.0.7-dswarm-SNAPSHOT</version.metafacture-core>
 		<version.metrics>3.1.2</version.metrics>
 		<version.rxjava>1.3.0</version.rxjava>
@@ -255,6 +257,7 @@
 						<dependency>
 							<groupId>net.sourceforge.cobertura</groupId>
 							<artifactId>cobertura</artifactId>
+							<version>${version.cobertura}</version>
 							<exclusions>
 								<exclusion>
 									<artifactId>slf4j-api</artifactId>
@@ -272,6 +275,27 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
 					<version>${version.maven.plugin.release}</version>
+					<dependencies>
+						<dependency>
+							<groupId>org.apache.maven</groupId>
+							<artifactId>maven-core</artifactId>
+							<version>${version.plugin.maven.core}</version>
+							<exclusions>
+								<exclusion>
+									<artifactId>jcl-over-slf4j</artifactId>
+									<groupId>org.slf4j</groupId>
+								</exclusion>
+								<exclusion>
+									<artifactId>slf4j-jdk14</artifactId>
+									<groupId>org.slf4j</groupId>
+								</exclusion>
+								<exclusion>
+									<artifactId>slf4j-nop</artifactId>
+									<groupId>org.slf4j</groupId>
+								</exclusion>
+							</exclusions>
+						</dependency>
+					</dependencies>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -295,6 +319,14 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>${version.maven.plugin.surefire}</version>
+					<configuration>
+						<classpathDependencyExcludes>
+							<classpathDependencyExclude>org.slf4j:jcl-over-slf4j</classpathDependencyExclude>
+							<classpathDependencyExclude>org.slf4j:slf4j-jdk14</classpathDependencyExclude>
+							<classpathDependencyExclude>org.slf4j:slf4j-nop</classpathDependencyExclude>
+						</classpathDependencyExcludes>
+						<useSystemClassLoader>false</useSystemClassLoader>
+					</configuration>
 					<executions>
 						<execution>
 							<id>default-test</id>
@@ -304,6 +336,27 @@
 							</goals>
 						</execution>
 					</executions>
+					<dependencies>
+						<dependency>
+							<groupId>org.apache.maven</groupId>
+							<artifactId>maven-core</artifactId>
+							<version>${version.plugin.maven.core}</version>
+							<exclusions>
+								<exclusion>
+									<artifactId>jcl-over-slf4j</artifactId>
+									<groupId>org.slf4j</groupId>
+								</exclusion>
+								<exclusion>
+									<artifactId>slf4j-jdk14</artifactId>
+									<groupId>org.slf4j</groupId>
+								</exclusion>
+								<exclusion>
+									<artifactId>slf4j-nop</artifactId>
+									<groupId>org.slf4j</groupId>
+								</exclusion>
+							</exclusions>
+						</dependency>
+					</dependencies>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -348,7 +401,7 @@
 						<dependency>
 							<groupId>org.apache.maven</groupId>
 							<artifactId>maven-core</artifactId>
-							<version>${version.maven.core}</version>
+							<version>${version.plugin.maven.core}</version>
 							<exclusions>
 								<exclusion>
 									<artifactId>jcl-over-slf4j</artifactId>
@@ -396,7 +449,7 @@
 						<dependency>
 							<groupId>org.apache.maven</groupId>
 							<artifactId>maven-core</artifactId>
-							<version>${version.maven.core}</version>
+							<version>${version.plugin.maven.core}</version>
 							<exclusions>
 								<exclusion>
 									<artifactId>jcl-over-slf4j</artifactId>
@@ -430,6 +483,27 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-project-info-reports-plugin</artifactId>
 					<version>${version.maven.plugin.project-info-reports}</version>
+					<dependencies>
+						<dependency>
+							<groupId>org.apache.maven</groupId>
+							<artifactId>maven-core</artifactId>
+							<version>${version.plugin.maven.core}</version>
+							<exclusions>
+								<exclusion>
+									<artifactId>jcl-over-slf4j</artifactId>
+									<groupId>org.slf4j</groupId>
+								</exclusion>
+								<exclusion>
+									<artifactId>slf4j-jdk14</artifactId>
+									<groupId>org.slf4j</groupId>
+								</exclusion>
+								<exclusion>
+									<artifactId>slf4j-nop</artifactId>
+									<groupId>org.slf4j</groupId>
+								</exclusion>
+							</exclusions>
+						</dependency>
+					</dependencies>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -463,6 +537,27 @@
 				<configuration>
 					<allowSnapshots>false</allowSnapshots>
 				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven</groupId>
+						<artifactId>maven-core</artifactId>
+						<version>${version.plugin.maven.core}</version>
+						<exclusions>
+							<exclusion>
+								<artifactId>jcl-over-slf4j</artifactId>
+								<groupId>org.slf4j</groupId>
+							</exclusion>
+							<exclusion>
+								<artifactId>slf4j-jdk14</artifactId>
+								<groupId>org.slf4j</groupId>
+							</exclusion>
+							<exclusion>
+								<artifactId>slf4j-nop</artifactId>
+								<groupId>org.slf4j</groupId>
+							</exclusion>
+						</exclusions>
+					</dependency>
+				</dependencies>
 			</plugin>
 			<plugin>
 				<groupId>com.mycila</groupId>
@@ -502,6 +597,27 @@
 						<phase>process-sources</phase>
 					</execution>
 				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven</groupId>
+						<artifactId>maven-core</artifactId>
+						<version>${version.plugin.maven.core}</version>
+						<exclusions>
+							<exclusion>
+								<artifactId>jcl-over-slf4j</artifactId>
+								<groupId>org.slf4j</groupId>
+							</exclusion>
+							<exclusion>
+								<artifactId>slf4j-jdk14</artifactId>
+								<groupId>org.slf4j</groupId>
+							</exclusion>
+							<exclusion>
+								<artifactId>slf4j-nop</artifactId>
+								<groupId>org.slf4j</groupId>
+							</exclusion>
+						</exclusions>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>
