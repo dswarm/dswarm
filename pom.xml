@@ -319,14 +319,6 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>${version.maven.plugin.surefire}</version>
-					<configuration>
-						<classpathDependencyExcludes>
-							<classpathDependencyExclude>org.slf4j:jcl-over-slf4j</classpathDependencyExclude>
-							<classpathDependencyExclude>org.slf4j:slf4j-jdk14</classpathDependencyExclude>
-							<classpathDependencyExclude>org.slf4j:slf4j-nop</classpathDependencyExclude>
-						</classpathDependencyExcludes>
-						<useSystemClassLoader>false</useSystemClassLoader>
-					</configuration>
 					<executions>
 						<execution>
 							<id>default-test</id>
