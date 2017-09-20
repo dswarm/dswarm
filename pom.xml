@@ -260,12 +260,12 @@
 							<version>${version.cobertura}</version>
 							<exclusions>
 								<exclusion>
-									<artifactId>slf4j-api</artifactId>
 									<groupId>org.slf4j</groupId>
+									<artifactId>slf4j-api</artifactId>
 								</exclusion>
 								<exclusion>
-									<artifactId>logback-classic</artifactId>
 									<groupId>ch.qos.logback</groupId>
+									<artifactId>logback-classic</artifactId>
 								</exclusion>
 							</exclusions>
 						</dependency>
@@ -282,16 +282,16 @@
 							<version>${version.plugin.maven.core}</version>
 							<exclusions>
 								<exclusion>
+									<groupId>org.slf4j</groupId>
 									<artifactId>jcl-over-slf4j</artifactId>
-									<groupId>org.slf4j</groupId>
 								</exclusion>
 								<exclusion>
+									<groupId>org.slf4j</groupId>
 									<artifactId>slf4j-jdk14</artifactId>
-									<groupId>org.slf4j</groupId>
 								</exclusion>
 								<exclusion>
-									<artifactId>slf4j-nop</artifactId>
 									<groupId>org.slf4j</groupId>
+									<artifactId>slf4j-nop</artifactId>
 								</exclusion>
 							</exclusions>
 						</dependency>
@@ -335,16 +335,16 @@
 							<version>${version.plugin.maven.core}</version>
 							<exclusions>
 								<exclusion>
+									<groupId>org.slf4j</groupId>
 									<artifactId>jcl-over-slf4j</artifactId>
-									<groupId>org.slf4j</groupId>
 								</exclusion>
 								<exclusion>
+									<groupId>org.slf4j</groupId>
 									<artifactId>slf4j-jdk14</artifactId>
-									<groupId>org.slf4j</groupId>
 								</exclusion>
 								<exclusion>
-									<artifactId>slf4j-nop</artifactId>
 									<groupId>org.slf4j</groupId>
+									<artifactId>slf4j-nop</artifactId>
 								</exclusion>
 							</exclusions>
 						</dependency>
@@ -396,19 +396,20 @@
 							<version>${version.plugin.maven.core}</version>
 							<exclusions>
 								<exclusion>
+									<groupId>org.slf4j</groupId>
 									<artifactId>jcl-over-slf4j</artifactId>
-									<groupId>org.slf4j</groupId>
 								</exclusion>
 								<exclusion>
+									<groupId>org.slf4j</groupId>
 									<artifactId>slf4j-jdk14</artifactId>
-									<groupId>org.slf4j</groupId>
 								</exclusion>
 								<exclusion>
-									<artifactId>slf4j-nop</artifactId>
 									<groupId>org.slf4j</groupId>
+									<artifactId>slf4j-nop</artifactId>
 								</exclusion>
 							</exclusions>
 						</dependency>
+
 					</dependencies>
 				</plugin>
 				<plugin>
@@ -444,16 +445,16 @@
 							<version>${version.plugin.maven.core}</version>
 							<exclusions>
 								<exclusion>
+									<groupId>org.slf4j</groupId>
 									<artifactId>jcl-over-slf4j</artifactId>
-									<groupId>org.slf4j</groupId>
 								</exclusion>
 								<exclusion>
+									<groupId>org.slf4j</groupId>
 									<artifactId>slf4j-jdk14</artifactId>
-									<groupId>org.slf4j</groupId>
 								</exclusion>
 								<exclusion>
-									<artifactId>slf4j-nop</artifactId>
 									<groupId>org.slf4j</groupId>
+									<artifactId>slf4j-nop</artifactId>
 								</exclusion>
 							</exclusions>
 						</dependency>
@@ -482,16 +483,16 @@
 							<version>${version.plugin.maven.core}</version>
 							<exclusions>
 								<exclusion>
+									<groupId>org.slf4j</groupId>
 									<artifactId>jcl-over-slf4j</artifactId>
-									<groupId>org.slf4j</groupId>
 								</exclusion>
 								<exclusion>
+									<groupId>org.slf4j</groupId>
 									<artifactId>slf4j-jdk14</artifactId>
-									<groupId>org.slf4j</groupId>
 								</exclusion>
 								<exclusion>
-									<artifactId>slf4j-nop</artifactId>
 									<groupId>org.slf4j</groupId>
+									<artifactId>slf4j-nop</artifactId>
 								</exclusion>
 							</exclusions>
 						</dependency>
@@ -536,16 +537,16 @@
 						<version>${version.plugin.maven.core}</version>
 						<exclusions>
 							<exclusion>
+								<groupId>org.slf4j</groupId>
 								<artifactId>jcl-over-slf4j</artifactId>
-								<groupId>org.slf4j</groupId>
 							</exclusion>
 							<exclusion>
+								<groupId>org.slf4j</groupId>
 								<artifactId>slf4j-jdk14</artifactId>
-								<groupId>org.slf4j</groupId>
 							</exclusion>
 							<exclusion>
-								<artifactId>slf4j-nop</artifactId>
 								<groupId>org.slf4j</groupId>
+								<artifactId>slf4j-nop</artifactId>
 							</exclusion>
 						</exclusions>
 					</dependency>
@@ -596,16 +597,16 @@
 						<version>${version.plugin.maven.core}</version>
 						<exclusions>
 							<exclusion>
+								<groupId>org.slf4j</groupId>
 								<artifactId>jcl-over-slf4j</artifactId>
-								<groupId>org.slf4j</groupId>
 							</exclusion>
 							<exclusion>
+								<groupId>org.slf4j</groupId>
 								<artifactId>slf4j-jdk14</artifactId>
-								<groupId>org.slf4j</groupId>
 							</exclusion>
 							<exclusion>
-								<artifactId>slf4j-nop</artifactId>
 								<groupId>org.slf4j</groupId>
+								<artifactId>slf4j-nop</artifactId>
 							</exclusion>
 						</exclusions>
 					</dependency>
@@ -741,16 +742,10 @@
 			<version>${version.logback}</version>
 			<exclusions>
 				<exclusion>
-					<artifactId>slf4j-api</artifactId>
 					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
 				</exclusion>
 			</exclusions>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-checkstyle-plugin</artifactId>
-			<version>${version.maven.plugin.checkstyle}</version>
 		</dependency>
 
 		<!-- Utilities -->
@@ -787,8 +782,8 @@
 			<version>${version.jackson}</version>
 			<exclusions>
 				<exclusion>
-					<artifactId>jackson-annotations</artifactId>
 					<groupId>com.fasterxml.jackson.core</groupId>
+					<artifactId>jackson-annotations</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -808,8 +803,8 @@
 			<version>${version.jackson}</version>
 			<exclusions>
 				<exclusion>
-					<artifactId>guice</artifactId>
 					<groupId>com.google.inject</groupId>
+					<artifactId>guice</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -829,8 +824,8 @@
 			<version>${version.metrics}</version>
 			<exclusions>
 				<exclusion>
-					<artifactId>slf4j-api</artifactId>
 					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -840,8 +835,8 @@
 			<version>${version.metrics}</version>
 			<exclusions>
 				<exclusion>
-					<artifactId>slf4j-api</artifactId>
 					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -851,8 +846,8 @@
 			<version>${version.metrics}</version>
 			<exclusions>
 				<exclusion>
-					<artifactId>slf4j-api</artifactId>
 					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -877,8 +872,8 @@
 			<version>${version.metrics}</version>
 			<exclusions>
 				<exclusion>
-					<artifactId>slf4j-api</artifactId>
 					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -888,12 +883,12 @@
 			<version>${version.metrics}</version>
 			<exclusions>
 				<exclusion>
-					<artifactId>logback-classic</artifactId>
 					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-classic</artifactId>
 				</exclusion>
 				<exclusion>
-					<artifactId>slf4j-api</artifactId>
 					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -905,8 +900,8 @@
 			<version>${version.guice}</version>
 			<exclusions>
 				<exclusion>
-					<artifactId>guava</artifactId>
 					<groupId>com.google.guava</groupId>
+					<artifactId>guava</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -924,12 +919,12 @@
 			<version>${version.dswarm.common}</version>
 			<exclusions>
 				<exclusion>
-					<artifactId>commons-lang3</artifactId>
 					<groupId>org.apache.commons</groupId>
+					<artifactId>commons-lang3</artifactId>
 				</exclusion>
 				<exclusion>
-					<artifactId>commons-csv</artifactId>
 					<groupId>org.apache.commons</groupId>
+					<artifactId>commons-csv</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
