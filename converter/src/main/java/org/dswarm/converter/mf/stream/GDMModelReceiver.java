@@ -85,7 +85,7 @@ public class GDMModelReceiver implements ObjectReceiver<GDMModel> {
 
 	public Observable<GDMModel> getObservable() {
 
-		return modelSubject.onBackpressureBuffer().lift(new BufferOperator()).filter(m -> {
+		return modelSubject.lift(new BufferOperator()).filter(m -> {
 
 			if (!afterClosedStream.get() && !gdmModelDeque.isEmpty()) {
 
