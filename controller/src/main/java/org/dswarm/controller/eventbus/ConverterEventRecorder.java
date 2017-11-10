@@ -122,7 +122,7 @@ public abstract class ConverterEventRecorder<CONVERTER_EVENT_IMPL extends Conver
 		final ConnectableObservable<org.dswarm.persistence.model.internal.Model> connectableResult = connectableObservableTuple.v2();
 
 		final ConnectableObservable<org.dswarm.persistence.model.internal.Model> connectableResult2 = connectableResult
-				.onBackpressureBuffer(10000)
+				.onBackpressureBuffer(100000)
 				.publish();
 
 		connectableResult.connect();
@@ -130,8 +130,8 @@ public abstract class ConverterEventRecorder<CONVERTER_EVENT_IMPL extends Conver
 		try {
 
 			final ConnectableObservable<Response> writeResponse = internalServiceFactory.getInternalGDMGraphService()
-					.updateObject(dataModel.getUuid(), connectableResult2.observeOn(GDM_SCHEDULER).onBackpressureBuffer(10000), updateFormat, enableVersioning)
-					.onBackpressureBuffer(10000)
+					.updateObject(dataModel.getUuid(), connectableResult2.observeOn(GDM_SCHEDULER).onBackpressureBuffer(100000), updateFormat, enableVersioning)
+					.onBackpressureBuffer(100000)
 					.doOnSubscribe(() -> LOG.debug("subscribed to write response observable"))
 					.publish();
 
@@ -171,7 +171,7 @@ public abstract class ConverterEventRecorder<CONVERTER_EVENT_IMPL extends Conver
 		final ConnectableObservable<GDMModel> connectableSource = connectableObservableTuple.v1();
 		final ConnectableObservable<org.dswarm.persistence.model.internal.Model> connectableResult = connectableObservableTuple.v2();
 
-		final Observable<org.dswarm.persistence.model.internal.Model> result = connectableResult.onBackpressureBuffer(10000)
+		final Observable<org.dswarm.persistence.model.internal.Model> result = connectableResult.onBackpressureBuffer(100000)
 				.doOnSubscribe(() -> connectableSource.connect());
 
 		connectableResult.connect();
@@ -205,7 +205,7 @@ public abstract class ConverterEventRecorder<CONVERTER_EVENT_IMPL extends Conver
 
 			final Observable<GDMModel> convertedData = convertData(dataModel, utiliseExistingSchema, scheduler, path, hasSchema);
 			final ConnectableObservable<GDMModel> connectableConvertedData = convertedData
-					.onBackpressureBuffer(10000)
+					.onBackpressureBuffer(100000)
 					.publish();
 
 			final ConnectableObservable<org.dswarm.persistence.model.internal.Model> postProcessedConvertedData = connectableConvertedData.filter(gdmModel -> {
@@ -312,7 +312,7 @@ public abstract class ConverterEventRecorder<CONVERTER_EVENT_IMPL extends Conver
 										type, dataModel.getUuid(), recordCount, statementCounter.get(), path);
 							})
 					.doOnSubscribe(() -> LOG.debug("subscribed to {} ingest", type))
-					.onBackpressureBuffer(10000)
+					.onBackpressureBuffer(100000)
 					.publish();
 
 			return Tuple.tuple(connectableConvertedData, postProcessedConvertedData);
