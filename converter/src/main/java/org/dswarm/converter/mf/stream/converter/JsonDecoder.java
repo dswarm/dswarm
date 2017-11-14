@@ -91,7 +91,7 @@ public class JsonDecoder extends DefaultObjectPipe<Reader, JsonReceiver> {
 						popFieldName();
 						tokenStack.pop();
 
-						if (JsonToken.FIELD_NAME.equals(tokenStack.peek())) {
+						if (!tokenStack.isEmpty() && JsonToken.FIELD_NAME.equals(tokenStack.peek())) {
 
 							tokenStack.pop();
 						}
