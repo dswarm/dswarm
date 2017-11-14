@@ -1,0 +1,4552 @@
+[
+  [
+    {
+      "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3": [
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+          "o": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/schema#recordType"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#hierarchy_sequence",
+          "o": {
+            "v": "00300 // 300"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#illustrated",
+          "o": {
+            "v": "Not Illustrated"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#marc_error",
+          "o": {
+            "v": "org.marc4j.ErrorHandler$Error:Minor Error  : Subfield tag is an invalid uppercase character, changing it to lower case. --- [ 689 : D ]"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#marc_error",
+          "o": {
+            "v": "org.marc4j.ErrorHandler$Error:Minor Error  : Subfield tag is an invalid uppercase character, changing it to lower case. --- [ 689 : D ]"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_ct_mv",
+          "o": {
+            "v": "U"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_ct_mv",
+          "o": {
+            "v": "UT 1000 - UT 2970"
+          }
+        },
+        {
+          "order": 3,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_ct_mv",
+          "o": {
+            "v": "UT 1400 - UT 2250"
+          }
+        },
+        {
+          "order": 4,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_ct_mv",
+          "o": {
+            "v": "UT 1400"
+          }
+        },
+        {
+          "order": 5,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_ct_mv",
+          "o": {
+            "v": "ZG - ZS"
+          }
+        },
+        {
+          "order": 6,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_ct_mv",
+          "o": {
+            "v": "ZI"
+          }
+        },
+        {
+          "order": 7,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_ct_mv",
+          "o": {
+            "v": "ZI 9000 - ZI 9800"
+          }
+        },
+        {
+          "order": 8,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_ct_mv",
+          "o": {
+            "v": "ZI 9200"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title",
+          "o": {
+            "v": "Berechnung minimaler Wertebereiche für Parameterfunktionen eines Lagenetzes aus vorgegebenen Toleranzen der Beobachtungsgrössen /"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#local_heading_facet_dezwi2",
+          "o": {
+            "v": "Geodätisches Netz"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#local_heading_facet_dezwi2",
+          "o": {
+            "v": "Berechnung"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#record_id",
+          "o": {
+            "v": "018892264"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_path",
+          "o": {
+            "v": "U"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_path",
+          "o": {
+            "v": "UT 1000 - UT 2970"
+          }
+        },
+        {
+          "order": 3,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_path",
+          "o": {
+            "v": "UT 1400 - UT 2250"
+          }
+        },
+        {
+          "order": 4,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_path",
+          "o": {
+            "v": "UT 1400"
+          }
+        },
+        {
+          "order": 5,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_path",
+          "o": {
+            "v": "ZG - ZS"
+          }
+        },
+        {
+          "order": 6,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_path",
+          "o": {
+            "v": "ZI"
+          }
+        },
+        {
+          "order": 7,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_path",
+          "o": {
+            "v": "ZI 9000 - ZI 9800"
+          }
+        },
+        {
+          "order": 8,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_path",
+          "o": {
+            "v": "ZI 9200"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format",
+          "o": {
+            "v": "Thesis"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#author_variant",
+          "o": {
+            "v": "h g hg"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#branch_nrw",
+          "o": {
+            "v": "Local Holdings"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#publishDate",
+          "o": {
+            "v": "1984"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#itemdata",
+          "o": {
+            "v": "{\"DE-105\":[{\"bc\":\"96.3827/14.\",\"cn\":\"96.3827  4.\"}],\"DE-14\":[{\"bc\":\"10370483\",\"cn\":\"U-191,300\"}],\"DE-15\":[{\"bc\":\"0021572491\",\"cn\":\"77-3-41:300\"}]}"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#imprint",
+          "o": {
+            "v": "München : Verlag der Bayer. Akad. d. Wiss. [u.a.], 1984"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#recordtype",
+          "o": {
+            "v": "marcfinc"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_full",
+          "o": {
+            "v": "Berechnung minimaler Wertebereiche für Parameterfunktionen eines Lagenetzes aus vorgegebenen Toleranzen der Beobachtungsgrössen /"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_dezi4",
+          "o": {
+            "v": "e-Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#facet_local_del330",
+          "o": {
+            "v": "Geodätisches Netz"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#facet_local_del330",
+          "o": {
+            "v": "Berechnung"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#hierarchy_parent_id",
+          "o": {
+            "v": "0000013076"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#series",
+          "o": {
+            "v": "Bayerische Akademie der Wissenschaften Deutsche Geodätische Kommission Deutsche Geodätische Kommission der Bayerischen Akademie der Wissenschaften. Reihe C, Dissertationen"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#callnumber_de15",
+          "o": {
+            "v": "77-3-41:300"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_cns_mv",
+          "o": {
+            "v": "U"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_cns_mv",
+          "o": {
+            "v": "UT 1000 - UT 2970"
+          }
+        },
+        {
+          "order": 3,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_cns_mv",
+          "o": {
+            "v": "UT 1400 - UT 2250"
+          }
+        },
+        {
+          "order": 4,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_cns_mv",
+          "o": {
+            "v": "UT 1400"
+          }
+        },
+        {
+          "order": 5,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_cns_mv",
+          "o": {
+            "v": "ZG - ZS"
+          }
+        },
+        {
+          "order": 6,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_cns_mv",
+          "o": {
+            "v": "ZI"
+          }
+        },
+        {
+          "order": 7,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_cns_mv",
+          "o": {
+            "v": "ZI 9000 - ZI 9800"
+          }
+        },
+        {
+          "order": 8,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_cns_mv",
+          "o": {
+            "v": "ZI 9200"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#dissertation_note",
+          "o": {
+            "v": "Zugl.: München, Techn. Univ., Diss., 1984."
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#branch_de14",
+          "o": {
+            "v": "zell9"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#branch_de15",
+          "o": {
+            "v": "Bibliotheca Albertina"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_de540",
+          "o": {
+            "v": "Thesis"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_nrw",
+          "o": {
+            "v": "Thesis"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_del189",
+          "o": {
+            "v": "Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#topic_facet",
+          "o": {
+            "v": "Geodätisches Netz"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#topic_facet",
+          "o": {
+            "v": "Berechnung"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#access_facet",
+          "o": {
+            "v": "Local Holdings"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#fullrecord",
+          "o": {
+            "v": "02717cam a2200709   4500001001100000003000700011005001700018007000300035008004100038015002100079016002200100020003000122035002100152035002500173040003100198041000800229084006700237084005800304100004200362245016900404260006300573260002100636300002700657490011900684502004800803591005400851689006900905689006100974689001101035751001801046810020401064935001001268935000701278936012201285936011001407020001801517982002301535984001101558983001801569984000601587982002501593969001301618983001901631969000601650982002701656972001101683983002201694972000701716984001301723972001601736972001301752972001501765972001501780972001601795950000901811950002601820852003201846852003201878852003301910852003301943980003101976\u001e0002139053\u001eDE-576\u001e20130117105935.0\u001etu\u001e891025s1984    xx       m    000 0 ger c\u001e  \u001fa85,H10,0472\u001f2dnb\u001e7 \u001fa850768799\u001f2DE-101\u001e  \u001fa3769693507\u001f93-7696-9350-7\u001e  \u001fa(OCoLC)263547152\u001e  \u001fa(DE-599)DNB850768799\u001e  \u001faDE-576\u001fbger\u001fcDE-576\u001ferakwb\u001e  \u001fager\u001e  \u001faUT 1400\u001f2rvk\u001f9U\u001f9UT 1000 - UT 2970\u001f9UT 1400 - UT 2250\u001f9UT 1400\u001e  \u001faZI 9200\u001f2rvk\u001f9ZG - ZS\u001f9ZI\u001f9ZI 9000 - ZI 9800\u001f9ZI 9200\u001e1 \u001faGrimhardt, Hartmut\u001f0(DE-576)165939648\u001e10\u001faBerechnung minimaler Wertebereiche für Parameterfunktionen eines Lagenetzes aus vorgegebenen Toleranzen der Beobachtungsgrössen /\u001fcvorgelegt von Hartmut Grimhardt\u001e  \u001faMünchen :\u001fbVerlag der Bayer. Akad. d. Wiss. [u.a.],\u001fc1984\u001e  \u001faMünchen :\u001fbBeck\u001e  \u001fa97 S. :\u001fbgraph. Darst.\u001e1 \u001faDeutsche Geodätische Kommission bei der Bayerischen Akademie der Wissenschaften : Reihe C, Dissertationen ; \u001fv300\u001e  \u001faZugl.: München, Techn. Univ., Diss., 1984.\u001e  \u001faSW: 580 FGBA/S+DB ; 720 ff. bvb ; 5090: DDSU/sred\u001e00\u001fds\u001f0(DE-588)4020208-2\u001f0(DE-576)208932380\u001f2gnd\u001faGeodätisches Netz\u001e01\u001fds\u001f0(DE-588)4120997-7\u001f0(DE-576)209539739\u001f2gnd\u001faBerechnung\u001e0 \u001f5DE-576\u001e  \u001faMünchen\u001f4uvp\u001e2 \u001faBayerische Akademie der Wissenschaften\u001fbDeutsche Geodätische Kommission\u001ftDeutsche Geodätische Kommission der Bayerischen Akademie der Wissenschaften. Reihe C, Dissertationen\u001fv300\u001fw(DE-576)032853246\u001e  \u001fbdruck\u001e  \u001fchs\u001erv\u001faUT 1400\u001fbAllgemeines\u001fkPhysik\u001fkPhysik des festen Erdkörpers - Geophysik\u001fkAllgemeine Geophysik\u001fkAllgemeines\u001f0329177842\u001erv\u001faZI 9200\u001fbLandesvermessung\u001fkTechnik\u001fkBauingenieurwesen\u001fkGeodäsie, Vermessung\u001fkLandesvermessung\u001f0201746409\u001e  \u001fa9783769693508\u001e  \u001fa(DE-14)10370483\u001fx1\u001e  \u001fbMAG\u001fx1\u001e  \u001fa(DE-14)174644\u001e  \u001fcB\u001e  \u001fa(DE-15)0021572491\u001fx1\u001e  \u001fbKeine\u001fx1\u001e  \u001fa(DE-15)3190901\u001e  \u001fcB\u001e  \u001fa(DE-105)96.3827/14.\u001fx1\u001e  \u001fbMAG\u001fx1\u001e  \u001fa(DE-105)500146403\u001e  \u001fcHS\u001e  \u001fzLSTO: 19\u001e  \u001fh96.3827  4.\u001e  \u001ffDK 528.3\u001e  \u001ffDK 528.063\u001e  \u001ffDK 378.245\u001e  \u001fi96.3827  4.\u001e  \u001faNetz\u001e  \u001faNumerisches Verfahren\u001e  \u001faDE-14\u001fz2014-03-16T01:56:35Z\u001e  \u001faDE-15\u001fz2013-01-17T10:59:50Z\u001e  \u001faDE-105\u001fz2002-01-30T00:00:00Z\u001e  \u001faDE-185\u001fz2017-03-08T06:53:40Z\u001e  \u001fa018892264\u001fb0\u001fc201703061352\u001e\u001d"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#signatur",
+          "o": {
+            "v": "(DE-105)96.3827  4."
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#signatur",
+          "o": {
+            "v": "(DE-15)77-3-41:300"
+          }
+        },
+        {
+          "order": 3,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#signatur",
+          "o": {
+            "v": "(DE-14)U-191,300"
+          }
+        },
+        {
+          "order": 4,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#signatur",
+          "o": {
+            "v": "(DE-14)94 4 03922"
+          }
+        },
+        {
+          "order": 5,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#signatur",
+          "o": {
+            "v": "(DE-14)94 4 03922 001"
+          }
+        },
+        {
+          "order": 6,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#signatur",
+          "o": {
+            "v": "(DE-14)ZI 9200 G862"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#barcode",
+          "o": {
+            "v": "(DE-105)96.3827/14."
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#barcode",
+          "o": {
+            "v": "(DE-15)0021572491"
+          }
+        },
+        {
+          "order": 3,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#barcode",
+          "o": {
+            "v": "(DE-14)10370483"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#is_hierarchy_title",
+          "o": {
+            "v": "Berechnung minimaler Wertebereiche für Parameterfunktionen eines Lagenetzes aus vorgegebenen Toleranzen der Beobachtungsgrössen"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_de105",
+          "o": {
+            "v": "Thesis"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_de105",
+          "o": {
+            "v": "Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#publisher",
+          "o": {
+            "v": "Verlag der Bayer. Akad. d. Wiss. [u.a.],"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#publisher",
+          "o": {
+            "v": "Beck"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_short",
+          "o": {
+            "v": "Berechnung minimaler Wertebereiche für Parameterfunktionen eines Lagenetzes aus vorgegebenen Toleranzen der Beobachtungsgrössen /"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#language",
+          "o": {
+            "v": "German"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#geogr_code_person",
+          "o": {
+            "v": "not assigned"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_label",
+          "o": {
+            "v": "Physik"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_label",
+          "o": {
+            "v": "Physik des festen Erdkörpers - Geophysik"
+          }
+        },
+        {
+          "order": 3,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_label",
+          "o": {
+            "v": "Allgemeine Geophysik"
+          }
+        },
+        {
+          "order": 4,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_label",
+          "o": {
+            "v": "Allgemeines"
+          }
+        },
+        {
+          "order": 5,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_label",
+          "o": {
+            "v": "Technik"
+          }
+        },
+        {
+          "order": 6,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_label",
+          "o": {
+            "v": "Bauingenieurwesen"
+          }
+        },
+        {
+          "order": 7,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_label",
+          "o": {
+            "v": "Geodäsie, Vermessung"
+          }
+        },
+        {
+          "order": 8,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_label",
+          "o": {
+            "v": "Landesvermessung"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_sort",
+          "o": {
+            "v": "berechnung minimaler wertebereiche für parameterfunktionen eines lagenetzes aus vorgegebenen toleranzen der beobachtungsgrössen"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#collcode_de105",
+          "o": {
+            "v": "Magazin"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#isbn",
+          "o": {
+            "v": "3769693507"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#isbn",
+          "o": {
+            "v": "9783769693508"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_full_unstemmed",
+          "o": {
+            "v": "Berechnung minimaler Wertebereiche für Parameterfunktionen eines Lagenetzes aus vorgegebenen Toleranzen der Beobachtungsgrössen /"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#callnumber_de15_ct_mv",
+          "o": {
+            "v": "77-3-41:300"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#facet_de14_branch_collcode_exception",
+          "o": {
+            "v": "zell9_MAG_NM"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#callnumber_de15_cns_mv",
+          "o": {
+            "v": "77-3-41:300"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#hierarchy_top_id",
+          "o": {
+            "v": "0000013076"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#multipart_link",
+          "o": {
+            "v": "032853246"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#spellingShingle",
+          "o": {
+            "v": "Deutsche Geodätische Kommission bei der Bayerischen Akademie der Wissenschaften : Reihe C, Dissertationen ;"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#spellingShingle",
+          "o": {
+            "v": "Grimhardt, Hartmut"
+          }
+        },
+        {
+          "order": 3,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#spellingShingle",
+          "o": {
+            "v": "Geodätisches Netz"
+          }
+        },
+        {
+          "order": 4,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#spellingShingle",
+          "o": {
+            "v": "Berechnung"
+          }
+        },
+        {
+          "order": 5,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#spellingShingle",
+          "o": {
+            "v": "Berechnung minimaler Wertebereiche für Parameterfunktionen eines Lagenetzes aus vorgegebenen Toleranzen der Beobachtungsgrössen /"
+          }
+        },
+        {
+          "order": 6,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#spellingShingle",
+          "o": {
+            "v": "Bayerische Akademie der Wissenschaften Deutsche Geodätische Kommission Deutsche Geodätische Kommission der Bayerischen Akademie der Wissenschaften. Reihe C, Dissertationen"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#geogr_code",
+          "o": {
+            "v": "not assigned"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#collcode_de15",
+          "o": {
+            "v": "Magazin / Sonstige"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#multipart_set",
+          "o": {
+            "v": " "
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rsn",
+          "o": {
+            "v": "(DE-14)174644"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rsn",
+          "o": {
+            "v": "(DE-15)3190901"
+          }
+        },
+        {
+          "order": 3,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rsn",
+          "o": {
+            "v": "(DE-105)500146403"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#vf1_author",
+          "o": {
+            "v": "Grimhardt, Hartmut"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#oclc_num",
+          "o": {
+            "v": "263547152"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#multipart_part",
+          "o": {
+            "v": "(032853246)300"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#date_de15",
+          "o": {
+            "v": "2013-01-17T09:59:50Z"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#series2",
+          "o": {
+            "v": "Deutsche Geodätische Kommission bei der Bayerischen Akademie der Wissenschaften : Reihe C, Dissertationen ;"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#publishPlace",
+          "o": {
+            "v": "München :"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#institution",
+          "o": {
+            "v": "DE-105"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#institution",
+          "o": {
+            "v": "DE-14"
+          }
+        },
+        {
+          "order": 3,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#institution",
+          "o": {
+            "v": "DE-15"
+          }
+        },
+        {
+          "order": 4,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#institution",
+          "o": {
+            "v": "DE-185"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#misc_de105",
+          "o": {
+            "v": "HS"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#date_de105",
+          "o": {
+            "v": "2002-01-29T23:00:00Z"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#hierarchy_top_title",
+          "o": {
+            "v": "Bayerische Akademie der Wissenschaften : Deutsche Geodätische Kommission der Bayerischen Akademie der Wissenschaften. Reihe C, Dissertationen"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_in_hierarchy",
+          "o": {
+            "v": "300. Berechnung minimaler Wertebereiche für Parameterfunktionen eines Lagenetzes aus vorgegebenen Toleranzen der Beobachtungsgrössen (1984)"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_de15",
+          "o": {
+            "v": "Thesis"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_degla1",
+          "o": {
+            "v": "Thesis"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_fullStr",
+          "o": {
+            "v": "Berechnung minimaler Wertebereiche für Parameterfunktionen eines Lagenetzes aus vorgegebenen Toleranzen der Beobachtungsgrössen /"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#barcode_de15",
+          "o": {
+            "v": "0021572491"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#finc_class_facet",
+          "o": {
+            "v": "Physik"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#finc_class_facet",
+          "o": {
+            "v": "Technik"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_facet",
+          "o": {
+            "v": "UT 1400"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_facet",
+          "o": {
+            "v": "ZI 9200"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#topic",
+          "o": {
+            "v": "Geodätisches Netz"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#topic",
+          "o": {
+            "v": "Berechnung"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#id",
+          "o": {
+            "v": "0002139053"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#physical",
+          "o": {
+            "v": "97 S. : graph. Darst."
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#hierarchy_parent_title",
+          "o": {
+            "v": "Bayerische Akademie der Wissenschaften : Deutsche Geodätische Kommission der Bayerischen Akademie der Wissenschaften. Reihe C, Dissertationen"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#author",
+          "o": {
+            "v": "Grimhardt, Hartmut"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#mega_collection",
+          "o": {
+            "v": "Verbunddaten SWB"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#topic_id",
+          "o": {
+            "v": "4020208-2"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#topic_id",
+          "o": {
+            "v": "4120997-7"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#_version_",
+          "o": {
+            "v": "1571375858254348288"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#branch_de105",
+          "o": {
+            "v": "Hauptbibliothek"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#udk_facet_de105",
+          "o": {
+            "v": "Astronomie. Geodäsie"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#udk_facet_de105",
+          "o": {
+            "v": "Dissertationen"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#spelling",
+          "o": {
+            "v": "Grimhardt, Hartmut (DE-576)165939648 Berechnung minimaler Wertebereiche für Parameterfunktionen eines Lagenetzes aus vorgegebenen Toleranzen der Beobachtungsgrössen / vorgelegt von Hartmut Grimhardt München : Verlag der Bayer. Akad. d. Wiss. [u.a.], 1984 München : Beck 97 S. : graph. Darst. Deutsche Geodätische Kommission bei der Bayerischen Akademie der Wissenschaften : Reihe C, Dissertationen ;  300 Zugl.: München, Techn. Univ., Diss., 1984. SW: 580 FGBA/S+DB ; 720 ff. bvb ; 5090: DDSU/sred s (DE-588)4020208-2 (DE-576)208932380 gnd Geodätisches Netz s (DE-588)4120997-7 (DE-576)209539739 gnd Berechnung DE-576 München uvp Bayerische Akademie der Wissenschaften Deutsche Geodätische Kommission Deutsche Geodätische Kommission der Bayerischen Akademie der Wissenschaften. Reihe C, Dissertationen 300 (DE-576)032853246"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#udk_raw_de105",
+          "o": {
+            "v": "DK 528.3"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#udk_raw_de105",
+          "o": {
+            "v": "DK 528.063"
+          }
+        },
+        {
+          "order": 3,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#udk_raw_de105",
+          "o": {
+            "v": "DK 378.245"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#author_sort",
+          "o": {
+            "v": "Grimhardt, Hartmut"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#is_hierarchy_id",
+          "o": {
+            "v": "0002139053"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#publishDateSort",
+          "o": {
+            "v": "1984"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_ded117",
+          "o": {
+            "v": "Thesis"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/24e7e5a3-77a1-422e-8f3d-536aad0aefc3"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#source_id",
+          "o": {
+            "v": "0"
+          }
+        }
+      ]
+    }
+  ],
+  [
+    {
+      "http://data.slub-dresden.de/datamodels/2/records/5c5c8b38-7167-4896-9295-e00ca0f8274b": [
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/5c5c8b38-7167-4896-9295-e00ca0f8274b"
+          },
+          "p": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+          "o": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/schema#recordType"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/5c5c8b38-7167-4896-9295-e00ca0f8274b"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#record",
+          "o": {
+            "id": 2
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+          "o": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/schema#recordType"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#finc_class_facet",
+          "o": {
+            "v": "not assigned"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#footnote",
+          "o": {
+            "v": "Einheitssacht. d. komment. Werkes: Corpus iuris civilis."
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#is_hierarchy_title",
+          "o": {
+            "v": "Repetitionvm Sev Commentariorvm In Varia Ivrisconsvltorvm Responsa Volumen ..."
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#publisher",
+          "o": {
+            "v": "apud Hugonem a Porta, & Antonium Vincentium,"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_facet",
+          "o": {
+            "v": "No subject assigned"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#imprint",
+          "o": {
+            "v": "Lvgdvni : apud Hugonem a Porta, & Antonium Vincentium, 15XX"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_full_unstemmed",
+          "o": {
+            "v": "Repetitionvm Sev Commentariorvm In Varia Ivrisconsvltorvm Responsa Volumen ..."
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#id",
+          "o": {
+            "v": "0002139057"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#spelling",
+          "o": {
+            "v": "Repetitionvm Sev Commentariorvm In Varia Ivrisconsvltorvm Responsa Volumen ... Einheitssacht. d. komm. Werkes: Corpus iuris civilis commentarii repetitionum commentariorum jurisconsultorum ictorum Repetitiones seu commentaria in varia iurisconsultorum responsa Lvgdvni : apud Hugonem a Porta, & Antonium Vincentium, 15XX (Lvgdvni: excudebat Claudius Seruanius) Einheitssacht. d. komment. Werkes: Corpus iuris civilis. Lyon pup"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#branch_de14",
+          "o": {
+            "v": "zell1"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_de540",
+          "o": {
+            "v": "Book, E-Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#hierarchy_top_id",
+          "o": {
+            "v": "0002139057"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_nrw",
+          "o": {
+            "v": "Book, E-Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_alt",
+          "o": {
+            "v": "Corpus iuris civilis"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_alt",
+          "o": {
+            "v": "commentarii repetitionum commentariorum jurisconsultorum ictorum"
+          }
+        },
+        {
+          "order": 3,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_alt",
+          "o": {
+            "v": "Repetitiones seu commentaria in varia iurisconsultorum responsa"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#spellingShingle",
+          "o": {
+            "v": "Repetitionvm Sev Commentariorvm In Varia Ivrisconsvltorvm Responsa Volumen ..."
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#geogr_code",
+          "o": {
+            "v": "not assigned"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_del189",
+          "o": {
+            "v": "Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#mega_collection",
+          "o": {
+            "v": "Verbunddaten SWB"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#access_facet",
+          "o": {
+            "v": "Local Holdings"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#record_id",
+          "o": {
+            "v": "018893295"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#_version_",
+          "o": {
+            "v": "1571375858521735168"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#fullrecord",
+          "o": {
+            "v": "01111cam a2200325  a4500001001100000003000700011005001700018007000300035008004100038035002500079040003100104041000800135041000900143046001700152245008300169246005800252246006900310246006800379260010800447500006100555751001400616935001000630983001800640984000700658983001800665969000700683852003200690852003200722980003100754\u001e0002139057\u001eDE-576\u001e20130524201702.0\u001etu\u001e891025n15uuuuuuxx             00 0 lat c\u001e  \u001fa(DE-599)BSZ018893295\u001e  \u001faDE-576\u001fbger\u001fcDE-576\u001ferakwb\u001e0 \u001falat\u001e07\u001falat.\u001e  \u001fjad16\u001f2DE-576\u001e10\u001faRepetitionvm Sev Commentariorvm In Varia Ivrisconsvltorvm Responsa Volumen ...\u001e1 \u001fiEinheitssacht. d. komm. Werkes:\u001faCorpus iuris civilis\u001e30\u001facommentarii repetitionum commentariorum jurisconsultorum ictorum\u001e9 \u001faRepetitiones seu commentaria in varia iurisconsultorum responsa\u001e  \u001faLvgdvni :\u001fbapud Hugonem a Porta, & Antonium Vincentium,\u001fc15XX\u001fe(Lvgdvni:\u001ffexcudebat Claudius Seruanius)\u001e  \u001faEinheitssacht. d. komment. Werkes: Corpus iuris civilis.\u001e  \u001faLyon\u001f4pup\u001e  \u001fbdruck\u001e  \u001fa(DE-14)890773\u001e  \u001fcMB\u001e  \u001fa(DE-15)460060\u001e  \u001fcMB\u001e  \u001faDE-14\u001fz2014-03-16T02:06:25Z\u001e  \u001faDE-15\u001fz1997-03-13T00:00:00Z\u001e  \u001fa018893295\u001fb0\u001fc201403061834\u001e\u001d"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#multipart_set",
+          "o": {
+            "v": "a"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rsn",
+          "o": {
+            "v": "(DE-14)890773"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rsn",
+          "o": {
+            "v": "(DE-15)460060"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format",
+          "o": {
+            "v": "Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#branch_nrw",
+          "o": {
+            "v": "Local Holdings"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#publishDate",
+          "o": {
+            "v": "15XX"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#geogr_code_person",
+          "o": {
+            "v": "not assigned"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#timecode",
+          "o": {
+            "v": "1501 – 1600"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#publishPlace",
+          "o": {
+            "v": "Lvgdvni :"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#institution",
+          "o": {
+            "v": "DE-14"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#institution",
+          "o": {
+            "v": "DE-15"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#itemdata",
+          "o": {
+            "v": "{}"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#illustrated",
+          "o": {
+            "v": "Not Illustrated"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_short",
+          "o": {
+            "v": "Repetitionvm Sev Commentariorvm In Varia Ivrisconsvltorvm Responsa Volumen ..."
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#recordtype",
+          "o": {
+            "v": "marcfinc"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#language",
+          "o": {
+            "v": "Latin"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#date_de15",
+          "o": {
+            "v": "1997-03-12T23:00:00Z"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_full",
+          "o": {
+            "v": "Repetitionvm Sev Commentariorvm In Varia Ivrisconsvltorvm Responsa Volumen ..."
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#hierarchy_top_title",
+          "o": {
+            "v": "Repetitionvm Sev Commentariorvm In Varia Ivrisconsvltorvm Responsa Volumen ..."
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_in_hierarchy",
+          "o": {
+            "v": "Repetitionvm Sev Commentariorvm In Varia Ivrisconsvltorvm Responsa Volumen ..."
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_sort",
+          "o": {
+            "v": "repetitionvm sev commentariorvm in varia ivrisconsvltorvm responsa volumen ."
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#is_hierarchy_id",
+          "o": {
+            "v": "0002139057"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#publishDateSort",
+          "o": {
+            "v": "1553"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_de15",
+          "o": {
+            "v": "Book, E-Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_ded117",
+          "o": {
+            "v": "Book, E-Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#source_id",
+          "o": {
+            "v": "0"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title",
+          "o": {
+            "v": "Repetitionvm Sev Commentariorvm In Varia Ivrisconsvltorvm Responsa Volumen ..."
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_degla1",
+          "o": {
+            "v": "Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_dezi4",
+          "o": {
+            "v": "e-Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 2
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_fullStr",
+          "o": {
+            "v": "Repetitionvm Sev Commentariorvm In Varia Ivrisconsvltorvm Responsa Volumen ..."
+          }
+        }
+      ]
+    }
+  ],
+  [
+    {
+      "http://data.slub-dresden.de/datamodels/2/records/432d1660-098f-498b-b078-f7e2b83ad2c6": [
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/432d1660-098f-498b-b078-f7e2b83ad2c6"
+          },
+          "p": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+          "o": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/schema#recordType"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/432d1660-098f-498b-b078-f7e2b83ad2c6"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#record",
+          "o": {
+            "id": 3
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+          "o": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/schema#recordType"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#hierarchy_sequence",
+          "o": {
+            "v": "00001 // 1"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_sort",
+          "o": {
+            "v": "marci vitruvii pollionis de architectura libri decem"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#barcode_de15",
+          "o": {
+            "v": "M10925961"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#author",
+          "o": {
+            "v": "Vitruvius"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#finc_class_facet",
+          "o": {
+            "v": "Technik"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_ct_mv",
+          "o": {
+            "v": "ZG - ZS"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_ct_mv",
+          "o": {
+            "v": "ZH"
+          }
+        },
+        {
+          "order": 3,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_ct_mv",
+          "o": {
+            "v": "ZH 3000 - ZH 3950"
+          }
+        },
+        {
+          "order": 4,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_ct_mv",
+          "o": {
+            "v": "ZH 3100"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#callnumber_de15",
+          "o": {
+            "v": "Phil.lat.68:1"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_cns_mv",
+          "o": {
+            "v": "ZG - ZS"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_cns_mv",
+          "o": {
+            "v": "ZH"
+          }
+        },
+        {
+          "order": 3,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_cns_mv",
+          "o": {
+            "v": "ZH 3000 - ZH 3950"
+          }
+        },
+        {
+          "order": 4,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_cns_mv",
+          "o": {
+            "v": "ZH 3100"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#illustrated",
+          "o": {
+            "v": "Not Illustrated"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_del152",
+          "o": {
+            "v": "Buch"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_full_unstemmed",
+          "o": {
+            "v": "Marci Vitruvii Pollionis De architectura libri decem. 1 /"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_part",
+          "o": {
+            "v": "1 /"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#facet_de14_branch_collcode_exception",
+          "o": {
+            "v": "zell1_MAG_P3"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#spelling",
+          "o": {
+            "v": "Vitruvius v1. Jh. (DE-588)118627252 (DE-576)163424772 Marci Vitruvii Pollionis De architectura libri decem. 1 / ex fide librorum scriptorum recensuit, emendavit, suisque et virorum doctorum annotationibus illustravit Io. Gottlob Schneider Lipsiae : Göschen, 1807 LXXVI, 312 S. 5090 maschinell aus ähnlichen Titelaufnahmen ergänzt Leipzig pup (DE-576)018894976 1 Online-Ausg. von Bd. 1 (DE-576)345307046 Mikrofiche-Ausg. von Bd. 1 (DE-576)074595504"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#mega_collection",
+          "o": {
+            "v": "Verbunddaten SWB"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#mega_collection",
+          "o": {
+            "v": "SWB SSG UB Heidelberg"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#physical",
+          "o": {
+            "v": "LXXVI, 312 S."
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#hierarchy_parent_title",
+          "o": {
+            "v": "Marci Vitruvii Pollionis De architectura libri decem/ex fide librorum scriptorum recensuit, emendavit, suisque et virorum doctorum annotationibus illustravit Io. Gottlob Schneider"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_de540",
+          "o": {
+            "v": "Book, E-Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#hierarchy_top_id",
+          "o": {
+            "v": "0002139071"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_nrw",
+          "o": {
+            "v": "Book, E-Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#id",
+          "o": {
+            "v": "0002139072"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#callnumber_de15_cns_mv",
+          "o": {
+            "v": "Phil.lat.68:1"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#spellingShingle",
+          "o": {
+            "v": "Vitruvius"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#spellingShingle",
+          "o": {
+            "v": "Marci Vitruvii Pollionis De architectura libri decem."
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_path",
+          "o": {
+            "v": "ZG - ZS"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_path",
+          "o": {
+            "v": "ZH"
+          }
+        },
+        {
+          "order": 3,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_path",
+          "o": {
+            "v": "ZH 3000 - ZH 3950"
+          }
+        },
+        {
+          "order": 4,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_path",
+          "o": {
+            "v": "ZH 3100"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#geogr_code",
+          "o": {
+            "v": "not assigned"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#collcode_de15",
+          "o": {
+            "v": "Magazin / Sonstige"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_del189",
+          "o": {
+            "v": "Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#branch_de14",
+          "o": {
+            "v": "zell1"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#access_facet",
+          "o": {
+            "v": "Local Holdings"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#record_id",
+          "o": {
+            "v": "018895034"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_de15",
+          "o": {
+            "v": "Book, E-Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#branch_de15",
+          "o": {
+            "v": "Bibliotheca Albertina"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#fullrecord",
+          "o": {
+            "v": "02786cam a2200877  c4500001001100000003000700011005001700018007000300035008004100038016002100079035002500100040003100125041000800156041000900164046001700173084005800190084001500248100006100263245019100324260003100515300001800546591005900564751001700623773002500640775004600665775005000711935001000761936015500771982002600926984001100952983001900963984000600982982002400988969001301012983001801025969000601043900001401049900001401063900001401077900001101091900002901102900001201131900002701143900002901170900001301199900002801212900002901240900002501269900001701294900002201311900002601333900002101359900001301380900001501393900001501408900002201423900002901445900002101474900003201495900002901527900001101556900002501567900002901592900002001621900001701641900002001658900002901678900001101707900002201718951000701740852003201747852003201779852003201811852003401843980003101877\u001e0002139072\u001eDE-576\u001e20141002121224.0\u001etu\u001e891026s1807    xx             00 0 lat c\u001e  \u001fa(OCoLC)311091968\u001e  \u001fa(DE-599)BSZ018895034\u001e  \u001faDE-576\u001fbger\u001fcDE-576\u001ferakwb\u001e0 \u001falat\u001e07\u001falat.\u001e  \u001fja19a\u001f2DE-576\u001e  \u001faZH 3100\u001f2rvk\u001f9ZG - ZS\u001f9ZH\u001f9ZH 3000 - ZH 3950\u001f9ZH 3100\u001e  \u001fa9,10\u001f2ssgn\u001e0 \u001faVitruvius\u001fdv1. Jh.\u001f0(DE-588)118627252\u001f0(DE-576)163424772\u001e10\u001faMarci Vitruvii Pollionis De architectura libri decem.\u001fn1 /\u001fcex fide librorum scriptorum recensuit, emendavit, suisque et virorum doctorum annotationibus illustravit Io. Gottlob Schneider\u001e  \u001faLipsiae :\u001fbGöschen,\u001fc1807\u001e  \u001faLXXVI, 312 S.\u001e  \u001fa5090 maschinell aus ähnlichen Titelaufnahmen ergänzt\u001e  \u001faLeipzig\u001f4pup\u001e18\u001fw(DE-576)018894976\u001fg1\u001e0 \u001fiOnline-Ausg. von Bd. 1\u001fw(DE-576)345307046\u001e0 \u001fiMikrofiche-Ausg. von Bd. 1\u001fw(DE-576)074595504\u001e  \u001fbdruck\u001erv\u001faZH 3100\u001fbBautheorie; Architekturtheorie; Architekturkritik\u001fkTechnik\u001fkArchitektur\u001fkArchitekturpraxis\u001fkBautheorie; Architekturtheorie; Architekturkritik\u001e  \u001fa(DE-14)XMAR1118387\u001fx1\u001e  \u001fbMAG\u001fx1\u001e  \u001fa(DE-14)1155034\u001e  \u001fcB\u001e  \u001fa(DE-15)M10925961\u001fx1\u001e  \u001fbKeine\u001fx1\u001e  \u001fa(DE-15)719759\u001e  \u001fcB\u001e  \u001faVitruvius\u001e  \u001faArchitekt\u001e  \u001faIngenieur\u001e  \u001faPollio\u001e  \u001faPollio, Marcus Vitruvius\u001e  \u001faVitruve\u001e  \u001faWriter on Architecture\u001e  \u001faScriptor de Architectura\u001e  \u001faVitruvio\u001e  \u001faVitruvio Polion, Marcus\u001e  \u001faVitruvio Pollione, Lucio\u001e  \u001faVitruvius, Marcus P.\u001e  \u001faVitruve, ...\u001e  \u001faVitruvius, Pollio\u001e  \u001faVitruve Pollion, Marc\u001e  \u001faPollion, Marc V.\u001e  \u001faPollione\u001e  \u001fade Vérone\u001e  \u001fade Formies\u001e  \u001faVitruvius, Marcus\u001e  \u001faVitruvius Pollio, Lucius\u001e  \u001faVitruvius Pollio\u001e  \u001faVitruvio Pollione, Marco L.\u001e  \u001faVitruvio Pollione, Marco\u001e  \u001faVitrue\u001e  \u001faVitruv Pollion, Marc\u001e  \u001faVitruvius Pollio, Marcus\u001e  \u001faVitrubio, Marco\u001e  \u001faVitruvio, M.\u001e  \u001faVitruvio, Marco\u001e  \u001faVitruvius-Pollio, Marcus\u001e  \u001faVitruv\u001e  \u001faPollio, Marcus V.\u001e  \u001fbXT\u001e  \u001faDE-14\u001fz2014-03-16T00:32:59Z\u001e  \u001faDE-15\u001fz1999-11-01T00:00:00Z\u001e  \u001faDE-16\u001fz2015-07-28T14:23:22Z\u001e  \u001faDE-1989\u001fz2015-05-15T16:00:14Z\u001e  \u001fa018895034\u001fb0\u001fc201507281320\u001e\u001d"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#multipart_set",
+          "o": {
+            "v": "c"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#signatur",
+          "o": {
+            "v": "(DE-15)Phil.lat.68:1"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#signatur",
+          "o": {
+            "v": "(DE-14)Lit.Rom.B.4353-1"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rsn",
+          "o": {
+            "v": "(DE-14)1155034"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rsn",
+          "o": {
+            "v": "(DE-15)719759"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#vf1_author",
+          "o": {
+            "v": "Vitruvius"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#oclc_num",
+          "o": {
+            "v": "311091968"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#multipart_part",
+          "o": {
+            "v": "(018894976)1"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format",
+          "o": {
+            "v": "Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#author_variant",
+          "o": {
+            "v": "v"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#barcode",
+          "o": {
+            "v": "(DE-15)M10925961"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#barcode",
+          "o": {
+            "v": "(DE-14)XMAR1118387"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#branch_nrw",
+          "o": {
+            "v": "Local Holdings"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#multipart_link",
+          "o": {
+            "v": "018894976"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#publishDate",
+          "o": {
+            "v": "1807"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#geogr_code_person",
+          "o": {
+            "v": "Roman Empire"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_facet",
+          "o": {
+            "v": "ZH 3100"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#imprint",
+          "o": {
+            "v": "Lipsiae : Göschen, 1807"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#date_de15",
+          "o": {
+            "v": "1999-10-31T23:00:00Z"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#timecode",
+          "o": {
+            "v": "1801 – 1850"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#publishPlace",
+          "o": {
+            "v": "Lipsiae :"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#institution",
+          "o": {
+            "v": "DE-14"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#institution",
+          "o": {
+            "v": "DE-15"
+          }
+        },
+        {
+          "order": 3,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#institution",
+          "o": {
+            "v": "DE-16"
+          }
+        },
+        {
+          "order": 4,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#institution",
+          "o": {
+            "v": "DE-1989"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#callnumber_de15_ct_mv",
+          "o": {
+            "v": "Phil.lat.68:1"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#itemdata",
+          "o": {
+            "v": "{\"DE-14\":[{\"bc\":\"XMAR1118387\",\"cn\":\"Lit.Rom.B.4353-1\"}],\"DE-15\":[{\"bc\":\"M10925961\",\"cn\":\"Phil.lat.68:1\"}]}"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_label",
+          "o": {
+            "v": "Technik"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_label",
+          "o": {
+            "v": "Architektur"
+          }
+        },
+        {
+          "order": 3,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_label",
+          "o": {
+            "v": "Architekturpraxis"
+          }
+        },
+        {
+          "order": 4,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_label",
+          "o": {
+            "v": "Bautheorie; Architekturtheorie; Architekturkritik"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#publisher",
+          "o": {
+            "v": "Göschen,"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_short",
+          "o": {
+            "v": "Marci Vitruvii Pollionis De architectura libri decem."
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_ded117",
+          "o": {
+            "v": "Book, E-Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#recordtype",
+          "o": {
+            "v": "marcfinc"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#language",
+          "o": {
+            "v": "Latin"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#is_hierarchy_title",
+          "o": {
+            "v": "Marci Vitruvii Pollionis De architectura libri decem."
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_full",
+          "o": {
+            "v": "Marci Vitruvii Pollionis De architectura libri decem. 1 /"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#hierarchy_top_title",
+          "o": {
+            "v": "Marci Vitruvii Pollionis De architectura libri decem/ex fide librorum scriptorum recensuit, emendavit, suisque et virorum doctorum annotationibus illustravit Io. Gottlob Schneider"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_in_hierarchy",
+          "o": {
+            "v": "1. (1807)"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#author_sort",
+          "o": {
+            "v": "Vitruvius"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#_version_",
+          "o": {
+            "v": "1577144364996493312"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#is_hierarchy_id",
+          "o": {
+            "v": "0002139072"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#publishDateSort",
+          "o": {
+            "v": "1807"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#container_reference",
+          "o": {
+            "v": "1"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_fullStr",
+          "o": {
+            "v": "Marci Vitruvii Pollionis De architectura libri decem. 1 /"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#hierarchy_parent_id",
+          "o": {
+            "v": "0002139071"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#source_id",
+          "o": {
+            "v": "0"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title",
+          "o": {
+            "v": "Marci Vitruvii Pollionis De architectura libri decem."
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#author_id",
+          "o": {
+            "v": "118627252"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_degla1",
+          "o": {
+            "v": "Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_dezi4",
+          "o": {
+            "v": "e-Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 3
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#facet_avail",
+          "o": {
+            "v": "Local"
+          }
+        }
+      ]
+    }
+  ],
+  [
+    {
+      "http://data.slub-dresden.de/datamodels/2/records/9f3f7c0c-237f-43d4-84f7-61fdd66b7180": [
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/9f3f7c0c-237f-43d4-84f7-61fdd66b7180"
+          },
+          "p": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+          "o": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/schema#recordType"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/9f3f7c0c-237f-43d4-84f7-61fdd66b7180"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#record",
+          "o": {
+            "id": 4
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+          "o": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/schema#recordType"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#hierarchy_sequence",
+          "o": {
+            "v": "00003 // 3"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_sort",
+          "o": {
+            "v": "marci vitruvii pollionis de architectura libri decem"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#barcode_de15",
+          "o": {
+            "v": "M10925988"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#author",
+          "o": {
+            "v": "Vitruvius"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#finc_class_facet",
+          "o": {
+            "v": "not assigned"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#callnumber_de15",
+          "o": {
+            "v": "Phil.lat.68:3"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#illustrated",
+          "o": {
+            "v": "Not Illustrated"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_del152",
+          "o": {
+            "v": "Buch"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_full_unstemmed",
+          "o": {
+            "v": "Marci Vitruvii Pollionis De architectura libri decem. 3, Commentariorum partem posteriorem tenens /"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_part",
+          "o": {
+            "v": "3, Commentariorum partem posteriorem tenens /"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#facet_de14_branch_collcode_exception",
+          "o": {
+            "v": "zell1_MAG_P3"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#spelling",
+          "o": {
+            "v": "Vitruvius v1. Jh. (DE-588)118627252 (DE-576)163424772 Marci Vitruvii Pollionis De architectura libri decem. 3, Commentariorum partem posteriorem tenens / ex fide librorum scriptorum recensuit, emendavit, suisque et virorum doctorum annotationibus illustravit Io. Gottlob Schneider Lipsiae : Göschen, 1808 394 S. Leipzig pup (DE-576)018894976 3 Online-Ausg. von Bd. 3 Commentariorum partem posteriorem tenens (DE-576)345307348 Mikrofiche-Ausg. von Bd. 3 Commentariorum partem posteriorem tenens (DE-576)074596063"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#mega_collection",
+          "o": {
+            "v": "Verbunddaten SWB"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#mega_collection",
+          "o": {
+            "v": "SWB SSG UB Heidelberg"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#physical",
+          "o": {
+            "v": "394 S."
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#hierarchy_parent_title",
+          "o": {
+            "v": "Marci Vitruvii Pollionis De architectura libri decem/ex fide librorum scriptorum recensuit, emendavit, suisque et virorum doctorum annotationibus illustravit Io. Gottlob Schneider"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_de540",
+          "o": {
+            "v": "Book, E-Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#hierarchy_top_id",
+          "o": {
+            "v": "0002139071"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_nrw",
+          "o": {
+            "v": "Book, E-Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#id",
+          "o": {
+            "v": "0002139074"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#callnumber_de15_cns_mv",
+          "o": {
+            "v": "Phil.lat.68:3"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#spellingShingle",
+          "o": {
+            "v": "Vitruvius"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#spellingShingle",
+          "o": {
+            "v": "Marci Vitruvii Pollionis De architectura libri decem."
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#geogr_code",
+          "o": {
+            "v": "not assigned"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#collcode_de15",
+          "o": {
+            "v": "Magazin / Sonstige"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_del189",
+          "o": {
+            "v": "Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#branch_de14",
+          "o": {
+            "v": "zell1"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#access_facet",
+          "o": {
+            "v": "Local Holdings"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#record_id",
+          "o": {
+            "v": "018895069"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_de15",
+          "o": {
+            "v": "Book, E-Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#branch_de15",
+          "o": {
+            "v": "Bibliotheca Albertina"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#fullrecord",
+          "o": {
+            "v": "02598cam a2200841  c4500001001100000003000700011005001700018007000300035008004100038016002100079035002500100040003100125041000800156041000900164046001700173084001500190100006100205245023400266260003100500300001100531751001700542773002500559775008800584775009200672935001000764982002600774984001100800983001900811984000600830982002400836969001300860983001800873969000600891900001400897900001400911900001400925900001100939900002900950900001200979900002700991900002901018900001301047900002801060900002901088900002501117900001701142900002201159900002601181900002101207900001301228900001501241900001501256900002201271900002901293900002101322900003201343900002901375900001101404900002501415900002901440900002001469900001701489900002001506900002901526900001101555900002201566951000701588852003201595852003201627852003201659852003401691980003101725\u001e0002139074\u001eDE-576\u001e20141002121518.0\u001etu\u001e891026s1808    xx             00 0 lat c\u001e  \u001fa(OCoLC)311091977\u001e  \u001fa(DE-599)BSZ018895069\u001e  \u001faDE-576\u001fbger\u001fcDE-576\u001ferakwb\u001e0 \u001falat\u001e07\u001falat.\u001e  \u001fja19a\u001f2DE-576\u001e  \u001fa9,10\u001f2ssgn\u001e0 \u001faVitruvius\u001fdv1. Jh.\u001f0(DE-588)118627252\u001f0(DE-576)163424772\u001e10\u001faMarci Vitruvii Pollionis De architectura libri decem.\u001fn3,\u001fpCommentariorum partem posteriorem tenens /\u001fcex fide librorum scriptorum recensuit, emendavit, suisque et virorum doctorum annotationibus illustravit Io. Gottlob Schneider\u001e  \u001faLipsiae :\u001fbGöschen,\u001fc1808\u001e  \u001fa394 S.\u001e  \u001faLeipzig\u001f4pup\u001e18\u001fw(DE-576)018894976\u001fg3\u001e0 \u001fiOnline-Ausg. von Bd. 3\u001ftCommentariorum partem posteriorem tenens\u001fw(DE-576)345307348\u001e0 \u001fiMikrofiche-Ausg. von Bd. 3\u001ftCommentariorum partem posteriorem tenens\u001fw(DE-576)074596063\u001e  \u001fbdruck\u001e  \u001fa(DE-14)XMAR1118385\u001fx1\u001e  \u001fbMAG\u001fx1\u001e  \u001fa(DE-14)1155036\u001e  \u001fcB\u001e  \u001fa(DE-15)M10925988\u001fx1\u001e  \u001fbKeine\u001fx1\u001e  \u001fa(DE-15)719761\u001e  \u001fcB\u001e  \u001faVitruvius\u001e  \u001faArchitekt\u001e  \u001faIngenieur\u001e  \u001faPollio\u001e  \u001faPollio, Marcus Vitruvius\u001e  \u001faVitruve\u001e  \u001faWriter on Architecture\u001e  \u001faScriptor de Architectura\u001e  \u001faVitruvio\u001e  \u001faVitruvio Polion, Marcus\u001e  \u001faVitruvio Pollione, Lucio\u001e  \u001faVitruvius, Marcus P.\u001e  \u001faVitruve, ...\u001e  \u001faVitruvius, Pollio\u001e  \u001faVitruve Pollion, Marc\u001e  \u001faPollion, Marc V.\u001e  \u001faPollione\u001e  \u001fade Vérone\u001e  \u001fade Formies\u001e  \u001faVitruvius, Marcus\u001e  \u001faVitruvius Pollio, Lucius\u001e  \u001faVitruvius Pollio\u001e  \u001faVitruvio Pollione, Marco L.\u001e  \u001faVitruvio Pollione, Marco\u001e  \u001faVitrue\u001e  \u001faVitruv Pollion, Marc\u001e  \u001faVitruvius Pollio, Marcus\u001e  \u001faVitrubio, Marco\u001e  \u001faVitruvio, M.\u001e  \u001faVitruvio, Marco\u001e  \u001faVitruvius-Pollio, Marcus\u001e  \u001faVitruv\u001e  \u001faPollio, Marcus V.\u001e  \u001fbXT\u001e  \u001faDE-14\u001fz2014-03-15T18:30:04Z\u001e  \u001faDE-15\u001fz1999-11-01T00:00:00Z\u001e  \u001faDE-16\u001fz2015-07-28T14:23:22Z\u001e  \u001faDE-1989\u001fz2015-05-15T15:57:50Z\u001e  \u001fa018895069\u001fb0\u001fc201507281320\u001e\u001d"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#multipart_set",
+          "o": {
+            "v": "c"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#signatur",
+          "o": {
+            "v": "(DE-15)Phil.lat.68:3"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#signatur",
+          "o": {
+            "v": "(DE-14)Lit.Rom.B.4353-3"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rsn",
+          "o": {
+            "v": "(DE-14)1155036"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rsn",
+          "o": {
+            "v": "(DE-15)719761"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#vf1_author",
+          "o": {
+            "v": "Vitruvius"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#oclc_num",
+          "o": {
+            "v": "311091977"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#multipart_part",
+          "o": {
+            "v": "(018894976)3"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format",
+          "o": {
+            "v": "Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#author_variant",
+          "o": {
+            "v": "v"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#barcode",
+          "o": {
+            "v": "(DE-15)M10925988"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#barcode",
+          "o": {
+            "v": "(DE-14)XMAR1118385"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#branch_nrw",
+          "o": {
+            "v": "Local Holdings"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#multipart_link",
+          "o": {
+            "v": "018894976"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#publishDate",
+          "o": {
+            "v": "1808"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#geogr_code_person",
+          "o": {
+            "v": "Roman Empire"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_facet",
+          "o": {
+            "v": "No subject assigned"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#imprint",
+          "o": {
+            "v": "Lipsiae : Göschen, 1808"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#date_de15",
+          "o": {
+            "v": "1999-10-31T23:00:00Z"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#timecode",
+          "o": {
+            "v": "1801 – 1850"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#publishPlace",
+          "o": {
+            "v": "Lipsiae :"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#institution",
+          "o": {
+            "v": "DE-14"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#institution",
+          "o": {
+            "v": "DE-15"
+          }
+        },
+        {
+          "order": 3,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#institution",
+          "o": {
+            "v": "DE-16"
+          }
+        },
+        {
+          "order": 4,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#institution",
+          "o": {
+            "v": "DE-1989"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#callnumber_de15_ct_mv",
+          "o": {
+            "v": "Phil.lat.68:3"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#itemdata",
+          "o": {
+            "v": "{\"DE-14\":[{\"bc\":\"XMAR1118385\",\"cn\":\"Lit.Rom.B.4353-3\"}],\"DE-15\":[{\"bc\":\"M10925988\",\"cn\":\"Phil.lat.68:3\"}]}"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#publisher",
+          "o": {
+            "v": "Göschen,"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_short",
+          "o": {
+            "v": "Marci Vitruvii Pollionis De architectura libri decem."
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_ded117",
+          "o": {
+            "v": "Book, E-Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#recordtype",
+          "o": {
+            "v": "marcfinc"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#language",
+          "o": {
+            "v": "Latin"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#is_hierarchy_title",
+          "o": {
+            "v": "Marci Vitruvii Pollionis De architectura libri decem."
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_full",
+          "o": {
+            "v": "Marci Vitruvii Pollionis De architectura libri decem. 3, Commentariorum partem posteriorem tenens /"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#hierarchy_top_title",
+          "o": {
+            "v": "Marci Vitruvii Pollionis De architectura libri decem/ex fide librorum scriptorum recensuit, emendavit, suisque et virorum doctorum annotationibus illustravit Io. Gottlob Schneider"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_in_hierarchy",
+          "o": {
+            "v": "3. Commentariorum partem posteriorem tenens (1808)"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#author_sort",
+          "o": {
+            "v": "Vitruvius"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#_version_",
+          "o": {
+            "v": "1577145326956969984"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#is_hierarchy_id",
+          "o": {
+            "v": "0002139074"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#publishDateSort",
+          "o": {
+            "v": "1808"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#container_reference",
+          "o": {
+            "v": "3"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_fullStr",
+          "o": {
+            "v": "Marci Vitruvii Pollionis De architectura libri decem. 3, Commentariorum partem posteriorem tenens /"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#hierarchy_parent_id",
+          "o": {
+            "v": "0002139071"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#source_id",
+          "o": {
+            "v": "0"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title",
+          "o": {
+            "v": "Marci Vitruvii Pollionis De architectura libri decem."
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#author_id",
+          "o": {
+            "v": "118627252"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_degla1",
+          "o": {
+            "v": "Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_dezi4",
+          "o": {
+            "v": "e-Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 4
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#facet_avail",
+          "o": {
+            "v": "Local"
+          }
+        }
+      ]
+    }
+  ],
+  [
+    {
+      "http://data.slub-dresden.de/datamodels/2/records/169207eb-3570-40b6-a779-6dea222b34de": [
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/169207eb-3570-40b6-a779-6dea222b34de"
+          },
+          "p": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+          "o": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/schema#recordType"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/records/169207eb-3570-40b6-a779-6dea222b34de"
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#record",
+          "o": {
+            "id": 5
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+          "o": {
+            "uri": "http://data.slub-dresden.de/datamodels/2/schema#recordType"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_new",
+          "o": {
+            "v": "Reusner, Nikolaus Symbola Imperatoria"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#author_sort",
+          "o": {
+            "v": "Reusner, Nikolaus"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#author",
+          "o": {
+            "v": "Reusner, Nikolaus"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#finc_class_facet",
+          "o": {
+            "v": "not assigned"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#date_de15",
+          "o": {
+            "v": "1997-03-23T23:00:00Z"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#illustrated",
+          "o": {
+            "v": "Not Illustrated"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_full_unstemmed",
+          "o": {
+            "v": "Nicolai Revsneri Symbolorvm Imperatoriorvm Classis ... : Opvs Philologicvm et Politicvm, Vereqve Regivm Ac Imperatoriorum ... Additvs est Cvilibet Classi tergeminus Elenchus: Symbolorum scilicet, Imperatorum, tum quoq[ue] Rerum, & Sententiarum"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#id",
+          "o": {
+            "v": "0002139078"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_sub",
+          "o": {
+            "v": "Opvs Philologicvm et Politicvm, Vereqve Regivm Ac Imperatoriorum ... Additvs est Cvilibet Classi tergeminus Elenchus: Symbolorum scilicet, Imperatorum, tum quoq[ue] Rerum, & Sententiarum"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#spelling",
+          "o": {
+            "v": "Reusner, Nikolaus 1545 - 1602 (DE-588)100069983 (DE-576)162707924 Nicolai Revsneri Symbolorvm Imperatoriorvm Classis ... : Opvs Philologicvm et Politicvm, Vereqve Regivm Ac Imperatoriorum ... Additvs est Cvilibet Classi tergeminus Elenchus: Symbolorum scilicet, Imperatorum, tum quoq[ue] Rerum, & Sententiarum symbolorum imperatoriorum Symbola Imperatoria Francofvrti ad Moenvm : Curante Ioanne Spiessio, 15XX Frankfurt am Main pup Reusner, Nikolaus Symbola Imperatoria (DE-576)089450191"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#mega_collection",
+          "o": {
+            "v": "Verbunddaten SWB"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_de540",
+          "o": {
+            "v": "Book, E-Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title",
+          "o": {
+            "v": "Nicolai Revsneri Symbolorvm Imperatoriorvm Classis ... : Opvs Philologicvm et Politicvm, Vereqve Regivm Ac Imperatoriorum ... Additvs est Cvilibet Classi tergeminus Elenchus: Symbolorum scilicet, Imperatorum, tum quoq[ue] Rerum, & Sententiarum"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_nrw",
+          "o": {
+            "v": "Book, E-Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_alt",
+          "o": {
+            "v": "symbolorum imperatoriorum"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_alt",
+          "o": {
+            "v": "Symbola Imperatoria"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#hierarchy_top_id",
+          "o": {
+            "v": "0002139078"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#spellingShingle",
+          "o": {
+            "v": "Reusner, Nikolaus"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#spellingShingle",
+          "o": {
+            "v": "Nicolai Revsneri Symbolorvm Imperatoriorvm Classis ... : Opvs Philologicvm et Politicvm, Vereqve Regivm Ac Imperatoriorum ... Additvs est Cvilibet Classi tergeminus Elenchus: Symbolorum scilicet, Imperatorum, tum quoq[ue] Rerum, & Sententiarum"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#geogr_code",
+          "o": {
+            "v": "not assigned"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_del189",
+          "o": {
+            "v": "Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#branch_de14",
+          "o": {
+            "v": "zell1"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#access_facet",
+          "o": {
+            "v": "Local Holdings"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#record_id",
+          "o": {
+            "v": "018897150"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#_version_",
+          "o": {
+            "v": "1571375859684605952"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#fullrecord",
+          "o": {
+            "v": "01510cam a2200445  a4500001001100000003000700011005001700018007000300035008004100038035002500079040003100104041000800135041000900143046001700152100007300169245024900242246003000491246002400521260006000545751002700605785006200632935001000694983001800704969000700722983001800729984000700747900002200754900002600776900002600802900002400828900002200852900001800874900002300892900002400915900002000939951001000959852003200969852003201001980003101033\u001e0002139078\u001eDE-576\u001e20140801144023.0\u001etu\u001e891026n15uuuuuuxx             00 0 lat c\u001e  \u001fa(DE-599)BSZ018897150\u001e  \u001faDE-576\u001fbger\u001fcDE-576\u001ferakwb\u001e0 \u001falat\u001e07\u001falat.\u001e  \u001fjad16\u001f2DE-576\u001e1 \u001faReusner, Nikolaus\u001fd1545 - 1602\u001f0(DE-588)100069983\u001f0(DE-576)162707924\u001e10\u001faNicolai Revsneri Symbolorvm Imperatoriorvm Classis ... :\u001fbOpvs Philologicvm et Politicvm, Vereqve Regivm Ac Imperatoriorum ... Additvs est Cvilibet Classi tergeminus Elenchus: Symbolorum scilicet, Imperatorum, tum quoq[ue] Rerum, & Sententiarum\u001e30\u001fasymbolorum imperatoriorum\u001e9 \u001faSymbola Imperatoria\u001e  \u001faFrancofvrti ad Moenvm :\u001fbCurante Ioanne Spiessio,\u001fc15XX\u001e  \u001faFrankfurt am Main\u001f4pup\u001e00\u001faReusner, Nikolaus\u001ftSymbola Imperatoria\u001fw(DE-576)089450191\u001e  \u001fbdruck\u001e  \u001fa(DE-15)460069\u001e  \u001fcMB\u001e  \u001fa(DE-14)890783\u001e  \u001fcMB\u001e  \u001faReusner, Nicolaus\u001e  \u001faReusner, Nikolaus von\u001e  \u001faReusner, Nicolaus von\u001e  \u001faReisnerus, Nicolaus\u001e  \u001faReusner, Nikolaus\u001e  \u001faReusnerus, N.\u001e  \u001faReusnerus, Nicolai\u001e  \u001faReusnerus, Nicolaus\u001e  \u001faReusnerus, Nic.\u001e  \u001fbXA-DE\u001e  \u001faDE-14\u001fz2014-03-16T00:32:59Z\u001e  \u001faDE-15\u001fz1997-03-24T00:00:00Z\u001e  \u001fa018897150\u001fb0\u001fc201408020239\u001e\u001d"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#multipart_set",
+          "o": {
+            "v": "a"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rsn",
+          "o": {
+            "v": "(DE-15)460069"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rsn",
+          "o": {
+            "v": "(DE-14)890783"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#vf1_author",
+          "o": {
+            "v": "Reusner, Nikolaus"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format",
+          "o": {
+            "v": "Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#author_variant",
+          "o": {
+            "v": "n r nr"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#branch_nrw",
+          "o": {
+            "v": "Local Holdings"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#publishDate",
+          "o": {
+            "v": "15XX"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#geogr_code_person",
+          "o": {
+            "v": "Germany"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#rvk_facet",
+          "o": {
+            "v": "No subject assigned"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#imprint",
+          "o": {
+            "v": "Francofvrti ad Moenvm : Curante Ioanne Spiessio, 15XX"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#timecode",
+          "o": {
+            "v": "1501 – 1600"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#publishPlace",
+          "o": {
+            "v": "Francofvrti ad Moenvm :"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#institution",
+          "o": {
+            "v": "DE-14"
+          }
+        },
+        {
+          "order": 2,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#institution",
+          "o": {
+            "v": "DE-15"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#itemdata",
+          "o": {
+            "v": "{}"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#publisher",
+          "o": {
+            "v": "Curante Ioanne Spiessio,"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_short",
+          "o": {
+            "v": "Nicolai Revsneri Symbolorvm Imperatoriorvm Classis ... :"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#recordtype",
+          "o": {
+            "v": "marcfinc"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#language",
+          "o": {
+            "v": "Latin"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#is_hierarchy_title",
+          "o": {
+            "v": "Nicolai Revsneri Symbolorvm Imperatoriorvm Classis ... : Opvs Philologicvm et Politicvm, Vereqve Regivm Ac Imperatoriorum ... Additvs est Cvilibet Classi tergeminus Elenchus: Symbolorum scilicet, Imperatorum, tum quoq[ue] Rerum, & Sententiarum"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_full",
+          "o": {
+            "v": "Nicolai Revsneri Symbolorvm Imperatoriorvm Classis ... : Opvs Philologicvm et Politicvm, Vereqve Regivm Ac Imperatoriorum ... Additvs est Cvilibet Classi tergeminus Elenchus: Symbolorum scilicet, Imperatorum, tum quoq[ue] Rerum, & Sententiarum"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#hierarchy_top_title",
+          "o": {
+            "v": "Nicolai Revsneri Symbolorvm Imperatoriorvm Classis ... : Opvs Philologicvm et Politicvm, Vereqve Regivm Ac Imperatoriorum ... Additvs est Cvilibet Classi tergeminus Elenchus: Symbolorum scilicet, Imperatorum, tum quoq[ue] Rerum, & Sententiarum"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_in_hierarchy",
+          "o": {
+            "v": "Reusner, Nikolaus : Nicolai Revsneri Symbolorvm Imperatoriorvm Classis ... : Opvs Philologicvm et Politicvm, Vereqve Regivm Ac Imperatoriorum ... Additvs est Cvilibet Classi tergeminus Elenchus: Symbolorum scilicet, Imperatorum, tum quoq[ue] Rerum, & Sententiarum"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_sort",
+          "o": {
+            "v": "nicolai revsneri symbolorvm imperatoriorvm classis ... :opvs philologicvm et politicvm, vereqve regivm ac imperatoriorum ... additvs est cvilibet classi tergeminus elenchus: symbolorum scilicet, imperatorum, tum quoq[ue] rerum, & sententiarum"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#is_hierarchy_id",
+          "o": {
+            "v": "0002139078"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#publishDateSort",
+          "o": {
+            "v": "1588"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_de15",
+          "o": {
+            "v": "Book, E-Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_ded117",
+          "o": {
+            "v": "Book, E-Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#source_id",
+          "o": {
+            "v": "0"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#author_id",
+          "o": {
+            "v": "100069983"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_degla1",
+          "o": {
+            "v": "Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#format_dezi4",
+          "o": {
+            "v": "e-Book"
+          }
+        },
+        {
+          "order": 1,
+          "s": {
+            "id": 5
+          },
+          "p": "http://data.slub-dresden.de/datamodels/2/schema#title_fullStr",
+          "o": {
+            "v": "Nicolai Revsneri Symbolorvm Imperatoriorvm Classis ... : Opvs Philologicvm et Politicvm, Vereqve Regivm Ac Imperatoriorum ... Additvs est Cvilibet Classi tergeminus Elenchus: Symbolorum scilicet, Imperatorum, tum quoq[ue] Rerum, & Sententiarum"
+          }
+        }
+      ]
+    }
+  ]
+]

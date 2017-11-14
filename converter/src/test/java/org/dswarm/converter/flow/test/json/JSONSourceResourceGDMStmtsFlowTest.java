@@ -74,12 +74,49 @@ public class JSONSourceResourceGDMStmtsFlowTest extends GuicedTest {
 		testFlow(flow, "bib-record-marc.json", "test-record-marc-gdm.json", null);
 	}
 
+	@Test
+	public void testFromConfigurationWithArray() throws Exception {
+
+		final String uuid = UUIDService.getUUID(Configuration.class.getSimpleName());
+
+		final Configuration configuration = new Configuration(uuid);
+
+		configuration.addParameter(ConfigurationStatics.RECORD_TAG, new TextNode("record"));
+
+		final String dataModelUUID = "2";
+
+		final DataModel dataModel = new DataModel(dataModelUUID);
+
+		dataModel.setConfiguration(configuration);
+
+		final JSONSourceResourceGDMStmtsFlow flow = injector
+				.getInstance(JsonResourceFlowFactory.class)
+				.fromDataModel(dataModel, false);
+
+		testFlow(flow, "dd-1426/slub-finc-swb-records.json", "dd-1426/slub-finc-swb-records-gdm.json", null);
+	}
+
 	private void testFlow(final JSONSourceResourceGDMStmtsFlow flow, final String fileName, final String expectedResultFileName, final Integer offset)
 			throws DMPConverterException, IOException {
+
+		// serialise model as JSON (pretty print)
+		final ObjectMapper mapper = DMPPersistenceUtil.getJSONObjectMapper().copy().configure(SerializationFeature.INDENT_OUTPUT, true);
 
 		final List<GDMModel> gdmModels = flow.applyResource(fileName).toList().toBlocking().first();
 
 		LOG.debug("GDM model = '{}'", gdmModels);
+
+		final URL expectedResultFileURL = Resources.getResource(expectedResultFileName);
+
+		Assert.assertNotNull("the expected result file URL shouldn't be null", expectedResultFileURL);
+
+		final String expectedResults = Resources.toString(expectedResultFileURL, StandardCharsets.UTF_8);
+
+		final ArrayNode expectedModelsJSON = mapper.readValue(expectedResults, ArrayNode.class);
+
+		Assert.assertNotNull("the expected result shouldn't be null", expectedResults);
+
+		int i = 0;
 
 		if (gdmModels != null && !gdmModels.isEmpty()) {
 
@@ -91,22 +128,15 @@ public class JSONSourceResourceGDMStmtsFlowTest extends GuicedTest {
 
 				Assert.assertNotNull("the GDM model shouldn't be null", model);
 
-				// serialise model as JSON (pretty print)
-				final ObjectMapper mapper = DMPPersistenceUtil.getJSONObjectMapper().copy().configure(SerializationFeature.INDENT_OUTPUT, true);
-
 				final String modelJSON = mapper.writeValueAsString(model);
 
 				Assert.assertNotNull("the GDM model JSON shouldn't be null", modelJSON);
 
-				final URL expectedResultFileURL = Resources.getResource(expectedResultFileName);
-
-				Assert.assertNotNull("the expected result file URL shouldn't be null", expectedResultFileURL);
-
-				final String expectedResult = Resources.toString(expectedResultFileURL, StandardCharsets.UTF_8);
-
-				Assert.assertNotNull("the expected result shouldn't be null", expectedResult);
-
 				final long expectedResultLength;
+
+				final JsonNode expectedModelJSON = expectedModelsJSON.get(i);
+
+				final String expectedResult = mapper.writeValueAsString(expectedModelJSON);
 
 				if (offset != null) {
 
@@ -169,6 +199,8 @@ public class JSONSourceResourceGDMStmtsFlowTest extends GuicedTest {
 				}
 
 				Assert.assertEquals("the processing result length is not equal to the expected one", expectedResultLength, modelJSON.length());
+
+				i++;
 			}
 		}
 	}

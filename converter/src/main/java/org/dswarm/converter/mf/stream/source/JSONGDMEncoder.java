@@ -190,8 +190,7 @@ public class JSONGDMEncoder extends DefaultJsonPipe<ObjectReceiver<GDMModel>> {
 			if (recordTagUri.equals(getRecordTagURI(elementURIStack.peek(), name))) {
 
 				// TODO: how to determine the id of an record, or should we mint uris? - e.g. with help of a given schema that contains a content schema with a legacy record identifer
-				//final String identifier = attributes.getValue("id");
-				final String identifier = null;
+				final String identifier = UUID.randomUUID().toString();
 				startRecord(identifier);
 				inRecord = true;
 			}

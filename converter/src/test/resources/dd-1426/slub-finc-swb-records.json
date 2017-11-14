@@ -1,0 +1,923 @@
+[
+  {
+    "record": {
+      "hierarchy_sequence": [
+        "00300 // 300"
+      ],
+      "illustrated": "Not Illustrated",
+      "marc_error": [
+        "org.marc4j.ErrorHandler$Error:Minor Error  : Subfield tag is an invalid uppercase character, changing it to lower case. --- [ 689 : D ]",
+        "org.marc4j.ErrorHandler$Error:Minor Error  : Subfield tag is an invalid uppercase character, changing it to lower case. --- [ 689 : D ]"
+      ],
+      "rvk_ct_mv": [
+        "U",
+        "UT 1000 - UT 2970",
+        "UT 1400 - UT 2250",
+        "UT 1400",
+        "ZG - ZS",
+        "ZI",
+        "ZI 9000 - ZI 9800",
+        "ZI 9200"
+      ],
+      "title": "Berechnung minimaler Wertebereiche für Parameterfunktionen eines Lagenetzes aus vorgegebenen Toleranzen der Beobachtungsgrössen /",
+      "local_heading_facet_dezwi2": [
+        "Geodätisches Netz",
+        "Berechnung"
+      ],
+      "record_id": "018892264",
+      "rvk_path": [
+        "U",
+        "UT 1000 - UT 2970",
+        "UT 1400 - UT 2250",
+        "UT 1400",
+        "ZG - ZS",
+        "ZI",
+        "ZI 9000 - ZI 9800",
+        "ZI 9200"
+      ],
+      "format": [
+        "Thesis"
+      ],
+      "author_variant": [
+        "h g hg"
+      ],
+      "branch_nrw": [
+        "Local Holdings"
+      ],
+      "publishDate": [
+        "1984"
+      ],
+      "itemdata": "{\"DE-105\":[{\"bc\":\"96.3827/14.\",\"cn\":\"96.3827  4.\"}],\"DE-14\":[{\"bc\":\"10370483\",\"cn\":\"U-191,300\"}],\"DE-15\":[{\"bc\":\"0021572491\",\"cn\":\"77-3-41:300\"}]}",
+      "imprint": "München : Verlag der Bayer. Akad. d. Wiss. [u.a.], 1984",
+      "recordtype": "marcfinc",
+      "title_full": "Berechnung minimaler Wertebereiche für Parameterfunktionen eines Lagenetzes aus vorgegebenen Toleranzen der Beobachtungsgrössen /",
+      "format_dezi4": [
+        "e-Book"
+      ],
+      "facet_local_del330": [
+        "Geodätisches Netz",
+        "Berechnung"
+      ],
+      "hierarchy_parent_id": [
+        "0000013076"
+      ],
+      "series": [
+        "Bayerische Akademie der Wissenschaften Deutsche Geodätische Kommission Deutsche Geodätische Kommission der Bayerischen Akademie der Wissenschaften. Reihe C, Dissertationen"
+      ],
+      "callnumber_de15": [
+        "77-3-41:300"
+      ],
+      "rvk_cns_mv": [
+        "U",
+        "UT 1000 - UT 2970",
+        "UT 1400 - UT 2250",
+        "UT 1400",
+        "ZG - ZS",
+        "ZI",
+        "ZI 9000 - ZI 9800",
+        "ZI 9200"
+      ],
+      "dissertation_note": [
+        "Zugl.: München, Techn. Univ., Diss., 1984."
+      ],
+      "branch_de14": [
+        "zell9"
+      ],
+      "branch_de15": [
+        "Bibliotheca Albertina"
+      ],
+      "format_de540": [
+        "Thesis"
+      ],
+      "format_nrw": [
+        "Thesis"
+      ],
+      "format_del189": [
+        "Book"
+      ],
+      "topic_facet": [
+        "Geodätisches Netz",
+        "Berechnung"
+      ],
+      "access_facet": "Local Holdings",
+      "fullrecord": "02717cam a2200709   4500001001100000003000700011005001700018007000300035008004100038015002100079016002200100020003000122035002100152035002500173040003100198041000800229084006700237084005800304100004200362245016900404260006300573260002100636300002700657490011900684502004800803591005400851689006900905689006100974689001101035751001801046810020401064935001001268935000701278936012201285936011001407020001801517982002301535984001101558983001801569984000601587982002501593969001301618983001901631969000601650982002701656972001101683983002201694972000701716984001301723972001601736972001301752972001501765972001501780972001601795950000901811950002601820852003201846852003201878852003301910852003301943980003101976\u001e0002139053\u001eDE-576\u001e20130117105935.0\u001etu\u001e891025s1984    xx       m    000 0 ger c\u001e  \u001fa85,H10,0472\u001f2dnb\u001e7 \u001fa850768799\u001f2DE-101\u001e  \u001fa3769693507\u001f93-7696-9350-7\u001e  \u001fa(OCoLC)263547152\u001e  \u001fa(DE-599)DNB850768799\u001e  \u001faDE-576\u001fbger\u001fcDE-576\u001ferakwb\u001e  \u001fager\u001e  \u001faUT 1400\u001f2rvk\u001f9U\u001f9UT 1000 - UT 2970\u001f9UT 1400 - UT 2250\u001f9UT 1400\u001e  \u001faZI 9200\u001f2rvk\u001f9ZG - ZS\u001f9ZI\u001f9ZI 9000 - ZI 9800\u001f9ZI 9200\u001e1 \u001faGrimhardt, Hartmut\u001f0(DE-576)165939648\u001e10\u001faBerechnung minimaler Wertebereiche für Parameterfunktionen eines Lagenetzes aus vorgegebenen Toleranzen der Beobachtungsgrössen /\u001fcvorgelegt von Hartmut Grimhardt\u001e  \u001faMünchen :\u001fbVerlag der Bayer. Akad. d. Wiss. [u.a.],\u001fc1984\u001e  \u001faMünchen :\u001fbBeck\u001e  \u001fa97 S. :\u001fbgraph. Darst.\u001e1 \u001faDeutsche Geodätische Kommission bei der Bayerischen Akademie der Wissenschaften : Reihe C, Dissertationen ; \u001fv300\u001e  \u001faZugl.: München, Techn. Univ., Diss., 1984.\u001e  \u001faSW: 580 FGBA/S+DB ; 720 ff. bvb ; 5090: DDSU/sred\u001e00\u001fds\u001f0(DE-588)4020208-2\u001f0(DE-576)208932380\u001f2gnd\u001faGeodätisches Netz\u001e01\u001fds\u001f0(DE-588)4120997-7\u001f0(DE-576)209539739\u001f2gnd\u001faBerechnung\u001e0 \u001f5DE-576\u001e  \u001faMünchen\u001f4uvp\u001e2 \u001faBayerische Akademie der Wissenschaften\u001fbDeutsche Geodätische Kommission\u001ftDeutsche Geodätische Kommission der Bayerischen Akademie der Wissenschaften. Reihe C, Dissertationen\u001fv300\u001fw(DE-576)032853246\u001e  \u001fbdruck\u001e  \u001fchs\u001erv\u001faUT 1400\u001fbAllgemeines\u001fkPhysik\u001fkPhysik des festen Erdkörpers - Geophysik\u001fkAllgemeine Geophysik\u001fkAllgemeines\u001f0329177842\u001erv\u001faZI 9200\u001fbLandesvermessung\u001fkTechnik\u001fkBauingenieurwesen\u001fkGeodäsie, Vermessung\u001fkLandesvermessung\u001f0201746409\u001e  \u001fa9783769693508\u001e  \u001fa(DE-14)10370483\u001fx1\u001e  \u001fbMAG\u001fx1\u001e  \u001fa(DE-14)174644\u001e  \u001fcB\u001e  \u001fa(DE-15)0021572491\u001fx1\u001e  \u001fbKeine\u001fx1\u001e  \u001fa(DE-15)3190901\u001e  \u001fcB\u001e  \u001fa(DE-105)96.3827/14.\u001fx1\u001e  \u001fbMAG\u001fx1\u001e  \u001fa(DE-105)500146403\u001e  \u001fcHS\u001e  \u001fzLSTO: 19\u001e  \u001fh96.3827  4.\u001e  \u001ffDK 528.3\u001e  \u001ffDK 528.063\u001e  \u001ffDK 378.245\u001e  \u001fi96.3827  4.\u001e  \u001faNetz\u001e  \u001faNumerisches Verfahren\u001e  \u001faDE-14\u001fz2014-03-16T01:56:35Z\u001e  \u001faDE-15\u001fz2013-01-17T10:59:50Z\u001e  \u001faDE-105\u001fz2002-01-30T00:00:00Z\u001e  \u001faDE-185\u001fz2017-03-08T06:53:40Z\u001e  \u001fa018892264\u001fb0\u001fc201703061352\u001e\u001d",
+      "signatur": [
+        "(DE-105)96.3827  4.",
+        "(DE-15)77-3-41:300",
+        "(DE-14)U-191,300",
+        "(DE-14)94 4 03922",
+        "(DE-14)94 4 03922 001",
+        "(DE-14)ZI 9200 G862"
+      ],
+      "barcode": [
+        "(DE-105)96.3827/14.",
+        "(DE-15)0021572491",
+        "(DE-14)10370483"
+      ],
+      "is_hierarchy_title": "Berechnung minimaler Wertebereiche für Parameterfunktionen eines Lagenetzes aus vorgegebenen Toleranzen der Beobachtungsgrössen",
+      "format_de105": [
+        "Thesis",
+        "Book"
+      ],
+      "publisher": [
+        "Verlag der Bayer. Akad. d. Wiss. [u.a.],",
+        "Beck"
+      ],
+      "title_short": "Berechnung minimaler Wertebereiche für Parameterfunktionen eines Lagenetzes aus vorgegebenen Toleranzen der Beobachtungsgrössen /",
+      "language": [
+        "German"
+      ],
+      "geogr_code_person": [
+        "not assigned"
+      ],
+      "rvk_label": [
+        "Physik",
+        "Physik des festen Erdkörpers - Geophysik",
+        "Allgemeine Geophysik",
+        "Allgemeines",
+        "Technik",
+        "Bauingenieurwesen",
+        "Geodäsie, Vermessung",
+        "Landesvermessung"
+      ],
+      "title_sort": "berechnung minimaler wertebereiche für parameterfunktionen eines lagenetzes aus vorgegebenen toleranzen der beobachtungsgrössen",
+      "collcode_de105": [
+        "Magazin"
+      ],
+      "isbn": [
+        "3769693507",
+        "9783769693508"
+      ],
+      "title_full_unstemmed": "Berechnung minimaler Wertebereiche für Parameterfunktionen eines Lagenetzes aus vorgegebenen Toleranzen der Beobachtungsgrössen /",
+      "callnumber_de15_ct_mv": [
+        "77-3-41:300"
+      ],
+      "facet_de14_branch_collcode_exception": [
+        "zell9_MAG_NM"
+      ],
+      "callnumber_de15_cns_mv": [
+        "77-3-41:300"
+      ],
+      "hierarchy_top_id": [
+        "0000013076"
+      ],
+      "multipart_link": [
+        "032853246"
+      ],
+      "spellingShingle": [
+        "Deutsche Geodätische Kommission bei der Bayerischen Akademie der Wissenschaften : Reihe C, Dissertationen ;",
+        "Grimhardt, Hartmut",
+        "Geodätisches Netz",
+        "Berechnung",
+        "Berechnung minimaler Wertebereiche für Parameterfunktionen eines Lagenetzes aus vorgegebenen Toleranzen der Beobachtungsgrössen /",
+        "Bayerische Akademie der Wissenschaften Deutsche Geodätische Kommission Deutsche Geodätische Kommission der Bayerischen Akademie der Wissenschaften. Reihe C, Dissertationen"
+      ],
+      "geogr_code": [
+        "not assigned"
+      ],
+      "collcode_de15": [
+        "Magazin / Sonstige"
+      ],
+      "multipart_set": " ",
+      "rsn": [
+        "(DE-14)174644",
+        "(DE-15)3190901",
+        "(DE-105)500146403"
+      ],
+      "vf1_author": "Grimhardt, Hartmut",
+      "oclc_num": [
+        "263547152"
+      ],
+      "multipart_part": [
+        "(032853246)300"
+      ],
+      "date_de15": "2013-01-17T09:59:50Z",
+      "series2": [
+        "Deutsche Geodätische Kommission bei der Bayerischen Akademie der Wissenschaften : Reihe C, Dissertationen ;"
+      ],
+      "publishPlace": [
+        "München :"
+      ],
+      "institution": [
+        "DE-105",
+        "DE-14",
+        "DE-15",
+        "DE-185"
+      ],
+      "misc_de105": [
+        "HS"
+      ],
+      "date_de105": "2002-01-29T23:00:00Z",
+      "hierarchy_top_title": [
+        "Bayerische Akademie der Wissenschaften : Deutsche Geodätische Kommission der Bayerischen Akademie der Wissenschaften. Reihe C, Dissertationen"
+      ],
+      "title_in_hierarchy": [
+        "300. Berechnung minimaler Wertebereiche für Parameterfunktionen eines Lagenetzes aus vorgegebenen Toleranzen der Beobachtungsgrössen (1984)"
+      ],
+      "format_de15": [
+        "Thesis"
+      ],
+      "format_degla1": [
+        "Thesis"
+      ],
+      "title_fullStr": "Berechnung minimaler Wertebereiche für Parameterfunktionen eines Lagenetzes aus vorgegebenen Toleranzen der Beobachtungsgrössen /",
+      "barcode_de15": [
+        "0021572491"
+      ],
+      "finc_class_facet": [
+        "Physik",
+        "Technik"
+      ],
+      "rvk_facet": [
+        "UT 1400",
+        "ZI 9200"
+      ],
+      "topic": [
+        "Geodätisches Netz",
+        "Berechnung"
+      ],
+      "id": "0002139053",
+      "physical": [
+        "97 S. : graph. Darst."
+      ],
+      "hierarchy_parent_title": [
+        "Bayerische Akademie der Wissenschaften : Deutsche Geodätische Kommission der Bayerischen Akademie der Wissenschaften. Reihe C, Dissertationen"
+      ],
+      "author": [
+        "Grimhardt, Hartmut"
+      ],
+      "mega_collection": [
+        "Verbunddaten SWB"
+      ],
+      "topic_id": [
+        "4020208-2",
+        "4120997-7"
+      ],
+      "_version_": 1571375858254348288,
+      "author_role": [
+        ""
+      ],
+      "branch_de105": [
+        "Hauptbibliothek"
+      ],
+      "udk_facet_de105": [
+        "Astronomie. Geodäsie",
+        "Dissertationen"
+      ],
+      "spelling": [
+        "Grimhardt, Hartmut (DE-576)165939648 Berechnung minimaler Wertebereiche für Parameterfunktionen eines Lagenetzes aus vorgegebenen Toleranzen der Beobachtungsgrössen / vorgelegt von Hartmut Grimhardt München : Verlag der Bayer. Akad. d. Wiss. [u.a.], 1984 München : Beck 97 S. : graph. Darst. Deutsche Geodätische Kommission bei der Bayerischen Akademie der Wissenschaften : Reihe C, Dissertationen ;  300 Zugl.: München, Techn. Univ., Diss., 1984. SW: 580 FGBA/S+DB ; 720 ff. bvb ; 5090: DDSU/sred s (DE-588)4020208-2 (DE-576)208932380 gnd Geodätisches Netz s (DE-588)4120997-7 (DE-576)209539739 gnd Berechnung DE-576 München uvp Bayerische Akademie der Wissenschaften Deutsche Geodätische Kommission Deutsche Geodätische Kommission der Bayerischen Akademie der Wissenschaften. Reihe C, Dissertationen 300 (DE-576)032853246"
+      ],
+      "udk_raw_de105": [
+        "DK 528.3",
+        "DK 528.063",
+        "DK 378.245"
+      ],
+      "author_sort": "Grimhardt, Hartmut",
+      "is_hierarchy_id": "0002139053",
+      "publishDateSort": "1984",
+      "format_ded117": [
+        "Thesis"
+      ],
+      "source_id": "0"
+    }
+  },
+  {
+    "record": {
+      "finc_class_facet": [
+        "not assigned"
+      ],
+      "footnote": [
+        "Einheitssacht. d. komment. Werkes: Corpus iuris civilis."
+      ],
+      "is_hierarchy_title": "Repetitionvm Sev Commentariorvm In Varia Ivrisconsvltorvm Responsa Volumen ...",
+      "publisher": [
+        "apud Hugonem a Porta, & Antonium Vincentium,"
+      ],
+      "rvk_facet": [
+        "No subject assigned"
+      ],
+      "imprint": "Lvgdvni : apud Hugonem a Porta, & Antonium Vincentium, 15XX",
+      "title_full_unstemmed": "Repetitionvm Sev Commentariorvm In Varia Ivrisconsvltorvm Responsa Volumen ...",
+      "id": "0002139057",
+      "spelling": [
+        "Repetitionvm Sev Commentariorvm In Varia Ivrisconsvltorvm Responsa Volumen ... Einheitssacht. d. komm. Werkes: Corpus iuris civilis commentarii repetitionum commentariorum jurisconsultorum ictorum Repetitiones seu commentaria in varia iurisconsultorum responsa Lvgdvni : apud Hugonem a Porta, & Antonium Vincentium, 15XX (Lvgdvni: excudebat Claudius Seruanius) Einheitssacht. d. komment. Werkes: Corpus iuris civilis. Lyon pup"
+      ],
+      "branch_de14": [
+        "zell1"
+      ],
+      "format_de540": [
+        "Book, E-Book"
+      ],
+      "hierarchy_top_id": [
+        "0002139057"
+      ],
+      "format_nrw": [
+        "Book, E-Book"
+      ],
+      "title_alt": [
+        "Corpus iuris civilis",
+        "commentarii repetitionum commentariorum jurisconsultorum ictorum",
+        "Repetitiones seu commentaria in varia iurisconsultorum responsa"
+      ],
+      "spellingShingle": [
+        "Repetitionvm Sev Commentariorvm In Varia Ivrisconsvltorvm Responsa Volumen ..."
+      ],
+      "geogr_code": [
+        "not assigned"
+      ],
+      "format_del189": [
+        "Book"
+      ],
+      "mega_collection": [
+        "Verbunddaten SWB"
+      ],
+      "access_facet": "Local Holdings",
+      "record_id": "018893295",
+      "_version_": 1571375858521735168,
+      "fullrecord": "01111cam a2200325  a4500001001100000003000700011005001700018007000300035008004100038035002500079040003100104041000800135041000900143046001700152245008300169246005800252246006900310246006800379260010800447500006100555751001400616935001000630983001800640984000700658983001800665969000700683852003200690852003200722980003100754\u001e0002139057\u001eDE-576\u001e20130524201702.0\u001etu\u001e891025n15uuuuuuxx             00 0 lat c\u001e  \u001fa(DE-599)BSZ018893295\u001e  \u001faDE-576\u001fbger\u001fcDE-576\u001ferakwb\u001e0 \u001falat\u001e07\u001falat.\u001e  \u001fjad16\u001f2DE-576\u001e10\u001faRepetitionvm Sev Commentariorvm In Varia Ivrisconsvltorvm Responsa Volumen ...\u001e1 \u001fiEinheitssacht. d. komm. Werkes:\u001faCorpus iuris civilis\u001e30\u001facommentarii repetitionum commentariorum jurisconsultorum ictorum\u001e9 \u001faRepetitiones seu commentaria in varia iurisconsultorum responsa\u001e  \u001faLvgdvni :\u001fbapud Hugonem a Porta, & Antonium Vincentium,\u001fc15XX\u001fe(Lvgdvni:\u001ffexcudebat Claudius Seruanius)\u001e  \u001faEinheitssacht. d. komment. Werkes: Corpus iuris civilis.\u001e  \u001faLyon\u001f4pup\u001e  \u001fbdruck\u001e  \u001fa(DE-14)890773\u001e  \u001fcMB\u001e  \u001fa(DE-15)460060\u001e  \u001fcMB\u001e  \u001faDE-14\u001fz2014-03-16T02:06:25Z\u001e  \u001faDE-15\u001fz1997-03-13T00:00:00Z\u001e  \u001fa018893295\u001fb0\u001fc201403061834\u001e\u001d",
+      "multipart_set": "a",
+      "rsn": [
+        "(DE-14)890773",
+        "(DE-15)460060"
+      ],
+      "format": [
+        "Book"
+      ],
+      "branch_nrw": [
+        "Local Holdings"
+      ],
+      "publishDate": [
+        "15XX"
+      ],
+      "geogr_code_person": [
+        "not assigned"
+      ],
+      "timecode": [
+        "1501 – 1600"
+      ],
+      "publishPlace": [
+        "Lvgdvni :"
+      ],
+      "institution": [
+        "DE-14",
+        "DE-15"
+      ],
+      "itemdata": "{}",
+      "illustrated": "Not Illustrated",
+      "title_short": "Repetitionvm Sev Commentariorvm In Varia Ivrisconsvltorvm Responsa Volumen ...",
+      "recordtype": "marcfinc",
+      "language": [
+        "Latin"
+      ],
+      "date_de15": "1997-03-12T23:00:00Z",
+      "title_full": "Repetitionvm Sev Commentariorvm In Varia Ivrisconsvltorvm Responsa Volumen ...",
+      "hierarchy_top_title": [
+        "Repetitionvm Sev Commentariorvm In Varia Ivrisconsvltorvm Responsa Volumen ..."
+      ],
+      "title_in_hierarchy": [
+        "Repetitionvm Sev Commentariorvm In Varia Ivrisconsvltorvm Responsa Volumen ..."
+      ],
+      "title_sort": "repetitionvm sev commentariorvm in varia ivrisconsvltorvm responsa volumen .",
+      "is_hierarchy_id": "0002139057",
+      "publishDateSort": "1553",
+      "format_de15": [
+        "Book, E-Book"
+      ],
+      "format_ded117": [
+        "Book, E-Book"
+      ],
+      "source_id": "0",
+      "title": "Repetitionvm Sev Commentariorvm In Varia Ivrisconsvltorvm Responsa Volumen ...",
+      "format_degla1": [
+        "Book"
+      ],
+      "format_dezi4": [
+        "e-Book"
+      ],
+      "title_fullStr": "Repetitionvm Sev Commentariorvm In Varia Ivrisconsvltorvm Responsa Volumen ..."
+    }
+  },
+  {
+    "record": {
+      "hierarchy_sequence": [
+        "00001 // 1"
+      ],
+      "title_sort": "marci vitruvii pollionis de architectura libri decem",
+      "barcode_de15": [
+        "M10925961"
+      ],
+      "author": [
+        "Vitruvius"
+      ],
+      "finc_class_facet": [
+        "Technik"
+      ],
+      "rvk_ct_mv": [
+        "ZG - ZS",
+        "ZH",
+        "ZH 3000 - ZH 3950",
+        "ZH 3100"
+      ],
+      "callnumber_de15": [
+        "Phil.lat.68:1"
+      ],
+      "rvk_cns_mv": [
+        "ZG - ZS",
+        "ZH",
+        "ZH 3000 - ZH 3950",
+        "ZH 3100"
+      ],
+      "illustrated": "Not Illustrated",
+      "format_del152": [
+        "Buch"
+      ],
+      "title_full_unstemmed": "Marci Vitruvii Pollionis De architectura libri decem. 1 /",
+      "title_part": "1 /",
+      "facet_de14_branch_collcode_exception": [
+        "zell1_MAG_P3"
+      ],
+      "spelling": [
+        "Vitruvius v1. Jh. (DE-588)118627252 (DE-576)163424772 Marci Vitruvii Pollionis De architectura libri decem. 1 / ex fide librorum scriptorum recensuit, emendavit, suisque et virorum doctorum annotationibus illustravit Io. Gottlob Schneider Lipsiae : Göschen, 1807 LXXVI, 312 S. 5090 maschinell aus ähnlichen Titelaufnahmen ergänzt Leipzig pup (DE-576)018894976 1 Online-Ausg. von Bd. 1 (DE-576)345307046 Mikrofiche-Ausg. von Bd. 1 (DE-576)074595504"
+      ],
+      "mega_collection": [
+        "Verbunddaten SWB",
+        "SWB SSG UB Heidelberg"
+      ],
+      "physical": [
+        "LXXVI, 312 S."
+      ],
+      "hierarchy_parent_title": [
+        "Marci Vitruvii Pollionis De architectura libri decem/ex fide librorum scriptorum recensuit, emendavit, suisque et virorum doctorum annotationibus illustravit Io. Gottlob Schneider"
+      ],
+      "format_de540": [
+        "Book, E-Book"
+      ],
+      "hierarchy_top_id": [
+        "0002139071"
+      ],
+      "format_nrw": [
+        "Book, E-Book"
+      ],
+      "id": "0002139072",
+      "callnumber_de15_cns_mv": [
+        "Phil.lat.68:1"
+      ],
+      "spellingShingle": [
+        "Vitruvius",
+        "Marci Vitruvii Pollionis De architectura libri decem."
+      ],
+      "rvk_path": [
+        "ZG - ZS",
+        "ZH",
+        "ZH 3000 - ZH 3950",
+        "ZH 3100"
+      ],
+      "geogr_code": [
+        "not assigned"
+      ],
+      "collcode_de15": [
+        "Magazin / Sonstige"
+      ],
+      "format_del189": [
+        "Book"
+      ],
+      "branch_de14": [
+        "zell1"
+      ],
+      "access_facet": "Local Holdings",
+      "record_id": "018895034",
+      "format_de15": [
+        "Book, E-Book"
+      ],
+      "branch_de15": [
+        "Bibliotheca Albertina"
+      ],
+      "fullrecord": "02786cam a2200877  c4500001001100000003000700011005001700018007000300035008004100038016002100079035002500100040003100125041000800156041000900164046001700173084005800190084001500248100006100263245019100324260003100515300001800546591005900564751001700623773002500640775004600665775005000711935001000761936015500771982002600926984001100952983001900963984000600982982002400988969001301012983001801025969000601043900001401049900001401063900001401077900001101091900002901102900001201131900002701143900002901170900001301199900002801212900002901240900002501269900001701294900002201311900002601333900002101359900001301380900001501393900001501408900002201423900002901445900002101474900003201495900002901527900001101556900002501567900002901592900002001621900001701641900002001658900002901678900001101707900002201718951000701740852003201747852003201779852003201811852003401843980003101877\u001e0002139072\u001eDE-576\u001e20141002121224.0\u001etu\u001e891026s1807    xx             00 0 lat c\u001e  \u001fa(OCoLC)311091968\u001e  \u001fa(DE-599)BSZ018895034\u001e  \u001faDE-576\u001fbger\u001fcDE-576\u001ferakwb\u001e0 \u001falat\u001e07\u001falat.\u001e  \u001fja19a\u001f2DE-576\u001e  \u001faZH 3100\u001f2rvk\u001f9ZG - ZS\u001f9ZH\u001f9ZH 3000 - ZH 3950\u001f9ZH 3100\u001e  \u001fa9,10\u001f2ssgn\u001e0 \u001faVitruvius\u001fdv1. Jh.\u001f0(DE-588)118627252\u001f0(DE-576)163424772\u001e10\u001faMarci Vitruvii Pollionis De architectura libri decem.\u001fn1 /\u001fcex fide librorum scriptorum recensuit, emendavit, suisque et virorum doctorum annotationibus illustravit Io. Gottlob Schneider\u001e  \u001faLipsiae :\u001fbGöschen,\u001fc1807\u001e  \u001faLXXVI, 312 S.\u001e  \u001fa5090 maschinell aus ähnlichen Titelaufnahmen ergänzt\u001e  \u001faLeipzig\u001f4pup\u001e18\u001fw(DE-576)018894976\u001fg1\u001e0 \u001fiOnline-Ausg. von Bd. 1\u001fw(DE-576)345307046\u001e0 \u001fiMikrofiche-Ausg. von Bd. 1\u001fw(DE-576)074595504\u001e  \u001fbdruck\u001erv\u001faZH 3100\u001fbBautheorie; Architekturtheorie; Architekturkritik\u001fkTechnik\u001fkArchitektur\u001fkArchitekturpraxis\u001fkBautheorie; Architekturtheorie; Architekturkritik\u001e  \u001fa(DE-14)XMAR1118387\u001fx1\u001e  \u001fbMAG\u001fx1\u001e  \u001fa(DE-14)1155034\u001e  \u001fcB\u001e  \u001fa(DE-15)M10925961\u001fx1\u001e  \u001fbKeine\u001fx1\u001e  \u001fa(DE-15)719759\u001e  \u001fcB\u001e  \u001faVitruvius\u001e  \u001faArchitekt\u001e  \u001faIngenieur\u001e  \u001faPollio\u001e  \u001faPollio, Marcus Vitruvius\u001e  \u001faVitruve\u001e  \u001faWriter on Architecture\u001e  \u001faScriptor de Architectura\u001e  \u001faVitruvio\u001e  \u001faVitruvio Polion, Marcus\u001e  \u001faVitruvio Pollione, Lucio\u001e  \u001faVitruvius, Marcus P.\u001e  \u001faVitruve, ...\u001e  \u001faVitruvius, Pollio\u001e  \u001faVitruve Pollion, Marc\u001e  \u001faPollion, Marc V.\u001e  \u001faPollione\u001e  \u001fade Vérone\u001e  \u001fade Formies\u001e  \u001faVitruvius, Marcus\u001e  \u001faVitruvius Pollio, Lucius\u001e  \u001faVitruvius Pollio\u001e  \u001faVitruvio Pollione, Marco L.\u001e  \u001faVitruvio Pollione, Marco\u001e  \u001faVitrue\u001e  \u001faVitruv Pollion, Marc\u001e  \u001faVitruvius Pollio, Marcus\u001e  \u001faVitrubio, Marco\u001e  \u001faVitruvio, M.\u001e  \u001faVitruvio, Marco\u001e  \u001faVitruvius-Pollio, Marcus\u001e  \u001faVitruv\u001e  \u001faPollio, Marcus V.\u001e  \u001fbXT\u001e  \u001faDE-14\u001fz2014-03-16T00:32:59Z\u001e  \u001faDE-15\u001fz1999-11-01T00:00:00Z\u001e  \u001faDE-16\u001fz2015-07-28T14:23:22Z\u001e  \u001faDE-1989\u001fz2015-05-15T16:00:14Z\u001e  \u001fa018895034\u001fb0\u001fc201507281320\u001e\u001d",
+      "author_role": [
+        ""
+      ],
+      "multipart_set": "c",
+      "signatur": [
+        "(DE-15)Phil.lat.68:1",
+        "(DE-14)Lit.Rom.B.4353-1"
+      ],
+      "rsn": [
+        "(DE-14)1155034",
+        "(DE-15)719759"
+      ],
+      "vf1_author": "Vitruvius",
+      "oclc_num": [
+        "311091968"
+      ],
+      "multipart_part": [
+        "(018894976)1"
+      ],
+      "format": [
+        "Book"
+      ],
+      "author_variant": [
+        "v"
+      ],
+      "barcode": [
+        "(DE-15)M10925961",
+        "(DE-14)XMAR1118387"
+      ],
+      "branch_nrw": [
+        "Local Holdings"
+      ],
+      "multipart_link": [
+        "018894976"
+      ],
+      "publishDate": [
+        "1807"
+      ],
+      "geogr_code_person": [
+        "Roman Empire"
+      ],
+      "rvk_facet": [
+        "ZH 3100"
+      ],
+      "imprint": "Lipsiae : Göschen, 1807",
+      "date_de15": "1999-10-31T23:00:00Z",
+      "timecode": [
+        "1801 – 1850"
+      ],
+      "publishPlace": [
+        "Lipsiae :"
+      ],
+      "institution": [
+        "DE-14",
+        "DE-15",
+        "DE-16",
+        "DE-1989"
+      ],
+      "callnumber_de15_ct_mv": [
+        "Phil.lat.68:1"
+      ],
+      "itemdata": "{\"DE-14\":[{\"bc\":\"XMAR1118387\",\"cn\":\"Lit.Rom.B.4353-1\"}],\"DE-15\":[{\"bc\":\"M10925961\",\"cn\":\"Phil.lat.68:1\"}]}",
+      "rvk_label": [
+        "Technik",
+        "Architektur",
+        "Architekturpraxis",
+        "Bautheorie; Architekturtheorie; Architekturkritik"
+      ],
+      "publisher": [
+        "Göschen,"
+      ],
+      "title_short": "Marci Vitruvii Pollionis De architectura libri decem.",
+      "format_ded117": [
+        "Book, E-Book"
+      ],
+      "recordtype": "marcfinc",
+      "language": [
+        "Latin"
+      ],
+      "is_hierarchy_title": "Marci Vitruvii Pollionis De architectura libri decem.",
+      "title_full": "Marci Vitruvii Pollionis De architectura libri decem. 1 /",
+      "hierarchy_top_title": [
+        "Marci Vitruvii Pollionis De architectura libri decem/ex fide librorum scriptorum recensuit, emendavit, suisque et virorum doctorum annotationibus illustravit Io. Gottlob Schneider"
+      ],
+      "title_in_hierarchy": [
+        "1. (1807)"
+      ],
+      "author_sort": "Vitruvius",
+      "_version_": 1577144364996493312,
+      "is_hierarchy_id": "0002139072",
+      "publishDateSort": "1807",
+      "container_reference": "1",
+      "title_fullStr": "Marci Vitruvii Pollionis De architectura libri decem. 1 /",
+      "hierarchy_parent_id": [
+        "0002139071"
+      ],
+      "source_id": "0",
+      "title": "Marci Vitruvii Pollionis De architectura libri decem.",
+      "author_id": [
+        "118627252"
+      ],
+      "format_degla1": [
+        "Book"
+      ],
+      "format_dezi4": [
+        "e-Book"
+      ],
+      "facet_avail": [
+        "Local"
+      ]
+    }
+  },
+  {
+    "record": {
+      "hierarchy_sequence": [
+        "00003 // 3"
+      ],
+      "title_sort": "marci vitruvii pollionis de architectura libri decem",
+      "barcode_de15": [
+        "M10925988"
+      ],
+      "author": [
+        "Vitruvius"
+      ],
+      "finc_class_facet": [
+        "not assigned"
+      ],
+      "callnumber_de15": [
+        "Phil.lat.68:3"
+      ],
+      "illustrated": "Not Illustrated",
+      "format_del152": [
+        "Buch"
+      ],
+      "title_full_unstemmed": "Marci Vitruvii Pollionis De architectura libri decem. 3, Commentariorum partem posteriorem tenens /",
+      "title_part": "3, Commentariorum partem posteriorem tenens /",
+      "facet_de14_branch_collcode_exception": [
+        "zell1_MAG_P3"
+      ],
+      "spelling": [
+        "Vitruvius v1. Jh. (DE-588)118627252 (DE-576)163424772 Marci Vitruvii Pollionis De architectura libri decem. 3, Commentariorum partem posteriorem tenens / ex fide librorum scriptorum recensuit, emendavit, suisque et virorum doctorum annotationibus illustravit Io. Gottlob Schneider Lipsiae : Göschen, 1808 394 S. Leipzig pup (DE-576)018894976 3 Online-Ausg. von Bd. 3 Commentariorum partem posteriorem tenens (DE-576)345307348 Mikrofiche-Ausg. von Bd. 3 Commentariorum partem posteriorem tenens (DE-576)074596063"
+      ],
+      "mega_collection": [
+        "Verbunddaten SWB",
+        "SWB SSG UB Heidelberg"
+      ],
+      "physical": [
+        "394 S."
+      ],
+      "hierarchy_parent_title": [
+        "Marci Vitruvii Pollionis De architectura libri decem/ex fide librorum scriptorum recensuit, emendavit, suisque et virorum doctorum annotationibus illustravit Io. Gottlob Schneider"
+      ],
+      "format_de540": [
+        "Book, E-Book"
+      ],
+      "hierarchy_top_id": [
+        "0002139071"
+      ],
+      "format_nrw": [
+        "Book, E-Book"
+      ],
+      "id": "0002139074",
+      "callnumber_de15_cns_mv": [
+        "Phil.lat.68:3"
+      ],
+      "spellingShingle": [
+        "Vitruvius",
+        "Marci Vitruvii Pollionis De architectura libri decem."
+      ],
+      "geogr_code": [
+        "not assigned"
+      ],
+      "collcode_de15": [
+        "Magazin / Sonstige"
+      ],
+      "format_del189": [
+        "Book"
+      ],
+      "branch_de14": [
+        "zell1"
+      ],
+      "access_facet": "Local Holdings",
+      "record_id": "018895069",
+      "format_de15": [
+        "Book, E-Book"
+      ],
+      "branch_de15": [
+        "Bibliotheca Albertina"
+      ],
+      "fullrecord": "02598cam a2200841  c4500001001100000003000700011005001700018007000300035008004100038016002100079035002500100040003100125041000800156041000900164046001700173084001500190100006100205245023400266260003100500300001100531751001700542773002500559775008800584775009200672935001000764982002600774984001100800983001900811984000600830982002400836969001300860983001800873969000600891900001400897900001400911900001400925900001100939900002900950900001200979900002700991900002901018900001301047900002801060900002901088900002501117900001701142900002201159900002601181900002101207900001301228900001501241900001501256900002201271900002901293900002101322900003201343900002901375900001101404900002501415900002901440900002001469900001701489900002001506900002901526900001101555900002201566951000701588852003201595852003201627852003201659852003401691980003101725\u001e0002139074\u001eDE-576\u001e20141002121518.0\u001etu\u001e891026s1808    xx             00 0 lat c\u001e  \u001fa(OCoLC)311091977\u001e  \u001fa(DE-599)BSZ018895069\u001e  \u001faDE-576\u001fbger\u001fcDE-576\u001ferakwb\u001e0 \u001falat\u001e07\u001falat.\u001e  \u001fja19a\u001f2DE-576\u001e  \u001fa9,10\u001f2ssgn\u001e0 \u001faVitruvius\u001fdv1. Jh.\u001f0(DE-588)118627252\u001f0(DE-576)163424772\u001e10\u001faMarci Vitruvii Pollionis De architectura libri decem.\u001fn3,\u001fpCommentariorum partem posteriorem tenens /\u001fcex fide librorum scriptorum recensuit, emendavit, suisque et virorum doctorum annotationibus illustravit Io. Gottlob Schneider\u001e  \u001faLipsiae :\u001fbGöschen,\u001fc1808\u001e  \u001fa394 S.\u001e  \u001faLeipzig\u001f4pup\u001e18\u001fw(DE-576)018894976\u001fg3\u001e0 \u001fiOnline-Ausg. von Bd. 3\u001ftCommentariorum partem posteriorem tenens\u001fw(DE-576)345307348\u001e0 \u001fiMikrofiche-Ausg. von Bd. 3\u001ftCommentariorum partem posteriorem tenens\u001fw(DE-576)074596063\u001e  \u001fbdruck\u001e  \u001fa(DE-14)XMAR1118385\u001fx1\u001e  \u001fbMAG\u001fx1\u001e  \u001fa(DE-14)1155036\u001e  \u001fcB\u001e  \u001fa(DE-15)M10925988\u001fx1\u001e  \u001fbKeine\u001fx1\u001e  \u001fa(DE-15)719761\u001e  \u001fcB\u001e  \u001faVitruvius\u001e  \u001faArchitekt\u001e  \u001faIngenieur\u001e  \u001faPollio\u001e  \u001faPollio, Marcus Vitruvius\u001e  \u001faVitruve\u001e  \u001faWriter on Architecture\u001e  \u001faScriptor de Architectura\u001e  \u001faVitruvio\u001e  \u001faVitruvio Polion, Marcus\u001e  \u001faVitruvio Pollione, Lucio\u001e  \u001faVitruvius, Marcus P.\u001e  \u001faVitruve, ...\u001e  \u001faVitruvius, Pollio\u001e  \u001faVitruve Pollion, Marc\u001e  \u001faPollion, Marc V.\u001e  \u001faPollione\u001e  \u001fade Vérone\u001e  \u001fade Formies\u001e  \u001faVitruvius, Marcus\u001e  \u001faVitruvius Pollio, Lucius\u001e  \u001faVitruvius Pollio\u001e  \u001faVitruvio Pollione, Marco L.\u001e  \u001faVitruvio Pollione, Marco\u001e  \u001faVitrue\u001e  \u001faVitruv Pollion, Marc\u001e  \u001faVitruvius Pollio, Marcus\u001e  \u001faVitrubio, Marco\u001e  \u001faVitruvio, M.\u001e  \u001faVitruvio, Marco\u001e  \u001faVitruvius-Pollio, Marcus\u001e  \u001faVitruv\u001e  \u001faPollio, Marcus V.\u001e  \u001fbXT\u001e  \u001faDE-14\u001fz2014-03-15T18:30:04Z\u001e  \u001faDE-15\u001fz1999-11-01T00:00:00Z\u001e  \u001faDE-16\u001fz2015-07-28T14:23:22Z\u001e  \u001faDE-1989\u001fz2015-05-15T15:57:50Z\u001e  \u001fa018895069\u001fb0\u001fc201507281320\u001e\u001d",
+      "author_role": [
+        ""
+      ],
+      "multipart_set": "c",
+      "signatur": [
+        "(DE-15)Phil.lat.68:3",
+        "(DE-14)Lit.Rom.B.4353-3"
+      ],
+      "rsn": [
+        "(DE-14)1155036",
+        "(DE-15)719761"
+      ],
+      "vf1_author": "Vitruvius",
+      "oclc_num": [
+        "311091977"
+      ],
+      "multipart_part": [
+        "(018894976)3"
+      ],
+      "format": [
+        "Book"
+      ],
+      "author_variant": [
+        "v"
+      ],
+      "barcode": [
+        "(DE-15)M10925988",
+        "(DE-14)XMAR1118385"
+      ],
+      "branch_nrw": [
+        "Local Holdings"
+      ],
+      "multipart_link": [
+        "018894976"
+      ],
+      "publishDate": [
+        "1808"
+      ],
+      "geogr_code_person": [
+        "Roman Empire"
+      ],
+      "rvk_facet": [
+        "No subject assigned"
+      ],
+      "imprint": "Lipsiae : Göschen, 1808",
+      "date_de15": "1999-10-31T23:00:00Z",
+      "timecode": [
+        "1801 – 1850"
+      ],
+      "publishPlace": [
+        "Lipsiae :"
+      ],
+      "institution": [
+        "DE-14",
+        "DE-15",
+        "DE-16",
+        "DE-1989"
+      ],
+      "callnumber_de15_ct_mv": [
+        "Phil.lat.68:3"
+      ],
+      "itemdata": "{\"DE-14\":[{\"bc\":\"XMAR1118385\",\"cn\":\"Lit.Rom.B.4353-3\"}],\"DE-15\":[{\"bc\":\"M10925988\",\"cn\":\"Phil.lat.68:3\"}]}",
+      "publisher": [
+        "Göschen,"
+      ],
+      "title_short": "Marci Vitruvii Pollionis De architectura libri decem.",
+      "format_ded117": [
+        "Book, E-Book"
+      ],
+      "recordtype": "marcfinc",
+      "language": [
+        "Latin"
+      ],
+      "is_hierarchy_title": "Marci Vitruvii Pollionis De architectura libri decem.",
+      "title_full": "Marci Vitruvii Pollionis De architectura libri decem. 3, Commentariorum partem posteriorem tenens /",
+      "hierarchy_top_title": [
+        "Marci Vitruvii Pollionis De architectura libri decem/ex fide librorum scriptorum recensuit, emendavit, suisque et virorum doctorum annotationibus illustravit Io. Gottlob Schneider"
+      ],
+      "title_in_hierarchy": [
+        "3. Commentariorum partem posteriorem tenens (1808)"
+      ],
+      "author_sort": "Vitruvius",
+      "_version_": 1577145326956969984,
+      "is_hierarchy_id": "0002139074",
+      "publishDateSort": "1808",
+      "container_reference": "3",
+      "title_fullStr": "Marci Vitruvii Pollionis De architectura libri decem. 3, Commentariorum partem posteriorem tenens /",
+      "hierarchy_parent_id": [
+        "0002139071"
+      ],
+      "source_id": "0",
+      "title": "Marci Vitruvii Pollionis De architectura libri decem.",
+      "author_id": [
+        "118627252"
+      ],
+      "format_degla1": [
+        "Book"
+      ],
+      "format_dezi4": [
+        "e-Book"
+      ],
+      "facet_avail": [
+        "Local"
+      ]
+    }
+  },
+  {
+    "record": {
+      "title_new": [
+        "Reusner, Nikolaus Symbola Imperatoria"
+      ],
+      "author_sort": "Reusner, Nikolaus",
+      "author": [
+        "Reusner, Nikolaus"
+      ],
+      "finc_class_facet": [
+        "not assigned"
+      ],
+      "date_de15": "1997-03-23T23:00:00Z",
+      "illustrated": "Not Illustrated",
+      "title_full_unstemmed": "Nicolai Revsneri Symbolorvm Imperatoriorvm Classis ... : Opvs Philologicvm et Politicvm, Vereqve Regivm Ac Imperatoriorum ... Additvs est Cvilibet Classi tergeminus Elenchus: Symbolorum scilicet, Imperatorum, tum quoq[ue] Rerum, & Sententiarum",
+      "id": "0002139078",
+      "title_sub": "Opvs Philologicvm et Politicvm, Vereqve Regivm Ac Imperatoriorum ... Additvs est Cvilibet Classi tergeminus Elenchus: Symbolorum scilicet, Imperatorum, tum quoq[ue] Rerum, & Sententiarum",
+      "spelling": [
+        "Reusner, Nikolaus 1545 - 1602 (DE-588)100069983 (DE-576)162707924 Nicolai Revsneri Symbolorvm Imperatoriorvm Classis ... : Opvs Philologicvm et Politicvm, Vereqve Regivm Ac Imperatoriorum ... Additvs est Cvilibet Classi tergeminus Elenchus: Symbolorum scilicet, Imperatorum, tum quoq[ue] Rerum, & Sententiarum symbolorum imperatoriorum Symbola Imperatoria Francofvrti ad Moenvm : Curante Ioanne Spiessio, 15XX Frankfurt am Main pup Reusner, Nikolaus Symbola Imperatoria (DE-576)089450191"
+      ],
+      "mega_collection": [
+        "Verbunddaten SWB"
+      ],
+      "format_de540": [
+        "Book, E-Book"
+      ],
+      "title": "Nicolai Revsneri Symbolorvm Imperatoriorvm Classis ... : Opvs Philologicvm et Politicvm, Vereqve Regivm Ac Imperatoriorum ... Additvs est Cvilibet Classi tergeminus Elenchus: Symbolorum scilicet, Imperatorum, tum quoq[ue] Rerum, & Sententiarum",
+      "format_nrw": [
+        "Book, E-Book"
+      ],
+      "title_alt": [
+        "symbolorum imperatoriorum",
+        "Symbola Imperatoria"
+      ],
+      "hierarchy_top_id": [
+        "0002139078"
+      ],
+      "spellingShingle": [
+        "Reusner, Nikolaus",
+        "Nicolai Revsneri Symbolorvm Imperatoriorvm Classis ... : Opvs Philologicvm et Politicvm, Vereqve Regivm Ac Imperatoriorum ... Additvs est Cvilibet Classi tergeminus Elenchus: Symbolorum scilicet, Imperatorum, tum quoq[ue] Rerum, & Sententiarum"
+      ],
+      "geogr_code": [
+        "not assigned"
+      ],
+      "format_del189": [
+        "Book"
+      ],
+      "branch_de14": [
+        "zell1"
+      ],
+      "access_facet": "Local Holdings",
+      "record_id": "018897150",
+      "_version_": 1571375859684605952,
+      "fullrecord": "01510cam a2200445  a4500001001100000003000700011005001700018007000300035008004100038035002500079040003100104041000800135041000900143046001700152100007300169245024900242246003000491246002400521260006000545751002700605785006200632935001000694983001800704969000700722983001800729984000700747900002200754900002600776900002600802900002400828900002200852900001800874900002300892900002400915900002000939951001000959852003200969852003201001980003101033\u001e0002139078\u001eDE-576\u001e20140801144023.0\u001etu\u001e891026n15uuuuuuxx             00 0 lat c\u001e  \u001fa(DE-599)BSZ018897150\u001e  \u001faDE-576\u001fbger\u001fcDE-576\u001ferakwb\u001e0 \u001falat\u001e07\u001falat.\u001e  \u001fjad16\u001f2DE-576\u001e1 \u001faReusner, Nikolaus\u001fd1545 - 1602\u001f0(DE-588)100069983\u001f0(DE-576)162707924\u001e10\u001faNicolai Revsneri Symbolorvm Imperatoriorvm Classis ... :\u001fbOpvs Philologicvm et Politicvm, Vereqve Regivm Ac Imperatoriorum ... Additvs est Cvilibet Classi tergeminus Elenchus: Symbolorum scilicet, Imperatorum, tum quoq[ue] Rerum, & Sententiarum\u001e30\u001fasymbolorum imperatoriorum\u001e9 \u001faSymbola Imperatoria\u001e  \u001faFrancofvrti ad Moenvm :\u001fbCurante Ioanne Spiessio,\u001fc15XX\u001e  \u001faFrankfurt am Main\u001f4pup\u001e00\u001faReusner, Nikolaus\u001ftSymbola Imperatoria\u001fw(DE-576)089450191\u001e  \u001fbdruck\u001e  \u001fa(DE-15)460069\u001e  \u001fcMB\u001e  \u001fa(DE-14)890783\u001e  \u001fcMB\u001e  \u001faReusner, Nicolaus\u001e  \u001faReusner, Nikolaus von\u001e  \u001faReusner, Nicolaus von\u001e  \u001faReisnerus, Nicolaus\u001e  \u001faReusner, Nikolaus\u001e  \u001faReusnerus, N.\u001e  \u001faReusnerus, Nicolai\u001e  \u001faReusnerus, Nicolaus\u001e  \u001faReusnerus, Nic.\u001e  \u001fbXA-DE\u001e  \u001faDE-14\u001fz2014-03-16T00:32:59Z\u001e  \u001faDE-15\u001fz1997-03-24T00:00:00Z\u001e  \u001fa018897150\u001fb0\u001fc201408020239\u001e\u001d",
+      "author_role": [
+        ""
+      ],
+      "multipart_set": "a",
+      "rsn": [
+        "(DE-15)460069",
+        "(DE-14)890783"
+      ],
+      "vf1_author": "Reusner, Nikolaus",
+      "format": [
+        "Book"
+      ],
+      "author_variant": [
+        "n r nr"
+      ],
+      "branch_nrw": [
+        "Local Holdings"
+      ],
+      "publishDate": [
+        "15XX"
+      ],
+      "geogr_code_person": [
+        "Germany"
+      ],
+      "rvk_facet": [
+        "No subject assigned"
+      ],
+      "imprint": "Francofvrti ad Moenvm : Curante Ioanne Spiessio, 15XX",
+      "timecode": [
+        "1501 – 1600"
+      ],
+      "publishPlace": [
+        "Francofvrti ad Moenvm :"
+      ],
+      "institution": [
+        "DE-14",
+        "DE-15"
+      ],
+      "itemdata": "{}",
+      "publisher": [
+        "Curante Ioanne Spiessio,"
+      ],
+      "title_short": "Nicolai Revsneri Symbolorvm Imperatoriorvm Classis ... :",
+      "recordtype": "marcfinc",
+      "language": [
+        "Latin"
+      ],
+      "is_hierarchy_title": "Nicolai Revsneri Symbolorvm Imperatoriorvm Classis ... : Opvs Philologicvm et Politicvm, Vereqve Regivm Ac Imperatoriorum ... Additvs est Cvilibet Classi tergeminus Elenchus: Symbolorum scilicet, Imperatorum, tum quoq[ue] Rerum, & Sententiarum",
+      "title_full": "Nicolai Revsneri Symbolorvm Imperatoriorvm Classis ... : Opvs Philologicvm et Politicvm, Vereqve Regivm Ac Imperatoriorum ... Additvs est Cvilibet Classi tergeminus Elenchus: Symbolorum scilicet, Imperatorum, tum quoq[ue] Rerum, & Sententiarum",
+      "hierarchy_top_title": [
+        "Nicolai Revsneri Symbolorvm Imperatoriorvm Classis ... : Opvs Philologicvm et Politicvm, Vereqve Regivm Ac Imperatoriorum ... Additvs est Cvilibet Classi tergeminus Elenchus: Symbolorum scilicet, Imperatorum, tum quoq[ue] Rerum, & Sententiarum"
+      ],
+      "title_in_hierarchy": [
+        "Reusner, Nikolaus : Nicolai Revsneri Symbolorvm Imperatoriorvm Classis ... : Opvs Philologicvm et Politicvm, Vereqve Regivm Ac Imperatoriorum ... Additvs est Cvilibet Classi tergeminus Elenchus: Symbolorum scilicet, Imperatorum, tum quoq[ue] Rerum, & Sententiarum"
+      ],
+      "title_sort": "nicolai revsneri symbolorvm imperatoriorvm classis ... :opvs philologicvm et politicvm, vereqve regivm ac imperatoriorum ... additvs est cvilibet classi tergeminus elenchus: symbolorum scilicet, imperatorum, tum quoq[ue] rerum, & sententiarum",
+      "is_hierarchy_id": "0002139078",
+      "publishDateSort": "1588",
+      "format_de15": [
+        "Book, E-Book"
+      ],
+      "format_ded117": [
+        "Book, E-Book"
+      ],
+      "source_id": "0",
+      "author_id": [
+        "100069983"
+      ],
+      "format_degla1": [
+        "Book"
+      ],
+      "format_dezi4": [
+        "e-Book"
+      ],
+      "title_fullStr": "Nicolai Revsneri Symbolorvm Imperatoriorvm Classis ... : Opvs Philologicvm et Politicvm, Vereqve Regivm Ac Imperatoriorum ... Additvs est Cvilibet Classi tergeminus Elenchus: Symbolorum scilicet, Imperatorum, tum quoq[ue] Rerum, & Sententiarum"
+    }
+  }
+]
