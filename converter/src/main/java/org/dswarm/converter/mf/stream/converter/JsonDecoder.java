@@ -88,11 +88,11 @@ public class JsonDecoder extends DefaultObjectPipe<Reader, JsonReceiver> {
 						break;
 					case END_ARRAY:
 
-						popFieldName();
 						tokenStack.pop();
 
 						if (!tokenStack.isEmpty() && JsonToken.FIELD_NAME.equals(tokenStack.peek())) {
 
+							popFieldName();
 							tokenStack.pop();
 						}
 
@@ -106,6 +106,7 @@ public class JsonDecoder extends DefaultObjectPipe<Reader, JsonReceiver> {
 
 						if (!tokenStack.isEmpty() && JsonToken.FIELD_NAME.equals(tokenStack.peek())) {
 
+							popFieldName();
 							tokenStack.pop();
 						}
 
