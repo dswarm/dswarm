@@ -1,0 +1,1238 @@
+<collection xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00000202|df_dz_0002000</identifier>
+         <datestamp>2016-04-15T17:01:31Z</datestamp>
+         <setSpec>fotos</setSpec>
+         <setSpec>karten</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Dresden
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+   
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+   
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+   </dc:coverage>
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>DDZ (Fotograf)</dc:creator>
+            <dc:creator>Buchner, Paul &lt;1531&gt;</dc:creator>
+            <dc:title>Geschossflugbahnen. Paul Buchner, 1577. Feder, Pinsel/Papier. 30 x 40 cm. Bez.: &quot;Proportion eines Quadrats, / welches 1500 Dresnischer / Elenn gros Ist.&quot; &quot;Paulus Puchner / Haußzeugmeister / 1577&quot;</dc:title>
+            <dc:subject>Zeichenkunst</dc:subject>
+            <dc:subject>Ingenieurzeichnung</dc:subject>
+            <dc:subject>Geschütz</dc:subject>
+            <dc:subject>Fotos</dc:subject>
+            <dc:date>1577</dc:date>
+            <dc:description>Buchner, Paul &lt;1531&gt;, Geschossflugbahnen. Paul Buchner, 1577. Feder, Pinsel/Papier. 30 x 40 cm. Bez.: &quot;Proportion eines Quadrats, / welches 1500 Dresnischer / Elenn gros Ist.&quot; &quot;Paulus Puchner / Haußzeugmeister / 1577&quot; Dresden
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+   
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+   
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+   </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00000202.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00000202.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_dz_0002000.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_dz_0002000.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00000203|df_dz_0002001</identifier>
+         <datestamp>2016-04-15T17:01:31Z</datestamp>
+         <setSpec>fotos</setSpec>
+         <setSpec>karten</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Dresden
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+   </dc:coverage>
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>DDZ (Fotograf)</dc:creator>
+            <dc:creator>Buchner, Paul &lt;1531&gt;</dc:creator>
+            <dc:title>Darstellung einer Rohrmündung mit Geschützaufsatz und Kugel. Paul Buchner, 1577. Feder, Pinsel/Papier. 47,8 x 138,4 cm. Bez.: &quot;Paulus Puchner Haußzeugmeister 1577&quot;</dc:title>
+            <dc:subject>Zeichenkunst</dc:subject>
+            <dc:subject>Ingenieurzeichnung</dc:subject>
+            <dc:subject>Geschütz</dc:subject>
+            <dc:subject>Kartenforum</dc:subject>
+            <dc:date>1577</dc:date>
+            <dc:description>Buchner, Paul &lt;1531&gt;, Darstellung einer Rohrmündung mit Geschützaufsatz und Kugel. Paul Buchner, 1577. Feder, Pinsel/Papier. 47,8 x 138,4 cm. Bez.: &quot;Paulus Puchner Haußzeugmeister 1577&quot; Dresden
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+   </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00000203.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00000203.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_dz_0002001.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_dz_0002001.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003676|df_hauptkatalog_0147181</identifier>
+         <datestamp>2016-05-19T12:37:48Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:creator>Bantzer, Carl</dc:creator>
+            <dc:title>Wallfahrer am Grabe der heiligen Elisabeth</dc:title>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:subject>Elisabethkirche</dc:subject>
+            <dc:subject>Fotos</dc:subject>
+            <dc:subject>Ortskatalog zur Kunst und Architektur</dc:subject>
+            <dc:date>1888</dc:date>
+            <dc:description>Bantzer, Carl, Wallfahrer am Grabe der heiligen Elisabeth </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003676.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003676.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0147181.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0147181.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003678|df_hauptkatalog_0125757</identifier>
+         <datestamp>2016-04-15T17:01:49Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:creator>Bissolo, Francesco</dc:creator>
+            <dc:title>Maria mit dem Kinde und vier Heiligen</dc:title>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:subject>Fotos</dc:subject>
+            <dc:subject>Ortskatalog zur Kunst und Architektur</dc:subject>
+            <dc:date>unknown</dc:date>
+            <dc:description>Bissolo, Francesco, Maria mit dem Kinde und vier Heiligen </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003678.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003678.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0125757.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0125757.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003679|df_hauptkatalog_0097019</identifier>
+         <datestamp>2016-04-15T17:01:49Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>Brouwer, Adriaen</dc:creator>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:title>Bauernrauferei beim Kartenspiel</dc:title>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Fotografie</dc:subject>
+            <dc:date>unknown</dc:date>
+            <dc:description>Brouwer, Adriaen, Bauernrauferei beim Kartenspiel </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003679.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003679.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0097019.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0097019.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003679|df_hauptkatalog_0130306</identifier>
+         <datestamp>2016-04-15T17:01:49Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:creator>Brouwer, Adriaen</dc:creator>
+            <dc:title>Bauernrauferei beim Kartenspiel</dc:title>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:date>unknown</dc:date>
+            <dc:description>Brouwer, Adriaen, Bauernrauferei beim Kartenspiel </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003679.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003679.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0130306.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0130306.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003679|df_hauptkatalog_0181037</identifier>
+         <datestamp>2016-04-15T17:01:50Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>Brouwer, Adriaen</dc:creator>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:title>Bauernrauferei beim Kartenspiel</dc:title>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Fotografie</dc:subject>
+            <dc:subject>Fotos</dc:subject>
+            <dc:subject>Ortskatalog zur Kunst und Architektur</dc:subject>
+            <dc:date>unknown</dc:date>
+            <dc:description>Brouwer, Adriaen, Bauernrauferei beim Kartenspiel </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003679.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003679.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0181037.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0181037.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003680|df_hauptkatalog_0130980</identifier>
+         <datestamp>2016-04-15T17:01:50Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:creator>Brouwer, Adriaen</dc:creator>
+            <dc:title>Unangenehme Vaterpflichten</dc:title>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:date>um 1631
+        </dc:date>
+            <dc:description>Brouwer, Adriaen, Unangenehme Vaterpflichten </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003680.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003680.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0130980.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0130980.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003680|df_hauptkatalog_0189406</identifier>
+         <datestamp>2016-04-15T17:01:50Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>Brouwer, Adriaen</dc:creator>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:title>Unangenehme Vaterpflichten</dc:title>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Fotografie</dc:subject>
+            <dc:subject>Fotos</dc:subject>
+            <dc:subject>Ortskatalog zur Kunst und Architektur</dc:subject>
+            <dc:date>um 1631
+        </dc:date>
+            <dc:date>um 1631
+            </dc:date>
+            <dc:description>Brouwer, Adriaen, Unangenehme Vaterpflichten </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003680.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003680.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0189406.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0189406.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003681|df_hauptkatalog_0130305</identifier>
+         <datestamp>2016-04-15T17:01:50Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:creator>Brouwer, Adriaen</dc:creator>
+            <dc:title>Bauernrauferei beim Würfelspiel</dc:title>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:subject>Fotos</dc:subject>
+            <dc:subject>Ortskatalog zur Kunst und Architektur</dc:subject>
+            <dc:date>um 1634-1636
+        </dc:date>
+            <dc:description>Brouwer, Adriaen, Bauernrauferei beim Würfelspiel </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003681.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003681.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0130305.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0130305.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003682|df_hauptkatalog_0130265</identifier>
+         <datestamp>2016-05-20T09:28:47Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:creator>Brueghel, Jan, der Ältere</dc:creator>
+            <dc:title>Belebter Fahrweg auf waldiger Höhe</dc:title>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:subject>Fotos</dc:subject>
+            <dc:subject>Ortskatalog zur Kunst und Architektur</dc:subject>
+            <dc:date>unknown</dc:date>
+            <dc:description>Brueghel, Jan, der Ältere, Belebter Fahrweg auf waldiger Höhe </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003682.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003682.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0130265.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0130265.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003683|df_hauptkatalog_0130260</identifier>
+         <datestamp>2016-05-20T09:28:47Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:creator>Brueghel, Jan, der Ältere</dc:creator>
+            <dc:title>Landschaft mit dem Rohrdommeljäger</dc:title>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:subject>Fotos</dc:subject>
+            <dc:subject>Ortskatalog zur Kunst und Architektur</dc:subject>
+            <dc:date>1605</dc:date>
+            <dc:description>Brueghel, Jan, der Ältere, Landschaft mit dem Rohrdommeljäger </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003683.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003683.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0130260.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0130260.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003687|df_hauptkatalog_0131099</identifier>
+         <datestamp>2016-04-15T17:01:50Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:creator>Corinth, Lovis</dc:creator>
+            <dc:title>Entwurf zu Orpheus</dc:title>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Entwurf</dc:subject>
+            <dc:subject>Fotos</dc:subject>
+            <dc:subject>Ortskatalog zur Kunst und Architektur</dc:subject>
+            <dc:date>1908
+            </dc:date>
+            <dc:description>Corinth, Lovis, Entwurf zu Orpheus </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003687.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003687.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0131099.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0131099.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003691|df_hauptkatalog_0156312</identifier>
+         <datestamp>2016-04-15T17:01:50Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:contributor>Maria Josepha &lt;Frankreich, Prinzessin&gt;</dc:contributor>
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:creator>Dathan, Johann Georg</dc:creator>
+            <dc:title>Allegorie auf die Vermählung der Prinzessin Maria Josepha von Sachsen mit dem Dauphin von Frankreich im Jahre 1747</dc:title>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:subject>Fotos</dc:subject>
+            <dc:subject>Ortskatalog zur Kunst und Architektur</dc:subject>
+            <dc:date>1748
+        </dc:date>
+            <dc:description>Dathan, Johann Georg, Allegorie auf die Vermählung der Prinzessin Maria Josepha von Sachsen mit dem Dauphin von Frankreich im Jahre 1747 </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003691.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003691.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0156312.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0156312.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003692|df_hauptkatalog_0121884</identifier>
+         <datestamp>2016-04-15T17:01:50Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:creator>Dietrich, Christian Wilhelm Ernst</dc:creator>
+            <dc:title>Diana entdeckt Kallistos Fehltritt</dc:title>
+            <dc:subject>Malerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:subject>Fotos</dc:subject>
+            <dc:subject>Ortskatalog zur Kunst und Architektur</dc:subject>
+            <dc:date>1730?
+            </dc:date>
+            <dc:description>Dietrich, Christian Wilhelm Ernst, Diana entdeckt Kallistos Fehltritt </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003692.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003692.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0121884.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0121884.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003694|df_hauptkatalog_0156306</identifier>
+         <datestamp>2016-04-15T17:01:50Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:creator>Dietrich, Christian Wilhelm Ernst</dc:creator>
+            <dc:title>Hirt und Hirtin bei ihren Herden</dc:title>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:subject>Fotos</dc:subject>
+            <dc:subject>Ortskatalog zur Kunst und Architektur</dc:subject>
+            <dc:date>vor 1730
+            </dc:date>
+            <dc:description>Dietrich, Christian Wilhelm Ernst, Hirt und Hirtin bei ihren Herden </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003694.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003694.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0156306.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0156306.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003708|df_hauptkatalog_0100541</identifier>
+         <datestamp>2016-04-15T17:01:48Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>Dyck, Anton van</dc:creator>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:title>Der heilige Hieronymus</dc:title>
+            <dc:subject>Malerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:subject>Malerei</dc:subject>
+            <dc:subject>Fotografie</dc:subject>
+            <dc:subject>Fotos</dc:subject>
+            <dc:subject>Ortskatalog zur Kunst und Architektur</dc:subject>
+            <dc:date>um 1617-1620
+        </dc:date>
+            <dc:date>um 1617-1620
+            </dc:date>
+            <dc:description>Dyck, Anton van, Der heilige Hieronymus </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003708.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003708.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0100541.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0100541.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003708|df_hauptkatalog_0130293</identifier>
+         <datestamp>2016-04-15T17:01:48Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:creator>Dyck, Anton van</dc:creator>
+            <dc:title>Der heilige Hieronymus</dc:title>
+            <dc:subject>Malerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:date>um 1617-1620
+        </dc:date>
+            <dc:description>Dyck, Anton van, Der heilige Hieronymus </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003708.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003708.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0130293.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0130293.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003708|df_hauptkatalog_0191206</identifier>
+         <datestamp>2016-04-15T17:01:48Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>Dyck, Anton van</dc:creator>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:title>Der heilige Hieronymus</dc:title>
+            <dc:subject>Malerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:subject>Malerei</dc:subject>
+            <dc:subject>Fotografie</dc:subject>
+            <dc:date>um 1617-1620
+        </dc:date>
+            <dc:date>um 1617-1620
+            </dc:date>
+            <dc:description>Dyck, Anton van, Der heilige Hieronymus </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003708.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003708.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0191206.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0191206.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003709|df_hauptkatalog_0090951</identifier>
+         <datestamp>2016-04-15T17:01:48Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>Eeckhout, Gerbrand van den</dc:creator>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:title>Jacobs Traum von der Himmelsleiter</dc:title>
+            <dc:subject>Malerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:subject>Malerei</dc:subject>
+            <dc:subject>Fotografie</dc:subject>
+            <dc:subject>Fotos</dc:subject>
+            <dc:subject>Ortskatalog zur Kunst und Architektur</dc:subject>
+            <dc:date>1669
+        </dc:date>
+            <dc:date>1669
+            </dc:date>
+            <dc:description>Eeckhout, Gerbrand van den, Jacobs Traum von der Himmelsleiter </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003709.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003709.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0090951.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0090951.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003709|df_hauptkatalog_0131027</identifier>
+         <datestamp>2016-04-15T17:01:48Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:creator>Eeckhout, Gerbrand van den</dc:creator>
+            <dc:title>Jacobs Traum von der Himmelsleiter</dc:title>
+            <dc:subject>Malerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:date>1669
+        </dc:date>
+            <dc:description>Eeckhout, Gerbrand van den, Jacobs Traum von der Himmelsleiter </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003709.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003709.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0131027.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0131027.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003710|df_hauptkatalog_0086461</identifier>
+         <datestamp>2016-04-15T17:01:49Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>Elsheimer, Adam</dc:creator>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:title>Landschaft mit der Flucht nach Ägypten</dc:title>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Fotografie</dc:subject>
+            <dc:subject>Fotos</dc:subject>
+            <dc:subject>Ortskatalog zur Kunst und Architektur</dc:subject>
+            <dc:date>unknown</dc:date>
+            <dc:description>Elsheimer, Adam, Landschaft mit der Flucht nach Ägypten </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003710.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003710.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0086461.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0086461.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003710|df_hauptkatalog_0130449</identifier>
+         <datestamp>2016-04-15T17:01:49Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>Elsheimer, Adam</dc:creator>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:title>Landschaft mit der Flucht nach Ägypten</dc:title>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Fotografie</dc:subject>
+            <dc:date>unknown</dc:date>
+            <dc:description>Elsheimer, Adam, Landschaft mit der Flucht nach Ägypten </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003710.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003710.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0130449.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0130449.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003710|df_hauptkatalog_0162000</identifier>
+         <datestamp>2016-04-15T17:01:49Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:creator>Elsheimer, Adam</dc:creator>
+            <dc:title>Landschaft mit der Flucht nach Ägypten</dc:title>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:date>unknown</dc:date>
+            <dc:description>Elsheimer, Adam, Landschaft mit der Flucht nach Ägypten </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003710.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003710.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0162000.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0162000.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003710|df_hauptkatalog_0167032</identifier>
+         <datestamp>2016-04-15T17:01:49Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>Elsheimer, Adam</dc:creator>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:title>Landschaft mit der Flucht nach Ägypten</dc:title>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Fotografie</dc:subject>
+            <dc:date>unknown</dc:date>
+            <dc:description>Elsheimer, Adam, Landschaft mit der Flucht nach Ägypten </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003710.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003710.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0167032.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0167032.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003710|df_hauptkatalog_0169675</identifier>
+         <datestamp>2016-04-15T17:01:49Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>Elsheimer, Adam</dc:creator>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:title>Landschaft mit der Flucht nach Ägypten</dc:title>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Fotografie</dc:subject>
+            <dc:date>unknown</dc:date>
+            <dc:description>Elsheimer, Adam, Landschaft mit der Flucht nach Ägypten </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003710.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003710.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0169675.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0169675.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003712|df_hauptkatalog_0130448</identifier>
+         <datestamp>2016-04-15T17:01:49Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:creator>Elsheimer, Adam</dc:creator>
+            <dc:title>Jupiter und Merkur bei Philemon und Baucis</dc:title>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:date>um 1608/1609
+        </dc:date>
+            <dc:description>Elsheimer, Adam, Jupiter und Merkur bei Philemon und Baucis </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003712.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003712.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0130448.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0130448.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003712|df_hauptkatalog_0179606</identifier>
+         <datestamp>2016-04-15T17:01:49Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>Elsheimer, Adam</dc:creator>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:title>Jupiter und Merkur bei Philemon und Baucis</dc:title>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Fotografie</dc:subject>
+            <dc:subject>Fotos</dc:subject>
+            <dc:subject>Ortskatalog zur Kunst und Architektur</dc:subject>
+            <dc:date>um 1608/1609
+        </dc:date>
+            <dc:date>um 1608/1609
+            </dc:date>
+            <dc:description>Elsheimer, Adam, Jupiter und Merkur bei Philemon und Baucis </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003712.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003712.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0179606.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0179606.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003713|df_hauptkatalog_0131819</identifier>
+         <datestamp>2016-04-15T17:01:47Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:creator>Everdingen, Allart van</dc:creator>
+            <dc:title>Der große Wasserfall</dc:title>
+            <dc:subject>Tafelmalerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:subject>Fotos</dc:subject>
+            <dc:subject>Ortskatalog zur Kunst und Architektur</dc:subject>
+            <dc:date>vor 1650
+        </dc:date>
+            <dc:description>Everdingen, Allart van, Der große Wasserfall </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003713.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003713.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0131819.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0131819.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003715|df_hauptkatalog_0131026</identifier>
+         <datestamp>2016-04-15T17:01:47Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:creator>Flinck, Govert</dc:creator>
+            <dc:title>David überreicht Uria den Brief</dc:title>
+            <dc:subject>Malerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:subject>Fotos</dc:subject>
+            <dc:subject>Ortskatalog zur Kunst und Architektur</dc:subject>
+            <dc:date>um 1650
+        </dc:date>
+            <dc:description>Flinck, Govert, David überreicht Uria den Brief </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003715.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003715.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0131026.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0131026.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+   <record>
+      <header>
+         <identifier>oai::a8450::obj|00003716|df_hauptkatalog_0124247</identifier>
+         <datestamp>2016-04-15T17:01:47Z</datestamp>
+         <setSpec>fotos</setSpec>
+      </header>
+      <metadata>
+         <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:edp="http://www.stegmannsystems.com/edp/2009" xmlns:edpm="http://www.stegmannsystems.com/edp-meta/2009" xmlns:europeana="http://europeana.eu/terms" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+            <dc:coverage>Staatliche Kunstsammlungen Dresden (SKD)</dc:coverage>
+            <dc:coverage>Dresden</dc:coverage>
+            <dc:creator>XXX (Fotograf)</dc:creator>
+            <dc:creator>Friedrich, Caspar David</dc:creator>
+            <dc:title>Hünengrab im Schnee</dc:title>
+            <dc:subject>Malerei</dc:subject>
+            <dc:subject>Bild</dc:subject>
+            <dc:date>1807
+            </dc:date>
+            <dc:description>Friedrich, Caspar David, Hünengrab im Schnee </dc:description>
+            <dc:format>image/jpeg</dc:format>
+            <dc:source>SLUB/Deutsche Fotothek</dc:source>
+            <dc:type>image</dc:type>
+            <europeana:provider>Deutsche Fotothek</europeana:provider>
+            <europeana:type>IMAGE</europeana:type>
+            <dc:identifier>http://www.deutschefotothek.de/obj00003716.html</dc:identifier>
+            <europeana:isShownAt>http://www.deutschefotothek.de/obj00003716.html</europeana:isShownAt>
+            <europeana:isShownBy>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0124247.jpg</europeana:isShownBy>
+            <europeana:object>http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0124247.jpg</europeana:object>
+            <dc:language>de-DE</dc:language>
+            <dc:rights>SLUB / Deutsche Fotothek</dc:rights>
+            <europeana:country>DE</europeana:country>
+            <europeana:language>de</europeana:language>
+         </oai_dc:dc>
+      </metadata>
+   </record>
+</collection>
