@@ -470,6 +470,12 @@ public final class XMLGDMEncoder extends DefaultXmlPipe<ObjectReceiver<GDMModel>
 			return SchemaUtils.mintUri(uri, localName);
 		}
 
+		if(uri != null) {
+
+			// do URI minting as usual (i.e. make use of namespace URI)
+			return SchemaUtils.mintUri(uri, localName);
+		}
+
 		final Map<String, AdvancedDMPJPAObject> termMap = optionalTermMap.get();
 
 		if (!termMap.containsKey(localName)) {
