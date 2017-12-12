@@ -25,6 +25,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -136,7 +137,7 @@ public class BuildInitInternalSchemaScriptTest extends GuicedTest {
 		schemaService = GuicedTest.injector.getInstance(SchemaService.class);
 	}
 
-	//@Test
+	@Test
 	public void buildScript() throws Exception {
 
 		final Schema bibrmContractSchema = new BibrmContractItemSchemaBuilder(Optional.ofNullable(schemaAttributePathsSAPIUUIDs.get(SchemaUtils.BIBRM_CONTRACT_ITEM_SCHEMA_UUID))).buildSchema();

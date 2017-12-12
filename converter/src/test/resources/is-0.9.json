@@ -1,7 +1,8 @@
 {
-    "type":"object",
-    "description":"Intermediate Schema for article metadata.",
-    "required":[
+    "type": "object",
+    "description": "Intermediate Schema for article metadata.",
+    "required": [
+        "finc.id",
         "finc.mega_collection",
         "finc.record_id",
         "finc.source_id",
@@ -10,55 +11,55 @@
         "rft.genre",
         "ris.type"
     ],
-    "additionalProperties":true,
-    "properties":{
-        "abstract":{
-            "type":"string"
+    "additionalProperties": true,
+    "properties": {
+        "abstract": {
+            "type": "string"
         },
-        "authors":{
-            "type":"array",
-            "items":{
-                "type":"object",
-                "properties":{
-                    "x.id":{
-                        "type":"string"
+        "authors": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "x.id": {
+                        "type": "string"
                     },
-                    "rft.au":{
-                        "type":"string"
+                    "rft.au": {
+                        "type": "string"
                     },
-                    "rft.aulast":{
-                        "type":"string"
+                    "rft.aulast": {
+                        "type": "string"
                     },
-                    "rft.aufirst":{
-                        "type":"string"
+                    "rft.aufirst": {
+                        "type": "string"
                     },
-                    "rft.auinit":{
-                        "type":"string"
+                    "rft.auinit": {
+                        "type": "string"
                     },
-                    "rft.auinit1":{
-                        "type":"string"
+                    "rft.auinit1": {
+                        "type": "string"
                     },
-                    "rft.auinitm":{
-                        "type":"string"
+                    "rft.auinitm": {
+                        "type": "string"
                     },
-                    "rft.ausuffix":{
-                        "type":"string"
+                    "rft.ausuffix": {
+                        "type": "string"
                     },
-                    "rft.aucorp":{
-                        "type":"string"
+                    "rft.aucorp": {
+                        "type": "string"
                     }
                 }
             }
         },
-        "doi":{
-            "type":"string"
+        "doi": {
+            "type": "string"
         },
-        "languages":{
-            "type":"array",
-            "uniqueItems":true,
-            "items":{
-                "type":"string",
-                "enum":[
+        "languages": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+                "type": "string",
+                "enum": [
                     "aaa",
                     "aab",
                     "aac",
@@ -149,13 +150,11 @@
                     "adw",
                     "adx",
                     "ady",
-                    "ady",
                     "adz",
                     "aea",
                     "aeb",
                     "aec",
                     "aed",
-                    "aee",
                     "aee",
                     "aek",
                     "ael",
@@ -173,7 +172,6 @@
                     "afe",
                     "afg",
                     "afh",
-                    "afi",
                     "afi",
                     "afk",
                     "afn",
@@ -300,7 +298,6 @@
                     "alt",
                     "alu",
                     "alw",
-                    "alw",
                     "alx",
                     "aly",
                     "alz",
@@ -372,7 +369,6 @@
                     "aor",
                     "aos",
                     "aot",
-                    "aot",
                     "aou",
                     "aox",
                     "aoz",
@@ -413,7 +409,6 @@
                     "ara",
                     "arb",
                     "arc",
-                    "arc",
                     "ard",
                     "are",
                     "arg",
@@ -423,13 +418,11 @@
                     "ark",
                     "arl",
                     "arn",
-                    "arn",
                     "aro",
                     "arp",
                     "arq",
                     "arr",
                     "ars",
-                    "aru",
                     "aru",
                     "arv",
                     "arw",
@@ -455,9 +448,6 @@
                     "asq",
                     "asr",
                     "ass",
-                    "ast",
-                    "ast",
-                    "ast",
                     "ast",
                     "asu",
                     "asv",
@@ -503,7 +493,6 @@
                     "aun",
                     "auo",
                     "aup",
-                    "auq",
                     "auq",
                     "aur",
                     "aut",
@@ -620,7 +609,6 @@
                     "bbm",
                     "bbn",
                     "bbo",
-                    "bbo",
                     "bbp",
                     "bbq",
                     "bbr",
@@ -693,7 +681,6 @@
                     "beh",
                     "bei",
                     "bej",
-                    "bej",
                     "bek",
                     "bel",
                     "bem",
@@ -712,9 +699,7 @@
                     "bfa",
                     "bfb",
                     "bfc",
-                    "bfc",
                     "bfd",
-                    "bfe",
                     "bfe",
                     "bff",
                     "bfg",
@@ -745,7 +730,6 @@
                     "bgg",
                     "bgi",
                     "bgj",
-                    "bgk",
                     "bgk",
                     "bgl",
                     "bgm",
@@ -789,7 +773,6 @@
                     "bhz",
                     "bia",
                     "bib",
-                    "bib",
                     "bic",
                     "bid",
                     "bie",
@@ -799,7 +782,6 @@
                     "bik",
                     "bil",
                     "bim",
-                    "bin",
                     "bin",
                     "bio",
                     "bip",
@@ -840,7 +822,6 @@
                     "bka",
                     "bkc",
                     "bkd",
-                    "bkd",
                     "bkf",
                     "bkg",
                     "bkh",
@@ -872,7 +853,6 @@
                     "blh",
                     "bli",
                     "blj",
-                    "blk",
                     "blk",
                     "bll",
                     "blm",
@@ -933,8 +913,6 @@
                     "bns",
                     "bnu",
                     "bnv",
-                    "bnv",
-                    "bnv",
                     "bnw",
                     "bnx",
                     "bny",
@@ -972,7 +950,6 @@
                     "bpi",
                     "bpj",
                     "bpk",
-                    "bpk",
                     "bpl",
                     "bpm",
                     "bpn",
@@ -991,7 +968,6 @@
                     "bqa",
                     "bqb",
                     "bqc",
-                    "bqc",
                     "bqd",
                     "bqf",
                     "bqg",
@@ -1009,7 +985,6 @@
                     "bqs",
                     "bqt",
                     "bqu",
-                    "bqv",
                     "bqv",
                     "bqw",
                     "bqx",
@@ -1043,7 +1018,6 @@
                     "brz",
                     "bsa",
                     "bsb",
-                    "bsc",
                     "bsc",
                     "bse",
                     "bsf",
@@ -1155,7 +1129,6 @@
                     "bwm",
                     "bwn",
                     "bwo",
-                    "bwo",
                     "bwp",
                     "bwq",
                     "bwr",
@@ -1172,12 +1145,10 @@
                     "bxd",
                     "bxe",
                     "bxf",
-                    "bxf",
                     "bxg",
                     "bxh",
                     "bxi",
                     "bxj",
-                    "bxk",
                     "bxk",
                     "bxl",
                     "bxm",
@@ -1205,11 +1176,9 @@
                     "byl",
                     "bym",
                     "byn",
-                    "byn",
                     "byo",
                     "byp",
                     "byq",
-                    "byr",
                     "byr",
                     "bys",
                     "byt",
@@ -1248,12 +1217,10 @@
                     "cac",
                     "cad",
                     "cae",
-                    "cae",
                     "caf",
                     "cag",
                     "cah",
                     "caj",
-                    "cak",
                     "cak",
                     "cal",
                     "cam",
@@ -1263,7 +1230,6 @@
                     "caq",
                     "car",
                     "cas",
-                    "cat",
                     "cat",
                     "cav",
                     "caw",
@@ -1282,7 +1248,6 @@
                     "cbl",
                     "cbn",
                     "cbo",
-                    "cbq",
                     "cbq",
                     "cbr",
                     "cbs",
@@ -1347,14 +1312,9 @@
                     "chn",
                     "cho",
                     "chp",
-                    "chp",
                     "chq",
                     "chr",
                     "cht",
-                    "chu",
-                    "chu",
-                    "chu",
-                    "chu",
                     "chu",
                     "chv",
                     "chw",
@@ -1371,8 +1331,6 @@
                     "cim",
                     "cin",
                     "cip",
-                    "cir",
-                    "cir",
                     "cir",
                     "ciw",
                     "ciy",
@@ -1450,7 +1408,6 @@
                     "cof",
                     "cog",
                     "coh",
-                    "coh",
                     "coj",
                     "cok",
                     "col",
@@ -1489,7 +1446,6 @@
                     "crf",
                     "crg",
                     "crh",
-                    "crh",
                     "cri",
                     "crj",
                     "crk",
@@ -1509,8 +1465,6 @@
                     "csa",
                     "csb",
                     "csc",
-                    "csc",
-                    "csc",
                     "csd",
                     "cse",
                     "csf",
@@ -1522,7 +1476,6 @@
                     "csl",
                     "csm",
                     "csn",
-                    "cso",
                     "cso",
                     "csq",
                     "csr",
@@ -1552,11 +1505,9 @@
                     "cuc",
                     "cug",
                     "cuh",
-                    "cuh",
                     "cui",
                     "cuj",
                     "cuk",
-                    "cul",
                     "cul",
                     "cum",
                     "cuo",
@@ -1574,7 +1525,6 @@
                     "cwb",
                     "cwd",
                     "cwe",
-                    "cwg",
                     "cwg",
                     "cwt",
                     "cya",
@@ -1603,7 +1553,6 @@
                     "dar",
                     "das",
                     "dau",
-                    "dav",
                     "dav",
                     "daw",
                     "dax",
@@ -1669,7 +1618,6 @@
                     "dgi",
                     "dgk",
                     "dgl",
-                    "dgl",
                     "dgn",
                     "dgo",
                     "dgr",
@@ -1681,7 +1629,6 @@
                     "dgz",
                     "dhd",
                     "dhg",
-                    "dhg",
                     "dhi",
                     "dhl",
                     "dhm",
@@ -1691,7 +1638,6 @@
                     "dhs",
                     "dhu",
                     "dhv",
-                    "dhv",
                     "dhw",
                     "dhx",
                     "dia",
@@ -1699,7 +1645,6 @@
                     "dic",
                     "did",
                     "dif",
-                    "dig",
                     "dig",
                     "dih",
                     "dii",
@@ -1716,8 +1661,6 @@
                     "dit",
                     "diu",
                     "div",
-                    "div",
-                    "div",
                     "diw",
                     "dix",
                     "diy",
@@ -1730,8 +1673,6 @@
                     "djf",
                     "dji",
                     "djj",
-                    "djk",
-                    "djk",
                     "djk",
                     "djm",
                     "djn",
@@ -1761,11 +1702,9 @@
                     "dmr",
                     "dms",
                     "dmu",
-                    "dmu",
                     "dmv",
                     "dmw",
                     "dmx",
-                    "dmy",
                     "dmy",
                     "dna",
                     "dnd",
@@ -1846,8 +1785,6 @@
                     "dud",
                     "due",
                     "duf",
-                    "duf",
-                    "dug",
                     "dug",
                     "duh",
                     "dui",
@@ -1894,7 +1831,6 @@
                     "ebo",
                     "ebr",
                     "ebu",
-                    "ebu",
                     "ecr",
                     "ecs",
                     "ecy",
@@ -1917,7 +1853,6 @@
                     "ekg",
                     "eki",
                     "ekk",
-                    "ekl",
                     "ekl",
                     "ekm",
                     "eko",
@@ -1959,7 +1894,6 @@
                     "enn",
                     "eno",
                     "enq",
-                    "enr",
                     "enr",
                     "enu",
                     "env",
@@ -2044,7 +1978,6 @@
                     "fie",
                     "fij",
                     "fil",
-                    "fil",
                     "fin",
                     "fip",
                     "fir",
@@ -2058,7 +1991,6 @@
                     "fll",
                     "fln",
                     "flr",
-                    "fly",
                     "fly",
                     "fmp",
                     "fmu",
@@ -2079,7 +2011,6 @@
                     "frm",
                     "fro",
                     "frp",
-                    "frp",
                     "frq",
                     "frr",
                     "frs",
@@ -2087,8 +2018,6 @@
                     "fry",
                     "fse",
                     "fsl",
-                    "fss",
-                    "fss",
                     "fss",
                     "fub",
                     "fuc",
@@ -2194,7 +2123,6 @@
                     "ged",
                     "geg",
                     "geh",
-                    "geh",
                     "gei",
                     "gej",
                     "gek",
@@ -2219,7 +2147,6 @@
                     "ggo",
                     "ggt",
                     "ggu",
-                    "ggu",
                     "ggw",
                     "gha",
                     "ghc",
@@ -2231,7 +2158,6 @@
                     "gho",
                     "ghr",
                     "ghs",
-                    "ght",
                     "ght",
                     "gia",
                     "gib",
@@ -2264,12 +2190,10 @@
                     "gkp",
                     "gku",
                     "gla",
-                    "gla",
                     "glc",
                     "gld",
                     "gle",
                     "glg",
-                    "glh",
                     "glh",
                     "gli",
                     "glj",
@@ -2376,8 +2300,6 @@
                     "gsp",
                     "gss",
                     "gsw",
-                    "gsw",
-                    "gsw",
                     "gta",
                     "gtu",
                     "gua",
@@ -2404,7 +2326,6 @@
                     "guv",
                     "guw",
                     "gux",
-                    "guz",
                     "guz",
                     "gva",
                     "gvc",
@@ -2471,7 +2392,6 @@
                     "har",
                     "has",
                     "hat",
-                    "hat",
                     "hau",
                     "hav",
                     "haw",
@@ -2523,7 +2443,6 @@
                     "hke",
                     "hkk",
                     "hks",
-                    "hks",
                     "hla",
                     "hlb",
                     "hld",
@@ -2531,32 +2450,20 @@
                     "hlt",
                     "hlu",
                     "hma",
-                    "hma",
                     "hmb",
                     "hmc",
-                    "hmc",
                     "hmd",
-                    "hmd",
-                    "hmd",
-                    "hme",
                     "hme",
                     "hmf",
                     "hmg",
                     "hmh",
-                    "hmh",
                     "hmi",
-                    "hmi",
-                    "hmj",
                     "hmj",
                     "hmk",
                     "hml",
-                    "hml",
                     "hmm",
-                    "hmm",
-                    "hmn",
                     "hmn",
                     "hmo",
-                    "hmp",
                     "hmp",
                     "hmq",
                     "hmr",
@@ -2565,18 +2472,13 @@
                     "hmu",
                     "hmv",
                     "hmw",
-                    "hmw",
                     "hmy",
-                    "hmy",
-                    "hmz",
                     "hmz",
                     "hna",
                     "hnd",
                     "hne",
                     "hnh",
                     "hni",
-                    "hnj",
-                    "hnj",
                     "hnj",
                     "hnn",
                     "hno",
@@ -2590,7 +2492,6 @@
                     "hoh",
                     "hoi",
                     "hoj",
-                    "hoj",
                     "hol",
                     "hom",
                     "hoo",
@@ -2598,13 +2499,11 @@
                     "hor",
                     "hos",
                     "hot",
-                    "hot",
                     "hov",
                     "how",
                     "hoy",
                     "hoz",
                     "hpo",
-                    "hps",
                     "hps",
                     "hra",
                     "hrc",
@@ -2638,7 +2537,6 @@
                     "huh",
                     "hui",
                     "huj",
-                    "huj",
                     "huk",
                     "hul",
                     "hum",
@@ -2661,7 +2559,6 @@
                     "hvn",
                     "hvv",
                     "hwa",
-                    "hwc",
                     "hwc",
                     "hwo",
                     "hya",
@@ -2687,9 +2584,7 @@
                     "icl",
                     "icr",
                     "ida",
-                    "ida",
                     "idb",
-                    "idc",
                     "idc",
                     "idd",
                     "ide",
@@ -2700,7 +2595,6 @@
                     "idt",
                     "idu",
                     "ifa",
-                    "ifb",
                     "ifb",
                     "ife",
                     "iff",
@@ -2722,7 +2616,6 @@
                     "ihp",
                     "ihw",
                     "iii",
-                    "iii",
                     "iin",
                     "ijc",
                     "ije",
@@ -2738,7 +2631,6 @@
                     "ikr",
                     "iks",
                     "ikt",
-                    "ikt",
                     "iku",
                     "ikv",
                     "ikw",
@@ -2746,7 +2638,6 @@
                     "ikz",
                     "ila",
                     "ilb",
-                    "ile",
                     "ile",
                     "ilg",
                     "ili",
@@ -2844,7 +2735,6 @@
                     "jaa",
                     "jab",
                     "jac",
-                    "jac",
                     "jad",
                     "jae",
                     "jaf",
@@ -2902,12 +2792,10 @@
                     "jie",
                     "jig",
                     "jih",
-                    "jih",
                     "jii",
                     "jil",
                     "jim",
                     "jio",
-                    "jiq",
                     "jiq",
                     "jit",
                     "jiu",
@@ -2982,7 +2870,6 @@
                     "kaa",
                     "kab",
                     "kac",
-                    "kac",
                     "kad",
                     "kae",
                     "kaf",
@@ -2991,7 +2878,6 @@
                     "kai",
                     "kaj",
                     "kak",
-                    "kal",
                     "kal",
                     "kam",
                     "kan",
@@ -3043,7 +2929,6 @@
                     "kcj",
                     "kck",
                     "kcl",
-                    "kcl",
                     "kcm",
                     "kcn",
                     "kco",
@@ -3068,7 +2953,6 @@
                     "kdi",
                     "kdj",
                     "kdk",
-                    "kdk",
                     "kdl",
                     "kdm",
                     "kdn",
@@ -3079,7 +2963,6 @@
                     "kdu",
                     "kdw",
                     "kdx",
-                    "kdy",
                     "kdy",
                     "kdz",
                     "kea",
@@ -3172,8 +3055,6 @@
                     "khm",
                     "khn",
                     "kho",
-                    "kho",
-                    "khp",
                     "khp",
                     "khq",
                     "khr",
@@ -3192,11 +3073,9 @@
                     "kie",
                     "kif",
                     "kig",
-                    "kig",
                     "kih",
                     "kii",
                     "kij",
-                    "kik",
                     "kik",
                     "kil",
                     "kim",
@@ -3204,8 +3083,6 @@
                     "kio",
                     "kip",
                     "kiq",
-                    "kiq",
-                    "kir",
                     "kir",
                     "kis",
                     "kit",
@@ -3216,7 +3093,6 @@
                     "kiy",
                     "kiz",
                     "kja",
-                    "kjb",
                     "kjb",
                     "kjc",
                     "kjd",
@@ -3342,7 +3218,6 @@
                     "knv",
                     "knw",
                     "knx",
-                    "knx",
                     "kny",
                     "knz",
                     "koa",
@@ -3350,7 +3225,6 @@
                     "kod",
                     "koe",
                     "kof",
-                    "kog",
                     "kog",
                     "koh",
                     "koi",
@@ -3453,7 +3327,6 @@
                     "ksg",
                     "ksh",
                     "ksi",
-                    "ksi",
                     "ksj",
                     "ksk",
                     "ksl",
@@ -3497,7 +3370,6 @@
                     "ktx",
                     "kty",
                     "ktz",
-                    "kua",
                     "kua",
                     "kub",
                     "kuc",
@@ -3544,14 +3416,11 @@
                     "kvr",
                     "kvs",
                     "kvt",
-                    "kvt",
                     "kvu",
                     "kvv",
                     "kvw",
                     "kvx",
                     "kvy",
-                    "kvy",
-                    "kvz",
                     "kvz",
                     "kwa",
                     "kwb",
@@ -3581,9 +3450,7 @@
                     "kxa",
                     "kxb",
                     "kxc",
-                    "kxc",
                     "kxd",
-                    "kxf",
                     "kxf",
                     "kxh",
                     "kxi",
@@ -3747,7 +3614,6 @@
                     "ler",
                     "les",
                     "let",
-                    "let",
                     "leu",
                     "lev",
                     "lew",
@@ -3761,7 +3627,6 @@
                     "lgg",
                     "lgh",
                     "lgi",
-                    "lgk",
                     "lgk",
                     "lgl",
                     "lgm",
@@ -3793,8 +3658,6 @@
                     "lik",
                     "lil",
                     "lim",
-                    "lim",
-                    "lim",
                     "lin",
                     "lio",
                     "lip",
@@ -3817,7 +3680,6 @@
                     "ljx",
                     "lka",
                     "lkb",
-                    "lkb",
                     "lkc",
                     "lkd",
                     "lke",
@@ -3827,11 +3689,8 @@
                     "lkl",
                     "lkm",
                     "lkn",
-                    "lkn",
-                    "lko",
                     "lko",
                     "lkr",
-                    "lks",
                     "lks",
                     "lkt",
                     "lku",
@@ -3882,7 +3741,6 @@
                     "lna",
                     "lnb",
                     "lnd",
-                    "lnd",
                     "lng",
                     "lnh",
                     "lni",
@@ -3930,10 +3788,8 @@
                     "lre",
                     "lrg",
                     "lri",
-                    "lri",
                     "lrk",
                     "lrl",
-                    "lrm",
                     "lrm",
                     "lrn",
                     "lro",
@@ -3949,9 +3805,7 @@
                     "lsi",
                     "lsl",
                     "lsm",
-                    "lsm",
                     "lso",
-                    "lsp",
                     "lsp",
                     "lsr",
                     "lss",
@@ -3962,11 +3816,8 @@
                     "lti",
                     "ltn",
                     "lto",
-                    "lto",
-                    "lts",
                     "lts",
                     "ltu",
-                    "ltz",
                     "ltz",
                     "lua",
                     "lub",
@@ -3982,7 +3833,6 @@
                     "lum",
                     "lun",
                     "luo",
-                    "luo",
                     "lup",
                     "luq",
                     "lur",
@@ -3992,7 +3842,6 @@
                     "luv",
                     "luw",
                     "luy",
-                    "luy",
                     "luz",
                     "lva",
                     "lvk",
@@ -4000,7 +3849,6 @@
                     "lvu",
                     "lwa",
                     "lwe",
-                    "lwg",
                     "lwg",
                     "lwh",
                     "lwl",
@@ -4028,7 +3876,6 @@
                     "mak",
                     "mal",
                     "mam",
-                    "man",
                     "man",
                     "maq",
                     "mar",
@@ -4195,7 +4042,6 @@
                     "mhc",
                     "mhd",
                     "mhe",
-                    "mhe",
                     "mhf",
                     "mhg",
                     "mhi",
@@ -4211,15 +4057,12 @@
                     "mhs",
                     "mht",
                     "mhu",
-                    "mhu",
                     "mhw",
-                    "mhx",
                     "mhx",
                     "mhy",
                     "mhz",
                     "mia",
                     "mib",
-                    "mic",
                     "mic",
                     "mid",
                     "mie",
@@ -4227,7 +4070,6 @@
                     "mig",
                     "mih",
                     "mii",
-                    "mij",
                     "mij",
                     "mik",
                     "mil",
@@ -4302,7 +4144,6 @@
                     "mli",
                     "mlj",
                     "mlk",
-                    "mlk",
                     "mll",
                     "mlm",
                     "mln",
@@ -4314,9 +4155,7 @@
                     "mlt",
                     "mlu",
                     "mlv",
-                    "mlv",
                     "mlw",
-                    "mlx",
                     "mlx",
                     "mlz",
                     "mma",
@@ -4391,7 +4230,6 @@
                     "mox",
                     "moy",
                     "moz",
-                    "moz",
                     "mpa",
                     "mpb",
                     "mpc",
@@ -4455,7 +4293,6 @@
                     "mrk",
                     "mrl",
                     "mrm",
-                    "mrm",
                     "mrn",
                     "mro",
                     "mrp",
@@ -4466,7 +4303,6 @@
                     "mru",
                     "mrv",
                     "mrw",
-                    "mrx",
                     "mrx",
                     "mry",
                     "mrz",
@@ -4481,7 +4317,6 @@
                     "msi",
                     "msj",
                     "msk",
-                    "msl",
                     "msl",
                     "msm",
                     "msn",
@@ -4576,7 +4411,6 @@
                     "mwg",
                     "mwh",
                     "mwi",
-                    "mwi",
                     "mwk",
                     "mwl",
                     "mwm",
@@ -4603,7 +4437,6 @@
                     "mxh",
                     "mxi",
                     "mxj",
-                    "mxj",
                     "mxk",
                     "mxl",
                     "mxm",
@@ -4617,7 +4450,6 @@
                     "mxu",
                     "mxv",
                     "mxw",
-                    "mxx",
                     "mxx",
                     "mxy",
                     "mxz",
@@ -4684,13 +4516,10 @@
                     "nao",
                     "nap",
                     "naq",
-                    "naq",
                     "nar",
                     "nas",
                     "nat",
-                    "nat",
                     "nau",
-                    "nav",
                     "nav",
                     "naw",
                     "nax",
@@ -4760,7 +4589,6 @@
                     "ndq",
                     "ndr",
                     "nds",
-                    "nds",
                     "ndt",
                     "ndu",
                     "ndv",
@@ -4790,13 +4618,11 @@
                     "neu",
                     "nev",
                     "new",
-                    "new",
                     "nex",
                     "ney",
                     "nez",
                     "nfa",
                     "nfd",
-                    "nfl",
                     "nfl",
                     "nfr",
                     "nfu",
@@ -4816,7 +4642,6 @@
                     "ngo",
                     "ngp",
                     "ngq",
-                    "ngq",
                     "ngr",
                     "ngs",
                     "ngt",
@@ -4829,7 +4654,6 @@
                     "nha",
                     "nhb",
                     "nhc",
-                    "nhd",
                     "nhd",
                     "nhe",
                     "nhf",
@@ -4918,7 +4742,6 @@
                     "nla",
                     "nlc",
                     "nld",
-                    "nld",
                     "nle",
                     "nlg",
                     "nli",
@@ -4934,7 +4757,6 @@
                     "nly",
                     "nlz",
                     "nma",
-                    "nmb",
                     "nmb",
                     "nmc",
                     "nmd",
@@ -4956,7 +4778,6 @@
                     "nmt",
                     "nmu",
                     "nmv",
-                    "nmw",
                     "nmw",
                     "nmx",
                     "nmy",
@@ -5033,7 +4854,6 @@
                     "nrc",
                     "nre",
                     "nrf",
-                    "nrf",
                     "nrg",
                     "nri",
                     "nrk",
@@ -5041,7 +4861,6 @@
                     "nrm",
                     "nrn",
                     "nrp",
-                    "nrr",
                     "nrr",
                     "nrt",
                     "nru",
@@ -5059,8 +4878,6 @@
                     "nsl",
                     "nsm",
                     "nsn",
-                    "nso",
-                    "nso",
                     "nso",
                     "nsp",
                     "nsq",
@@ -5098,7 +4915,6 @@
                     "nui",
                     "nuj",
                     "nuk",
-                    "nuk",
                     "nul",
                     "num",
                     "nun",
@@ -5119,8 +4935,6 @@
                     "nvo",
                     "nwa",
                     "nwb",
-                    "nwc",
-                    "nwc",
                     "nwc",
                     "nwe",
                     "nwg",
@@ -5145,14 +4959,10 @@
                     "nxu",
                     "nxx",
                     "nya",
-                    "nya",
-                    "nya",
                     "nyb",
                     "nyc",
                     "nyd",
-                    "nyd",
                     "nye",
-                    "nyf",
                     "nyf",
                     "nyg",
                     "nyh",
@@ -5184,7 +4994,6 @@
                     "nzz",
                     "oaa",
                     "oac",
-                    "oar",
                     "oar",
                     "oav",
                     "obi",
@@ -5318,7 +5127,6 @@
                     "oso",
                     "osp",
                     "oss",
-                    "oss",
                     "ost",
                     "osu",
                     "osx",
@@ -5363,13 +5171,10 @@
                     "pak",
                     "pal",
                     "pam",
-                    "pam",
-                    "pan",
                     "pan",
                     "pao",
                     "pap",
                     "paq",
-                    "par",
                     "par",
                     "pas",
                     "pat",
@@ -5416,7 +5221,6 @@
                     "pdc",
                     "pdi",
                     "pdn",
-                    "pdn",
                     "pdo",
                     "pdt",
                     "pdu",
@@ -5458,7 +5262,6 @@
                     "phh",
                     "phk",
                     "phl",
-                    "phl",
                     "phm",
                     "phn",
                     "pho",
@@ -5488,14 +5291,12 @@
                     "pit",
                     "piu",
                     "piv",
-                    "piv",
                     "piw",
                     "pix",
                     "piy",
                     "piz",
                     "pjt",
                     "pka",
-                    "pkb",
                     "pkb",
                     "pkc",
                     "pkg",
@@ -5523,7 +5324,6 @@
                     "plp",
                     "plq",
                     "plr",
-                    "pls",
                     "pls",
                     "plt",
                     "plu",
@@ -5603,7 +5403,6 @@
                     "ppi",
                     "ppk",
                     "ppl",
-                    "ppl",
                     "ppm",
                     "ppn",
                     "ppo",
@@ -5627,11 +5426,9 @@
                     "prm",
                     "prn",
                     "pro",
-                    "pro",
                     "prp",
                     "prq",
                     "prr",
-                    "prs",
                     "prs",
                     "prt",
                     "pru",
@@ -5645,8 +5442,6 @@
                     "pse",
                     "psg",
                     "psh",
-                    "psh",
-                    "psi",
                     "psi",
                     "psl",
                     "psm",
@@ -5689,7 +5484,6 @@
                     "puq",
                     "pur",
                     "pus",
-                    "pus",
                     "put",
                     "puu",
                     "puw",
@@ -5709,14 +5503,12 @@
                     "pym",
                     "pyn",
                     "pys",
-                    "pys",
                     "pyu",
                     "pyx",
                     "pyy",
                     "pzn",
                     "qua",
                     "qub",
-                    "quc",
                     "quc",
                     "qud",
                     "que",
@@ -5779,7 +5571,6 @@
                     "rad",
                     "raf",
                     "rag",
-                    "rag",
                     "rah",
                     "rai",
                     "raj",
@@ -5790,7 +5581,6 @@
                     "rao",
                     "rap",
                     "raq",
-                    "rar",
                     "rar",
                     "ras",
                     "rat",
@@ -5846,7 +5636,6 @@
                     "rki",
                     "rkm",
                     "rkt",
-                    "rkt",
                     "rkw",
                     "rma",
                     "rmb",
@@ -5890,8 +5679,6 @@
                     "rol",
                     "rom",
                     "ron",
-                    "ron",
-                    "ron",
                     "roo",
                     "rop",
                     "ror",
@@ -5920,8 +5707,6 @@
                     "ruk",
                     "run",
                     "ruo",
-                    "rup",
-                    "rup",
                     "rup",
                     "ruq",
                     "rus",
@@ -5967,7 +5752,6 @@
                     "sbc",
                     "sbd",
                     "sbe",
-                    "sbf",
                     "sbf",
                     "sbg",
                     "sbh",
@@ -6051,7 +5835,6 @@
                     "sey",
                     "sez",
                     "sfb",
-                    "sfb",
                     "sfe",
                     "sfm",
                     "sfs",
@@ -6108,13 +5891,11 @@
                     "sif",
                     "sig",
                     "sih",
-                    "sih",
                     "sii",
                     "sij",
                     "sik",
                     "sil",
                     "sim",
-                    "sin",
                     "sin",
                     "sip",
                     "siq",
@@ -6132,7 +5913,6 @@
                     "sje",
                     "sjg",
                     "sjk",
-                    "sjl",
                     "sjl",
                     "sjm",
                     "sjn",
@@ -6159,7 +5939,6 @@
                     "sko",
                     "skp",
                     "skq",
-                    "skr",
                     "skr",
                     "sks",
                     "skt",
@@ -6236,8 +6015,6 @@
                     "snq",
                     "snr",
                     "sns",
-                    "sns",
-                    "snu",
                     "snu",
                     "snv",
                     "snw",
@@ -6269,7 +6046,6 @@
                     "soy",
                     "soz",
                     "spa",
-                    "spa",
                     "spb",
                     "spc",
                     "spd",
@@ -6287,7 +6063,6 @@
                     "sps",
                     "spt",
                     "spu",
-                    "spv",
                     "spv",
                     "spx",
                     "spy",
@@ -6331,7 +6106,6 @@
                     "ssb",
                     "ssc",
                     "ssd",
-                    "sse",
                     "sse",
                     "ssf",
                     "ssg",
@@ -6410,7 +6184,6 @@
                     "swe",
                     "swf",
                     "swg",
-                    "swh",
                     "swh",
                     "swi",
                     "swj",
@@ -6508,7 +6281,6 @@
                     "tbn",
                     "tbo",
                     "tbp",
-                    "tbp",
                     "tbr",
                     "tbs",
                     "tbt",
@@ -6523,7 +6295,6 @@
                     "tcc",
                     "tcd",
                     "tce",
-                    "tcf",
                     "tcf",
                     "tcg",
                     "tch",
@@ -6625,7 +6396,6 @@
                     "thh",
                     "thi",
                     "thk",
-                    "thk",
                     "thl",
                     "thm",
                     "thn",
@@ -6699,7 +6469,6 @@
                     "tlf",
                     "tlg",
                     "tlh",
-                    "tlh",
                     "tli",
                     "tlj",
                     "tlk",
@@ -6717,7 +6486,6 @@
                     "tlx",
                     "tly",
                     "tma",
-                    "tmb",
                     "tmb",
                     "tmc",
                     "tmd",
@@ -6791,14 +6559,12 @@
                     "toz",
                     "tpa",
                     "tpc",
-                    "tpc",
                     "tpe",
                     "tpf",
                     "tpg",
                     "tpi",
                     "tpj",
                     "tpk",
-                    "tpl",
                     "tpl",
                     "tpm",
                     "tpn",
@@ -6810,7 +6576,6 @@
                     "tpu",
                     "tpv",
                     "tpw",
-                    "tpx",
                     "tpx",
                     "tpy",
                     "tpz",
@@ -6845,7 +6610,6 @@
                     "trs",
                     "trt",
                     "tru",
-                    "tru",
                     "trv",
                     "trw",
                     "trx",
@@ -6862,7 +6626,6 @@
                     "tsj",
                     "tsk",
                     "tsl",
-                    "tsm",
                     "tsm",
                     "tsn",
                     "tso",
@@ -7028,7 +6791,6 @@
                     "uha",
                     "uhn",
                     "uig",
-                    "uig",
                     "uis",
                     "uiv",
                     "uji",
@@ -7040,7 +6802,6 @@
                     "ukq",
                     "ukr",
                     "uks",
-                    "uks",
                     "uku",
                     "ukw",
                     "uky",
@@ -7048,7 +6809,6 @@
                     "ulb",
                     "ulc",
                     "ule",
-                    "ulf",
                     "ulf",
                     "uli",
                     "ulk",
@@ -7085,7 +6845,6 @@
                     "upv",
                     "ura",
                     "urb",
-                    "urb",
                     "urc",
                     "urd",
                     "ure",
@@ -7099,7 +6858,6 @@
                     "urn",
                     "uro",
                     "urp",
-                    "urr",
                     "urr",
                     "urt",
                     "uru",
@@ -7124,7 +6882,6 @@
                     "uur",
                     "uuu",
                     "uve",
-                    "uve",
                     "uvh",
                     "uvl",
                     "uwa",
@@ -7138,8 +6895,6 @@
                     "vag",
                     "vah",
                     "vai",
-                    "vaj",
-                    "vaj",
                     "vaj",
                     "val",
                     "vam",
@@ -7162,7 +6917,6 @@
                     "vep",
                     "ver",
                     "vgr",
-                    "vgt",
                     "vgt",
                     "vic",
                     "vid",
@@ -7210,8 +6964,6 @@
                     "vmy",
                     "vmz",
                     "vnk",
-                    "vnk",
-                    "vnm",
                     "vnm",
                     "vnp",
                     "vol",
@@ -7221,10 +6973,8 @@
                     "vro",
                     "vrs",
                     "vrt",
-                    "vrt",
                     "vsi",
                     "vsl",
-                    "vsv",
                     "vsv",
                     "vto",
                     "vum",
@@ -7242,7 +6992,6 @@
                     "wai",
                     "waj",
                     "wal",
-                    "wal",
                     "wam",
                     "wan",
                     "wao",
@@ -7254,7 +7003,6 @@
                     "wau",
                     "wav",
                     "waw",
-                    "wax",
                     "wax",
                     "way",
                     "waz",
@@ -7297,7 +7045,6 @@
                     "weu",
                     "wew",
                     "wfg",
-                    "wfg",
                     "wga",
                     "wgb",
                     "wgg",
@@ -7329,7 +7076,6 @@
                     "wji",
                     "wka",
                     "wkb",
-                    "wkd",
                     "wkd",
                     "wkl",
                     "wku",
@@ -7447,7 +7193,6 @@
                     "wwa",
                     "wwb",
                     "wwo",
-                    "wwo",
                     "wwr",
                     "www",
                     "wxa",
@@ -7466,7 +7211,6 @@
                     "xag",
                     "xai",
                     "xaj",
-                    "xal",
                     "xal",
                     "xam",
                     "xan",
@@ -7501,7 +7245,6 @@
                     "xce",
                     "xcg",
                     "xch",
-                    "xch",
                     "xcl",
                     "xcm",
                     "xcn",
@@ -7535,7 +7278,6 @@
                     "xgg",
                     "xgi",
                     "xgl",
-                    "xgm",
                     "xgm",
                     "xgr",
                     "xgu",
@@ -7619,7 +7361,6 @@
                     "xmt",
                     "xmu",
                     "xmv",
-                    "xmv",
                     "xmw",
                     "xmx",
                     "xmy",
@@ -7637,7 +7378,6 @@
                     "xnt",
                     "xnu",
                     "xny",
-                    "xnz",
                     "xnz",
                     "xoc",
                     "xod",
@@ -7884,7 +7624,6 @@
                     "ylr",
                     "ylu",
                     "yly",
-                    "yly",
                     "ymb",
                     "ymc",
                     "ymd",
@@ -7895,7 +7634,6 @@
                     "ymk",
                     "yml",
                     "ymm",
-                    "ymn",
                     "ymn",
                     "ymo",
                     "ymp",
@@ -7962,7 +7700,6 @@
                     "ytw",
                     "yty",
                     "yua",
-                    "yua",
                     "yub",
                     "yuc",
                     "yud",
@@ -7991,7 +7728,6 @@
                     "ywn",
                     "ywq",
                     "ywr",
-                    "ywt",
                     "ywt",
                     "ywu",
                     "yww",
@@ -8030,12 +7766,9 @@
                     "zaw",
                     "zax",
                     "zay",
-                    "zay",
                     "zaz",
                     "zbc",
                     "zbe",
-                    "zbl",
-                    "zbl",
                     "zbl",
                     "zbt",
                     "zbw",
@@ -8052,7 +7785,6 @@
                     "zgm",
                     "zgn",
                     "zgr",
-                    "zha",
                     "zha",
                     "zhb",
                     "zhd",
@@ -8184,84 +7916,84 @@
                     "zuy",
                     "zwa",
                     "zxx",
-                    "zxx",
                     "zyb",
                     "zyg",
                     "zyj",
                     "zyn",
                     "zyp",
                     "zza",
-                    "zza",
-                    "zza",
-                    "zza",
-                    "zza",
-                    "zza",
                     "zzj"
                 ]
             }
         },
-        "url":{
-            "type":"array",
-            "items":{
-                "type":"string"
+        "url": {
+            "type": "array",
+            "items": {
+                "type": "string"
             }
         },
-        "version":{
-            "type":"string",
-            "pattern":"^[0-9]+.[0-9]+$"
+        "version": {
+            "type": "string",
+            "pattern": "^[0-9]+.[0-9]+$"
         },
-        "finc.format":{
-            "type":"string"
+        "finc.id": {
+            "type": "string"
         },
-        "finc.mega_collection":{
-            "type":"string"
+        "finc.format": {
+            "type": "string"
         },
-        "finc.record_id":{
-            "type":"string"
-        },
-        "finc.source_id":{
-            "type":"string"
-        },
-        "rft.artnum":{
-            "type":"string"
-        },
-        "rft.atitle":{
-            "type":"string"
-        },
-        "rft.btitle":{
-            "type":"string"
-        },
-        "rft.chron":{
-            "type":"string"
-        },
-        "rft.date":{
-            "type":"string",
-            "format":"date"
-        },
-        "rft.edition":{
-            "type":"string"
-        },
-        "rft.eisbn":{
-            "type":"array",
-            "items":{
-                "type":"string",
-                "pattern":"^[0-9X-]+$"
+        "finc.mega_collection": {
+            "type": "array",
+            "items": {
+                "type": "string"
             }
         },
-        "rft.eissn":{
-            "type":"array",
-            "items":{
-                "type":"string",
-                "pattern":"^[0-9]{4}-[0-9]{3}[0-9X]$"
+        "finc.record_id": {
+            "type": "string"
+        },
+        "finc.source_id": {
+            "type": "string"
+        },
+        "rft.artnum": {
+            "type": "string"
+        },
+        "rft.atitle": {
+            "type": "string"
+        },
+        "rft.btitle": {
+            "type": "string"
+        },
+        "rft.chron": {
+            "type": "string"
+        },
+        "rft.date": {
+            "type": "string",
+            "format": "date"
+        },
+        "rft.edition": {
+            "type": "string"
+        },
+        "rft.eisbn": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "pattern": "^[0-9X-]+$"
             }
         },
-        "rft.epage":{
-            "type":"string",
-            "pattern":"^[0-9]*$"
+        "rft.eissn": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "pattern": "^[0-9]{4}-[0-9]{3}[0-9X]$"
+            }
         },
-        "rft.genre":{
-            "type":"string",
-            "enum":[
+        "rft.epage": {
+            "type": "string",
+            "pattern": "^[0-9]*$"
+        },
+        "rft.genre": {
+            "type": "string",
+            "enum": [
                 "article",
                 "book",
                 "bookitem",
@@ -8274,85 +8006,85 @@
                 "unknown"
             ]
         },
-        "rft.isbn":{
-            "type":"array",
-            "items":{
-                "type":"string",
-                "pattern":"^[0-9X-]+$"
+        "rft.isbn": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "pattern": "^[0-9X-]+$"
             }
         },
-        "rft.issn":{
-            "type":"array",
-            "items":{
-                "type":"string",
-                "pattern":"^[0-9]{4}-[0-9]{3}[0-9X]$"
+        "rft.issn": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "pattern": "^[0-9]{4}-[0-9]{3}[0-9X]$"
             }
         },
-        "rft.issue":{
-            "type":"string"
+        "rft.issue": {
+            "type": "string"
         },
-        "rft.jtitle":{
-            "type":"string"
+        "rft.jtitle": {
+            "type": "string"
         },
-        "rft.tpages":{
-            "type":"string",
-            "pattern":"^[0-9]*$"
+        "rft.tpages": {
+            "type": "string",
+            "pattern": "^[0-9]*$"
         },
-        "rft.pages":{
-            "type":"string"
+        "rft.pages": {
+            "type": "string"
         },
-        "rft.place":{
-            "type":"array",
-            "items":{
-                "type":"string"
+        "rft.place": {
+            "type": "array",
+            "items": {
+                "type": "string"
             }
         },
-        "rft.pub":{
-            "type":"array",
-            "items":{
-                "type":"string"
+        "rft.pub": {
+            "type": "array",
+            "items": {
+                "type": "string"
             }
         },
-        "rft.quarter":{
-            "type":"string",
-            "enum":[
+        "rft.quarter": {
+            "type": "string",
+            "enum": [
                 "1",
                 "2",
                 "3",
                 "4"
             ]
         },
-        "rft.ssn":{
-            "type":"string",
-            "enum":[
+        "rft.ssn": {
+            "type": "string",
+            "enum": [
                 "spring",
                 "summer",
                 "fall",
                 "winter"
             ]
         },
-        "rft.series":{
-            "type":"string"
+        "rft.series": {
+            "type": "string"
         },
-        "rft.stitle":{
-            "type":"string"
+        "rft.stitle": {
+            "type": "string"
         },
-        "rft.spage":{
-            "type":"string",
-            "pattern":"^[0-9]*$"
+        "rft.spage": {
+            "type": "string",
+            "pattern": "^[0-9]*$"
         },
-        "rft.volume":{
-            "type":"string"
+        "rft.volume": {
+            "type": "string"
         },
-        "ris.db":{
-            "type":"string"
+        "ris.db": {
+            "type": "string"
         },
-        "ris.dp":{
-            "type":"string"
+        "ris.dp": {
+            "type": "string"
         },
-        "ris.type":{
-            "type":"string",
-            "enum":[
+        "ris.type": {
+            "type": "string",
+            "enum": [
                 "ABST",
                 "ADVS",
                 "AGGR",
@@ -8410,26 +8142,26 @@
                 "VIDEO"
             ]
         },
-        "x.subtitle":{
-            "type":"string"
+        "x.subtitle": {
+            "type": "string"
         },
-        "x.fulltext":{
-            "type":"string"
+        "x.fulltext": {
+            "type": "string"
         },
-        "x.headings":{
-            "type":"array",
-            "items":{
-                "type":"string"
+        "x.headings": {
+            "type": "array",
+            "items": {
+                "type": "string"
             }
         },
-        "x.subjects":{
-            "type":"array",
-            "items":{
-                "type":"string"
+        "x.subjects": {
+            "type": "array",
+            "items": {
+                "type": "string"
             }
         },
-        "x.type":{
-            "type":"string"
+        "x.type": {
+            "type": "string"
         }
     }
 }
