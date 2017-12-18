@@ -46,7 +46,7 @@
 			<field column="vf1_author_corp_orig" xpath="/Document/vf1_author_corp_orig"/>
 			<field column="vf1_author_corp2" xpath="/Document/vf1_author_corp2"/>
 			<field column="vf1_author_corp2_orig" xpath="/Document/vf1_author_corp2_orig"/>
-			<field column="vf1_author2_role" xpath="/Document/vf1_author2_role"/>
+			<field column="vf1_author2-role" xpath="/Document/vf1_author2-role"/>
 			<field column="author" xpath="/Document/author"/>
 			<field column="author_orig" xpath="/Document/author_orig"/>
 			<field column="author_variant" xpath="/Document/author_variant"/>

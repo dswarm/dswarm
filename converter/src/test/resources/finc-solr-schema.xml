@@ -198,7 +198,7 @@
     <field name="vf1_author_corp_orig" type="textProper" indexed="true" stored="true" multiValued="false"/>
     <field name="vf1_author_corp2" type="textProper" indexed="true" stored="true" multiValued="true"/>
     <field name="vf1_author_corp2_orig" type="textProper" indexed="true" stored="true" multiValued="true"/>
-    <field name="vf1_author2_role" type="string" indexed="true" stored="true" multiValued="true"/>
+    <field name="vf1_author2-role" type="string" indexed="true" stored="true" multiValued="true"/>
     <!-- <field name="auth_browse" type="string" indexed="true" stored="false" multiValued="true"/> -->
 
     <!-- finc:vufind3 -->
